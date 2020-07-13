@@ -2078,5 +2078,5 @@ int main(int argc, char **argv)
 	g_free(trace_path);
 	g_free(metadata_path);
 
-	return 0;
+	return exit_status();
 }
