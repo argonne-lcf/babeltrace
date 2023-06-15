@@ -5,6 +5,10 @@
 
 import abc
 
+from bt2 import typing_mod
+
+typing = typing_mod._typing_mod
+
 
 class _BaseObject:
     # Ensure that the object always has _ptr_internal set, even if it throws during
@@ -38,6 +42,9 @@ class _BaseObject:
         raise NotImplementedError
 
 
+# Type variable representing any sub-class of _UniqueObject.
+_UniqueObjectT = typing.TypeVar("_UniqueObjectT", bound="_UniqueObject")
+
 # A Python object that is itself not refcounted, but is wholly owned by an
 # object that is itself refcounted (a _SharedObject).  A Babeltrace unique
 # object gets destroyed once its owner gets destroyed (its refcount drops to
@@ -58,7 +65,9 @@ class _UniqueObject(_BaseObject):
     #   - owner_put_ref: Callback to put a reference on the owner.
 
     @classmethod
-    def _create_from_ptr_and_get_ref(cls, ptr, owner_ptr, owner_get_ref, owner_put_ref):
+    def _create_from_ptr_and_get_ref(
+        cls: typing.Type[_UniqueObjectT], ptr, owner_ptr, owner_get_ref, owner_put_ref
+    ) -> _UniqueObjectT:
         assert ptr is not None
         assert owner_ptr is not None
 
@@ -75,6 +84,10 @@ class _UniqueObject(_BaseObject):
 
     def __del__(self):
         self._owner_put_ref(self._owner_ptr)
+
+
+# Type variable representing any sub-class of _SharedObject.
+_SharedObjectT = typing.TypeVar("_SharedObjectT", bound="_SharedObject")
 
 
 # Python object that owns a reference to a Babeltrace object.
@@ -105,7 +118,7 @@ class _SharedObject(_BaseObject, abc.ABC):
     # and transfers this ownership to the newly created Python object.
 
     @classmethod
-    def _create_from_ptr(cls, ptr_owned):
+    def _create_from_ptr(cls: typing.Type[_SharedObjectT], ptr_owned) -> _SharedObjectT:
         assert ptr_owned is not None
 
         obj = cls.__new__(cls)
@@ -116,7 +129,9 @@ class _SharedObject(_BaseObject, abc.ABC):
     # stealing the caller's reference.
 
     @classmethod
-    def _create_from_ptr_and_get_ref(cls, ptr):
+    def _create_from_ptr_and_get_ref(
+        cls: typing.Type[_SharedObjectT], ptr
+    ) -> _SharedObjectT:
         obj = cls._create_from_ptr(ptr)
         cls._get_ref(obj._ptr_internal)
         return obj
