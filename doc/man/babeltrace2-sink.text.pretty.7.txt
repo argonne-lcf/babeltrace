@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2017-2023 Philippe Proulx <pproulx@efficios.com>
+//
+// SPDX-License-Identifier: CC-BY-SA-4.0
+
 = babeltrace2-sink.text.pretty(7)
 :manpagetype: component class
 :revdate: 15 January 2025

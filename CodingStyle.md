@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2012 Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 Babeltrace Coding Style
 
 The coding style used for this project follows the the Linux kernel

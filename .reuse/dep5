@@ -20,3 +20,20 @@ Files:
   tests/utils/python/tap/*.py
 Copyright: 2019 - present, Matt Layman and contributors
 License: BSD-2-Clause
+
+Files:
+  doc/api/libbabeltrace2/examples/*.c
+Copyright: 2019-2025 Philippe Proulx <pproulx@efficios.com>
+License: MIT
+
+Files:
+  doc/api/libbabeltrace2/examples/dust
+Copyright: 2019 Philippe Proulx <pproulx@efficios.com>
+License: CC0-1.0
+
+Files:
+  doc/api/libbabeltrace2/images/*.png
+  doc/contributing-images/*.png
+  doc/bindings/python/source/images/*.png
+Copyright: 2017-2025 Philippe Proulx <pproulx@efficios.com>
+License: CC-BY-SA-4.0

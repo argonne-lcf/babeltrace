@@ -1,2 +1,6 @@
+// SPDX-FileCopyrightText: 2019 Philippe Proulx <pproulx@efficios.com>
+//
+// SPDX-License-Identifier: CC-BY-SA-4.0
+
 See man:babeltrace2-intro(7) to learn more about the Babeltrace~2
 project and its core concepts.

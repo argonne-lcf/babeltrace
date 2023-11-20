@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2019 Philippe Proulx <pproulx@efficios.com>
+//
+// SPDX-License-Identifier: CC-BY-SA-4.0
+
 [verse]
 __YYYY__-__MM__-__DD__ __HH__:__II__[:__SS__[.__NANO__]]
 __HH__:__II__[:__SS__[.__NANO__]]

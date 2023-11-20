@@ -16,7 +16,7 @@ dist_doc_DATA = \
 	LICENSE \
 	README.adoc
 
-dist_noinst_DATA = CodingStyle
+dist_noinst_DATA = CodingStyle.md
 
 EXTRA_DIST = \
 	.reuse/dep5 \
@@ -35,5 +35,5 @@ EXTRA_DIST = \
 	LICENSES/LicenseRef-Autoconf-exception-macro.txt \
 	LICENSES/MIT.txt \
 	LICENSES/PSF-2.0.txt \
-	std-ext-lib.txt \
+	std-ext-lib.md \
 	version

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2017-2024 Philippe Proulx <pproulx@efficios.com>
+//
+// SPDX-License-Identifier: CC-BY-SA-4.0
+
 .Pretty-print the events, in order, of one or more CTF traces.
 ====
 [role="term"]
