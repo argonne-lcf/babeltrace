@@ -18,11 +18,11 @@ import bt2
 # them someday.
 class _TestCopySimple:
     def test_copy(self):
-        with self.assertRaises(NotImplementedError):
+        with self.assertRaisesRegex(NotImplementedError, "^$"):
             copy.copy(self._def)
 
     def test_deepcopy(self):
-        with self.assertRaises(NotImplementedError):
+        with self.assertRaisesRegex(NotImplementedError, "^$"):
             copy.deepcopy(self._def)
 
 
@@ -1109,7 +1109,7 @@ class BoolValueTestCase(_TestNumericValue, unittest.TestCase):
         del self._def
 
     def _assert_expecting_bool(self):
-        return self.assertRaisesRegex(TypeError, r"expecting a 'bool' object")
+        return self.assertRaisesRegex(TypeError, "expecting a 'bool' object")
 
     def test_create_default(self):
         b = bt2.BoolValue()
@@ -1130,11 +1130,17 @@ class BoolValueTestCase(_TestNumericValue, unittest.TestCase):
         self.assertTrue(b)
 
     def test_create_from_int_non_zero(self):
-        with self.assertRaises(TypeError):
+        with self.assertRaisesRegex(
+            TypeError,
+            "'<class 'int'>' object is not a 'bool', 'BoolValue', or '_BoolValueConst' object",
+        ):
             bt2.BoolValue(23)
 
     def test_create_from_int_zero(self):
-        with self.assertRaises(TypeError):
+        with self.assertRaisesRegex(
+            TypeError,
+            "'<class 'int'>' object is not a 'bool', 'BoolValue', or '_BoolValueConst' object",
+        ):
             bt2.BoolValue(0)
 
     def test_assign_true(self):
@@ -1158,7 +1164,10 @@ class BoolValueTestCase(_TestNumericValue, unittest.TestCase):
         self.assertFalse(b)
 
     def test_assign_int(self):
-        with self.assertRaises(TypeError):
+        with self.assertRaisesRegex(
+            TypeError,
+            "'<class 'int'>' object is not a 'bool', 'BoolValue', or '_BoolValueConst' object",
+        ):
             b = bt2.BoolValue()
             b.value = 23
 
@@ -1207,16 +1216,16 @@ class _TestIntegerValue(_TestNumericValue):
         del self._def_value
 
     def _assert_expecting_int(self):
-        return self.assertRaisesRegex(TypeError, r"expecting an integral number object")
+        return self.assertRaisesRegex(TypeError, "expecting an integral number object")
 
     def _assert_expecting_int64(self):
         return self.assertRaisesRegex(
-            ValueError, r"expecting a signed 64-bit integral value"
+            ValueError, "expecting a signed 64-bit integral value"
         )
 
     def _assert_expecting_uint64(self):
         return self.assertRaisesRegex(
-            ValueError, r"expecting an unsigned 64-bit integral value"
+            ValueError, "expecting an unsigned 64-bit integral value"
         )
 
     def test_create_default(self):
@@ -1340,7 +1349,7 @@ class RealValueTestCase(_TestNumericValue, unittest.TestCase):
         del self._def_value
 
     def _assert_expecting_float(self):
-        return self.assertRaisesRegex(TypeError, r"expecting a real number object")
+        return self.assertRaisesRegex(TypeError, "expecting a real number object")
 
     def _test_invalid_op(self, cb):
         with self.assertRaises(TypeError):
@@ -1454,8 +1463,8 @@ class StringValueTestCase(_TestCopySimple, unittest.TestCase):
     def tearDown(self):
         del self._def
 
-    def _assert_expecting_str(self):
-        return self.assertRaises(TypeError)
+    def _assert_expecting_str(self, regex):
+        return self.assertRaisesRegex(TypeError, regex)
 
     def test_create_default(self):
         s = bt2.StringValue()
@@ -1475,15 +1484,15 @@ class StringValueTestCase(_TestCopySimple, unittest.TestCase):
         class A:
             pass
 
-        with self._assert_expecting_str():
+        with self._assert_expecting_str("'A' is not a 'str' object"):
             bt2.StringValue(A())
 
     def test_create_from_varray(self):
-        with self._assert_expecting_str():
+        with self._assert_expecting_str("'ArrayValue' is not a 'str' object"):
             bt2.StringValue(bt2.ArrayValue())
 
     def test_assign_int(self):
-        with self._assert_expecting_str():
+        with self._assert_expecting_str("'int' is not a 'str' object"):
             self._def.value = 283
 
     def test_assign_str(self):
@@ -1573,7 +1582,10 @@ class StringValueTestCase(_TestCopySimple, unittest.TestCase):
 
     def test_const_iadd_str(self):
         to_append = "meow meow meow"
-        with self.assertRaises(TypeError):
+        with self.assertRaisesRegex(
+            TypeError,
+            r"unsupported operand type\(s\) for \+=: '_StringValueConst' and 'str'",
+        ):
             self._def_const += to_append
 
         self.assertEqual(self._def_const, self._def_value)
@@ -1597,8 +1609,8 @@ class ArrayValueTestCase(_TestCopySimple, unittest.TestCase):
     def _modify_def(self):
         self._def[2] = "xyz"
 
-    def _assert_type_error(self):
-        return self.assertRaises(TypeError)
+    def _assert_type_error(self, regex):
+        return self.assertRaisesRegex(TypeError, regex)
 
     def test_create_default(self):
         a = bt2.ArrayValue()
@@ -1621,7 +1633,7 @@ class ArrayValueTestCase(_TestCopySimple, unittest.TestCase):
         class A:
             pass
 
-        with self._assert_type_error():
+        with self._assert_type_error("'A' object is not iterable"):
             bt2.ArrayValue(A())
 
     def test_bool_op_true(self):
@@ -1680,19 +1692,27 @@ class ArrayValueTestCase(_TestCopySimple, unittest.TestCase):
         self.assertIsNone(self._def[2])
 
     def test_setitem_index_wrong_type(self):
-        with self._assert_type_error():
+        with self._assert_type_error(
+            "'str' object is not an integral number object: invalid index"
+        ):
             self._def["yes"] = 23
 
     def test_setitem_index_neg(self):
-        with self.assertRaises(IndexError):
+        with self.assertRaisesRegex(
+            IndexError, "array value object index is out of range"
+        ):
             self._def[-2] = 23
 
     def test_setitem_index_out_of_range(self):
-        with self.assertRaises(IndexError):
+        with self.assertRaisesRegex(
+            IndexError, "array value object index is out of range"
+        ):
             self._def[len(self._def)] = 23
 
     def test_const_setitem(self):
-        with self.assertRaises(TypeError):
+        with self.assertRaisesRegex(
+            TypeError, "'_ArrayValueConst' object does not support item assignment"
+        ):
             self._def_const[2] = 19
 
     def test_append_none(self):
@@ -1705,7 +1725,9 @@ class ArrayValueTestCase(_TestCopySimple, unittest.TestCase):
         self.assertEqual(self._def[len(self._def) - 1], raw)
 
     def test_const_append(self):
-        with self.assertRaises(AttributeError):
+        with self.assertRaisesRegex(
+            AttributeError, "'_ArrayValueConst' object has no attribute 'append'"
+        ):
             self._def_const.append(12194)
 
     def test_append_vint(self):
@@ -1717,7 +1739,7 @@ class ArrayValueTestCase(_TestCopySimple, unittest.TestCase):
         class A:
             pass
 
-        with self._assert_type_error():
+        with self._assert_type_error("cannot create value object from 'A' object"):
             self._def.append(A())
 
     def test_iadd(self):
@@ -1728,21 +1750,24 @@ class ArrayValueTestCase(_TestCopySimple, unittest.TestCase):
         self.assertEqual(self._def[len(self._def) - 1], raw[2])
 
     def test_const_iadd(self):
-        with self.assertRaises(TypeError):
+        with self.assertRaisesRegex(
+            TypeError,
+            r"unsupported operand type\(s\) for \+=: '_ArrayValueConst' and 'int'",
+        ):
             self._def_const += 12194
 
     def test_iadd_unknown(self):
         class A:
             pass
 
-        with self._assert_type_error():
+        with self._assert_type_error("'A' object is not iterable"):
             self._def += A()
 
     def test_iadd_list_unknown(self):
         class A:
             pass
 
-        with self._assert_type_error():
+        with self._assert_type_error("cannot create value object from 'A' object"):
             self._def += [A()]
 
     def test_iter(self):
@@ -1813,7 +1838,9 @@ class MapValueTestCase(_TestCopySimple, unittest.TestCase):
         class A:
             pass
 
-        with self.assertRaises(AttributeError):
+        with self.assertRaisesRegex(
+            AttributeError, "'A' object has no attribute 'items'"
+        ):
             bt2.MapValue(A())
 
     def test_bool_op_true(self):
@@ -1883,7 +1910,9 @@ class MapValueTestCase(_TestCopySimple, unittest.TestCase):
         self.assertEqual(self._def["pos-int"], raw)
 
     def test_const_setitem_int(self):
-        with self.assertRaises(TypeError):
+        with self.assertRaisesRegex(
+            TypeError, "'_MapValueConst' object does not support item assignment"
+        ):
             self._def_const["pos-int"] = 19
 
     def test_setitem_vint(self):
@@ -1902,7 +1931,7 @@ class MapValueTestCase(_TestCopySimple, unittest.TestCase):
         self.assertEqual(len(self._def), old_len + 1)
 
     def test_setitem_index_wrong_type(self):
-        with self.assertRaises(TypeError):
+        with self.assertRaisesRegex(TypeError, "'int' is not a 'str' object"):
             self._def[18] = 23
 
     def test_iter(self):
@@ -1942,7 +1971,7 @@ class MapValueTestCase(_TestCopySimple, unittest.TestCase):
         self.assertEqual(item5, "yes")
 
     def test_getitem_wrong_key(self):
-        with self.assertRaises(KeyError):
+        with self.assertRaisesRegex(KeyError, "'kilojoule'"):
             self._def["kilojoule"]
 
 
