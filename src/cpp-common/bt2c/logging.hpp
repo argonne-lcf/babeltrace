@@ -27,6 +27,7 @@
 #include "cpp-common/vendor/wise-enum/wise_enum.h"
 #include "logging/log-api.h"
 
+#include "aliases.hpp"
 #include "text-loc-str.hpp"
 
 namespace bt2c {
@@ -71,8 +72,6 @@ namespace bt2c {
 class Logger final
 {
 public:
-    using MemData = bt2s::span<const std::uint8_t>;
-
     /* clang-format off */
 
     /* Available log levels */
@@ -317,8 +316,8 @@ private:
     struct _StdLogWriter final
     {
         static void write(const char * const fileName, const char * const funcName,
-                          const unsigned lineNo, const Level level, const char * const tag, MemData,
-                          const char * const initMsg, const char * const msg) noexcept
+                          const unsigned lineNo, const Level level, const char * const tag,
+                          ConstBytes, const char * const initMsg, const char * const msg) noexcept
         {
             BT_ASSERT_DBG(initMsg && std::strcmp(initMsg, "") == 0);
             bt_log_write(fileName, funcName, lineNo, static_cast<bt_log_level>(level), tag, msg);
@@ -374,8 +373,8 @@ private:
     struct _InitMsgLogWriter final
     {
         static void write(const char * const fileName, const char * const funcName,
-                          const unsigned lineNo, const Level level, const char * const tag, MemData,
-                          const char * const initMsg, const char * const msg) noexcept
+                          const unsigned lineNo, const Level level, const char * const tag,
+                          ConstBytes, const char * const initMsg, const char * const msg) noexcept
         {
             bt_log_write_printf(funcName, fileName, lineNo, static_cast<bt_log_level>(level), tag,
                                 "%s%s", initMsg, msg);
@@ -490,7 +489,7 @@ private:
     {
         static void write(const char * const fileName, const char * const funcName,
                           const unsigned lineNo, const Level level, const char * const tag,
-                          const MemData memData, const char *, const char * const msg) noexcept
+                          const ConstBytes memData, const char *, const char * const msg) noexcept
         {
             bt_log_write_mem(funcName, fileName, lineNo, static_cast<bt_log_level>(level), tag,
                              memData.data(), memData.size(), msg);
@@ -506,7 +505,7 @@ public:
      */
     template <Level LevelV, typename... ArgTs>
     void logMem(const char * const fileName, const char * const funcName, const unsigned int lineNo,
-                const MemData memData, fmt::format_string<ArgTs...> fmt, ArgTs&&...args) const
+                const ConstBytes memData, fmt::format_string<ArgTs...> fmt, ArgTs&&...args) const
     {
         this->_log<_MemLogWriter, LevelV, false>(fileName, funcName, lineNo, memData, "",
                                                  std::move(fmt), std::forward<ArgTs>(args)...);
@@ -526,8 +525,8 @@ private:
      */
     template <typename LogWriterT, Level LevelV, bool AppendCauseV, typename... ArgTs>
     void _log(const char * const fileName, const char * const funcName, const unsigned int lineNo,
-              const MemData memData, const char * const initMsg, fmt::format_string<ArgTs...> fmt,
-              ArgTs&&...args) const
+              const ConstBytes memData, const char * const initMsg,
+              fmt::format_string<ArgTs...> fmt, ArgTs&&...args) const
     {
         const auto wouldLog = this->wouldLog(LevelV);
 
