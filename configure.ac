@@ -576,6 +576,8 @@ AE_IF_FEATURE_ENABLED([python-bindings-doc],
   ]
 )
 
+PKG_CHECK_MODULES([LTTNGCTL], [lttng-ctl], [], AC_MSG_ERROR([Cannot find liblttng-ctl with pkg-config]))
+
 AE_IF_FEATURE_ENABLED([debug-info], [
   # Check if libelf and libdw are present
   PKG_CHECK_MODULES([ELFUTILS], [libelf >= 0.154 libdw >= 0.154],
