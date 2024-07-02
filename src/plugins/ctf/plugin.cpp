@@ -10,6 +10,7 @@
 
 #include "fs-sink/fs-sink.hpp"
 #include "fs-src/fs.hpp"
+#include "la-src/la.hpp"
 #include "lttng-live/lttng-live.hpp"
 
 #ifndef BT_BUILT_IN_PLUGINS
@@ -34,6 +35,19 @@ BT_PLUGIN_SOURCE_COMPONENT_CLASS_MESSAGE_ITERATOR_CLASS_FINALIZE_METHOD(fs,
                                                                         ctf_fs_iterator_finalize);
 BT_PLUGIN_SOURCE_COMPONENT_CLASS_MESSAGE_ITERATOR_CLASS_SEEK_BEGINNING_METHODS(
     fs, ctf_fs_iterator_seek_beginning, NULL);
+
+/* ctf.lttng-archive source */
+BT_PLUGIN_SOURCE_COMPONENT_CLASS_WITH_ID(auto, la, "lttng-archive", ctf_la_iterator_next);
+BT_PLUGIN_SOURCE_COMPONENT_CLASS_DESCRIPTION_WITH_ID(
+    auto, la, "Read LTTng trace archives for some watched recording session.");
+BT_PLUGIN_SOURCE_COMPONENT_CLASS_HELP_WITH_ID(auto, la,
+                                              "Proof of concept for Argonne: no help available!");
+BT_PLUGIN_SOURCE_COMPONENT_CLASS_INITIALIZE_METHOD_WITH_ID(auto, la, ctf_la_init);
+BT_PLUGIN_SOURCE_COMPONENT_CLASS_FINALIZE_METHOD_WITH_ID(auto, la, ctf_la_finalize);
+BT_PLUGIN_SOURCE_COMPONENT_CLASS_MESSAGE_ITERATOR_CLASS_INITIALIZE_METHOD_WITH_ID(
+    auto, la, ctf_la_iterator_init);
+BT_PLUGIN_SOURCE_COMPONENT_CLASS_MESSAGE_ITERATOR_CLASS_FINALIZE_METHOD_WITH_ID(
+    auto, la, ctf_la_iterator_finalize);
 
 /* ctf.fs sink */
 BT_PLUGIN_SINK_COMPONENT_CLASS(fs, ctf_fs_sink_consume);

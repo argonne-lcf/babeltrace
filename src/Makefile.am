@@ -749,6 +749,14 @@ plugins_ctf_babeltrace_plugin_ctf_la_SOURCES = \
 	plugins/ctf/fs-src/metadata.hpp \
 	plugins/ctf/fs-src/query.cpp \
 	plugins/ctf/fs-src/query.hpp \
+	plugins/ctf/la-src/data-stream-file.cpp \
+	plugins/ctf/la-src/data-stream-file.hpp \
+	plugins/ctf/la-src/file.cpp \
+	plugins/ctf/la-src/file.hpp \
+	plugins/ctf/la-src/la.cpp \
+	plugins/ctf/la-src/la.hpp \
+	plugins/ctf/la-src/lttng-index.hpp \
+	plugins/ctf/la-src/metadata.hpp \
 	plugins/ctf/lttng-live/data-stream.cpp \
 	plugins/ctf/lttng-live/data-stream.hpp \
 	plugins/ctf/lttng-live/lttng-live.cpp \
@@ -763,6 +771,7 @@ plugins_ctf_babeltrace_plugin_ctf_la_SOURCES = \
 plugins_ctf_babeltrace_plugin_ctf_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
 	$(LT_NO_UNDEFINED) \
+	$(LTTNGCTL_LIBS) \
 	-avoid-version -module $(LD_NOTEXT)
 
 plugins_ctf_babeltrace_plugin_ctf_la_LIBADD = \
