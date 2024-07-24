@@ -1,5 +1,7 @@
 #!/bin/bash
 #
+# SPDX-FileCopyrightText: 2024 EfficiOS Inc.
+#
 # SPDX-License-Identifier: GPL-2.0-only
 
 SH_TAP=1
