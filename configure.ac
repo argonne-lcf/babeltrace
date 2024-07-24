@@ -851,16 +851,16 @@ AC_OUTPUT
 # Mini-report on what will be built.
 #
 
-PPRINT_INIT
-PPRINT_SET_INDENT(1)
-PPRINT_SET_TS(38)
+AE_PPRINT_INIT
+AE_PPRINT_SET_INDENT(1)
+AE_PPRINT_SET_TS(38)
 
 AS_ECHO
 
 AS_IF([test -n "bt_version_name"], [
-  AS_ECHO("${PPRINT_COLOR_BLDBLU}Babeltrace $PACKAGE_VERSION \"bt_version_name\"$PPRINT_COLOR_RST")
+  AS_ECHO("${AE_PPRINT_COLOR_BLDBLU}Babeltrace $PACKAGE_VERSION \"bt_version_name\"$AE_PPRINT_COLOR_RST")
 ], [
-  AS_ECHO("${PPRINT_COLOR_BLDBLU}Babeltrace $PACKAGE_VERSION")
+  AS_ECHO("${AE_PPRINT_COLOR_BLDBLU}Babeltrace $PACKAGE_VERSION")
 ])
 
 AS_ECHO
@@ -875,7 +875,7 @@ AS_IF([test -n "bt_version_description"], [
   AS_ECHO
 ])
 
-PPRINT_SUBTITLE([System])
+AE_PPRINT_SUBTITLE([System])
 
 # Target architecture we're building for.
 target_arch=$host_cpu
@@ -889,83 +889,83 @@ for f in $CFLAGS; do
 done
 ]
 
-PPRINT_PROP_STRING([Target architecture], $target_arch)
+AE_PPRINT_PROP_STRING([Target architecture], $target_arch)
 
 AS_ECHO
-PPRINT_SUBTITLE([Python 3 language support])
+AE_PPRINT_SUBTITLE([Python 3 language support])
 test "x$have_python" = "xyes" && value=1 || value=0
-PPRINT_PROP_BOOL([Have Python interpreter], $value)
+AE_PPRINT_PROP_BOOL([Have Python interpreter], $value)
 test "x$have_python_dev" = "xyes" && value=1 || value=0
-PPRINT_PROP_BOOL([Have Python development libraries], $value)
+AE_PPRINT_PROP_BOOL([Have Python development libraries], $value)
 test "x$enable_python_bindings" = "xyes" && value=1 || value=0
-PPRINT_PROP_BOOL_CUSTOM([Python bindings], $value, [To enable, use --enable-python-bindings])
+AE_PPRINT_PROP_BOOL_CUSTOM([Python bindings], $value, [To enable, use --enable-python-bindings])
 test "x$enable_python_plugins" = "xyes" && value=1 || value=0
-PPRINT_PROP_BOOL_CUSTOM([Python plugin support], $value, [To enable, use --enable-python-plugins])
+AE_PPRINT_PROP_BOOL_CUSTOM([Python plugin support], $value, [To enable, use --enable-python-plugins])
 AS_IF([test "x$have_python" = "xyes"], [
-  PPRINT_PROP_STRING([Python interpreter path], [$PYTHON])
+  AE_PPRINT_PROP_STRING([Python interpreter path], [$PYTHON])
 ])
 AS_IF([test "x$have_python_dev" = "xyes"], [
-  PPRINT_PROP_STRING([python-config path], [$PYTHON_CONFIG])
-  PPRINT_PROP_STRING([Python include paths], [$PYTHON_INCLUDE])
-  PPRINT_PROP_STRING([Python linker flags], [$PYTHON_LDFLAGS])
+  AE_PPRINT_PROP_STRING([python-config path], [$PYTHON_CONFIG])
+  AE_PPRINT_PROP_STRING([Python include paths], [$PYTHON_INCLUDE])
+  AE_PPRINT_PROP_STRING([Python linker flags], [$PYTHON_LDFLAGS])
 ])
 AE_IF_FEATURE_ENABLED([python-bindings], [
-  PPRINT_PROP_STRING([SWIG executable], [$SWIG])
-  PPRINT_PROP_STRING([SWIG library], [$SWIG_LIB])
+  AE_PPRINT_PROP_STRING([SWIG executable], [$SWIG])
+  AE_PPRINT_PROP_STRING([SWIG library], [$SWIG_LIB])
 ])
 
 AS_ECHO
-PPRINT_SUBTITLE([Plugins])
-PPRINT_PROP_BOOL(['ctf' plugin], 1)
+AE_PPRINT_SUBTITLE([Plugins])
+AE_PPRINT_PROP_BOOL(['ctf' plugin], 1)
 test "x$enable_debug_info" = "xyes" && value=1 || value=0
-PPRINT_PROP_BOOL_CUSTOM(['lttng-utils' plugin], $value, [To enable, use --enable-debug-info])
-PPRINT_PROP_BOOL(['text' plugin], 1)
-PPRINT_PROP_BOOL(['utils' plugin], 1)
+AE_PPRINT_PROP_BOOL_CUSTOM(['lttng-utils' plugin], $value, [To enable, use --enable-debug-info])
+AE_PPRINT_PROP_BOOL(['text' plugin], 1)
+AE_PPRINT_PROP_BOOL(['utils' plugin], 1)
 
 AS_ECHO
-PPRINT_SUBTITLE([Built-in features])
+AE_PPRINT_SUBTITLE([Built-in features])
 test "x$enable_built_in_plugins" = "xyes" && value=1 || value=0
-PPRINT_PROP_BOOL_CUSTOM([Built-in plugins], $value, [To enable, use --enable-built-in-plugins])
+AE_PPRINT_PROP_BOOL_CUSTOM([Built-in plugins], $value, [To enable, use --enable-built-in-plugins])
 test "x$enable_built_in_python_plugin_support" = "xyes" && value=1 || value=0
-PPRINT_PROP_BOOL_CUSTOM([Built-in Python plugin support], $value, [To enable, use --enable-built-in-python-plugin-support])
+AE_PPRINT_PROP_BOOL_CUSTOM([Built-in Python plugin support], $value, [To enable, use --enable-built-in-python-plugin-support])
 
 AS_ECHO
-PPRINT_SUBTITLE([Documentation])
+AE_PPRINT_SUBTITLE([Documentation])
 
 # man pages build enabled/disabled
 m4_pushdef([build_man_pages_msg], [Build and install man pages])
 
 AE_IF_FEATURE_ENABLED([man-pages], [
   AE_IF_IN_GIT_REPO([
-    PPRINT_PROP_BOOL([build_man_pages_msg], 1)
+    AE_PPRINT_PROP_BOOL([build_man_pages_msg], 1)
   ], [
     AS_IF([test "x$have_asciidoc_xmlto" = "xyes"], [
-      PPRINT_PROP_BOOL([build_man_pages_msg], 1)
+      AE_PPRINT_PROP_BOOL([build_man_pages_msg], 1)
     ], [
-      PPRINT_PROP_STRING([build_man_pages_msg],
-        [${PPRINT_COLOR_BLDGRN}yes (already built)],
-        $PPRINT_COLOR_SUBTITLE)
+      AE_PPRINT_PROP_STRING([build_man_pages_msg],
+        [${AE_PPRINT_COLOR_BLDGRN}yes (already built)],
+        $AE_PPRINT_COLOR_SUBTITLE)
     ])
   ])
 ], [
-  PPRINT_PROP_BOOL_CUSTOM([build_man_pages_msg], 0, [To build man pages, use --enable-man-pages])
+  AE_PPRINT_PROP_BOOL_CUSTOM([build_man_pages_msg], 0, [To build man pages, use --enable-man-pages])
 ])
 
 m4_popdef([build_man_pages_msg])
 
 test "x$enable_api_doc" = "xyes" && value=1 || value=0
-PPRINT_PROP_BOOL_CUSTOM([HTML API documentation], $value, [To build documentation, use --enable-api-doc])
+AE_PPRINT_PROP_BOOL_CUSTOM([HTML API documentation], $value, [To build documentation, use --enable-api-doc])
 test "x$enable_python_bindings_doc" = "xyes" && value=1 || value=0
-PPRINT_PROP_BOOL_CUSTOM([Python bindings documentation], $value, [To build the Python bindings documentation, use --enable-python-bindings-doc])
+AE_PPRINT_PROP_BOOL_CUSTOM([Python bindings documentation], $value, [To build the Python bindings documentation, use --enable-python-bindings-doc])
 
 AS_ECHO
-PPRINT_SUBTITLE([Logging])
-PPRINT_PROP_STRING([Minimal log level], $BABELTRACE_MINIMAL_LOG_LEVEL)
+AE_PPRINT_SUBTITLE([Logging])
+AE_PPRINT_PROP_STRING([Minimal log level], $BABELTRACE_MINIMAL_LOG_LEVEL)
 
 AS_ECHO
-PPRINT_SUBTITLE([Special build modes])
-PPRINT_PROP_BOOL_CUSTOM([Debug mode], $BABELTRACE_DEBUG_MODE, [To enable, set the BABELTRACE_DEBUG_MODE environment variable to 1])
-PPRINT_PROP_BOOL_CUSTOM([Developer mode], $BABELTRACE_DEV_MODE, [To enable, set the BABELTRACE_DEV_MODE environment variable to 1])
+AE_PPRINT_SUBTITLE([Special build modes])
+AE_PPRINT_PROP_BOOL_CUSTOM([Debug mode], $BABELTRACE_DEBUG_MODE, [To enable, set the BABELTRACE_DEBUG_MODE environment variable to 1])
+AE_PPRINT_PROP_BOOL_CUSTOM([Developer mode], $BABELTRACE_DEV_MODE, [To enable, set the BABELTRACE_DEV_MODE environment variable to 1])
 
 report_bindir="`eval eval echo $bindir`"
 report_libdir="`eval eval echo $libdir`"
@@ -975,11 +975,11 @@ report_pluginprovidersdir="`eval eval eval echo $BABELTRACE_PLUGIN_PROVIDERS_DIR
 
 # Print the bindir and libdir this `make install' will install into.
 AS_ECHO
-PPRINT_SUBTITLE([Install directories])
-PPRINT_PROP_STRING([Binaries], [$report_bindir])
-PPRINT_PROP_STRING([Libraries], [$report_libdir])
-PPRINT_PROP_STRING([Plugins], [$report_pluginsdir])
-PPRINT_PROP_STRING([Plugin providers], [$report_pluginprovidersdir])
-PPRINT_PROP_STRING([Configuration], [$report_sysconfdif])
+AE_PPRINT_SUBTITLE([Install directories])
+AE_PPRINT_PROP_STRING([Binaries], [$report_bindir])
+AE_PPRINT_PROP_STRING([Libraries], [$report_libdir])
+AE_PPRINT_PROP_STRING([Plugins], [$report_pluginsdir])
+AE_PPRINT_PROP_STRING([Plugin providers], [$report_pluginprovidersdir])
+AE_PPRINT_PROP_STRING([Configuration], [$report_sysconfdif])
 
 # vim: shiftwidth=2 softtabstop=2 expandtab
