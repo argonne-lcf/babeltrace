@@ -199,6 +199,7 @@ copy_stream_class_content(struct trace_ir_maps *ir_maps, const bt_stream_class *
     uint64_t ec_number, ec_idx;
     bt_logging_level log_level = ir_maps->log_level;
     bt_self_component *self_comp = ir_maps->self_comp;
+    uint64_t graph_mip_version = bt_self_component_get_graph_mip_version(self_comp);
 
     BT_COMP_LOGD("Copying content of stream class: in-sc-addr=%p, out-sc-addr=%p", in_stream_class,
                  out_stream_class);
@@ -244,6 +245,7 @@ copy_stream_class_content(struct trace_ir_maps *ir_maps, const bt_stream_class *
         out_stream_class, bt_stream_class_supports_discarded_packets(in_stream_class),
         bt_stream_class_discarded_packets_have_default_clock_snapshots(in_stream_class));
 
+    /* Copy stream class name */
     in_name = bt_stream_class_get_name(in_stream_class);
     if (in_name) {
         enum bt_stream_class_set_name_status set_name_status =
@@ -256,6 +258,28 @@ copy_stream_class_content(struct trace_ir_maps *ir_maps, const bt_stream_class *
             status = static_cast<debug_info_trace_ir_mapping_status>(set_name_status);
             goto end;
         }
+    }
+
+    if (graph_mip_version == 1) {
+        /* Copy stream class namespace */
+        const char *in_namespace = bt_stream_class_get_namespace(in_stream_class);
+        if (in_namespace) {
+            enum bt_stream_class_set_namespace_status set_namespace_status =
+                bt_stream_class_set_namespace(out_stream_class, in_namespace);
+            if (set_namespace_status != BT_STREAM_CLASS_SET_NAMESPACE_STATUS_OK) {
+                BT_COMP_LOGE_APPEND_CAUSE(self_comp,
+                                          "Error set stream class namespace: "
+                                          "out-sc-addr=%p, namespace=\"%s\"",
+                                          out_stream_class, in_namespace);
+                status = static_cast<debug_info_trace_ir_mapping_status>(set_namespace_status);
+                goto end;
+            }
+        }
+
+        /*
+         * Do not copy the stream class UID as the trace may be
+         * modified and should no longer have the same identifier.
+         */
     }
 
     bt_stream_class_set_assigns_automatic_stream_id(out_stream_class, BT_FALSE);
