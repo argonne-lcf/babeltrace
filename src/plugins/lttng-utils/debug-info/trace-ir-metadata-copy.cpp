@@ -490,10 +490,11 @@ copy_event_class_content(struct trace_ir_maps *ir_maps, const bt_event_class *in
     if (in_event_class_name) {
         enum bt_event_class_set_name_status set_name_status =
             bt_event_class_set_name(out_event_class, in_event_class_name);
+
         if (set_name_status != BT_EVENT_CLASS_SET_NAME_STATUS_OK) {
             BT_COMP_LOGE_APPEND_CAUSE(self_comp,
                                       "Error setting event class' name: ec-addr=%p, "
-                                      "name=\"%s\"",
+                                      "ec-name=\"%s\"",
                                       out_event_class, in_event_class_name);
             status = static_cast<debug_info_trace_ir_mapping_status>(set_name_status);
             goto end;
