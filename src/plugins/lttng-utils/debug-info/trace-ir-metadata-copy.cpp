@@ -480,6 +480,7 @@ copy_event_class_content(struct trace_ir_maps *ir_maps, const bt_event_class *in
     const bt_field_class *in_event_specific_context, *in_event_payload;
     bt_logging_level log_level = ir_maps->log_level;
     bt_self_component *self_comp = ir_maps->self_comp;
+    uint64_t graph_mip_version = bt_self_component_get_graph_mip_version(self_comp);
 
     BT_COMP_LOGD("Copying content of event class: in-ec-addr=%p, out-ec-addr=%p", in_event_class,
                  out_event_class);
@@ -497,6 +498,30 @@ copy_event_class_content(struct trace_ir_maps *ir_maps, const bt_event_class *in
             status = static_cast<debug_info_trace_ir_mapping_status>(set_name_status);
             goto end;
         }
+    }
+
+    if (graph_mip_version == 1) {
+        /* Copy event class namespace. */
+        const char *in_event_class_namespace = bt_event_class_get_namespace(in_event_class);
+
+        if (in_event_class_namespace) {
+            enum bt_event_class_set_namespace_status set_namespace_status =
+                bt_event_class_set_namespace(out_event_class, in_event_class_namespace);
+
+            if (set_namespace_status != BT_EVENT_CLASS_SET_NAMESPACE_STATUS_OK) {
+                BT_COMP_LOGE_APPEND_CAUSE(self_comp,
+                                          "Error setting event class' "
+                                          "namespace: ec-addr=%p, ec-namespace=\"%s\"",
+                                          out_event_class, in_event_class_namespace);
+                status = static_cast<debug_info_trace_ir_mapping_status>(set_namespace_status);
+                goto end;
+            }
+        }
+
+        /*
+         * Do not copy the event class UID as the trace may be
+         * modified and should no longer have the same identifier.
+         */
     }
 
     /*
