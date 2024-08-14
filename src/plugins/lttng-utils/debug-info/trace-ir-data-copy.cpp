@@ -28,12 +28,13 @@ enum debug_info_trace_ir_mapping_status copy_trace_content(const bt_trace *in_tr
     enum debug_info_trace_ir_mapping_status status;
     const char *trace_name;
     uint64_t i, env_field_count;
+    uint64_t graph_mip_version = bt_self_component_get_graph_mip_version(self_comp);
 
     BT_COMP_LOGD("Copying content of trace: in-t-addr=%p, out-t-addr=%p", in_trace, out_trace);
 
+    /* Copy the trace name. */
     trace_name = bt_trace_get_name(in_trace);
 
-    /* Copy the trace name. */
     if (trace_name) {
         bt_trace_set_name_status set_name_status = bt_trace_set_name(out_trace, trace_name);
         if (set_name_status != BT_TRACE_SET_NAME_STATUS_OK) {
@@ -46,6 +47,25 @@ enum debug_info_trace_ir_mapping_status copy_trace_content(const bt_trace *in_tr
         }
     }
 
+    if (graph_mip_version == 1) {
+        /* Copy the trace namespace. */
+        const char *trace_namespace = bt_trace_get_namespace(in_trace);
+
+        if (trace_namespace) {
+            bt_trace_set_namespace_status set_namespace_status =
+                bt_trace_set_namespace(out_trace, trace_namespace);
+
+            if (set_namespace_status != BT_TRACE_SET_NAMESPACE_STATUS_OK) {
+                BT_COMP_LOGE_APPEND_CAUSE(self_comp,
+                                          "Cannot set trace's "
+                                          "namespace: out-t-addr=%p, namespace=\"%s\"",
+                                          out_trace, trace_namespace);
+                status = static_cast<debug_info_trace_ir_mapping_status>(set_namespace_status);
+                goto end;
+            }
+        }
+    }
+
     /*
      * Safe to use the same value object because it's frozen at this
      * point.
@@ -53,8 +73,9 @@ enum debug_info_trace_ir_mapping_status copy_trace_content(const bt_trace *in_tr
     bt_trace_set_user_attributes(out_trace, bt_trace_borrow_user_attributes_const(in_trace));
 
     /*
-     * Do not copy the trace UUID as the trace may be modified and should
-     * no longer have the same UUID.
+     * Do not copy the trace identifier (UUID for MIP 0, UID for MIP 1)
+     * as the trace may be modified and should no longer have the same
+     * identifier.
      */
 
     /*
