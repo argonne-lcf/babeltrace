@@ -136,17 +136,42 @@ static inline enum debug_info_trace_ir_mapping_status
 field_class_bit_array_copy(struct trace_ir_metadata_maps *md_maps,
                            const bt_field_class *in_field_class, bt_field_class *out_field_class)
 {
+    enum debug_info_trace_ir_mapping_status status;
+
     BT_COMP_LOGD("Copying content of bit array field class: "
                  "in-fc-addr=%p, out-fc-addr=%p",
                  in_field_class, out_field_class);
-    /*
-     * There is no content to copy. Keep this function call anyway for
-     * logging purposes.
-     */
+
+    if (bt_self_component_get_graph_mip_version(md_maps->self_comp) >= 1) {
+        /* Copy all flag properties. */
+        uint64_t flag_count = bt_field_class_bit_array_get_flag_count(in_field_class);
+
+        for (uint64_t i = 0; i < flag_count; i++) {
+            const bt_field_class_bit_array_flag *flag =
+                bt_field_class_bit_array_borrow_flag_by_index_const(in_field_class, i);
+
+            BT_ASSERT(flag);
+
+            const char *flag_label = bt_field_class_bit_array_flag_get_label(flag);
+            const bt_integer_range_set_unsigned *flag_index_ranges =
+                bt_field_class_bit_array_flag_borrow_index_ranges_const(flag);
+
+            bt_field_class_bit_array_add_flag_status add_flag_status =
+                bt_field_class_bit_array_add_flag(out_field_class, flag_label, flag_index_ranges);
+            if (add_flag_status != BT_FIELD_CLASS_BIT_ARRAY_ADD_FLAG_STATUS_OK) {
+                status = static_cast<debug_info_trace_ir_mapping_status>(add_flag_status);
+                goto end;
+            }
+        }
+    }
+
     BT_COMP_LOGD("Copied content of bit array field class: "
                  "in-fc-addr=%p, out-fc-addr=%p",
                  in_field_class, out_field_class);
-    return DEBUG_INFO_TRACE_IR_MAPPING_STATUS_OK;
+
+    status = DEBUG_INFO_TRACE_IR_MAPPING_STATUS_OK;
+end:
+    return status;
 }
 
 static inline enum debug_info_trace_ir_mapping_status
