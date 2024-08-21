@@ -654,6 +654,51 @@ end:
     return status;
 }
 
+static bt_field_class *create_field_class_dynamic_array_copy(struct trace_ir_metadata_maps *md_maps,
+                                                             const bt_field_class *in_field_class,
+                                                             bt_field_class *out_elem_fc)
+{
+    bt_self_component *self_comp = md_maps->self_comp;
+    bt_field_class *out_field_class = nullptr;
+    bt_field_class_type fc_type = bt_field_class_get_type(in_field_class);
+    uint64_t graph_mip_version = bt_self_component_get_graph_mip_version(self_comp);
+
+    if (graph_mip_version == 0) {
+        bt_field_class *out_length_fc = nullptr;
+
+        if (fc_type == BT_FIELD_CLASS_TYPE_DYNAMIC_ARRAY_WITH_LENGTH_FIELD) {
+            const bt_field_path *length_fp =
+                bt_field_class_array_dynamic_with_length_field_borrow_length_field_path_const(
+                    in_field_class);
+            const bt_field_class *in_length_fc =
+                resolve_field_path_to_field_class(length_fp, md_maps);
+            BT_ASSERT(in_length_fc);
+
+            out_length_fc = static_cast<bt_field_class *>(
+                g_hash_table_lookup(md_maps->field_class_map, in_length_fc));
+            BT_ASSERT(out_length_fc);
+        }
+
+        out_field_class = bt_field_class_array_dynamic_create(md_maps->output_trace_class,
+                                                              out_elem_fc, out_length_fc);
+    } else {
+        if (fc_type == BT_FIELD_CLASS_TYPE_DYNAMIC_ARRAY_WITH_LENGTH_FIELD) {
+            const bt_field_location *length_field_location =
+                bt_field_class_array_dynamic_with_length_field_borrow_length_field_location_const(
+                    in_field_class);
+            BT_ASSERT(length_field_location);
+
+            out_field_class = bt_field_class_array_dynamic_with_length_field_location_create(
+                md_maps->output_trace_class, out_elem_fc, length_field_location);
+        } else if (fc_type == BT_FIELD_CLASS_TYPE_DYNAMIC_ARRAY_WITHOUT_LENGTH_FIELD) {
+            out_field_class = bt_field_class_array_dynamic_without_length_field_location_create(
+                md_maps->output_trace_class, out_elem_fc);
+        }
+    }
+
+    return out_field_class;
+}
+
 static bt_field_class *copy_field_class_array_element(struct trace_ir_metadata_maps *md_maps,
                                                       const bt_field_class *in_elem_fc)
 {
@@ -768,7 +813,6 @@ bt_field_class *create_field_class_copy_internal(struct trace_ir_metadata_maps *
     if (bt_field_class_type_is(fc_type, BT_FIELD_CLASS_TYPE_DYNAMIC_ARRAY)) {
         const bt_field_class *in_elem_fc =
             bt_field_class_array_borrow_element_field_class_const(in_field_class);
-        bt_field_class *out_length_fc = NULL;
         bt_field_class *out_elem_fc = copy_field_class_array_element(md_maps, in_elem_fc);
 
         if (!out_elem_fc) {
@@ -776,21 +820,8 @@ bt_field_class *create_field_class_copy_internal(struct trace_ir_metadata_maps *
             goto error;
         }
 
-        if (fc_type == BT_FIELD_CLASS_TYPE_DYNAMIC_ARRAY_WITH_LENGTH_FIELD) {
-            const bt_field_path *length_fp =
-                bt_field_class_array_dynamic_with_length_field_borrow_length_field_path_const(
-                    in_field_class);
-            const bt_field_class *in_length_fc =
-                resolve_field_path_to_field_class(length_fp, md_maps);
-
-            BT_ASSERT(in_length_fc);
-            out_length_fc = static_cast<bt_field_class *>(
-                g_hash_table_lookup(md_maps->field_class_map, in_length_fc));
-            BT_ASSERT(out_length_fc);
-        }
-
-        out_field_class = bt_field_class_array_dynamic_create(md_maps->output_trace_class,
-                                                              out_elem_fc, out_length_fc);
+        out_field_class =
+            create_field_class_dynamic_array_copy(md_maps, in_field_class, out_elem_fc);
     } else if (bt_field_class_type_is(fc_type, BT_FIELD_CLASS_TYPE_OPTION)) {
         const bt_field_class *in_content_fc =
             bt_field_class_option_borrow_field_class_const(in_field_class);
