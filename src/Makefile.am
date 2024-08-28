@@ -775,6 +775,10 @@ plugins_ctf_babeltrace_plugin_ctf_la_SOURCES = \
 	plugins/ctf/lttng-live/viewer-connection.hpp \
 	plugins/ctf/plugin.cpp
 
+plugins_ctf_babeltrace_plugin_ctf_la_CXXFLAGS = \
+	$(AM_CXXFLAGS) \
+	$(LTTNGCTL_CFLAGS)
+
 plugins_ctf_babeltrace_plugin_ctf_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
 	$(LT_NO_UNDEFINED) \
