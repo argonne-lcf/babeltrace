@@ -893,12 +893,9 @@ class _LttngDataStream(_LttngStream):
 
 
 class _LttngMetadataStreamSection:
-    def __init__(self, timestamp: int, data: Optional[bytes]):
+    def __init__(self, timestamp: int, data: bytes):
         self._timestamp = timestamp
-        if data is None:
-            self._data = bytes()
-        else:
-            self._data = data
+        self._data = data
         logging.info(
             "Built metadata stream section: ts={}, data-len={}".format(
                 self._timestamp, len(self._data)
@@ -1053,7 +1050,7 @@ def _split_metadata_sections(
             while metadata_sections[metadata_section_idx].is_empty:
                 sections.append(
                     _LttngMetadataStreamSection(
-                        metadata_sections[metadata_section_idx].timestamp, None
+                        metadata_sections[metadata_section_idx].timestamp, bytes()
                     )
                 )
                 metadata_section_idx += 1
