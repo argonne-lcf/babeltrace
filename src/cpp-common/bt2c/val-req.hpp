@@ -518,7 +518,7 @@ protected:
         ValHasTypeReq<ValT, ValOpsT>::_validate(val);
 
         auto& scalarVal = static_cast<const ScalarValT&>(val);
-        const auto rawVal = ValOpsT::scalarValRawVal(scalarVal);
+        const auto& rawVal = ValOpsT::scalarValRawVal(scalarVal);
 
         if (_mSet.find(rawVal) == _mSet.end()) {
             BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW_SPEC(
