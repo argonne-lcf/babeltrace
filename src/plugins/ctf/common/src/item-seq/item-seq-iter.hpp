@@ -4319,7 +4319,7 @@ template <bt2c::Signedness SignednessV, BitOrder BitOrderV>
 struct ReadFixedLenIntFunc<SignednessV, 0, ByteOrder::Big, BitOrderV> final
 {
     static ReadFixedLenIntFuncRet<SignednessV> read(const ItemSeqIter& iter,
-                                                    const FixedLenBitArrayFc& fc) noexcept
+                                                    const FixedLenBitArrayFc& fc)
     {
         iter._checkLastFixedLenBitArrayFieldByteOrder(fc);
 
@@ -4338,7 +4338,7 @@ template <bt2c::Signedness SignednessV, BitOrder BitOrderV>
 struct ReadFixedLenIntFunc<SignednessV, 0, ByteOrder::Little, BitOrderV> final
 {
     static ReadFixedLenIntFuncRet<SignednessV> read(const ItemSeqIter& iter,
-                                                    const FixedLenBitArrayFc& fc) noexcept
+                                                    const FixedLenBitArrayFc& fc)
     {
         iter._checkLastFixedLenBitArrayFieldByteOrder(fc);
 
