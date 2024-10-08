@@ -33,6 +33,11 @@ debug_info_comp_init(bt_self_component_filter *self_comp,
 
 void debug_info_comp_finalize(bt_self_component_filter *self_comp);
 
+bt_component_class_get_supported_mip_versions_method_status
+debug_info_supported_mip_versions(bt_self_component_class_filter *self, const bt_value *params,
+                                  void *initialize_method_data, bt_logging_level logging_level,
+                                  bt_integer_range_set_unsigned *supported_versions);
+
 bt_message_iterator_class_initialize_method_status
 debug_info_msg_iter_init(bt_self_message_iterator *self_msg_iter,
                          bt_self_message_iterator_configuration *config,

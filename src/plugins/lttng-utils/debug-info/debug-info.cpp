@@ -1659,6 +1659,17 @@ end:
     return status;
 }
 
+bt_component_class_get_supported_mip_versions_method_status
+debug_info_supported_mip_versions(bt_self_component_class_filter *self __attribute__((unused)),
+                                  const bt_value *params __attribute__((unused)),
+                                  void *initialize_method_data __attribute__((unused)),
+                                  bt_logging_level logging_level __attribute__((unused)),
+                                  bt_integer_range_set_unsigned *supported_versions)
+{
+    return static_cast<bt_component_class_get_supported_mip_versions_method_status>(
+        bt_integer_range_set_unsigned_add_range(supported_versions, 0, 1));
+}
+
 void debug_info_comp_finalize(bt_self_component_filter *self_comp_flt)
 {
     struct debug_info_component *debug_info = static_cast<debug_info_component *>(
