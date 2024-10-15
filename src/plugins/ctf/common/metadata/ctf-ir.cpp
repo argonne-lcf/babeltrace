@@ -11,7 +11,7 @@ namespace ctf {
 namespace ir {
 
 const char * const ClkOrigin::_unixEpochNs = jsonstr::btNs;
-const char * const ClkOrigin::_unixEpochName = "unix-epoch";
+const char * const ClkOrigin::_unixEpochName = jsonstr::unixEpoch;
 const char * const ClkOrigin::_unixEpochUid = "";
 const char * const defaultBlobMediaType = "application/octet-stream";
 
