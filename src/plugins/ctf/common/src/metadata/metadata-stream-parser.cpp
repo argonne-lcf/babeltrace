@@ -9,6 +9,7 @@
 #include "common/assert.h"
 #include "cpp-common/bt2c/call.hpp"
 
+#include "../../metadata/json-strings.hpp"
 #include "metadata-stream-parser.hpp"
 #include "normalize-clk-offset.hpp"
 
@@ -18,7 +19,6 @@ namespace {
 
 using namespace bt2c::literals::datalen;
 
-constexpr const char *btUserAttrsNs = "babeltrace.org,2020";
 constexpr const char *logLevelUserAttr = "log-level";
 constexpr const char *emfUriUserAttr = "emf-uri";
 constexpr const char *lttngUserAttrsNs = "lttng.org,2009";
@@ -648,7 +648,7 @@ bt2::MapValue::Shared filterKnownUserAttrsOne(const bt2::ConstMapValue attrs)
  */
 bt2::ConstMapValue::Shared filterKnownUserAttrs(const bt2::ConstMapValue attrs)
 {
-    const auto btUserAttrs = attrs[btUserAttrsNs];
+    const auto btUserAttrs = attrs[jsonstr::btNs];
 
     if (!btUserAttrs) {
         return attrs.shared();
@@ -661,7 +661,7 @@ bt2::ConstMapValue::Shared filterKnownUserAttrs(const bt2::ConstMapValue attrs)
     auto newAttrs = bt2::MapValue::create();
 
     attrs.forEach([&](const bt2c::CStringView k, const bt2::ConstValue v) {
-        if (k != btUserAttrsNs || !v.isMap()) {
+        if (k != jsonstr::btNs || !v.isMap()) {
             /* Copy other namespaces as is */
             newAttrs->insert(k, *v.copy());
             return;
@@ -1658,7 +1658,7 @@ private:
     _strUserAttr(const bt2::ConstMapValue userAttrs, const char * const name) noexcept
     {
         if (const auto val =
-                LibTraceClsFromTraceClsTranslator::_strUserAttr(userAttrs, btUserAttrsNs, name)) {
+                LibTraceClsFromTraceClsTranslator::_strUserAttr(userAttrs, jsonstr::btNs, name)) {
             /* From Babeltrace 2 namespace */
             return val;
         }

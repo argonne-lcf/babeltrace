@@ -12,6 +12,7 @@
 #include "cpp-common/bt2c/aliases.hpp"
 
 #include "ctf-1-metadata-stream-parser.hpp"
+#include "plugins/ctf/common/metadata/json-strings.hpp"
 #include "plugins/ctf/common/src/metadata/ctf-ir.hpp"
 
 namespace ctf {
@@ -242,7 +243,7 @@ OptAttrs eventRecordClsBtAttrsFromOrigEventRecordCls(const ctf_event_class& orig
     }
 
     auto attrs = bt2::MapValue::create();
-    auto nsMapVal = attrs->insertEmptyMap("babeltrace.org,2020");
+    auto nsMapVal = attrs->insertEmptyMap(jsonstr::btNs);
 
     if (origEventRecordCls.emf_uri->len) {
         /* Set EMF URI attribute */

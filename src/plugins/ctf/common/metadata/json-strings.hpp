@@ -15,6 +15,7 @@ extern const char * const align;
 extern const char * const attrs;
 extern const char * const bigEndian;
 extern const char * const bitOrder;
+extern const char * const btNs;
 extern const char * const byteOrder;
 extern const char * const clkCls;
 extern const char * const cycles;

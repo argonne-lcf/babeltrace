@@ -14,6 +14,7 @@ const char * const align = "alignment";
 const char * const attrs = "attributes";
 const char * const bigEndian = "big-endian";
 const char * const bitOrder = "bit-order";
+const char * const btNs = "babeltrace.org,2020";
 const char * const byteOrder = "byte-order";
 const char * const clkCls = "clock-class";
 const char * const cycles = "cycles";

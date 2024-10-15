@@ -5,11 +5,12 @@
  */
 
 #include "ctf-ir.hpp"
+#include "json-strings.hpp"
 
 namespace ctf {
 namespace ir {
 
-const char * const ClkOrigin::_unixEpochNs = "babeltrace.org,2020";
+const char * const ClkOrigin::_unixEpochNs = jsonstr::btNs;
 const char * const ClkOrigin::_unixEpochName = "unix-epoch";
 const char * const ClkOrigin::_unixEpochUid = "";
 const char * const defaultBlobMediaType = "application/octet-stream";
