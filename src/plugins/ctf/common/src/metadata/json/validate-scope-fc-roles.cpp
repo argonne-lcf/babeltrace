@@ -6,7 +6,7 @@
 
 #include "cpp-common/bt2c/contains.hpp"
 
-#include "strings.hpp"
+#include "../../../metadata/json-strings.hpp"
 #include "validate-scope-fc-roles.hpp"
 
 namespace ctf {

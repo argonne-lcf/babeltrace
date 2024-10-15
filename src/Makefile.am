@@ -682,6 +682,8 @@ plugins_ctf_babeltrace_plugin_ctf_la_SOURCES = \
 	plugins/ctf/common/metadata/ctf-ir.cpp \
 	plugins/ctf/common/metadata/int-range.hpp \
 	plugins/ctf/common/metadata/int-range-set.hpp \
+	plugins/ctf/common/metadata/json-strings.hpp \
+	plugins/ctf/common/metadata/json-strings.cpp \
 	plugins/ctf/common/src/clk-cls-cfg.hpp \
 	plugins/ctf/common/src/item-seq/item.cpp \
 	plugins/ctf/common/src/item-seq/item.hpp \
@@ -707,8 +709,6 @@ plugins_ctf_babeltrace_plugin_ctf_la_SOURCES = \
 	plugins/ctf/common/src/metadata/json/normalize-field-locs.hpp \
 	plugins/ctf/common/src/metadata/json/resolve-fcs-with-int-sel.cpp \
 	plugins/ctf/common/src/metadata/json/resolve-fcs-with-int-sel.hpp \
-	plugins/ctf/common/src/metadata/json/strings.cpp \
-	plugins/ctf/common/src/metadata/json/strings.hpp \
 	plugins/ctf/common/src/metadata/json/utils.cpp \
 	plugins/ctf/common/src/metadata/json/utils.hpp \
 	plugins/ctf/common/src/metadata/json/val-req.cpp \

@@ -13,7 +13,7 @@
 #include "cpp-common/bt2c/json-val-req.hpp"
 #include "cpp-common/bt2c/logging.hpp"
 
-#include "strings.hpp"
+#include "../../../metadata/json-strings.hpp"
 #include "val-req.hpp"
 
 namespace ctf {

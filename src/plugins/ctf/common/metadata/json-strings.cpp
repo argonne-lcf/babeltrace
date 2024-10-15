@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-#include "strings.hpp"
+#include "json-strings.hpp"
 
 namespace ctf {
 namespace jsonstr {

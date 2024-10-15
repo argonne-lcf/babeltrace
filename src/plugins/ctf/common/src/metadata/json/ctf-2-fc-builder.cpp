@@ -9,9 +9,9 @@
 #include "cpp-common/bt2c/logging.hpp"
 #include "cpp-common/bt2s/optional.hpp"
 
+#include "../../../metadata/json-strings.hpp"
 #include "../ctf-ir.hpp"
 #include "ctf-2-fc-builder.hpp"
-#include "strings.hpp"
 #include "utils.hpp"
 
 namespace ctf {

@@ -13,8 +13,8 @@
 #include "cpp-common/bt2/value.hpp"
 #include "cpp-common/bt2c/json-val.hpp"
 
+#include "../../../metadata/json-strings.hpp"
 #include "../ctf-ir.hpp"
-#include "strings.hpp"
 
 namespace ctf {
 namespace src {

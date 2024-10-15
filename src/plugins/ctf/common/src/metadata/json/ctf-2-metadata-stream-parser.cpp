@@ -16,12 +16,12 @@
 #include "cpp-common/bt2c/parse-json-as-val.hpp"
 #include "cpp-common/bt2s/string-view.hpp"
 
+#include "../../../metadata/json-strings.hpp"
 #include "ctf-2-metadata-stream-parser.hpp"
 #include "fcs-with-role.hpp"
 #include "normalize-field-locs.hpp"
 #include "plugins/ctf/common/src/metadata/ctf-ir.hpp"
 #include "resolve-fcs-with-int-sel.hpp"
-#include "strings.hpp"
 #include "utils.hpp"
 #include "validate-scope-fc-roles.hpp"
 

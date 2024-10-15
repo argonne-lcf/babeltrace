@@ -14,8 +14,8 @@
 #include "cpp-common/bt2c/logging.hpp"
 #include "cpp-common/bt2c/text-loc-str.hpp"
 
+#include "../../../metadata/json-strings.hpp"
 #include "key-fc-types.hpp"
-#include "strings.hpp"
 #include "utils.hpp"
 
 namespace ctf {
