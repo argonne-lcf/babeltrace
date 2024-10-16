@@ -48,7 +48,6 @@ void destroy_trace_class(struct bt_object *obj)
 	struct bt_trace_class *tc = (void *) obj;
 
 	BT_LIB_LOGD("Destroying trace class object: %!+T", tc);
-	BT_OBJECT_PUT_REF_AND_RESET(tc->user_attributes);
 
 	/*
 	 * Call destruction listener functions so that everything else
@@ -109,6 +108,8 @@ void destroy_trace_class(struct bt_object *obj)
 		g_ptr_array_free(tc->stream_classes, TRUE);
 		tc->stream_classes = NULL;
 	}
+
+	BT_OBJECT_PUT_REF_AND_RESET(tc->user_attributes);
 
 	g_free(tc);
 }
