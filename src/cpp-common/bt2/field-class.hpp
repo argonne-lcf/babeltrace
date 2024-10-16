@@ -572,6 +572,11 @@ public:
         return bt_field_class_bit_array_borrow_flag_by_label_const(this->libObjPtr(), label);
     }
 
+    std::uint64_t flagCount() const noexcept
+    {
+        return bt_field_class_bit_array_get_flag_count(this->libObjPtr());
+    }
+
     CommonBitArrayFieldClass addFlag(const bt2c::CStringView label,
                                      const ConstBitArrayFieldClassFlag::RangeSet ranges) const
     {
@@ -593,7 +598,7 @@ public:
 
     Iterator end() const noexcept
     {
-        return Iterator {*this, this->length()};
+        return Iterator {*this, this->flagCount()};
     }
 
     Shared shared() const noexcept
