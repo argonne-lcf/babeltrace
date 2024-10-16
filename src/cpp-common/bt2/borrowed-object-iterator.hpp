@@ -24,9 +24,6 @@ namespace bt2 {
  *
  * `ContainerT` must implement:
  *
- *     // Returns the number of contained borrowed objects.
- *     std::uint64_t length() const noexcept;
- *
  *     // Returns the borrowed object at index `i`.
  *     SomeObject operator[](std::uint64_t i) const noexcept;
  */
