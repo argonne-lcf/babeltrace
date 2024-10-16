@@ -19,7 +19,6 @@ namespace {
 
 using namespace bt2c::literals::datalen;
 
-constexpr const char *logLevelUserAttr = "log-level";
 constexpr const char *emfUriUserAttr = "emf-uri";
 constexpr const char *lttngUserAttrsNs = "lttng.org,2009";
 
@@ -621,7 +620,7 @@ bt2::MapValue::Shared filterKnownUserAttrsOne(const bt2::ConstMapValue attrs)
     bt2::MapValue::Shared filteredAttrs;
 
     attrs.forEach([&](const bt2c::CStringView k, const bt2::ConstValue v) {
-        if (k == logLevelUserAttr || k == emfUriUserAttr) {
+        if (k == jsonstr::logLevel || k == emfUriUserAttr) {
             return;
         }
 
@@ -654,7 +653,7 @@ bt2::ConstMapValue::Shared filterKnownUserAttrs(const bt2::ConstMapValue attrs)
         return attrs.shared();
     }
 
-    if (!btUserAttrs->hasEntry(logLevelUserAttr) && !btUserAttrs->hasEntry(emfUriUserAttr)) {
+    if (!btUserAttrs->hasEntry(jsonstr::logLevel) && !btUserAttrs->hasEntry(emfUriUserAttr)) {
         return attrs.shared();
     }
 
@@ -1702,46 +1701,43 @@ private:
         if (eventRecordCls.attrs()) {
             /* Set log level */
             if (const auto userAttr =
-                    this->_strUserAttr(*eventRecordCls.attrs(), logLevelUserAttr)) {
-                const auto logLevel = bt2c::call([&userAttr]()
-                                                     -> bt2s::optional<bt2::EventClassLogLevel> {
-                    if (userAttr->value() == MetadataStreamParser::logLevelEmergencyName) {
-                        return bt2::EventClassLogLevel::Emergency;
-                    } else if (userAttr->value() == MetadataStreamParser::logLevelAlertName) {
-                        return bt2::EventClassLogLevel::Alert;
-                    } else if (userAttr->value() == MetadataStreamParser::logLevelCriticalName) {
-                        return bt2::EventClassLogLevel::Critical;
-                    } else if (userAttr->value() == MetadataStreamParser::logLevelErrorName) {
-                        return bt2::EventClassLogLevel::Error;
-                    } else if (userAttr->value() == MetadataStreamParser::logLevelWarningName) {
-                        return bt2::EventClassLogLevel::Warning;
-                    } else if (userAttr->value() == MetadataStreamParser::logLevelNoticeName) {
-                        return bt2::EventClassLogLevel::Notice;
-                    } else if (userAttr->value() == MetadataStreamParser::logLevelInfoName) {
-                        return bt2::EventClassLogLevel::Info;
-                    } else if (userAttr->value() == MetadataStreamParser::logLevelDebugSystemName) {
-                        return bt2::EventClassLogLevel::DebugSystem;
-                    } else if (userAttr->value() ==
-                               MetadataStreamParser::logLevelDebugProgramName) {
-                        return bt2::EventClassLogLevel::DebugProgram;
-                    } else if (userAttr->value() ==
-                               MetadataStreamParser::logLevelDebugProcessName) {
-                        return bt2::EventClassLogLevel::DebugProcess;
-                    } else if (userAttr->value() == MetadataStreamParser::logLevelDebugModuleName) {
-                        return bt2::EventClassLogLevel::DebugModule;
-                    } else if (userAttr->value() == MetadataStreamParser::logLevelDebugUnitName) {
-                        return bt2::EventClassLogLevel::DebugUnit;
-                    } else if (userAttr->value() ==
-                               MetadataStreamParser::logLevelDebugFunctionName) {
-                        return bt2::EventClassLogLevel::DebugFunction;
-                    } else if (userAttr->value() == MetadataStreamParser::logLevelDebugLineName) {
-                        return bt2::EventClassLogLevel::DebugLine;
-                    } else if (userAttr->value() == MetadataStreamParser::logLevelDebugName) {
-                        return bt2::EventClassLogLevel::Debug;
-                    }
+                    this->_strUserAttr(*eventRecordCls.attrs(), jsonstr::logLevel)) {
+                const auto logLevel =
+                    bt2c::call([&userAttr]() -> bt2s::optional<bt2::EventClassLogLevel> {
+                        if (userAttr->value() == jsonstr::logLevelEmergency) {
+                            return bt2::EventClassLogLevel::Emergency;
+                        } else if (userAttr->value() == jsonstr::logLevelAlert) {
+                            return bt2::EventClassLogLevel::Alert;
+                        } else if (userAttr->value() == jsonstr::logLevelCritical) {
+                            return bt2::EventClassLogLevel::Critical;
+                        } else if (userAttr->value() == jsonstr::logLevelError) {
+                            return bt2::EventClassLogLevel::Error;
+                        } else if (userAttr->value() == jsonstr::logLevelWarning) {
+                            return bt2::EventClassLogLevel::Warning;
+                        } else if (userAttr->value() == jsonstr::logLevelNotice) {
+                            return bt2::EventClassLogLevel::Notice;
+                        } else if (userAttr->value() == jsonstr::logLevelInfo) {
+                            return bt2::EventClassLogLevel::Info;
+                        } else if (userAttr->value() == jsonstr::logLevelDebugSystem) {
+                            return bt2::EventClassLogLevel::DebugSystem;
+                        } else if (userAttr->value() == jsonstr::logLevelDebugProgram) {
+                            return bt2::EventClassLogLevel::DebugProgram;
+                        } else if (userAttr->value() == jsonstr::logLevelDebugProcess) {
+                            return bt2::EventClassLogLevel::DebugProcess;
+                        } else if (userAttr->value() == jsonstr::logLevelDebugModule) {
+                            return bt2::EventClassLogLevel::DebugModule;
+                        } else if (userAttr->value() == jsonstr::logLevelDebugUnit) {
+                            return bt2::EventClassLogLevel::DebugUnit;
+                        } else if (userAttr->value() == jsonstr::logLevelDebugFunction) {
+                            return bt2::EventClassLogLevel::DebugFunction;
+                        } else if (userAttr->value() == jsonstr::logLevelDebugLine) {
+                            return bt2::EventClassLogLevel::DebugLine;
+                        } else if (userAttr->value() == jsonstr::logLevelDebug) {
+                            return bt2::EventClassLogLevel::Debug;
+                        }
 
-                    return {};
-                });
+                        return {};
+                    });
 
                 if (logLevel) {
                     libEventRecordCls->logLevel(*logLevel);
@@ -1991,22 +1987,6 @@ void normalizeClkClsOffsetFromOrigin(ClkCls& clkCls) noexcept
 }
 
 } /* namespace */
-
-const char * const MetadataStreamParser::logLevelEmergencyName = "emergency";
-const char * const MetadataStreamParser::logLevelAlertName = "alert";
-const char * const MetadataStreamParser::logLevelCriticalName = "critical";
-const char * const MetadataStreamParser::logLevelErrorName = "error";
-const char * const MetadataStreamParser::logLevelWarningName = "warning";
-const char * const MetadataStreamParser::logLevelNoticeName = "notice";
-const char * const MetadataStreamParser::logLevelInfoName = "info";
-const char * const MetadataStreamParser::logLevelDebugSystemName = "debug:system";
-const char * const MetadataStreamParser::logLevelDebugProgramName = "debug:program";
-const char * const MetadataStreamParser::logLevelDebugProcessName = "debug:process";
-const char * const MetadataStreamParser::logLevelDebugModuleName = "debug:module";
-const char * const MetadataStreamParser::logLevelDebugUnitName = "debug:unit";
-const char * const MetadataStreamParser::logLevelDebugFunctionName = "debug:function";
-const char * const MetadataStreamParser::logLevelDebugLineName = "debug:line";
-const char * const MetadataStreamParser::logLevelDebugName = "debug";
 
 MetadataStreamParser::MetadataStreamParser(
     const bt2::OptionalBorrowedObject<bt2::SelfComponent> selfComp,

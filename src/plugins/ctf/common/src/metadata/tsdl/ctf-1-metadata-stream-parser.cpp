@@ -196,35 +196,35 @@ const char *eventRecordClsLogLevelNameFromOrigLogLevel(const bt_event_class_log_
 {
     switch (origLogLevel) {
     case BT_EVENT_CLASS_LOG_LEVEL_EMERGENCY:
-        return MetadataStreamParser::logLevelEmergencyName;
+        return jsonstr::logLevelEmergency;
     case BT_EVENT_CLASS_LOG_LEVEL_ALERT:
-        return MetadataStreamParser::logLevelAlertName;
+        return jsonstr::logLevelAlert;
     case BT_EVENT_CLASS_LOG_LEVEL_CRITICAL:
-        return MetadataStreamParser::logLevelCriticalName;
+        return jsonstr::logLevelCritical;
     case BT_EVENT_CLASS_LOG_LEVEL_ERROR:
-        return MetadataStreamParser::logLevelErrorName;
+        return jsonstr::logLevelError;
     case BT_EVENT_CLASS_LOG_LEVEL_WARNING:
-        return MetadataStreamParser::logLevelWarningName;
+        return jsonstr::logLevelWarning;
     case BT_EVENT_CLASS_LOG_LEVEL_NOTICE:
-        return MetadataStreamParser::logLevelNoticeName;
+        return jsonstr::logLevelNotice;
     case BT_EVENT_CLASS_LOG_LEVEL_INFO:
-        return MetadataStreamParser::logLevelInfoName;
+        return jsonstr::logLevelInfo;
     case BT_EVENT_CLASS_LOG_LEVEL_DEBUG_SYSTEM:
-        return MetadataStreamParser::logLevelDebugSystemName;
+        return jsonstr::logLevelDebugSystem;
     case BT_EVENT_CLASS_LOG_LEVEL_DEBUG_PROGRAM:
-        return MetadataStreamParser::logLevelDebugProgramName;
+        return jsonstr::logLevelDebugProgram;
     case BT_EVENT_CLASS_LOG_LEVEL_DEBUG_PROCESS:
-        return MetadataStreamParser::logLevelDebugProcessName;
+        return jsonstr::logLevelDebugProcess;
     case BT_EVENT_CLASS_LOG_LEVEL_DEBUG_MODULE:
-        return MetadataStreamParser::logLevelDebugModuleName;
+        return jsonstr::logLevelDebugModule;
     case BT_EVENT_CLASS_LOG_LEVEL_DEBUG_UNIT:
-        return MetadataStreamParser::logLevelDebugUnitName;
+        return jsonstr::logLevelDebugUnit;
     case BT_EVENT_CLASS_LOG_LEVEL_DEBUG_FUNCTION:
-        return MetadataStreamParser::logLevelDebugFunctionName;
+        return jsonstr::logLevelDebugFunction;
     case BT_EVENT_CLASS_LOG_LEVEL_DEBUG_LINE:
-        return MetadataStreamParser::logLevelDebugLineName;
+        return jsonstr::logLevelDebugLine;
     case BT_EVENT_CLASS_LOG_LEVEL_DEBUG:
-        return MetadataStreamParser::logLevelDebugName;
+        return jsonstr::logLevelDebug;
     default:
         bt_common_abort();
     }
@@ -252,7 +252,7 @@ OptAttrs eventRecordClsBtAttrsFromOrigEventRecordCls(const ctf_event_class& orig
 
     if (origEventRecordCls.is_log_level_set) {
         /* Set log level attribute */
-        nsMapVal.insert("log-level",
+        nsMapVal.insert(jsonstr::logLevel,
                         eventRecordClsLogLevelNameFromOrigLogLevel(origEventRecordCls.log_level));
     }
 

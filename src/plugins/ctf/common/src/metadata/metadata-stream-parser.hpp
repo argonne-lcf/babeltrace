@@ -84,23 +84,6 @@ public:
         return _mMetadataStreamUuid;
     }
 
-    /* Log level names for user attributes */
-    static const char * const logLevelEmergencyName;
-    static const char * const logLevelAlertName;
-    static const char * const logLevelCriticalName;
-    static const char * const logLevelErrorName;
-    static const char * const logLevelWarningName;
-    static const char * const logLevelNoticeName;
-    static const char * const logLevelInfoName;
-    static const char * const logLevelDebugSystemName;
-    static const char * const logLevelDebugProgramName;
-    static const char * const logLevelDebugProcessName;
-    static const char * const logLevelDebugModuleName;
-    static const char * const logLevelDebugUnitName;
-    static const char * const logLevelDebugFunctionName;
-    static const char * const logLevelDebugLineName;
-    static const char * const logLevelDebugName;
-
 protected:
     /*
      * Self component access for derived classes.
