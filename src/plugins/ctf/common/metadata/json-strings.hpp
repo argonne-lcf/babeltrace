@@ -30,6 +30,7 @@ extern const char * const dynLenArray;
 extern const char * const dynLenBlob;
 extern const char * const dynLenStr;
 extern const char * const elemFc;
+extern const char * const emfUri;
 extern const char * const encoding;
 extern const char * const env;
 extern const char * const eventRecordCls;

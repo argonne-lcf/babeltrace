@@ -29,6 +29,7 @@ const char * const dynLenArray = "dynamic-length-array";
 const char * const dynLenBlob = "dynamic-length-blob";
 const char * const dynLenStr = "dynamic-length-string";
 const char * const elemFc = "element-field-class";
+const char * const emfUri = "emf-uri";
 const char * const encoding = "encoding";
 const char * const env = "environment";
 const char * const eventRecordCls = "event-record-class";

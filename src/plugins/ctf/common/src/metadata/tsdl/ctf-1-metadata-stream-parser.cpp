@@ -247,7 +247,7 @@ OptAttrs eventRecordClsBtAttrsFromOrigEventRecordCls(const ctf_event_class& orig
 
     if (origEventRecordCls.emf_uri->len) {
         /* Set EMF URI attribute */
-        nsMapVal.insert("emf-uri", origEventRecordCls.emf_uri->str);
+        nsMapVal.insert(jsonstr::emfUri, origEventRecordCls.emf_uri->str);
     }
 
     if (origEventRecordCls.is_log_level_set) {

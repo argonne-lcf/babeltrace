@@ -19,7 +19,6 @@ namespace {
 
 using namespace bt2c::literals::datalen;
 
-constexpr const char *emfUriUserAttr = "emf-uri";
 constexpr const char *lttngUserAttrsNs = "lttng.org,2009";
 
 /*
@@ -620,7 +619,7 @@ bt2::MapValue::Shared filterKnownUserAttrsOne(const bt2::ConstMapValue attrs)
     bt2::MapValue::Shared filteredAttrs;
 
     attrs.forEach([&](const bt2c::CStringView k, const bt2::ConstValue v) {
-        if (k == jsonstr::logLevel || k == emfUriUserAttr) {
+        if (k == jsonstr::logLevel || k == jsonstr::emfUri) {
             return;
         }
 
@@ -653,7 +652,7 @@ bt2::ConstMapValue::Shared filterKnownUserAttrs(const bt2::ConstMapValue attrs)
         return attrs.shared();
     }
 
-    if (!btUserAttrs->hasEntry(jsonstr::logLevel) && !btUserAttrs->hasEntry(emfUriUserAttr)) {
+    if (!btUserAttrs->hasEntry(jsonstr::logLevel) && !btUserAttrs->hasEntry(jsonstr::emfUri)) {
         return attrs.shared();
     }
 
@@ -1745,7 +1744,8 @@ private:
             }
 
             /* Set EMF URI */
-            if (const auto userAttr = this->_strUserAttr(*eventRecordCls.attrs(), emfUriUserAttr)) {
+            if (const auto userAttr =
+                    this->_strUserAttr(*eventRecordCls.attrs(), jsonstr::emfUri)) {
                 libEventRecordCls->emfUri(userAttr->value().data());
             }
         }
