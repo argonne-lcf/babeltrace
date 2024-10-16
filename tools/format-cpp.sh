@@ -41,13 +41,13 @@ format_cpp() {
 	# Using xargs(1) to fail as soon as the formatter fails (`-exec`
 	# won't stop if its subprocess fails).
 	#
-	# We want an absolute starting directory because find(1) excludes
-	# files in specific subdirectories.
+	# We want an absolute starting directory because find(1)
+	# excludes files in specific subdirectories.
 	find "$(realpath "$root_dir")" \( -name '*.cpp' -o -name '*.hpp' \) \
 		! -path '*/.git/*' \
 		! -path '*/src/cpp-common/vendor/*' \
-		! -path '*/src/plugins/ctf/common/metadata/parser.*' \
-		! -path '*/src/plugins/ctf/common/metadata/lexer.*' \
+		! -path '*/src/plugins/ctf/common/src/metadata/tsdl/parser.*' \
+		! -path '*/src/plugins/ctf/common/src/metadata/tsdl/lexer.*' \
 		-print0 | xargs -P"$(nproc)" -n1 -t -0 "${formatter[@]}"
 }
 
