@@ -143,6 +143,13 @@ lttng_live_session::~lttng_live_session()
             }
         }
 
+        const auto error = bt2::takeCurrentThreadError();
+
+        if (error) {
+            BT_CPPLOGW_SPEC(this->logger,
+                            "Clearing current thread error during live session teardown");
+        }
+
         this->id = -1ULL;
     }
 }
