@@ -59,7 +59,7 @@ public:
         return static_cast<Scope>(bt_field_location_get_root_scope(this->libObjPtr()));
     }
 
-    std::uint64_t size() const noexcept
+    std::uint64_t length() const noexcept
     {
         return bt_field_location_get_item_count(this->libObjPtr());
     }
