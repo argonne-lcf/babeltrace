@@ -500,6 +500,36 @@ int bt_ctfser_write_float64(struct bt_ctfser *ctfser, double value,
 }
 
 /*
+ * Writes bytes at the current offset within the current packet.
+ */
+static inline
+int bt_ctfser_write_data(struct bt_ctfser *ctfser, const uint8_t *value, uint64_t len)
+{
+	int ret = 0;
+	uint64_t i;
+
+	ret = bt_ctfser_align_offset_in_current_packet(ctfser, 8);
+	if (G_UNLIKELY(ret)) {
+		goto end;
+	}
+
+	for (i = 0; i < len; i++) {
+		if (G_UNLIKELY(!_bt_ctfser_has_space_left(ctfser, 8))) {
+			ret = _bt_ctfser_increase_cur_packet_size(ctfser);
+			if (G_UNLIKELY(ret)) {
+				goto end;
+			}
+		}
+
+		memcpy(_bt_ctfser_get_addr(ctfser), &value[i], sizeof(value[i]));
+		_bt_ctfser_incr_offset(ctfser, 8);
+	}
+
+end:
+	return ret;
+}
+
+/*
  * Writes a C string, including the terminating null character, at the
  * current offset within the current packet.
  */
