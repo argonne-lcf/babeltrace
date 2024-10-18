@@ -40,7 +40,7 @@ plan_tests 9
 bt_cli "$temp_stdout" "$temp_stderr" \
 	"--plugin-path=${data_dir}" \
 	-c src.foo.TheSource \
-	-c sink.ctf.fs -p "path=\"${temp_output_dir}\""
+	-c sink.ctf.fs -p "path=\"${temp_output_dir}\"" -p 'ctf-version="1"'
 ok "$?" "run babeltrace"
 
 # Check stdout.

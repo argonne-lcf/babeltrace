@@ -730,13 +730,15 @@ plugins_ctf_babeltrace_plugin_ctf_la_SOURCES = \
 	plugins/ctf/common/src/null-cp-finder.hpp \
 	plugins/ctf/common/src/pkt-props.cpp \
 	plugins/ctf/common/src/pkt-props.hpp \
-	plugins/ctf/fs-sink/fs-sink.cpp \
 	plugins/ctf/fs-sink/fs-sink-ctf-meta.hpp \
-	plugins/ctf/fs-sink/fs-sink.hpp \
 	plugins/ctf/fs-sink/fs-sink-stream.cpp \
 	plugins/ctf/fs-sink/fs-sink-stream.hpp \
 	plugins/ctf/fs-sink/fs-sink-trace.cpp \
 	plugins/ctf/fs-sink/fs-sink-trace.hpp \
+	plugins/ctf/fs-sink/fs-sink.cpp \
+	plugins/ctf/fs-sink/fs-sink.hpp \
+	plugins/ctf/fs-sink/translate-ctf-ir-to-json.cpp \
+	plugins/ctf/fs-sink/translate-ctf-ir-to-json.hpp \
 	plugins/ctf/fs-sink/translate-ctf-ir-to-tsdl.cpp \
 	plugins/ctf/fs-sink/translate-ctf-ir-to-tsdl.hpp \
 	plugins/ctf/fs-sink/translate-trace-ir-to-ctf-ir.cpp \

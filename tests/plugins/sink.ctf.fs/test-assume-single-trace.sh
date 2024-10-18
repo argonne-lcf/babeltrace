@@ -38,7 +38,7 @@ plan_tests 7
 bt_cli "$temp_stdout" "$temp_stderr" \
 	"--plugin-path=${data_dir}" \
 	-c src.foo.TheSource \
-	-c sink.ctf.fs -p "path=\"${trace_dir}\"" -p 'assume-single-trace=true'
+	-c sink.ctf.fs -p "path=\"${trace_dir}\"" -p 'assume-single-trace=true' -p 'ctf-version="1"'
 ok "$?" "run sink.ctf.fs with assume-single-trace=true"
 
 # Check stdout.

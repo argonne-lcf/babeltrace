@@ -15,6 +15,7 @@
 #include "common/assert.h"
 #include "common/common.h"
 #include "cpp-common/bt2/field-path.hpp"
+#include "cpp-common/bt2/wrap.hpp"
 #include "cpp-common/bt2c/fmt.hpp"
 
 #include "fs-sink-ctf-meta.hpp"
@@ -37,8 +38,9 @@ namespace sink {
 
 struct TraceIrToCtfIrCtx
 {
-    explicit TraceIrToCtfIrCtx(const bt2c::Logger& parentLogger) :
-        logger {parentLogger, "PLUGIN/SINK.CTF.FS/TRANSLATE-TRACE-IR-TO-CTF-IR"}
+    explicit TraceIrToCtfIrCtx(struct fs_sink_comp *fs_sink) :
+        logger {fs_sink->logger, "PLUGIN/SINK.CTF.FS/TRANSLATE-TRACE-IR-TO-CTF-IR"},
+        ctf_version {fs_sink->ctf_version}
     {
     }
 
@@ -53,8 +55,16 @@ struct TraceIrToCtfIrCtx
     bt_field_path_scope cur_scope = BT_FIELD_PATH_SCOPE_PACKET_CONTEXT;
 
     /*
-     * Array of `struct field_path_elem` */
+     * Array of `struct field_path_elem`
+     */
     GArray *cur_path = nullptr;
+
+    /*
+     * CTF version to generate (1 or 2).
+     *
+     * CTF 1.8 implies MIP 0 and CTF 2 implies MIP 1.
+     */
+    unsigned int ctf_version;
 };
 
 } /* namespace sink */
@@ -171,35 +181,42 @@ static inline int cur_path_stack_push(ctf::sink::TraceIrToCtfIrCtx *ctx, const c
     field_path_elem->name = g_string_new(NULL);
 
     if (name) {
-        if (force_protect_name) {
-            g_string_assign(field_path_elem->name, "_");
-        }
+        if (ctx->ctf_version == 1) {
+            if (force_protect_name) {
+                g_string_assign(field_path_elem->name, "_");
+            }
 
-        g_string_append(field_path_elem->name, name);
+            g_string_append(field_path_elem->name, name);
 
-        if (ctx->cur_scope == BT_FIELD_PATH_SCOPE_PACKET_CONTEXT) {
-            if (is_reserved_member_name(name, "packet_size") ||
-                is_reserved_member_name(name, "content_size") ||
-                is_reserved_member_name(name, "timestamp_begin") ||
-                is_reserved_member_name(name, "timestamp_end") ||
-                is_reserved_member_name(name, "events_discarded") ||
-                is_reserved_member_name(name, "packet_seq_num")) {
-                BT_CPPLOGE_SPEC(ctx->logger,
-                                "Unsupported reserved TSDL structure field class member "
-                                "or variant field class option name: name=\"{}\"",
-                                name);
+            if (ctx->cur_scope == BT_FIELD_PATH_SCOPE_PACKET_CONTEXT) {
+                if (is_reserved_member_name(name, "packet_size") ||
+                    is_reserved_member_name(name, "content_size") ||
+                    is_reserved_member_name(name, "timestamp_begin") ||
+                    is_reserved_member_name(name, "timestamp_end") ||
+                    is_reserved_member_name(name, "events_discarded") ||
+                    is_reserved_member_name(name, "packet_seq_num")) {
+                    BT_CPPLOGE_SPEC(ctx->logger,
+                                    "Unsupported reserved TSDL structure field class member "
+                                    "or variant field class option name: name=\"{}\"",
+                                    name);
+                    ret = -1;
+                    goto end;
+                }
+            }
+
+            if (!ist_valid_identifier(field_path_elem->name->str)) {
                 ret = -1;
+                BT_CPPLOGE_SPEC(ctx->logger,
+                                "Unsupported non-TSDL structure field class member "
+                                "or variant field class option name: name=\"{}\"",
+                                field_path_elem->name->str);
                 goto end;
             }
-        }
+        } else {
+            BT_ASSERT(ctx->ctf_version == 2);
 
-        if (!ist_valid_identifier(field_path_elem->name->str)) {
-            ret = -1;
-            BT_CPPLOGE_SPEC(ctx->logger,
-                            "Unsupported non-TSDL structure field class member "
-                            "or variant field class option name: name=\"{}\"",
-                            field_path_elem->name->str);
-            goto end;
+            /* Name protection not needed with CTF 2 */
+            g_string_assign(field_path_elem->name, name);
         }
     }
 
@@ -226,8 +243,8 @@ static inline void cur_path_stack_pop(ctf::sink::TraceIrToCtfIrCtx *ctx)
 }
 
 /*
- * Creates a relative field ref (a single name) from IR field path
- * `tgt_ir_field_path`.
+ * CTF 1.8 only: creates a relative field ref (a single name) from IR
+ * field path `tgt_ir_field_path`.
  *
  * This function tries to locate the target field class recursively from
  * the top to the bottom of the context's current path using only the
@@ -247,6 +264,8 @@ static int create_relative_field_ref(ctf::sink::TraceIrToCtfIrCtx *ctx,
     int64_t si;
     const char *tgt_fc_name = NULL;
     struct field_path_elem *field_path_elem;
+
+    BT_ASSERT(ctx->ctf_version == 1);
 
     /* Get target field class's name */
     switch (bt_field_path_get_root_scope(tgt_ir_field_path)) {
@@ -398,7 +417,8 @@ end:
 }
 
 /*
- * Creates an absolute field ref from IR field path `tgt_ir_field_path`.
+ * CTF 1.8 only: creates an absolute field ref from IR field
+ * path `tgt_ir_field_path`.
  *
  * Returns a negative value if this resolving operation failed.
  */
@@ -409,6 +429,8 @@ static int create_absolute_field_ref(ctf::sink::TraceIrToCtfIrCtx *ctx,
     int ret = 0;
     struct fs_sink_ctf_field_class *fc = NULL;
     uint64_t i;
+
+    BT_ASSERT(ctx->ctf_version == 1);
 
     switch (bt_field_path_get_root_scope(tgt_ir_field_path)) {
     case BT_FIELD_PATH_SCOPE_PACKET_CONTEXT:
@@ -479,11 +501,11 @@ end:
 }
 
 /*
- * Resolves a target field class located at `tgt_ir_field_path`, writing
- * the resolved field ref to `tgt_field_ref` and setting
- * `*create_before` according to whether or not the target field must be
- * created immediately before (in which case `tgt_field_ref` is
- * irrelevant).
+ * CTF 1.8 only: resolves a target field class located at
+ * `tgt_ir_field_path`, writing the resolved field ref to
+ * `tgt_field_ref` and setting `*create_before` according to whether or
+ * not the target field must be created immediately before (in which
+ * case `tgt_field_ref` is irrelevant).
  */
 static void resolve_field_class(ctf::sink::TraceIrToCtfIrCtx *ctx,
                                 const bt_field_path *tgt_ir_field_path, GString *tgt_field_ref,
@@ -491,6 +513,8 @@ static void resolve_field_class(ctf::sink::TraceIrToCtfIrCtx *ctx,
 {
     int ret;
     bt_field_path_scope tgt_scope;
+
+    BT_ASSERT(ctx->ctf_version == 1);
 
     *create_before = false;
 
@@ -662,14 +686,14 @@ end:
 }
 
 /*
- * This function protects a given variant FC option name (with the `_`
- * prefix) if required. On success, `name_buf->str` contains the variant
- * FC option name to use (original option name or protected if
- * required).
+ * CTF 1.8 only: this function protects a given variant FC option name
+ * (with the `_` prefix) if required. On success, `name_buf->str`
+ * contains the variant FC option name to use (original option name or
+ * protected if required).
  *
  * One of the goals of `sink.ctf.fs` is to write a CTF trace which is as
- * close as possible to an original CTF trace as decoded by
- * `src.ctf.fs`.
+ * close as possible to an original CTF trace as decoded
+ * by `src.ctf.fs`.
  *
  * This scenario is valid in CTF 1.8:
  *
@@ -867,16 +891,23 @@ static inline int translate_option_field_class(ctf::sink::TraceIrToCtfIrCtx *ctx
     BT_ASSERT(fc);
 
     /*
-     * CTF 1.8 does not support the option field class type. To
-     * write something anyway, this component translates this type
-     * to a variant field class where the options are:
+     * CTF 1.8 does not support the option field class type. To write
+     * something anyway, this component translates this type to a
+     * variant field class where the options are:
      *
-     * * An empty structure field class.
-     * * The optional field class itself.
+     * • An empty structure field class.
+     * • The optional field class itself.
      *
      * The "tag" is always generated/before in that case (an 8-bit
      * unsigned enumeration field class).
+     *
+     * CTF 2 supports optional fields.
      */
+    if (ctx->ctf_version == 2 &&
+        bt2::wrap(cur_path_stack_top(ctx)->ir_fc).isOptionWithoutSelector()) {
+        fc->tag_is_before = true;
+    }
+
     append_to_parent_field_class(ctx, &fc->base);
     ret = cur_path_stack_push(ctx, NULL, false, content_ir_fc, &fc->base);
     if (ret) {
@@ -916,67 +947,90 @@ static inline int translate_variant_field_class(ctf::sink::TraceIrToCtfIrCtx *ct
     ir_fc_type = bt_field_class_get_type(fc->base.ir_fc);
     opt_count = bt_field_class_variant_get_option_count(fc->base.ir_fc);
 
-    if (bt_field_class_type_is(ir_fc_type, BT_FIELD_CLASS_TYPE_VARIANT_WITH_SELECTOR_FIELD)) {
-        ir_selector_field_path =
-            bt_field_class_variant_with_selector_field_borrow_selector_field_path_const(
-                fc->base.ir_fc);
-        BT_ASSERT(ir_selector_field_path);
+    if (ctx->ctf_version == 1) {
+        if (bt_field_class_type_is(ir_fc_type, BT_FIELD_CLASS_TYPE_VARIANT_WITH_SELECTOR_FIELD)) {
+            /* MIP 0 specifics */
+            ir_selector_field_path =
+                bt_field_class_variant_with_selector_field_borrow_selector_field_path_const(
+                    fc->base.ir_fc);
+            BT_ASSERT(ir_selector_field_path);
+        }
+
+        /* Resolve tag field class before appending to parent */
+        resolve_field_class(ctx, ir_selector_field_path, fc->tag_ref, &fc->tag_is_before, &tgt_fc);
+    } else {
+        BT_ASSERT(ctx->ctf_version == 2);
+
+        if (bt_field_class_type_is(ir_fc_type,
+                                   BT_FIELD_CLASS_TYPE_VARIANT_WITHOUT_SELECTOR_FIELD)) {
+            fc->tag_is_before = true;
+        }
+
+        goto validate_opts;
     }
 
-    /* Resolve tag field class before appending to parent */
-    resolve_field_class(ctx, ir_selector_field_path, fc->tag_ref, &fc->tag_is_before, &tgt_fc);
+    if (ctx->ctf_version == 1) {
+        if (ir_selector_field_path && tgt_fc) {
+            uint64_t mapping_count;
+            uint64_t option_count;
 
-    if (ir_selector_field_path && tgt_fc) {
-        uint64_t mapping_count;
-        uint64_t option_count;
+            /* CTF 1.8: selector FC must be an enumeration FC */
+            bt_field_class_type type = bt_field_class_get_type(tgt_fc->ir_fc);
 
-        /* CTF 1.8: selector FC must be an enumeration FC */
-        bt_field_class_type type = bt_field_class_get_type(tgt_fc->ir_fc);
+            if (!bt_field_class_type_is(type, BT_FIELD_CLASS_TYPE_ENUMERATION)) {
+                fc->tag_is_before = true;
+                goto validate_opts;
+            }
 
-        if (!bt_field_class_type_is(type, BT_FIELD_CLASS_TYPE_ENUMERATION)) {
+            /*
+             * Call maybe_protect_variant_option_name() for each
+             * option below. In that case we also want selector FC
+             * to contain as many mappings as the variant FC has
+             * options.
+             */
+            mapping_count = bt_field_class_enumeration_get_mapping_count(tgt_fc->ir_fc);
+            option_count = bt_field_class_variant_get_option_count(fc->base.ir_fc);
+
+            if (mapping_count != option_count) {
+                fc->tag_is_before = true;
+                goto validate_opts;
+            }
+        } else {
+            /*
+             * No compatible selector field class for CTF 1.8:
+             * create the appropriate selector field class.
+             */
             fc->tag_is_before = true;
             goto validate_opts;
         }
-
-        /*
-         * Call maybe_protect_variant_option_name() for each
-         * option below. In that case we also want selector FC
-         * to contain as many mappings as the variant FC has
-         * options.
-         */
-        mapping_count = bt_field_class_enumeration_get_mapping_count(tgt_fc->ir_fc);
-        option_count = bt_field_class_variant_get_option_count(fc->base.ir_fc);
-
-        if (mapping_count != option_count) {
-            fc->tag_is_before = true;
-            goto validate_opts;
-        }
-    } else {
-        /*
-         * No compatible selector field class for CTF 1.8:
-         * create the appropriate selector field class.
-         */
-        fc->tag_is_before = true;
-        goto validate_opts;
     }
 
 validate_opts:
     /*
-     * First pass: detect any option name clash with option name
-     * protection. In that case, we don't fail: just create the
-     * selector field class before the variant field class.
+     * First pass (only CTF 1.8): detect any option name clash with
+     * option name TSDL protection. In that case, we don't fail: just
+     * create the selector field class before the variant field class.
      *
      * After this, `prot_opt_names` contains the final option names,
-     * potentially protected if needed. They can still be invalid
-     * TSDL identifiers however; this will be checked by
-     * cur_path_stack_push().
+     * potentially protected if needed. They can still be invalid TSDL
+     * identifiers however; this will be checked
+     * by cur_path_stack_push().
      */
     for (i = 0; i < opt_count; i++) {
-        if (!fc->tag_is_before) {
-            BT_ASSERT(tgt_fc->ir_fc);
-            ret = maybe_protect_variant_option_name(fc->base.ir_fc, tgt_fc->ir_fc, i, name_buf);
-            if (ret) {
-                fc->tag_is_before = true;
+        g_string_assign(name_buf, "");
+
+        if (ctx->ctf_version == 1) {
+            if (!fc->tag_is_before) {
+                BT_ASSERT(ctx->ctf_version == 1);
+                BT_ASSERT(tgt_fc->ir_fc);
+                ret = maybe_protect_variant_option_name(fc->base.ir_fc, tgt_fc->ir_fc, i, name_buf);
+                if (ret) {
+                    fc->tag_is_before = true;
+                }
+            }
+        } else {
+            if (const auto name = bt2::wrap(fc->base.ir_fc).asVariant()[i].name()) {
+                g_string_assign(name_buf, *name);
             }
         }
 
@@ -986,26 +1040,28 @@ validate_opts:
         }
     }
 
-    for (i = 0; i < opt_count; i++) {
-        uint64_t j;
-        const bt_value *opt_name_a =
-            bt_value_array_borrow_element_by_index_const(prot_opt_names, i);
+    if (ctx->ctf_version == 1) {
+        for (i = 0; i < opt_count; i++) {
+            uint64_t j;
+            const bt_value *opt_name_a =
+                bt_value_array_borrow_element_by_index_const(prot_opt_names, i);
 
-        for (j = 0; j < opt_count; j++) {
-            const bt_value *opt_name_b;
+            for (j = 0; j < opt_count; j++) {
+                const bt_value *opt_name_b;
 
-            if (i == j) {
-                continue;
-            }
+                if (i == j) {
+                    continue;
+                }
 
-            opt_name_b = bt_value_array_borrow_element_by_index_const(prot_opt_names, j);
-            if (bt_value_is_equal(opt_name_a, opt_name_b)) {
-                /*
-                 * Variant FC option names are not
-                 * unique when protected.
-                 */
-                fc->tag_is_before = true;
-                goto append_to_parent;
+                opt_name_b = bt_value_array_borrow_element_by_index_const(prot_opt_names, j);
+                if (bt_value_is_equal(opt_name_a, opt_name_b)) {
+                    /*
+                     * Variant FC option names are not
+                     * unique when protected.
+                     */
+                    fc->tag_is_before = true;
+                    goto append_to_parent;
+                }
             }
         }
     }
@@ -1025,9 +1081,8 @@ append_to_parent:
         opt_ir_fc = bt_field_class_variant_option_borrow_field_class_const(opt);
 
         /*
-         * We don't ask cur_path_stack_push() to protect the
-         * option name because it's already protected at this
-         * point.
+         * CTF 1.8: we don't ask cur_path_stack_push() to protect the
+         * option name because it's already protected at this point.
          */
         ret = cur_path_stack_push(ctx, prot_opt_name, false, opt_ir_fc, &fc->base);
         if (ret) {
@@ -1088,6 +1143,18 @@ end:
     return ret;
 }
 
+static inline int translate_static_blob_field_class(ctf::sink::TraceIrToCtfIrCtx *ctx)
+{
+    struct fs_sink_ctf_field_class_array *fc =
+        fs_sink_ctf_field_class_static_blob_create_empty(cur_path_stack_top(ctx)->ir_fc);
+
+    BT_ASSERT(fc);
+    BT_ASSERT(ctx->ctf_version == 2);
+    append_to_parent_field_class(ctx, &fc->base.base);
+    update_parent_field_class_alignment(ctx, fc->base.base.alignment);
+    return 0;
+}
+
 static inline int translate_dynamic_array_field_class(ctf::sink::TraceIrToCtfIrCtx *ctx)
 {
     struct fs_sink_ctf_field_class_sequence *fc =
@@ -1099,13 +1166,22 @@ static inline int translate_dynamic_array_field_class(ctf::sink::TraceIrToCtfIrC
     BT_ASSERT(fc);
 
     /* Resolve length field class before appending to parent */
-    if (bt_field_class_get_type(cur_path_stack_top(ctx)->ir_fc) ==
-        BT_FIELD_CLASS_TYPE_DYNAMIC_ARRAY_WITH_LENGTH_FIELD) {
-        resolve_field_class(
-            ctx,
-            bt_field_class_array_dynamic_with_length_field_borrow_length_field_path_const(
-                fc->base.base.ir_fc),
-            fc->length_ref, &fc->length_is_before, NULL);
+    if (ctx->ctf_version == 1) {
+        if (bt_field_class_get_type(cur_path_stack_top(ctx)->ir_fc) ==
+            BT_FIELD_CLASS_TYPE_DYNAMIC_ARRAY_WITH_LENGTH_FIELD) {
+            resolve_field_class(
+                ctx,
+                bt_field_class_array_dynamic_with_length_field_borrow_length_field_path_const(
+                    fc->base.base.ir_fc),
+                fc->length_ref, &fc->length_is_before, NULL);
+        }
+    } else {
+        BT_ASSERT(ctx->ctf_version == 2);
+
+        if (bt_field_class_get_type(cur_path_stack_top(ctx)->ir_fc) ==
+            BT_FIELD_CLASS_TYPE_DYNAMIC_ARRAY_WITHOUT_LENGTH_FIELD) {
+            fc->length_is_before = true;
+        }
     }
 
     append_to_parent_field_class(ctx, &fc->base.base);
@@ -1126,6 +1202,24 @@ static inline int translate_dynamic_array_field_class(ctf::sink::TraceIrToCtfIrC
 
 end:
     return ret;
+}
+
+static inline int translate_dynamic_blob_field_class(ctf::sink::TraceIrToCtfIrCtx *ctx)
+{
+    struct fs_sink_ctf_field_class_sequence *fc =
+        fs_sink_ctf_field_class_dyn_blob_create_empty(cur_path_stack_top(ctx)->ir_fc);
+
+    BT_ASSERT(fc);
+    BT_ASSERT(ctx->ctf_version == 2);
+
+    if (bt_field_class_get_type(cur_path_stack_top(ctx)->ir_fc) ==
+        BT_FIELD_CLASS_TYPE_DYNAMIC_BLOB_WITHOUT_LENGTH_FIELD) {
+        fc->length_is_before = true;
+    }
+
+    append_to_parent_field_class(ctx, &fc->base.base);
+    update_parent_field_class_alignment(ctx, fc->base.base.alignment);
+    return 0;
 }
 
 static inline int translate_bool_field_class(ctf::sink::TraceIrToCtfIrCtx *ctx)
@@ -1204,8 +1298,12 @@ static int translate_field_class(ctf::sink::TraceIrToCtfIrCtx *ctx)
         ret = translate_structure_field_class(ctx);
     } else if (ir_fc_type == BT_FIELD_CLASS_TYPE_STATIC_ARRAY) {
         ret = translate_static_array_field_class(ctx);
+    } else if (ir_fc_type == BT_FIELD_CLASS_TYPE_STATIC_BLOB) {
+        ret = translate_static_blob_field_class(ctx);
     } else if (bt_field_class_type_is(ir_fc_type, BT_FIELD_CLASS_TYPE_DYNAMIC_ARRAY)) {
         ret = translate_dynamic_array_field_class(ctx);
+    } else if (bt_field_class_type_is(ir_fc_type, BT_FIELD_CLASS_TYPE_DYNAMIC_BLOB)) {
+        ret = translate_dynamic_blob_field_class(ctx);
     } else if (bt_field_class_type_is(ir_fc_type, BT_FIELD_CLASS_TYPE_OPTION)) {
         ret = translate_option_field_class(ctx);
     } else if (bt_field_class_type_is(ir_fc_type, BT_FIELD_CLASS_TYPE_VARIANT)) {
@@ -1324,9 +1422,9 @@ end:
 }
 
 /*
- * This function recursively sets field refs of sequence and variant
- * field classes when they are immediately before, avoiding name clashes
- * with existing field class names.
+ * CTF 1.8 only: this function recursively sets field refs of sequence
+ * and variant field classes when they are immediately before, avoiding
+ * name clashes with existing field class names.
  *
  * It can fail at this point if, for example, a sequence field class of
  * which to set the length's field ref has something else than a
@@ -1468,8 +1566,10 @@ static int translate_scope_field_class(ctf::sink::TraceIrToCtfIrCtx *ctx, bt_fie
 
     cur_path_stack_pop(ctx);
 
-    /* Set field refs for preceding targets */
-    ret = set_field_refs(*fc, NULL, NULL);
+    /* CTF 1.8: set field refs for preceding targets */
+    if (ctx->ctf_version == 1) {
+        ret = set_field_refs(*fc, NULL, NULL);
+    }
 
 end:
     return ret;
@@ -1494,7 +1594,7 @@ static int translate_event_class(struct fs_sink_comp *fs_sink, struct fs_sink_ct
                                  struct fs_sink_ctf_event_class **out_ec)
 {
     int ret = 0;
-    ctf::sink::TraceIrToCtfIrCtx ctx {fs_sink->logger};
+    ctf::sink::TraceIrToCtfIrCtx ctx {fs_sink};
     struct fs_sink_ctf_event_class *ec;
 
     BT_ASSERT(sc);
@@ -1589,7 +1689,7 @@ static int translate_stream_class(struct fs_sink_comp *fs_sink, struct fs_sink_c
                                   struct fs_sink_ctf_stream_class **out_sc)
 {
     int ret = 0;
-    ctf::sink::TraceIrToCtfIrCtx ctx {fs_sink->logger};
+    ctf::sink::TraceIrToCtfIrCtx ctx {fs_sink};
 
     BT_ASSERT(trace);
     BT_ASSERT(ir_sc);
@@ -1602,15 +1702,16 @@ static int translate_stream_class(struct fs_sink_comp *fs_sink, struct fs_sink_c
         const char *name = bt_clock_class_get_name((*out_sc)->default_clock_class);
 
         if (name) {
-            /* Try original name, protected */
+            /* Try original name, protected (TSDL) */
             g_string_assign((*out_sc)->default_clock_class_name, "");
 
-            if (must_protect_identifier(name)) {
+            if (fs_sink->ctf_version == 1 && must_protect_identifier(name)) {
                 g_string_assign((*out_sc)->default_clock_class_name, "_");
             }
 
             g_string_assign((*out_sc)->default_clock_class_name, name);
-            if (!ist_valid_identifier((*out_sc)->default_clock_class_name->str)) {
+            if (fs_sink->ctf_version == 1 &&
+                !ist_valid_identifier((*out_sc)->default_clock_class_name->str)) {
                 /* Invalid: create a new name */
                 make_unique_default_clock_class_name(*out_sc);
             }

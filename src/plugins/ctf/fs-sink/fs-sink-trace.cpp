@@ -15,6 +15,7 @@
 #include "fs-sink-stream.hpp"
 #include "fs-sink-trace.hpp"
 #include "fs-sink.hpp"
+#include "translate-ctf-ir-to-json.hpp"
 #include "translate-ctf-ir-to-tsdl.hpp"
 #include "translate-trace-ir-to-ctf-ir.hpp"
 
@@ -458,7 +459,7 @@ end:
 
 void fs_sink_trace_destroy(struct fs_sink_trace *trace)
 {
-    GString *tsdl = NULL;
+    GString *metadata = NULL;
     FILE *fh = NULL;
     size_t len;
 
@@ -482,9 +483,15 @@ void fs_sink_trace_destroy(struct fs_sink_trace *trace)
         trace->streams = NULL;
     }
 
-    tsdl = g_string_new(NULL);
-    BT_ASSERT(tsdl);
-    translate_trace_ctf_ir_to_tsdl(trace->trace, tsdl);
+    metadata = g_string_new(NULL);
+    BT_ASSERT(metadata);
+
+    if (trace->fs_sink->ctf_version == 1) {
+        translate_trace_ctf_ir_to_tsdl(trace->trace, metadata);
+    } else {
+        BT_ASSERT(trace->fs_sink->ctf_version == 2);
+        translate_trace_ctf_ir_to_json(trace->trace, metadata);
+    }
 
     BT_ASSERT(trace->metadata_path);
     fh = fopen(trace->metadata_path->str, "wb");
@@ -496,8 +503,8 @@ void fs_sink_trace_destroy(struct fs_sink_trace *trace)
         bt_common_abort();
     }
 
-    len = fwrite(tsdl->str, sizeof(*tsdl->str), tsdl->len, fh);
-    if (len != tsdl->len) {
+    len = fwrite(metadata->str, sizeof(*metadata->str), metadata->len, fh);
+    if (len != metadata->len) {
         BT_CPPLOGF_ERRNO_SPEC(trace->logger,
                               "In trace destruction listener: "
                               "cannot write metadata file",
@@ -532,7 +539,7 @@ void fs_sink_trace_destroy(struct fs_sink_trace *trace)
     trace->trace = NULL;
     delete trace;
 
-    g_string_free(tsdl, TRUE);
+    g_string_free(metadata, TRUE);
 
 end:
     return;

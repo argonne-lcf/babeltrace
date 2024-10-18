@@ -44,6 +44,8 @@ BT_PLUGIN_SINK_COMPONENT_CLASS_FINALIZE_METHOD(fs, ctf_fs_sink_finalize);
 BT_PLUGIN_SINK_COMPONENT_CLASS_GRAPH_IS_CONFIGURED_METHOD(fs, ctf_fs_sink_graph_is_configured);
 BT_PLUGIN_SINK_COMPONENT_CLASS_DESCRIPTION(fs, "Write CTF traces to the file system.");
 BT_PLUGIN_SINK_COMPONENT_CLASS_HELP(fs, "See the babeltrace2-sink.ctf.fs(7) manual page.");
+BT_PLUGIN_SINK_COMPONENT_CLASS_GET_SUPPORTED_MIP_VERSIONS_METHOD(
+    fs, ctf_fs_sink_supported_mip_versions);
 
 /* ctf.lttng-live source */
 BT_PLUGIN_SOURCE_COMPONENT_CLASS_WITH_ID(auto, lttng_live, "lttng-live", lttng_live_msg_iter_next);

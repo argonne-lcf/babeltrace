@@ -26,7 +26,9 @@ enum fs_sink_ctf_field_class_type
     FS_SINK_CTF_FIELD_CLASS_TYPE_STRING,
     FS_SINK_CTF_FIELD_CLASS_TYPE_STRUCT,
     FS_SINK_CTF_FIELD_CLASS_TYPE_ARRAY,
+    FS_SINK_CTF_FIELD_CLASS_TYPE_STATIC_BLOB,
     FS_SINK_CTF_FIELD_CLASS_TYPE_SEQUENCE,
+    FS_SINK_CTF_FIELD_CLASS_TYPE_DYN_BLOB,
     FS_SINK_CTF_FIELD_CLASS_TYPE_OPTION,
     FS_SINK_CTF_FIELD_CLASS_TYPE_VARIANT,
 };
@@ -88,14 +90,19 @@ struct fs_sink_ctf_field_class_option
 {
     struct fs_sink_ctf_field_class base;
     struct fs_sink_ctf_field_class *content_fc;
+    bool tag_is_before;
+
+    /* TSDL-specific member */
     GString *tag_ref;
 };
 
 struct fs_sink_ctf_field_class_variant
 {
     struct fs_sink_ctf_field_class base;
-    GString *tag_ref;
     bool tag_is_before;
+
+    /* TSDL-specific member */
+    GString *tag_ref;
 
     /* Array of `struct fs_sink_ctf_named_field_class` */
     GArray *options;
@@ -107,17 +114,32 @@ struct fs_sink_ctf_field_class_array_base
     struct fs_sink_ctf_field_class *elem_fc;
 };
 
+/*
+ * This currently also serves for a static BLOB array, in which case:
+ *
+ * • `base.base.type` is `FS_SINK_CTF_FIELD_CLASS_TYPE_STATIC_BLOB`.
+ * • `base.elem_fc` is `nullptr`.
+ */
 struct fs_sink_ctf_field_class_array
 {
     struct fs_sink_ctf_field_class_array_base base;
     uint64_t length;
 };
 
+/*
+ * This currently also serves for a dynamic BLOB array, in which case:
+ *
+ * • `base.base.type` is `FS_SINK_CTF_FIELD_CLASS_TYPE_DYN_BLOB`.
+ * • `base.elem_fc` is `nullptr`.
+ * • `length_ref` is `nullptr`.
+ */
 struct fs_sink_ctf_field_class_sequence
 {
     struct fs_sink_ctf_field_class_array_base base;
-    GString *length_ref;
     bool length_is_before;
+
+    /* TSDL-specific member */
+    GString *length_ref;
 };
 
 static inline fs_sink_ctf_field_class_bit_array *
@@ -175,7 +197,9 @@ static inline fs_sink_ctf_field_class_array_base *
 fs_sink_ctf_field_class_as_array_base(fs_sink_ctf_field_class *fc)
 {
     BT_ASSERT_DBG(!fc || (fc->type == FS_SINK_CTF_FIELD_CLASS_TYPE_ARRAY ||
-                          fc->type == FS_SINK_CTF_FIELD_CLASS_TYPE_SEQUENCE));
+                          fc->type == FS_SINK_CTF_FIELD_CLASS_TYPE_STATIC_BLOB ||
+                          fc->type == FS_SINK_CTF_FIELD_CLASS_TYPE_SEQUENCE ||
+                          fc->type == FS_SINK_CTF_FIELD_CLASS_TYPE_DYN_BLOB));
 
     return (fs_sink_ctf_field_class_array_base *) fc;
 }
@@ -183,7 +207,8 @@ fs_sink_ctf_field_class_as_array_base(fs_sink_ctf_field_class *fc)
 static inline fs_sink_ctf_field_class_array *
 fs_sink_ctf_field_class_as_array(fs_sink_ctf_field_class *fc)
 {
-    BT_ASSERT_DBG(!fc || fc->type == FS_SINK_CTF_FIELD_CLASS_TYPE_ARRAY);
+    BT_ASSERT_DBG(!fc || (fc->type == FS_SINK_CTF_FIELD_CLASS_TYPE_ARRAY ||
+                          fc->type == FS_SINK_CTF_FIELD_CLASS_TYPE_STATIC_BLOB));
 
     return (fs_sink_ctf_field_class_array *) fc;
 }
@@ -191,7 +216,8 @@ fs_sink_ctf_field_class_as_array(fs_sink_ctf_field_class *fc)
 static inline fs_sink_ctf_field_class_sequence *
 fs_sink_ctf_field_class_as_sequence(fs_sink_ctf_field_class *fc)
 {
-    BT_ASSERT_DBG(!fc || fc->type == FS_SINK_CTF_FIELD_CLASS_TYPE_SEQUENCE);
+    BT_ASSERT_DBG(!fc || (fc->type == FS_SINK_CTF_FIELD_CLASS_TYPE_SEQUENCE ||
+                          fc->type == FS_SINK_CTF_FIELD_CLASS_TYPE_DYN_BLOB));
 
     return (fs_sink_ctf_field_class_sequence *) fc;
 }
@@ -446,6 +472,18 @@ fs_sink_ctf_field_class_array_create_empty(const bt_field_class *ir_fc)
     return fc;
 }
 
+static inline struct fs_sink_ctf_field_class_array *
+fs_sink_ctf_field_class_static_blob_create_empty(const bt_field_class *ir_fc)
+{
+    struct fs_sink_ctf_field_class_array *fc = g_new0(struct fs_sink_ctf_field_class_array, 1);
+
+    BT_ASSERT(fc);
+    _fs_sink_ctf_field_class_init(&fc->base.base, FS_SINK_CTF_FIELD_CLASS_TYPE_STATIC_BLOB, ir_fc,
+                                  8);
+    fc->length = bt_field_class_blob_static_get_length(ir_fc);
+    return fc;
+}
+
 static inline struct fs_sink_ctf_field_class_sequence *
 fs_sink_ctf_field_class_sequence_create_empty(const bt_field_class *ir_fc)
 {
@@ -458,6 +496,17 @@ fs_sink_ctf_field_class_sequence_create_empty(const bt_field_class *ir_fc)
     BT_ASSERT(fc->length_ref);
     fc->length_is_before =
         bt_field_class_get_type(ir_fc) == BT_FIELD_CLASS_TYPE_DYNAMIC_ARRAY_WITHOUT_LENGTH_FIELD;
+    return fc;
+}
+
+static inline struct fs_sink_ctf_field_class_sequence *
+fs_sink_ctf_field_class_dyn_blob_create_empty(const bt_field_class *ir_fc)
+{
+    struct fs_sink_ctf_field_class_sequence *fc =
+        g_new0(struct fs_sink_ctf_field_class_sequence, 1);
+
+    BT_ASSERT(fc);
+    _fs_sink_ctf_field_class_init(&fc->base.base, FS_SINK_CTF_FIELD_CLASS_TYPE_DYN_BLOB, ir_fc, 8);
     return fc;
 }
 

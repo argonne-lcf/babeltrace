@@ -11,6 +11,7 @@
 
 #include "common/assert.h"
 #include "cpp-common/bt2/wrap.hpp"
+#include "cpp-common/bt2c/logging.hpp"
 #include "cpp-common/vendor/fmt/format.h"
 #include "ctfser/ctfser.h"
 
@@ -44,6 +45,8 @@ end:
     return status;
 }
 
+constexpr const char *ctfVersionParamName = "ctf-version";
+
 static bt_param_validation_map_value_entry_descr fs_sink_params_descr[] = {
     {"path", BT_PARAM_VALIDATION_MAP_VALUE_ENTRY_MANDATORY,
      bt_param_validation_value_descr::makeString()},
@@ -55,10 +58,35 @@ static bt_param_validation_map_value_entry_descr fs_sink_params_descr[] = {
      bt_param_validation_value_descr::makeBool()},
     {"quiet", BT_PARAM_VALIDATION_MAP_VALUE_ENTRY_OPTIONAL,
      bt_param_validation_value_descr::makeBool()},
+    {ctfVersionParamName, BT_PARAM_VALIDATION_MAP_VALUE_ENTRY_OPTIONAL,
+     bt_param_validation_value_descr::makeString()},
     BT_PARAM_VALIDATION_MAP_VALUE_ENTRY_END};
 
-static bt_component_class_initialize_method_status configure_component(struct fs_sink_comp *fs_sink,
-                                                                       const bt_value *params)
+static int ctfVersionFromParams(const bt_value *params, const bt2c::Logger& logger)
+{
+    const auto wParams = bt2::wrap(params).asMap();
+
+    if (wParams.hasEntry(ctfVersionParamName)) {
+        const auto ctfVersionVal = wParams[ctfVersionParamName]->asString();
+
+        if (ctfVersionVal.value() == "1" || ctfVersionVal.value() == "1.8") {
+            return 1;
+        } else if (ctfVersionVal.value() != "2" && ctfVersionVal.value() != "2.0") {
+            BT_CPPLOGE_APPEND_CAUSE_SPEC(
+                logger,
+                "Unexpected `{}` parameter value `{}`: expecting `1`, `1.8`, `2`, or `2.0`.",
+                ctfVersionParamName, ctfVersionVal.value());
+            return -1;
+        }
+    }
+
+    /* Default */
+    return 2;
+}
+
+static bt_component_class_initialize_method_status
+configure_component(bt_self_component_sink *self_comp_sink, struct fs_sink_comp *fs_sink,
+                    const bt_value *params)
 {
     bt_component_class_initialize_method_status status;
     const bt_value *value;
@@ -97,6 +125,31 @@ static bt_component_class_initialize_method_status configure_component(struct fs
     value = bt_value_map_borrow_entry_value_const(params, "quiet");
     if (value) {
         fs_sink->quiet = (bool) bt_value_bool_get(value);
+    }
+
+    value = bt_value_map_borrow_entry_value_const(params, "ctf-version");
+    if (value) {
+        const auto ctfVersion = ctfVersionFromParams(params, fs_sink->logger);
+
+        if (ctfVersion < 0) {
+            status = BT_COMPONENT_CLASS_INITIALIZE_METHOD_STATUS_ERROR;
+            goto end;
+        }
+
+        fs_sink->ctf_version = static_cast<unsigned int>(ctfVersion);
+    }
+
+    {
+        const auto mipVersion = bt2::wrap(self_comp_sink).graphMipVersion();
+
+        if ((fs_sink->ctf_version == 1 && mipVersion == 1) ||
+            (fs_sink->ctf_version == 2 && mipVersion == 0)) {
+            status = BT_COMPONENT_CLASS_INITIALIZE_METHOD_STATUS_ERROR;
+            BT_CPPLOGE_APPEND_CAUSE_SPEC(
+                fs_sink->logger, "Invalid CTF version ({}) and MIP version combination ({}).",
+                fs_sink->ctf_version, mipVersion);
+            goto end;
+        }
     }
 
     status = BT_COMPONENT_CLASS_INITIALIZE_METHOD_STATUS_OK;
@@ -140,7 +193,7 @@ bt_component_class_initialize_method_status ctf_fs_sink_init(bt_self_component_s
 
         fs_sink = new fs_sink_comp {bt2::wrap(self_comp_sink)};
         fs_sink->output_dir_path = g_string_new(NULL);
-        status = configure_component(fs_sink, params);
+        status = configure_component(self_comp_sink, fs_sink, params);
         if (status != BT_COMPONENT_CLASS_INITIALIZE_METHOD_STATUS_OK) {
             /* configure_component() logs errors */
             goto end;
@@ -1053,4 +1106,48 @@ void ctf_fs_sink_finalize(bt_self_component_sink *self_comp)
         bt_self_component_sink_as_self_component(self_comp));
 
     destroy_fs_sink_comp(fs_sink);
+}
+
+bt_component_class_get_supported_mip_versions_method_status
+ctf_fs_sink_supported_mip_versions(bt_self_component_class_sink *self_component_class,
+                                   const bt_value *params, void *, bt_logging_level log_level,
+                                   bt_integer_range_set_unsigned *supported_versions)
+{
+    gchar *validation_error;
+    bt_component_class_get_supported_mip_versions_method_status status;
+    bt2c::Logger logger {bt2::wrap(self_component_class), static_cast<bt2::LoggingLevel>(log_level),
+                         "PLUGIN/SINK.CTF.FS"};
+
+    {
+        const auto validation_status =
+            bt_param_validation_validate(params, fs_sink_params_descr, &validation_error);
+
+        if (validation_status == BT_PARAM_VALIDATION_STATUS_VALIDATION_ERROR) {
+            status = BT_COMPONENT_CLASS_GET_SUPPORTED_MIP_VERSIONS_METHOD_STATUS_ERROR;
+            BT_CPPLOGE_APPEND_CAUSE_SPEC(logger, "{}", validation_error);
+            goto end;
+        } else if (validation_status == BT_PARAM_VALIDATION_STATUS_MEMORY_ERROR) {
+            status = BT_COMPONENT_CLASS_GET_SUPPORTED_MIP_VERSIONS_METHOD_STATUS_MEMORY_ERROR;
+            goto end;
+        }
+    }
+
+    {
+        const auto ctfVersion = ctfVersionFromParams(params, logger);
+
+        if (ctfVersion < 0) {
+            status = BT_COMPONENT_CLASS_GET_SUPPORTED_MIP_VERSIONS_METHOD_STATUS_ERROR;
+            goto end;
+        }
+
+        const auto mipVersion = ctfVersionFromParams(params, logger) == 2U ? 1 : 0;
+
+        bt2::wrap(supported_versions).addRange(mipVersion, mipVersion);
+    }
+
+    status = BT_COMPONENT_CLASS_GET_SUPPORTED_MIP_VERSIONS_METHOD_STATUS_OK;
+
+end:
+    g_free(validation_error);
+    return status;
 }

@@ -4,6 +4,8 @@
  * Copyright 2019 Philippe Proulx <pproulx@efficios.com>
  */
 
+#include <cstdint>
+
 #include <glib.h>
 #include <stdio.h>
 
@@ -244,6 +246,12 @@ end:
     return ret;
 }
 
+static inline int write_blob_data(struct fs_sink_stream *stream, const bt_field *field)
+{
+    return bt_ctfser_write_data(&stream->ctfser, bt_field_blob_get_data_const(field),
+                                bt_field_blob_get_length(field));
+}
+
 static inline int write_sequence_field(struct fs_sink_stream *stream,
                                        struct fs_sink_ctf_field_class_sequence *fc,
                                        const bt_field *field)
@@ -259,6 +267,26 @@ static inline int write_sequence_field(struct fs_sink_stream *stream,
     }
 
     ret = write_array_base_field_elements(stream, &fc->base, field);
+
+end:
+    return ret;
+}
+
+static inline int write_dyn_blob_field(struct fs_sink_stream *stream,
+                                       struct fs_sink_ctf_field_class_sequence *fc,
+                                       const bt_field *field)
+{
+    int ret;
+
+    if (fc->length_is_before) {
+        ret = bt_ctfser_write_unsigned_int(&stream->ctfser, bt_field_blob_get_length(field), 8, 32,
+                                           BYTE_ORDER);
+        if (G_UNLIKELY(ret)) {
+            goto end;
+        }
+    }
+
+    ret = write_blob_data(stream, field);
 
 end:
     return ret;
@@ -301,9 +329,12 @@ static inline int write_option_field(struct fs_sink_stream *stream,
     int ret;
     const bt_field *content_field = bt_field_option_borrow_field_const(field);
 
-    ret = bt_ctfser_write_unsigned_int(&stream->ctfser, content_field ? 1 : 0, 8, 8, BYTE_ORDER);
-    if (G_UNLIKELY(ret)) {
-        goto end;
+    if (fc->tag_is_before) {
+        ret =
+            bt_ctfser_write_unsigned_int(&stream->ctfser, content_field ? 1 : 0, 8, 8, BYTE_ORDER);
+        if (G_UNLIKELY(ret)) {
+            goto end;
+        }
     }
 
     /*
@@ -375,8 +406,14 @@ static int write_field(struct fs_sink_stream *stream, struct fs_sink_ctf_field_c
         ret = write_array_base_field_elements(stream, fs_sink_ctf_field_class_as_array_base(fc),
                                               field);
         break;
+    case FS_SINK_CTF_FIELD_CLASS_TYPE_STATIC_BLOB:
+        ret = write_blob_data(stream, field);
+        break;
     case FS_SINK_CTF_FIELD_CLASS_TYPE_SEQUENCE:
         ret = write_sequence_field(stream, fs_sink_ctf_field_class_as_sequence(fc), field);
+        break;
+    case FS_SINK_CTF_FIELD_CLASS_TYPE_DYN_BLOB:
+        ret = write_dyn_blob_field(stream, fs_sink_ctf_field_class_as_sequence(fc), field);
         break;
     case FS_SINK_CTF_FIELD_CLASS_TYPE_OPTION:
         ret = write_option_field(stream, fs_sink_ctf_field_class_as_option(fc), field);

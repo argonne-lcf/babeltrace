@@ -1,7 +1,7 @@
 = babeltrace2-sink.ctf.fs(7)
 :manpagetype: component class
-:revdate: 1 September 2023
-
+:revdate: 16 October 2024
+:btns: babeltrace.org,2020
 
 == NAME
 
@@ -12,8 +12,8 @@ class
 == DESCRIPTION
 
 A Babeltrace~2 compcls:sink.ctf.fs component writes the messages it
-consumes to one or more https://diamon.org/ctf/[CTF]~1.8 traces on
-the file system.
+consumes to one or more https://diamon.org/ctf/[CTF]~1.8 or CTF~2 traces
+on the file system.
 
 ----
             +-------------+
@@ -25,15 +25,31 @@ Messages -->@ in          |    the file system
 
 include::common-see-babeltrace2-intro.txt[]
 
+The param:ctf-version parameter controls the CTF version of the
+resulting traces.
+
+As of this version, a compcls:sink.ctf.fs component may only write:
+
+CTF~1.8 traces::
+    When working under version~0 of the Message Interchange Protocol (MIP).
+
+CTF~2 traces::
+    When working under version~1 of the MIP.
+
+Therefore, the "get supported MIP versions" method of a
+compcls:sink.ctf.fs component class reports to support only MIP~0 with
+the param:ctf-version parameter set to~`1` and only MIP~1 with
+param:ctf-version set to~`2`.
+
 A compcls:sink.ctf.fs component does not merge traces: it writes the
 messages of different input traces to different output traces.
 
 
-=== Special trace IR to CTF translations
+=== Trace IR to CTF 1.8 translation
 
-A compcls:sink.ctf.fs component makes a best effort to write CTF traces
-that are semantically equivalent to the input traces. As of this
-version, the component writes CTF~1.8 traces, so the following
+A compcls:sink.ctf.fs component makes a best effort to write CTF~1.8
+traces that are semantically equivalent to the input traces. As of this
+version, with the param:ctf-version parameter set to `1`, the following
 field class translations can occur:
 
 * The component translates a boolean field class to a CTF unsigned 8-bit
@@ -56,11 +72,93 @@ In all the cases above, the component adds a comment in the metadata
 stream, above the field class, to indicate that a special translation
 occurred.
 
+The component doesn't translate any user attribute: a CTF~1.8 metadata
+stream has no way to represent them.
+
+
+=== Trace IR to CTF 2 translation
+
+As of this version, with the param:ctf-version parameter set to `2`:
+
+* The component sets the `sink.ctf.fs` attribute, under the +{btns}+
+  namespace, of the preamble fragment to `true`.
+
+* The structure member class names of packet context field classes
+  having a CTF~2 role have the metadata stream UUID as a prefix to avoid
+  clashes with user member classes.
++
+For example, the packet content length member class could be named
+`afe9ed0e-ce73-413f-8956-83663bab2047-content_size`.
+
+* The component translates an event class log level to the
+  `log-level` attribute under the +{btns}+ namespace as such:
++
+--
+`BT_EVENT_CLASS_LOG_LEVEL_EMERGENCY`:
+    `"emergency"`
+
+`BT_EVENT_CLASS_LOG_LEVEL_ALERT`:
+    `"alert"`
+
+`BT_EVENT_CLASS_LOG_LEVEL_CRITICAL`:
+    `"critical"`
+
+`BT_EVENT_CLASS_LOG_LEVEL_ERROR`:
+    `"error"`
+
+`BT_EVENT_CLASS_LOG_LEVEL_WARNING`:
+    `"warning"`
+
+`BT_EVENT_CLASS_LOG_LEVEL_NOTICE`:
+    `"notice"`
+
+`BT_EVENT_CLASS_LOG_LEVEL_INFO`:
+    `"info"`
+
+`BT_EVENT_CLASS_LOG_LEVEL_DEBUG_SYSTEM`:
+    `"debug:system"`
+
+`BT_EVENT_CLASS_LOG_LEVEL_DEBUG_PROGRAM`:
+    `"debug:program"`
+
+`BT_EVENT_CLASS_LOG_LEVEL_DEBUG_PROCESS`:
+    `"debug:process"`
+
+`BT_EVENT_CLASS_LOG_LEVEL_DEBUG_MODULE`:
+    `"debug:module"`
+
+`BT_EVENT_CLASS_LOG_LEVEL_DEBUG_UNIT`:
+    `"debug:unit"`
+
+`BT_EVENT_CLASS_LOG_LEVEL_DEBUG_FUNCTION`:
+    `"debug:function"`
+
+`BT_EVENT_CLASS_LOG_LEVEL_DEBUG_LINE`:
+    `"debug:line"`
+
+`BT_EVENT_CLASS_LOG_LEVEL_DEBUG`:
+    `"debug:debug"`
+--
+
+* The component translates an event class EMF URI to the
+  `emf-uri` attribute under the +{btns}+ namespace as a JSON string.
+
+* When the component needs to generate a length/selector field class
+  __**F**__ for dynamic field classes without a length/selector
+  field:
+
+** The structure member name of __**F**__ is unspecified.
+
+** __**F**__ contains the attribute `is-key-only`, under the
+   +{btns}+ namespace, set to `true`.
+
+* The component doesn't translate trace and stream user attributes:
+  a CTF~2 metadata stream has no way to represent them.
 
 === Input message constraints
 
-Because of limitations in CTF~1.8 regarding how discarded events
-and packets are encoded:
+Because of limitations in CTF regarding how discarded events and packets
+are encoded:
 
 * If a stream class supports discarded events and the
   param:ignore-discarded-events parameter is :not: true:
@@ -98,10 +196,10 @@ stream's counter.
 
 A compcls:sink.ctf.fs component always aligns data fields as such:
 
-Integer fields with a size which is not a multiple of 8::
+Fixed-length bit array fields with a size which is not a multiple of 8::
     1-bit.
 
-All other scalar fields (integer, enumeration, real, string)::
+All other scalar fields (fixed-length bit array, null-terminated string, BLOB)::
     8-bit.
 
 The component writes fields using the machine's native byte order. As of
@@ -202,6 +300,23 @@ This parameter affects how the component builds the output trace path
 (see <<output-path,``Output path''>>).
 +
 Default: false.
+
+param:ctf-version='VERSION' vtype:[optional string]::
++
+Write traces following version 'VERSION' of CTF, where 'VERSION' is
+one of:
++
+--
+`1`::
+`1.8`::
+    CTF~1.8.
+
+`2`::
+`2.0`::
+    CTF~2.
+--
++
+Default: `2`.
 
 param:ignore-discarded-events='VAL' vtype:[optional boolean]::
     If 'VAL' is true, then ignore discarded events messages.

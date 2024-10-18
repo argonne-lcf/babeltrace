@@ -25,23 +25,23 @@ source "$UTILSSH"
 this_dir_relative="plugins/sink.ctf.fs/succeed"
 this_dir_build="$BT_TESTS_BUILDDIR/$this_dir_relative"
 expect_dir="$BT_TESTS_DATADIR/$this_dir_relative"
-succeed_traces="$BT_CTF_TRACES_PATH/1/succeed"
 
 test_ctf_single() {
 	local name="$1"
-	local in_trace_dir="$2"
+	local ctf_version=$2
+	local in_trace_dir="$3"
 	local temp_out_trace_dir
 
 	temp_out_trace_dir="$(mktemp -d)"
 
 	diag "Converting trace '$name' to CTF through 'sink.ctf.fs'"
-	"$BT_TESTS_BT2_BIN" >/dev/null "$in_trace_dir" -o ctf -w "$temp_out_trace_dir"
+	"$BT_TESTS_BT2_BIN" >/dev/null "$in_trace_dir" -c sink.ctf.fs -p "path=\"$temp_out_trace_dir\"" -p "ctf-version=\"$ctf_version\""
 	ret=$?
-	ok $ret "'sink.ctf.fs' component succeeds with input trace '$name'"
-	converted_test_name="Converted trace '$name' gives the expected output"
+	ok $ret "'sink.ctf.fs' component succeeds with input trace '$name' (CTF $ctf_version)"
+	converted_test_name="Converted trace '$name' gives the expected output (CTF $ctf_version)"
 
 	if [ $ret -eq 0 ]; then
-		bt_diff_details_ctf_single "$expect_dir/trace-$name.expect" \
+		bt_diff_details_ctf_single "$expect_dir/trace-$name-ctf$ctf_version.expect" \
 			"$temp_out_trace_dir" \
 			'-p' 'with-uuid=no,with-uid=no,with-trace-name=no,with-stream-name=no'
 		ok $? "$converted_test_name"
@@ -54,13 +54,15 @@ test_ctf_single() {
 
 test_ctf_existing_single() {
 	local name="$1"
-	local trace_dir="$succeed_traces/$name"
+	local ctf_version=$2
+	local trace_dir="$BT_CTF_TRACES_PATH/$ctf_version/succeed/$name"
 
-	test_ctf_single "$name" "$trace_dir"
+	test_ctf_single "$name" "$ctf_version" "$trace_dir"
 }
 
 test_ctf_gen_single() {
 	local name="$1"
+	local ctf_version=$2
 	local temp_gen_trace_dir
 
 	temp_gen_trace_dir="$(mktemp -d)"
@@ -74,16 +76,18 @@ test_ctf_gen_single() {
 		exit 1
 	fi
 
-	test_ctf_single "$name" "$temp_gen_trace_dir"
+	test_ctf_single "$name" "$ctf_version" "$temp_gen_trace_dir"
 	rm -rf "$temp_gen_trace_dir"
 }
 
-plan_tests 14
+plan_tests 18
 
-test_ctf_gen_single float
-test_ctf_gen_single double
-test_ctf_existing_single "meta-variant-no-underscore"
-test_ctf_existing_single "meta-variant-one-underscore"
-test_ctf_existing_single "meta-variant-reserved-keywords"
-test_ctf_existing_single "meta-variant-same-with-underscore"
-test_ctf_existing_single "meta-variant-two-underscores"
+test_ctf_gen_single float 1
+test_ctf_gen_single double 1
+test_ctf_gen_single float 2
+test_ctf_gen_single double 2
+test_ctf_existing_single "meta-variant-no-underscore" 1
+test_ctf_existing_single "meta-variant-one-underscore" 1
+test_ctf_existing_single "meta-variant-reserved-keywords" 1
+test_ctf_existing_single "meta-variant-same-with-underscore" 1
+test_ctf_existing_single "meta-variant-two-underscores" 1

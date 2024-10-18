@@ -49,6 +49,13 @@ struct fs_sink_comp
     bool quiet = false;
 
     /*
+     * CTF version to generate (1 or 2).
+     *
+     * CTF 1.8 implies MIP 0 and CTF 2 implies MIP 1.
+     */
+    unsigned int ctf_version = 2;
+
+    /*
      * Hash table of `const bt_trace *` (weak) to
      * `struct fs_sink_trace *` (owned by hash table).
      */
@@ -64,6 +71,12 @@ ctf_fs_sink_consume(bt_self_component_sink *component);
 
 bt_component_class_sink_graph_is_configured_method_status
 ctf_fs_sink_graph_is_configured(bt_self_component_sink *component);
+
+bt_component_class_get_supported_mip_versions_method_status
+ctf_fs_sink_supported_mip_versions(bt_self_component_class_sink *self_component_class,
+                                   const bt_value *params, void *initialize_method_data,
+                                   bt_logging_level logging_level,
+                                   bt_integer_range_set_unsigned *supported_versions);
 
 void ctf_fs_sink_finalize(bt_self_component_sink *component);
 
