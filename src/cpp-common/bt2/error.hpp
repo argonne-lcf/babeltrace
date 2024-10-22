@@ -226,7 +226,7 @@ private:
 public:
     bool operator==(const ConstErrorIterator& other) const noexcept
     {
-        BT_ASSERT(&other._mError == &_mError);
+        BT_ASSERT(other._mError == _mError);
         return other._mIndex == _mIndex;
     }
 
