@@ -4,11 +4,11 @@
     <tab type="user" visible="yes" url="@ref api-fund" title="API fundamentals"/>
     <tab type="user" visible="yes" url="@ref guides" title="Guides"/>
     <tab type="user" visible="yes" url="@ref examples" title="Examples"/>
-    <tab type="pages" visible="yes" title="All pages" intro=""/>
     <tab type="modules" visible="yes" title="API reference"
       intro="List of all API reference pages:"/>
     <tab type="topics" visible="yes" title="API reference"
       intro="List of all API reference pages:"/>
+    <tab type="pages" visible="yes" title="All pages" intro=""/>
   </navindex>
 
   <group>
