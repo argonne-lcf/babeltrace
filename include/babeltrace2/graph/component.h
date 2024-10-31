@@ -52,10 +52,10 @@ of component classes:
 <dl>
   <dt>\anchor api-comp-src Source component</dt>
   <dd>
-    A source component's \bt_msg_iter emits fresh \bt_p_msg.
+    The \bt_msg_iter of a source component emits fresh \bt_p_msg.
 
-    A source component's specific type is #bt_component_source and its
-    class's type enumerator is #BT_COMPONENT_CLASS_TYPE_SOURCE.
+    The specific type of a source component is #bt_component_source and
+    the type enumerator of its class is #BT_COMPONENT_CLASS_TYPE_SOURCE.
 
     \ref api-fund-c-typing "Upcast" the #bt_component_source type to the
     #bt_component type with bt_component_source_as_component_const().
@@ -69,18 +69,18 @@ of component classes:
     Get the number of output ports a source component has with
     bt_component_source_get_output_port_count().
 
-    Borrow a source component's output port by index with
+    Borrow the output port of a source component by index with
     bt_component_source_borrow_output_port_by_index_const() or by name
     with bt_component_source_borrow_output_port_by_name_const().
   </dd>
 
   <dt>\anchor api-comp-flt Filter component</dt>
   <dd>
-    A filter component's message iterator emits fresh and transformed
-    messages. It can also discard existing messages.
+    The message iterator of a filter component emits fresh and
+    transformed messages. It can also discard existing messages.
 
-    A filter component's specific type is #bt_component_filter and its
-    class's type enumerator is #BT_COMPONENT_CLASS_TYPE_FILTER.
+    The specific type of a filter component is #bt_component_filter and
+    the type enumerator of its class is #BT_COMPONENT_CLASS_TYPE_FILTER.
 
     \ref api-fund-c-typing "Upcast" the #bt_component_filter type to the
     #bt_component type with bt_component_filter_as_component_const().
@@ -94,14 +94,14 @@ of component classes:
     Get the number of output ports a filter component has with
     bt_component_filter_get_output_port_count().
 
-    Borrow a filter component's output port by index with
+    Borrow the output port of a filter component by index with
     bt_component_filter_borrow_output_port_by_index_const() or by name
     with bt_component_filter_borrow_output_port_by_name_const().
 
     Get the number of input ports a filter component has with
     bt_component_filter_get_input_port_count().
 
-    Borrow a filter component's input port by index with
+    Borrow the input port of a filter component by index with
     bt_component_filter_borrow_input_port_by_index_const() or by name
     with bt_component_filter_borrow_input_port_by_name_const().
   </dd>
@@ -111,8 +111,8 @@ of component classes:
     A sink component consumes messages from a source or filter message
     iterator.
 
-    A filter component's specific type is #bt_component_sink and its
-    class's type enumerator is #BT_COMPONENT_CLASS_TYPE_SINK.
+    The specific type of a filter component is #bt_component_sink and
+    the type enumerator of its class is #BT_COMPONENT_CLASS_TYPE_SINK.
 
     \ref api-fund-c-typing "Upcast" the #bt_component_sink type to the
     #bt_component type with bt_component_sink_as_component_const().
@@ -125,13 +125,13 @@ of component classes:
     Get the number of input ports a sink component has with
     bt_component_sink_get_input_port_count().
 
-    Borrow a sink component's input port by index with
+    Borrow the input port of a sink component by index with
     bt_component_sink_borrow_input_port_by_index_const() or by name
     with bt_component_sink_borrow_input_port_by_name_const().
   </dd>
 </dl>
 
-Get a component's class type enumerator with
+Get the type enumerator of the class of a componen with
 bt_component_get_class_type(). You can also use the
 bt_component_is_source(), bt_component_is_filter(), and
 bt_component_is_sink() helper functions.
@@ -158,12 +158,12 @@ A component has the following common properties:
     Each component has a unique name within a given trace processing
     \bt_graph.
 
-    A component's name is set when you
+    The name of a component is set when you
     \ref api-graph-lc-add "add it to a graph" with one of the
     <code>bt_graph_add_*_component*()</code> functions (\bt_p{name}
     parameter); you cannot change it afterwards.
 
-    Get a component's name with bt_component_get_name().
+    Get the name of a component with bt_component_get_name().
   </dd>
 
   <dt>
@@ -173,13 +173,13 @@ A component has the following common properties:
   <dd>
     Logging level of the component (and its message iterators, if any).
 
-    A component's logging level is set when you
+    The logging level of a component is set when you
     \ref api-graph-lc-add "add it to a trace processing graph" with one
     of the <code>bt_graph_add_*_component*()</code> functions
     (\bt_p{logging_level} parameter); as of
     \bt_name_version_min_maj, you cannot change it afterwards.
 
-    Get a component's logging level with
+    Get the logging level of a component with
     bt_component_get_logging_level().
   </dd>
 </dl>
@@ -225,7 +225,7 @@ A component has the following common properties:
     the component \bt_p{component}.
 
 @param[in] component
-    Component of which to get the class's type enumerator.
+    Component of which to get the type enumerator of its class.
 
 @returns
     Type enumerator of the class of \bt_p{component}.
@@ -256,7 +256,7 @@ extern bt_component_class_type bt_component_get_class_type(
 @bt_pre_not_null{component}
 
 @sa bt_component_get_class_type() &mdash;
-    Returns the type enumerator of a component's class.
+    Returns the type enumerator of the class of a component.
 */
 static inline
 bt_bool bt_component_is_source(const bt_component *component) __BT_NOEXCEPT
@@ -279,7 +279,7 @@ bt_bool bt_component_is_source(const bt_component *component) __BT_NOEXCEPT
 @bt_pre_not_null{component}
 
 @sa bt_component_get_class_type() &mdash;
-    Returns the type enumerator of a component's class.
+    Returns the type enumerator of the class of a component.
 */
 static inline
 bt_bool bt_component_is_filter(const bt_component *component) __BT_NOEXCEPT
@@ -302,7 +302,7 @@ bt_bool bt_component_is_filter(const bt_component *component) __BT_NOEXCEPT
 @bt_pre_not_null{component}
 
 @sa bt_component_get_class_type() &mdash;
-    Returns the type enumerator of a component's class.
+    Returns the type enumerator of the class of a component.
 */
 static inline
 bt_bool bt_component_is_sink(const bt_component *component) __BT_NOEXCEPT

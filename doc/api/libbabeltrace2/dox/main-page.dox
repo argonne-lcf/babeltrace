@@ -61,11 +61,11 @@ With the \bt_name library, you can:
   trace processing \bt_graph, connect the components as needed, and
   run the graph to accomplish a trace manipulation or conversion job.
 
-  This is what the \bt_cli CLI tool's
+  This is what the
   <a href="https://babeltrace.org/docs/v\bt_version_min_maj/man1/babeltrace2-convert.1"><code>convert</code></a>
   and
   <a href="https://babeltrace.org/docs/v\bt_version_min_maj/man1/babeltrace2-run.1"><code>run</code></a>
-  commands do, for example.
+  commands of the \bt_cli CLI tool do, for example.
 
 A trace processing \bt_graph contains connected components. The specific
 component topology determines the trace processing task to realize.
@@ -80,9 +80,9 @@ the \bt_ev_msg.
 With libbabeltrace2, you can also \ref api-qexec "query" some specific
 object from a component class (for example, the available LTTng live sessions
 of an <a href="https://lttng.org">LTTng</a> relay daemon).
-This is what the \bt_cli CLI tool's
+This is what the
 <a href="https://babeltrace.org/docs/v\bt_version_min_maj/man1/babeltrace2-query.1"><code>query</code></a>
-command does, for example.
+command of \bt_cli CLI tool does, for example.
 
 Make sure to read \bt_man{babeltrace2-intro,7}
 to learn even more about the \bt_name project and its core concepts.

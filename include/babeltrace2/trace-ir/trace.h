@@ -113,7 +113,7 @@ A trace has the following properties:
         <a href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID</a>
         of the trace.
 
-        The trace's UUID uniquely identifies the trace.
+        The UUID of the trace uniquely identifies the trace.
 
         Use bt_trace_set_uuid() and bt_trace_get_uuid().
       </dd>
@@ -126,9 +126,9 @@ A trace has the following properties:
         <a href="https://en.wikipedia.org/wiki/Unique_identifier">Unique identifier</a>
         (UID) of the trace.
 
-        The combination of the trace's
+        The combination of the
         \link api-tir-trace-prop-name name\endlink and UID
-        uniquely identifies the trace.
+        of the trace uniquely identifies it.
 
         Use bt_trace_set_uid() and bt_trace_get_uid().
       </dd>
@@ -140,13 +140,13 @@ A trace has the following properties:
   </dt>
   <dd>
     Generic key-value store which describes the environment of the trace
-    (for example, the system's hostname, its network address, the
-    tracer's name and version, and the rest).
+    (for example, the hostname of the system, its network address, the
+    name and version of the tracer, and the rest).
 
     Trace environment keys are strings while values are signed integers
     or strings.
 
-    Set a trace environment entry's value with
+    Set the value of a trace environment entry with
     bt_trace_set_environment_entry_integer() and
     bt_trace_set_environment_entry_string().
 
@@ -688,7 +688,7 @@ typedef enum bt_trace_set_environment_entry_status {
 See the \ref api-tir-trace-prop-env "environment" property.
 
 On success, if \bt_p{trace} already contains an environment entry named
-\bt_p{name}, this function replaces the existing entry's value with
+\bt_p{name}, this function replaces the value of the existing entry with
 \bt_p{value}.
 
 @param[in] trace
@@ -709,7 +709,7 @@ On success, if \bt_p{trace} already contains an environment entry named
 @bt_pre_not_null{name}
 
 @sa bt_trace_set_environment_entry_string() &mdash;
-    Sets a trace environment entry's value to a string.
+    Sets the value of a trace environment entry to a string.
 */
 extern bt_trace_set_environment_entry_status
 bt_trace_set_environment_entry_integer(bt_trace *trace, const char *name,
@@ -723,7 +723,7 @@ bt_trace_set_environment_entry_integer(bt_trace *trace, const char *name,
 See the \ref api-tir-trace-prop-env "environment" property.
 
 On success, if \bt_p{trace} already contains an environment entry named
-\bt_p{name}, this function replaces the existing entry's value with
+\bt_p{name}, this function replaces the value of the existing entry with
 \bt_p{value}.
 
 @param[in] trace
@@ -745,7 +745,7 @@ On success, if \bt_p{trace} already contains an environment entry named
 @bt_pre_not_null{value}
 
 @sa bt_trace_set_environment_entry_integer() &mdash;
-    Sets a trace environment entry's value to a signed integer.
+    Sets the value of a trace environment entry to a signed integer.
 */
 extern bt_trace_set_environment_entry_status
 bt_trace_set_environment_entry_string(bt_trace *trace, const char *name,
@@ -863,10 +863,11 @@ See the \ref api-tir-trace-prop-user-attrs "user attributes"
 property.
 
 @note
-    When you create a default trace with bt_trace_create(), the trace's
-    initial user attributes is an empty \bt_map_val. Therefore you can
-    borrow it with bt_trace_borrow_user_attributes() and fill it
-    directly instead of setting a new one with this function.
+    When you create a default trace with bt_trace_create(), the
+    initial user attributes of the trace is an empty \bt_map_val.
+    Therefore you can borrow it with bt_trace_borrow_user_attributes()
+    and fill it directly instead of setting a new one with this
+    function.
 
 @param[in] trace
     Trace of which to set the user attributes to \bt_p{user_attributes}.
@@ -892,8 +893,8 @@ See the \ref api-tir-trace-prop-user-attrs "user attributes"
 property.
 
 @note
-    When you create a default trace with bt_trace_create(), the trace's
-    initial user attributes is an empty \bt_map_val.
+    When you create a default trace with bt_trace_create(), the
+    initial user attributes of the trace is an empty \bt_map_val.
 
 @param[in] trace
     Trace from which to borrow the user attributes.

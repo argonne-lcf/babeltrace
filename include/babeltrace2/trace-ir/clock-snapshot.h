@@ -39,21 +39,21 @@ because they must not change while being transported from one
 \bt_comp to the other.
 
 Instead of having a stream clock object, messages have a default
-clock snapshot: this is a snapshot of the value of a stream's
-default clock (a clock class instance):
+clock snapshot: this is a snapshot of the value of the default clock
+of a stream (a clock class instance):
 
 @image html clocks.png
 
 In the illustration above, notice that:
 
 - Each stream has a default clock (yellow bell alarm clock): this is an
-  instance of the stream's class's default clock class.
+  instance of the default clock class of class of the stream.
 - Each \bt_msg (objects in blue stream rectangles) created for a given
   stream has a default clock snapshot (yellow star): this is a snapshot
-  of the stream's default clock.
+  of the default clock of the stream.
 
   In other words, a default clock snapshot contains the value of the
-  stream's default clock when this message occurred.
+  default clock of the stream when this message occurred.
 
 A clock snapshot is a \ref api-fund-unique-object "unique object": it
 belongs to a \bt_msg.
@@ -62,7 +62,7 @@ The type of a clock snapshot is #bt_clock_snapshot.
 
 You cannot create a clock snapshot: you specify a clock snapshot value
 (in clock cycles, a \c uint64_t value) when you create a \bt_msg or set
-a message's clock snapshot with one of:
+the clock snapshot of a message with one of:
 
 - bt_message_stream_beginning_set_default_clock_snapshot()
 - bt_message_stream_end_set_default_clock_snapshot()
@@ -75,7 +75,7 @@ a message's clock snapshot with one of:
 - bt_message_message_iterator_inactivity_create()
 
 See \ref api-tir-clock-cls-origin "Clock value vs. clock class origin"
-to understand the meaning of a clock's value in relation to the
+to understand the meaning of the value of a clock in relation to the
 properties of its class.
 */
 
@@ -123,8 +123,8 @@ extern const bt_clock_class *bt_clock_snapshot_borrow_clock_class_const(
 @bt_pre_not_null{clock_snapshot}
 
 @sa bt_clock_snapshot_get_ns_from_origin() &mdash;
-    Returns the equivalent nanoseconds from clock class origin of a
-    clock snapshot's value.
+    Returns the equivalent nanoseconds from clock class origin of the
+    value of a clock snapshot.
 */
 extern uint64_t bt_clock_snapshot_get_value(
 		const bt_clock_snapshot *clock_snapshot) __BT_NOEXCEPT;
@@ -194,11 +194,11 @@ code if any step of the computation process causes an integer overflow.
 @bt_pre_not_null{ns_from_origin}
 
 @sa bt_util_clock_cycles_to_ns_from_origin() &mdash;
-    Converts a clock value from cycles to nanoseconds from the clock's
-    origin.
+    Converts a clock value from cycles to nanoseconds from the origin
+    of a clock.
 @sa bt_clock_class_cycles_to_ns_from_origin() &mdash;
-    Converts a clock value from cycles to nanoseconds from a clock
-    class's origin.
+    Converts a clock value from cycles to nanoseconds from the origin
+    of a clock class.
 */
 extern bt_clock_snapshot_get_ns_from_origin_status
 bt_clock_snapshot_get_ns_from_origin(

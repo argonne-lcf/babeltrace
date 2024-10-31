@@ -66,7 +66,7 @@ The type of an event is #bt_event.
 An event conceptually belongs to a \bt_stream. Borrow the stream of an
 event with bt_event_borrow_stream() and bt_event_borrow_stream_const().
 
-If the event's stream's class
+If the stream class of the event
 \ref api-tir-stream-cls-prop-supports-pkt "supports packets",
 the event also belongs to a \bt_pkt. In that case, borrow the packet of
 an event with bt_event_borrow_packet() and
@@ -82,12 +82,12 @@ An event has the following properties:
 <dl>
   <dt>\anchor api-tir-ev-prop-payload Payload field</dt>
   <dd>
-    Event's payload \bt_field.
+    Payload \bt_field of the event.
 
     The payload of an event contains its main trace data.
 
-    The \ref api-tir-fc "class" of an event's payload field is set
-    at the event's \ref api-tir-ev-cls "class" level. See
+    The \ref api-tir-fc "class" of the payload field of an event is set
+    at the level of the \ref api-tir-ev-cls "class" of the event. See
     bt_event_class_set_payload_field_class(),
     bt_event_class_borrow_payload_field_class(), and
     bt_event_class_borrow_payload_field_class_const().
@@ -98,18 +98,18 @@ An event has the following properties:
 
   <dt>\anchor api-tir-ev-prop-spec-ctx Specific context field</dt>
   <dd>
-    Event's specific context \bt_field.
+    Specific context \bt_field of the event.
 
     The specific context of an event contains
     any contextual data of which the layout is specific to the
-    event's \ref api-tir-ev-cls "class" and which does not belong to the
-    payload.
+    \ref api-tir-ev-cls "class" of the event and which does not belong
+    to the payload.
 
-    The \ref api-tir-fc "class" of an event's specific context field is
-    set at the event's \ref api-tir-ev-cls "class" level. See
-    bt_event_class_set_specific_context_field_class()
-    bt_event_class_borrow_specific_context_field_class(),
-    and bt_event_class_borrow_specific_context_field_class_const()
+    The \ref api-tir-fc "class" of the specific context field of an
+    event is set at the level of the \ref api-tir-ev-cls "class" of
+    the event. See bt_event_class_set_specific_context_field_class()
+    bt_event_class_borrow_specific_context_field_class(), and
+    bt_event_class_borrow_specific_context_field_class_const()
 
     Use bt_event_borrow_specific_context_field() and
     bt_event_borrow_specific_context_field_const().
@@ -117,14 +117,14 @@ An event has the following properties:
 
   <dt>\anchor api-tir-ev-prop-common-ctx Common context field</dt>
   <dd>
-    Event's common context \bt_field.
+    Common context \bt_field of the event.
 
     The common context of an event contains contextual data of which the
     layout is common to all the \bt_p_ev_cls of the
-    event's stream's \ref api-tir-stream-cls "class".
+    \ref api-tir-stream-cls "stream class" of the event.
 
-    The \ref api-tir-fc "class" of an event's common context field is set
-    at the event's \bt_stream_cls level. See
+    The \ref api-tir-fc "class" of the common context field of an event
+    is set at the level of the \bt_stream_cls of the event. See
     bt_stream_class_set_event_common_context_field_class()
     bt_stream_class_borrow_event_common_context_field_class(),
     and bt_stream_class_borrow_event_common_context_field_class_const().

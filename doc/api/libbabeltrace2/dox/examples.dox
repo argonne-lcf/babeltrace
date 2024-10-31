@@ -16,13 +16,13 @@ The available examples are:
 This example shows a basic \bt_name
 \ref api-plugin-dev "shared object plugin" definition C file.
 
-The shared object plugin's name is <code>vestige</code>. Therefore
+The name of shared object plugin is <code>vestige</code>. Therefore
 the \c input and \c output \bt_p_comp_cls would be identified in the
 \bt_cli command-line tool as \c source.vestige.input and
 <code>sink.vestige.output</code>.
 
-Assume that \c vestige.c contains the actual source and sink component
-classes's code, and that \c vestige.h contains its declarations.
+Assume that \c vestige.c contains the code of the actual source and sink
+component classes, and that \c vestige.h contains its declarations.
 
 <code>vestige-plugin.c</code>:
 
@@ -55,9 +55,10 @@ That is:
     (seconds since the Unix epoch) of the record.
   - The second token is a number of microseconds to add to the Unix
     timestamp.
-  - The third token is the event record's name: only \c send-msg and
-    \c recv-msg are possible.
-  - The remaining characters form the event record's message (payload).
+  - The third token is the name of the event record: only \c send-msg
+    and \c recv-msg are possible.
+  - The remaining characters form the messsage of
+    the event record (payload).
 
 A <code>source.dust.input</code> component accepts a single
 \ref api-comp-cls-dev-meth-init "initialization parameter",
@@ -66,8 +67,8 @@ A <code>source.dust.input</code> component accepts a single
 A <code>source.dust.input</code> component creates a single
 \bt_oport named <code>out</code>.
 
-For each line of the input file, a <code>source.dust.input</code>
-component's \bt_msg_iter emits an \bt_ev_msg.
+For each line of the input file, the \bt_msg_iter of
+a <code>source.dust.input</code> component emits an \bt_ev_msg.
 
 To simplify this example, a <code>source.dust.input</code> component is
 not resilient and needs a valid input and valid initialization
@@ -123,7 +124,7 @@ component class is identified in the \bt_cli
 command-line tool as <code>filter.distill.theone</code>.
 
 A <code>filter.distill.theone</code> \bt_comp removes specific
-\bt_p_ev_msg from a \bt_stream based on their \bt_ev_cls's name.
+\bt_p_ev_msg from a \bt_stream based on the name of their \bt_ev_cls.
 
 A <code>filter.distill.theone</code> component accepts a single
 \ref api-comp-cls-dev-meth-init "initialization parameter",
@@ -193,10 +194,12 @@ example:
 
 For each line, there is:
 
-- The event message's index (simple counter).
-- The event message's \bt_ev_cls \ref api-tir-ev-cls-prop-name "name".
-- The number of members in the event message's \bt_ev's
-  \ref api-tir-ev-prop-payload "payload field".
+- The index of the event message (simple counter).
+- The \bt_ev_cls \ref api-tir-ev-cls-prop-name "name" of the event
+  message.
+- The number of members in the
+  \ref api-tir-ev-prop-payload "payload field" of the \bt_ev
+  of the event message.
 
 A <code>sink.epitome.output</code> component does not need any
 \ref api-comp-cls-dev-meth-init "initialization parameter": it just

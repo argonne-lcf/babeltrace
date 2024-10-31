@@ -78,7 +78,7 @@ You cannot directly create a field: there are no
 <code>bt_field_*_create()</code> functions. The \bt_name library
 creates fields within an \bt_ev or a \bt_pkt from \bt_p_fc.
 Therefore, to fill the payload fields of an \bt_ev, you must first
-borrow the event's existing payload \bt_struct_field with
+borrow the existing payload \bt_struct_field of the event with
 bt_event_borrow_payload_field() and then borrow each field, recursively,
 to set their values.
 
@@ -127,9 +127,10 @@ postcondition.
 
 All the field types share the same C type, #bt_field.
 
-Get the type enumerator of a field's class with bt_field_get_class_type().
-Get whether or not a field class type conceptually \em is a given type
-with the inline bt_field_class_type_is() function.
+Get the type enumerator of the class of a field with
+bt_field_get_class_type(). Get whether or not a field class type
+conceptually \em is a given type with the inline
+bt_field_class_type_is() function.
 
 <h1>\anchor api-tir-field-bool Boolean field</h1>
 
@@ -149,7 +150,7 @@ A bit array field contains a fixed-length array of bits. Its length
 is \ref api-tir-fc-ba-prop-len "given by its class".
 
 The bit array field API interprets the array as an unsigned integer
-value: the least significant bit's index is&nbsp;0.
+value: the index of the least significant bit is&nbsp;0.
 
 For example, to get whether or not bit&nbsp;3 of a bit array field is
 set:
@@ -311,7 +312,7 @@ bt_field_string_get_value().
 Get the length of a string field with
 bt_field_string_get_length().
 
-Append a string to a string field's current value with
+Append a string to the current value of a string field with
 bt_field_string_append() and bt_field_string_append_with_length().
 
 Clear a string field with bt_field_string_clear().
@@ -347,13 +348,13 @@ A BLOB field is an \em abstract field. The concrete BLOB fields are:
     each instance of the same dynamic BLOB field class can contain a
     different number of bytes.
 
-    Set a dynamic BLOB field's length with
+    Set the length of a dynamic BLOB field with
     bt_field_blob_dynamic_set_length() before you get its data
     with bt_field_blob_get_data().
   </dd>
 </dl>
 
-Get a BLOB field's length with bt_field_blob_get_length().
+Get the length of a BLOB field with bt_field_blob_get_length().
 
 Get the data of a BLOB field with bt_field_blob_get_data()
 or bt_field_blob_get_data_const().
@@ -383,13 +384,13 @@ An array field is an \em abstract field. The concrete array fields are:
     each instance of the same dynamic array field class can contain a
     different number of elements.
 
-    Set a dynamic array field's length with
+    Set the length of a dynamic array field with
     bt_field_array_dynamic_set_length() before you borrow any of its
     fields.
   </dd>
 </dl>
 
-Get an array field's length with bt_field_array_get_length().
+Get the length of an array field with bt_field_array_get_length().
 
 Borrow a field from an array field at a given index with
 bt_field_array_borrow_element_field_by_index() and
@@ -403,11 +404,11 @@ A structure field contains an ordered list of zero or more members. A
 structure field member contains a field: it's an instance of a structure
 field class member.
 
-Borrow a member's field from a structure field at a given index with
-bt_field_structure_borrow_member_field_by_index() and
+Borrow the field of a member from a structure field at a given index
+with bt_field_structure_borrow_member_field_by_index() and
 bt_field_structure_borrow_member_field_by_index_const().
 
-Borrow a member's field from a structure field by name with
+Borrow the field of a member from a structure field by name with
 bt_field_structure_borrow_member_field_by_name() and
 bt_field_structure_borrow_member_field_by_name_const().
 
@@ -435,15 +436,15 @@ instance of a variant field class option.
 Set the current option of a variant field with
 bt_field_variant_select_option_by_index().
 
-Get a variant field's selected option's index with
+Get the selected option index of a variant field with
 bt_field_variant_get_selected_option_index().
 
-Borrow a variant field's selected option's field with
+Borrow the field of the selected option of a variant field with
 bt_field_variant_borrow_selected_option_field() and
 bt_field_variant_borrow_selected_option_field_const().
 
-Borrow the class of a variant field's selected
-option with bt_field_variant_borrow_selected_option_class_const(),
+Borrow the class of the selected option of a variant field with
+bt_field_variant_borrow_selected_option_class_const(),
 bt_field_variant_with_selector_field_integer_unsigned_borrow_selected_option_class_const(),
 and
 bt_field_variant_with_selector_field_integer_signed_borrow_selected_option_class_const().
@@ -480,7 +481,7 @@ bt_field_class_get_type(bt_field_borrow_class(field))
 @endcode
 
 @param[in] field
-    Field of which to get the class's type enumerator
+    Field of which to get the type enumerator of its class.
 
 @returns
     Type enumerator of the class of \bt_p{field}.
@@ -584,7 +585,7 @@ extern bt_bool bt_field_bool_get_value(const bt_field *field) __BT_NOEXCEPT;
     Sets the bits of the \bt_ba_field \bt_p{field} to the bits of
     \bt_p{bits}.
 
-The least significant bit's index is 0.
+The index of the least significant bit is 0.
 
 See \bt_c_ba_field to learn more.
 
@@ -608,7 +609,7 @@ extern void bt_field_bit_array_set_value_as_integer(bt_field *field,
     Returns the bits of the \bt_ba_field \bt_p{field} as an
     unsigned integer.
 
-The least significant bit's index is 0.
+The index of the least significant bit is 0.
 
 See \bt_c_ba_field to learn more.
 
@@ -1616,7 +1617,7 @@ bt_field_variant_select_option_by_index(
     you call this function.
 
 @param[in] field
-    Variant field from which to borrow the selected option's field.
+    Variant field from which to borrow the field of its selected option.
 
 @returns
     @parblock
@@ -1630,9 +1631,9 @@ bt_field_variant_select_option_by_index(
 @bt_pre_is_var_field{field}
 
 @sa bt_field_variant_select_option_by_index() &mdash;
-    Sets a variant field's selected option.
+    Sets the selected option of a variant field.
 @sa bt_field_variant_get_selected_option_index() &mdash;
-    Returns the index of a variant field's selected option.
+    Returns the index of the selected option of a variant field.
 @sa bt_field_variant_borrow_selected_option_field_const() &mdash;
     \c const version of this function.
 */
@@ -1665,7 +1666,7 @@ bt_field_variant_borrow_selected_option_field_const(
 @bt_pre_is_var_field{field}
 
 @sa bt_field_variant_borrow_selected_option_field_const() &mdash;
-    Borrows the field of a variant field's selected option.
+    Borrows the field of the selected option of a variant field.
 */
 extern uint64_t bt_field_variant_get_selected_option_index(
 		const bt_field *field) __BT_NOEXCEPT;
@@ -1683,7 +1684,7 @@ bt_field_class_variant_borrow_option_by_index(
 @endcode
 
 @param[in] field
-    Variant field of which to get the selected option's class.
+    Variant field of which to get the class of its selected option.
 
 @returns
     Class of the selected option of \bt_p{field}.
@@ -1708,7 +1709,7 @@ bt_field_class_variant_with_selector_field_integer_unsigned_borrow_option_by_ind
 @endcode
 
 @param[in] field
-    Variant field of which to get the selected option's class.
+    Variant field of which to get the class of its selected option.
 
 @returns
     Class of the selected option of \bt_p{field}.
@@ -1733,7 +1734,7 @@ bt_field_class_variant_with_selector_field_integer_signed_borrow_option_by_index
 @endcode
 
 @param[in] field
-    Variant field of which to get the selected option's class.
+    Variant field of which to get the class of its selected option.
 
 @returns
     Class of the selected option of \bt_p{field}.

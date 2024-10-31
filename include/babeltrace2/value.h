@@ -591,8 +591,8 @@ This is the \em only instance of a null value.
 
 Like any type of value, the null value is a shared object: if you get a
 new null value reference with bt_value_get_ref(), you must eventually
-put it with bt_value_put_ref(). The null value singleton's reference
-count must never reach 0: libbabeltrace2 logs a warning message when
+put it with bt_value_put_ref(). The reference count of the null value
+singleton must never reach 0: libbabeltrace2 logs a warning message when
 this programming error occurs.
 
 Because all null values point to the same null value singleton, you can
@@ -1513,7 +1513,7 @@ To insert an entry having a null value, pass #bt_value_null as
 \bt_p{entry_value}.
 
 On success, if \bt_p{value} already contains an entry with key
-\bt_p{key}, this function replaces the existing entry's value with
+\bt_p{key}, this function replaces the value of the existing entry with
 \bt_p{entry_value}.
 
 @param[in] value
@@ -1568,8 +1568,8 @@ extern bt_value_map_insert_entry_status bt_value_map_insert_entry(
     in the map value \bt_p{value}.
 
 On success, if \bt_p{value} already contains an entry with key
-\bt_p{key}, this function replaces the existing entry's value with the
-created boolean value.
+\bt_p{key}, this function replaces the value of the existing entry with
+the created boolean value.
 
 @param[in] value
     Map value in which to insert or replace an entry with key \bt_p{key}
@@ -1603,8 +1603,8 @@ extern bt_value_map_insert_entry_status bt_value_map_insert_bool_entry(
     value in the map value \bt_p{value}.
 
 On success, if \bt_p{value} already contains an entry with key
-\bt_p{key}, this function replaces the existing entry's value with the
-created unsigned integer value.
+\bt_p{key}, this function replaces the value of the existing entry with
+the created unsigned integer value.
 
 @param[in] value
     Map value in which to insert or replace an entry with key \bt_p{key}
@@ -1638,8 +1638,8 @@ bt_value_map_insert_unsigned_integer_entry(bt_value *value, const char *key,
     in the map value \bt_p{value}.
 
 On success, if \bt_p{value} already contains an entry with key
-\bt_p{key}, this function replaces the existing entry's value with the
-created signed integer value.
+\bt_p{key}, this function replaces the value of the existing entry with
+the created signed integer value.
 
 @param[in] value
     Map value in which to insert or replace an entry with key \bt_p{key}
@@ -1673,8 +1673,8 @@ bt_value_map_insert_signed_integer_entry(bt_value *value, const char *key,
     value \bt_p{value}.
 
 On success, if \bt_p{value} already contains an entry with key
-\bt_p{key}, this function replaces the existing entry's value with the
-created real value.
+\bt_p{key}, this function replaces the value of the existing entry with
+the created real value.
 
 @param[in] value
     Map value in which to insert or replace an entry with key \bt_p{key}
@@ -1708,8 +1708,8 @@ extern bt_value_map_insert_entry_status bt_value_map_insert_real_entry(
     in the map value \bt_p{value}.
 
 On success, if \bt_p{value} already contains an entry with key
-\bt_p{key}, this function replaces the existing entry's value with the
-created string value.
+\bt_p{key}, this function replaces the value of the existing entry with
+the created string value.
 
 @param[in] value
     Map value in which to insert or replace an entry with key \bt_p{key}
@@ -1746,8 +1746,8 @@ On success, if \bt_p{entry_value} is not \c NULL, this function sets
 array value.
 
 On success, if \bt_p{value} already contains an entry with key
-\bt_p{key}, this function replaces the existing entry's value with the
-created empty array value.
+\bt_p{key}, this function replaces the value of the existing entry with
+the created empty array value.
 
 @param[in] value
     Map value in which to insert or replace an entry with key \bt_p{key}
@@ -1785,8 +1785,8 @@ On success, if \bt_p{entry_value} is not \c NULL, this function sets
 value.
 
 On success, if \bt_p{value} already contains an entry with key
-\bt_p{key}, this function replaces the existing entry's value with the
-created empty map value.
+\bt_p{key}, this function replaces the value of the existing entry with
+the created empty map value.
 
 @param[in] value
     Map value in which to insert or replace an entry with key \bt_p{key}

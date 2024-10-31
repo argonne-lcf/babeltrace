@@ -84,19 +84,19 @@ An event class has the following properties:
 <dl>
   <dt>\anchor api-tir-ev-cls-prop-id Numeric ID</dt>
   <dd>
-    Numeric ID, unique amongst the numeric IDs of the event class's
-    \bt_stream_cls's event classes.
+    Numeric ID, unique amongst the numeric IDs of the event classes
+    of the parent \bt_stream_cls.
 
-    Depending on whether or not the event class's stream class
+    Depending on whether or not the stream class of the event class
     automatically assigns event class IDs
     (see bt_stream_class_assigns_automatic_event_class_id()),
-    set the event class's numeric ID on creation with
+    set the numeric ID of the event class on creation with
     bt_event_class_create() or
     bt_event_class_create_with_id().
 
     You cannot change the numeric ID once the event class is created.
 
-    Get an event class's numeric ID with bt_event_class_get_id().
+    Get the numeric ID of an event class with bt_event_class_get_id().
   </dd>
 
   <dt>
@@ -139,8 +139,8 @@ An event class has the following properties:
   <dd>
     Log level of the event class.
 
-    The event class's log level corresponds to the log level of the
-    tracer's original instrumentation point.
+    The log level of the event class corresponds to the log level of the
+    original instrumentation point of the tracer.
 
     Use bt_event_class_set_log_level() and
     bt_event_class_get_log_level().
@@ -165,7 +165,7 @@ An event class has the following properties:
     Payload \bt_fc of the event class.
 
     The payload of an event class instance (\bt_ev) contains the
-    event's main data.
+    main data of the event.
 
     Use bt_event_class_set_payload_field_class()
     bt_event_class_borrow_payload_field_class(),
@@ -181,7 +181,7 @@ An event class has the following properties:
 
     The specific context of an event class instance (\bt_ev) contains
     any contextual data of which the layout is specific to the
-    event's class and which does not belong to the payload.
+    class of the event and which does not belong to the payload.
 
     Use bt_event_class_set_specific_context_field_class()
     bt_event_class_borrow_specific_context_field_class(),
@@ -1075,10 +1075,10 @@ See the \ref api-tir-ev-cls-prop-user-attrs "user attributes" property.
 
 @note
     When you create a default event class with bt_event_class_create()
-    or bt_event_class_create_with_id(), the event class's initial user
-    attributes is an empty \bt_map_val. Therefore you can borrow it with
-    bt_event_class_borrow_user_attributes() and fill it directly instead
-    of setting a new one with this function.
+    or bt_event_class_create_with_id(), the initial user
+    attributes of the event class is an empty \bt_map_val. Therefore you
+    can borrow it with bt_event_class_borrow_user_attributes() and fill
+    it directly instead of setting a new one with this function.
 
 @param[in] event_class
     Event class of which to set the user attributes to
@@ -1106,8 +1106,8 @@ See the \ref api-tir-ev-cls-prop-user-attrs "user attributes" property.
 
 @note
     When you create a default event class with bt_event_class_create()
-    or bt_event_class_create_with_id(), the event class's initial user
-    attributes is an empty \bt_map_val.
+    or bt_event_class_create_with_id(), the initial user
+    attributes of the event class is an empty \bt_map_val.
 
 @param[in] event_class
     Event class from which to borrow the user attributes.

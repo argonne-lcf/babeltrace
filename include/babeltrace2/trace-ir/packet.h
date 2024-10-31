@@ -36,8 +36,8 @@ case, for example, of the
 <a href="https://diamon.org/ctf/">Common Trace Format</a>.
 
 Because a packet could contain millions of events, there are no actual
-links from a packet to its events. However, there are links from a
-packet's events to it (see bt_event_borrow_packet() and
+links from a packet to its events. However, there are links from the
+events of a packet to it (see bt_event_borrow_packet() and
 bt_event_borrow_packet_const()).
 
 A packet can contain a context \bt_field which is data associated to
@@ -49,8 +49,8 @@ A packet conceptually belongs to a \bt_stream. Borrow the stream of a
 packet with bt_packet_borrow_stream() and
 bt_packet_borrow_stream_const().
 
-Before you create a packet for a given stream, the stream's class must
-\ref api-tir-stream-cls-prop-supports-pkt "support packets".
+Before you create a packet for a given stream, the class of the stream
+must \ref api-tir-stream-cls-prop-supports-pkt "support packets".
 
 Create a packet with bt_packet_create(). You can then use this packet to
 create a \bt_pb_msg and a \bt_pe_msg.
@@ -72,13 +72,13 @@ A packet has the following property:
 <dl>
   <dt>\anchor api-tir-pkt-prop-ctx Context field</dt>
   <dd>
-    Packet's context \bt_field.
+    Context \bt_field of the packet.
 
     The context of a packet contains data associated to all its
     events.
 
-    The \ref api-tir-fc "class" of a packet's context field is set
-    at the packet's \bt_stream_cls level. See
+    The \ref api-tir-fc "class" of the context field of a packet is set
+    at the level of the \bt_stream_cls of the packet. See
     bt_stream_class_set_packet_context_field_class()
     bt_stream_class_borrow_packet_context_field_class(),
     and bt_stream_class_borrow_packet_context_field_class_const()

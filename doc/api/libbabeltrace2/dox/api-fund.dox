@@ -66,8 +66,8 @@ In the output above:
 
   We use this ID for internal libbabeltrace2 testing.
 
-- The <code>Function:</code> line shows which function's contract was
-  broken.
+- The <code>Function:</code> line shows which contract of the function
+  was broken.
 
 Because precondition and postcondition checks detect programming errors,
 libbabeltrace2's approach is to abort as soon as possible so that you
@@ -140,7 +140,8 @@ Some \bt_name objects are \em shared while some others are \em unique:
     href="https://en.wikipedia.org/wiki/Reference_counting">reference
     count</a>.
 
-    A shared object's creation function returns a \em new reference.
+    The creation function of a shared object returns
+    a \em new reference.
 
     The API of a given shared object type contains:
 
@@ -154,9 +155,9 @@ Some \bt_name objects are \em shared while some others are \em unique:
       expression to \c NULL. This macro ends with \c _PUT_REF_AND_RESET.
 
     - A macro to move an existing reference from a source expression to
-      a destination expression, putting the destination expression's
-      existing reference, and setting the source expression to \c NULL.
-      This macro ends with \c _MOVE_REF.
+      a destination expression, putting the existing reference of the
+      destination expression, and setting the source expression to
+      \c NULL. This macro ends with \c _MOVE_REF.
 
     For example, bt_value_get_ref() and bt_value_put_ref() get and put
     \bt_val object references, BT_VALUE_PUT_REF_AND_RESET() puts a
@@ -174,8 +175,8 @@ Some \bt_name objects are \em shared while some others are \em unique:
     its reference count technically reaches zero.
 
     A function which accepts a shared object never "takes" or steals the
-    caller's reference unless its name contains the word \c move: you
-    still have your own reference when the function returns. For
+    reference of the caller unless its name contains the word \c move:
+    you still have your own reference when the function returns. For
     example:
 
     @code
@@ -198,9 +199,9 @@ Some \bt_name objects are \em shared while some others are \em unique:
     is always its sole owner.
 
     Because you cannot get a new unique object reference, you \em must
-    ensure that you own the unique object's owner to keep it alive. The
-    <a class="el" href="topics.html">API reference pages</a> make it
-    clear, depending on the context, which
+    ensure that you own the ultimate owner of a unique object to keep it
+    alive. The <a class="el" href="topics.html">API reference pages</a>
+    make it clear, depending on the context, which
     shared object is the ultimate owner of a given unique object.
 
     In general, you cannot create a unique object: the library creates
@@ -220,14 +221,16 @@ indicates whether the documented objects are shared or unique.
 The library can \em freeze some types of \bt_name objects when specific
 functions succeed.
 
-A frozen object is immutable: trying to set an object's property once
-it's frozen represents a \ref api-fund-pre-post "precondition" break.
+A frozen object is immutable: trying to set the property of an object
+once it's frozen represents a \ref api-fund-pre-post "precondition"
+break.
 
 For example, the library freezes the source \bt_comp initialization
 parameters when you call bt_graph_add_source_component(): this
-guarantees to the component's
-\ref api-comp-cls-dev-meth-init "initialization method" that the
-parameters will never change for the rest of their lifetime.
+guarantees to the
+\ref api-comp-cls-dev-meth-init "initialization method"
+of the component that the parameters will never change for the rest of
+their lifetime.
 
 When an object becomes frozen, its contained objects, if any, also
 become frozen, recursively.
@@ -255,9 +258,9 @@ accept a #bt_event pointer.
 
 The API uses
 <a href="https://en.wikipedia.org/wiki/Opaque_pointer">opaque pointers</a>,
-so that you don't having access to the object type's actual C structure.
-This helps with the development of features and fixes in future releases
-of \bt_name.
+so that you don't having access to the actual&nbsp;C structure of the
+object type. This helps with the development of features and fixes in
+future releases of \bt_name.
 
 Some objects share the same C type when different conceptual types can
 be contained in some collection. For example, all \bt_val objects have
@@ -266,7 +269,7 @@ types of values. You must be careful to only call the functions which
 apply to a specific type of such objects.
 The <a class="el" href="topics.html">API reference pages</a> make
 this clear in the precondition section. Such objects always have a
-<code>*_get_type()</code> function to get the object's exact type
+<code>*_get_type()</code> function to its the exact type
 enumerator. For example, bt_value_get_type() returns the type enumerator
 of a given \bt_val object.
 
@@ -278,8 +281,8 @@ an \bt_enum_fc mapping, but they have different C types:
 #bt_field_class_enumeration_unsigned_mapping and
 #bt_field_class_enumeration_mapping. Get the latter from the former with
 bt_field_class_enumeration_unsigned_mapping_as_mapping_const().
-The <code>bt_A_as_B()</code> functions do not change the object's
-reference count and they accept \c NULL.
+The <code>bt_A_as_B()</code> functions do not change the reference count
+of the object and they accept \c NULL.
 
 @attention
     \b Never directly cast a \bt_name object pointer from some C type to
@@ -296,8 +299,8 @@ As such, when a function returns a \c const object pointer, directly or
 through an output parameter, you can't modify the object.
 
 @attention
-    \b Never remove a \bt_name object pointer's \c const qualifier. The
-    API is designed so that you never need to do that.
+    \b Never remove the \c const qualifier of a \bt_name object pointer.
+    The API is designed so that you never need to do that.
 
 Functions which accept or return a \c const object pointer end with
 \c _const when they have (or could have in the future) a non \c const
@@ -308,7 +311,7 @@ Simple property getter functions do not end with \c _const.
 
 \ref api-fund-shared-object "Reference count" changing functions, ending
 with \c _get_ref and \c _put_ref(), accept a \c const object pointer
-parameter: the library does not consider that an object's nature is
+parameter: the library does not consider that the nature of an object is
 altered when its reference count changes.
 
 @subsection api-fund-int-types C integer types
@@ -483,7 +486,7 @@ explicitly pass an error object to the library functions.
 When a library function or \ref api-fund-user-classes "user method"
 returns an error status code (any status enumerator which contains
 the word \c ERROR), it \em can add one or more error causes to the
-current thread's error object.
+error object of the current thread.
 
 This makes it possible for the end user to understand the contexts which
 lead to the error, possibly across many \bt_p_plugin written by
@@ -496,12 +499,14 @@ When you "catch" an error, that is, react to a function returning an
 error status code without returning an error status code yourself,
 you can:
 
-- Take the current thread's error with bt_current_thread_take_error() to
-  get its causes, possibly presenting them to the end user.
+- Take the error of the current thread with
+  bt_current_thread_take_error() to get its causes, possibly presenting
+  them to the end user.
 
   You then need to release the error with bt_error_release().
 
-- Clear the current thread's error with bt_current_thread_clear_error().
+- Clear the error of the current thread with
+  bt_current_thread_clear_error().
 
 @attention
     You \em cannot call any libbabeltrace2 function when the current
@@ -511,8 +516,8 @@ you can:
 
 The
 <a href="https://babeltrace.org/docs/v\bt_version_min_maj/man1/babeltrace2.1"><code>babeltrace2</code></a>
-CLI uses this feature to pretty-print an error's causes to the end user,
-for example:
+CLI uses this feature to pretty-print the causes of an error to the end
+user, for example:
 
 @code{.unparsed}
 ERROR:    [Babeltrace CLI] (babeltrace2.c:2521)
@@ -540,10 +545,10 @@ CAUSED BY [auto-disc-source-ctf-fs: 'source.ctf.fs'] (fs.c:734)
 libbabeltrace2 contains many hundreds of logging statements to help you
 follow and debug your \bt_plugin or program.
 
-By default, the library's logging is disabled. To enable it, use
+By default, the logging of the library is disabled. To enable it, use
 bt_logging_set_global_level().
 
-To set the library's initial logging level (checked once at library
+To set the initial logging level of the library (checked once at library
 loading time), set the \c LIBBABELTRACE2_INIT_LOG_LEVEL environment
 variable, with one of:
 

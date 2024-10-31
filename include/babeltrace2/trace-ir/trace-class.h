@@ -353,10 +353,10 @@ property.
 
 @note
     When you create a default trace class with bt_trace_class_create()
-    or bt_trace_class_create_with_id(), the trace class's initial user
-    attributes is an empty \bt_map_val. Therefore you can borrow it with
-    bt_trace_class_borrow_user_attributes() and fill it directly
-    instead of setting a new one with this function.
+    or bt_trace_class_create_with_id(), the initial user
+    attributes of the trace class is an empty \bt_map_val. Therefore you
+    can borrow it with bt_trace_class_borrow_user_attributes() and fill
+    it directly instead of setting a new one with this function.
 
 @param[in] trace_class
     Trace class of which to set the user attributes to
@@ -385,8 +385,8 @@ property.
 
 @note
     When you create a default trace class with bt_trace_class_create()
-    or bt_trace_class_create_with_id(), the trace class's initial user
-    attributes is an empty \bt_map_val.
+    or bt_trace_class_create_with_id(), the initial user
+    attributes of the trace class is an empty \bt_map_val.
 
 @param[in] trace_class
     Trace class from which to borrow the user attributes.

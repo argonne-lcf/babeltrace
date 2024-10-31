@@ -39,8 +39,8 @@ because they must not change while being transported from one
 \bt_comp to the other.
 
 Instead of having a stream clock object, messages have a
-default \bt_cs: this is a snapshot of the value of a stream's default
-clock (a clock class instance):
+default \bt_cs: this is a snapshot of the value of the
+default clock of a stream (a clock class instance):
 
 @image html clocks.png
 
@@ -52,14 +52,14 @@ In the illustration above, notice that:
 - A stream class has a default clock class (orange bell alarm clock).
 
 - Each stream has a default clock (yellow bell alarm clock): this is an
-  instance of the stream's class's default clock class.
+  instance of the default clock class of the class of the stream.
 
 - Each \bt_msg (objects in blue stream rectangles) created for a given
   stream has a default \bt_cs (yellow star): this is a snapshot of the
-  stream's default clock.
+  default clock of the stream.
 
   In other words, a default clock snapshot contains the value of the
-  stream's default clock when this message occurred.
+  default clock of the stream when this message occurred.
 
 The default clock class property of a \bt_stream_cls is optional:
 if a stream class has no default clock class, then its instances
@@ -83,9 +83,9 @@ bt_clock_class_create().
 
 The value of a \bt_stream clock (a conceptual instance of a clock class)
 is in <em>cycles</em>. This value is always positive and is relative to
-the clock's offset, which is itself relative to its origin.
+the offset of the clock, which is itself relative to its origin.
 
-A clock's origin is one of, depending on its class:
+The origin of a clock is one of, depending on its class:
 
 <dl>
   <dt>If bt_clock_class_origin_is_known() returns #BT_FALSE</dt>
@@ -134,15 +134,15 @@ A clock's origin is one of, depending on its class:
 
 To compute an effective stream clock value, in cycles from its origin:
 
--# Convert the clock's
+-# Convert the
    \link api-tir-clock-cls-prop-offset "offset in seconds"\endlink
-   property to cycles using its
+   property of the clock to cycles using its
    \ref api-tir-clock-cls-prop-freq "frequency".
 
--# Add the value of step&nbsp;1, the stream clock's value,
-   and the clock's
+-# Add the value of step&nbsp;1, the value of the stream clock,
+   and the
    \link api-tir-clock-cls-prop-offset "offset in cycles"\endlink
-   property.
+   property of the clock.
 
 Because typical tracer clocks have a high frequency (often 1&nbsp;GHz
 and more), an effective stream clock value (cycles since Unix epoch, for
@@ -159,13 +159,13 @@ using the relevant clock class properties (frequency and offset).
 
 Those functions perform this computation:
 
--# Convert the clock's "offset in cycles" property to seconds using its
-   frequency.
+-# Convert the "offset in cycles" property of the clock to seconds using
+   its frequency.
 
--# Convert the clock's value to seconds using the clock's frequency.
+-# Convert the value of the clock to seconds using its frequency.
 
--# Add the values of step&nbsp;1, step&nbsp;2, and the clock's
-   "offset in seconds" property.
+-# Add the values of step&nbsp;1, step&nbsp;2, and the
+   "offset in seconds" property of the clock.
 
 -# Convert the value of step&nbsp;3 to nanoseconds.
 
@@ -173,13 +173,13 @@ The following illustration shows the possible scenarios:
 
 @image html clock-terminology.png
 
-The clock's "offset in seconds" property can be negative. For example,
-considering:
+The "offset in seconds" property of the clock can be negative. For
+example, considering:
 
 - Frequency: 1000&nbsp;Hz.
 - Offset in seconds: −10&nbsp;seconds.
 - Offset in cycles: 500&nbsp;cycles (that is, 0.5&nbsp;seconds).
-- Stream clock's value: 2000&nbsp;cycles (that is, 2&nbsp;seconds).
+- Stream clock value: 2000&nbsp;cycles (that is, 2&nbsp;seconds).
 
 Then the computed value is −7.5&nbsp;seconds from origin, or
 −7,500,000,000&nbsp;nanoseconds from origin.
@@ -191,7 +191,7 @@ A clock class has the following properties:
 <dl>
   <dt>\anchor api-tir-clock-cls-prop-freq Frequency</dt>
   <dd>
-    Frequency of the clock class's instances (stream clocks)
+    Frequency of the clock class instances (stream clocks)
     (cycles/second).
 
     Use bt_clock_class_set_frequency() and
@@ -204,11 +204,11 @@ A clock class has the following properties:
   </dt>
   <dd>
     Offset in seconds relative to the
-    \ref api-tir-clock-cls-origin "origin" of the clock class's
+    \ref api-tir-clock-cls-origin "origin" of the clock class
     instances (stream clocks), and offset in cycles relative to the
     offset in seconds.
 
-    The values of the clock class's instances are relative to the
+    The values of the clock class instances are relative to the
     computed offset.
 
     Use bt_clock_class_set_offset() and bt_clock_class_get_offset().
@@ -221,7 +221,7 @@ A clock class has the following properties:
     with the effective \bt_mip version&nbsp;1)
   </dt>
   <dd>
-    Precision of the clock class's instance (stream clocks) values
+    Precision of the clock class instance (stream clocks) values
     (cycles).
 
     For example, considering a precision of 7&nbsp;cycles, an
@@ -242,7 +242,7 @@ A clock class has the following properties:
     with the effective \bt_mip version&nbsp;1)
   </dt>
   <dd>
-    Accuracy of the clock class's instance (stream clocks) values
+    Accuracy of the clock class instance (stream clocks) values
     (cycles).
 
     For example, considering an accuracy of 7&nbsp;cycles, a
@@ -260,7 +260,7 @@ A clock class has the following properties:
     Origin
   </dt>
   <dd>
-    Origin of the clock class's instances (stream clocks).
+    Origin of the clock class instances (stream clocks).
 
     Depending on the effective \bt_mip (MIP) version of the trace
     processing \bt_graph:
@@ -295,7 +295,7 @@ A clock class has the following properties:
 
   <dt>\anchor api-tir-clock-cls-prop-iden \bt_dt_opt Identity</dt>
   <dd>
-    Identity of the clock class's instances (stream clocks).
+    Identity of the clock class instances (stream clocks).
 
     Depending on the effective \bt_mip (MIP) version of the trace
     processing \bt_graph:
@@ -466,7 +466,8 @@ See the \ref api-tir-clock-cls-prop-freq "frequency" property.
 @pre
     \bt_p{frequency} is not <code>UINT64_C(-1)</code>.
 @pre
-    \bt_p{frequency} is greater than the clock class's offset in cycles
+    \bt_p{frequency} is greater than the offset in cycles of the
+    clock class
     (as returned by bt_clock_class_get_offset()).
 
 @sa bt_clock_class_get_frequency() &mdash;
@@ -514,7 +515,7 @@ See the \ref api-tir-clock-cls-prop-offset "offset" property.
 @bt_pre_not_null{clock_class}
 @bt_pre_hot{clock_class}
 @pre
-    \bt_p{offset_cycles} is less than the clock class's frequency
+    \bt_p{offset_cycles} is less than the frequency of the clock class
     (as returned by bt_clock_class_get_frequency()).
 
 @sa bt_clock_class_get_offset() &mdash;
@@ -1419,8 +1420,8 @@ property.
 
 @note
     When you create a default clock class with bt_clock_class_create(),
-    the clock class's initial user attributes is an empty \bt_map_val.
-    Therefore you can borrow it with
+    the initial user attributes of the clock class is an empty
+    \bt_map_val. Therefore you can borrow it with
     bt_clock_class_borrow_user_attributes() and fill it directly instead
     of setting a new one with this function.
 
@@ -1451,7 +1452,8 @@ property.
 
 @note
     When you create a default clock class with bt_clock_class_create(),
-    the clock class's initial user attributes is an empty \bt_map_val.
+    the initial user attributes of the clock class is an empty
+    \bt_map_val.
 
 @param[in] clock_class
     Clock class from which to borrow the user attributes.
@@ -1555,9 +1557,9 @@ This function can fail and return the
 code if any step of the computation process causes an integer overflow.
 
 @param[in] clock_class
-    Stream clock's class.
+    Class of the stream clock.
 @param[in] value
-    Stream clock's value (cycles) to convert to nanoseconds from
+    Value of the stream clock (cycles) to convert to nanoseconds from
     the origin of \bt_p{clock_class}.
 @param[out] ns_from_origin
     <strong>On success</strong>, \bt_p{*ns_from_origin} is \bt_p{value}
@@ -1572,8 +1574,8 @@ code if any step of the computation process causes an integer overflow.
 @bt_pre_not_null{ns_from_origin}
 
 @sa bt_util_clock_cycles_to_ns_from_origin() &mdash;
-    Converts a clock value from cycles to nanoseconds from the clock's
-    origin.
+    Converts a clock value from cycles to nanoseconds from the origin
+    of the clock.
 */
 extern bt_clock_class_cycles_to_ns_from_origin_status
 bt_clock_class_cycles_to_ns_from_origin(

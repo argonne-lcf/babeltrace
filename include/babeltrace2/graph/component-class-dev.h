@@ -56,9 +56,9 @@ methods:
   <dd>
     Operates on an instance (a \bt_comp).
 
-    The type of the method's first parameter is
+    The type of the first parameter of the method is
     #bt_self_component_source, #bt_self_component_filter, or
-    bt_self_component_sink, depending on the component class's type.
+    bt_self_component_sink, depending on the component class type.
 
     This is similar to an instance method in Python (where the instance
     object name is generally <code>self</code>) or a member function
@@ -70,10 +70,9 @@ methods:
   <dd>
     Operates on a component class.
 
-    The type of the method's first parameter is
+    The type of the first parameter of the method is
     #bt_self_component_class_source, #bt_self_component_class_filter, or
-    bt_self_component_class_sink, depending on the component class's
-    type.
+    bt_self_component_class_sink, depending on the component class type.
 
     This is similar to a class method in Python or a static member
     function in C++, for example.
@@ -97,7 +96,7 @@ name (not unique in any way) at creation time.
 
 When you create a \bt_src_comp_cls or a \bt_flt_comp_cls, you must pass
 a \bt_msg_iter_cls. This is the class of any \bt_msg_iter created for
-one of the component class's instance's \bt_oport.
+one of the \bt_oport of instances of the component class.
 
 When you create a \bt_sink_comp_cls, you must pass a
 \ref api-comp-cls-dev-meth-consume "consuming method".
@@ -256,12 +255,12 @@ The available component class methods to implement are:
     destroyed.
 
     For \bt_p_src_comp and \bt_p_flt_comp, the library guarantees that
-    this method is called \em after all the component's \bt_p_msg_iter
-    are finalized.
+    this method is called \em after all the \bt_p_msg_iter of the
+    component are finalized.
 
-    This method is \em not called if the component's
-    \ref api-comp-cls-dev-meth-init "initialization method"
-    previously returned an error status code.
+    This method is \em not called if the
+    \ref api-comp-cls-dev-meth-init "initialization method" of
+    the component previously returned an error status code.
 
     Within this method, you cannot:
 
@@ -321,14 +320,15 @@ The available component class methods to implement are:
     bt_graph_run() or bt_graph_run_once() is called to notify your
     \bt_sink_comp that the graph is now configured.
 
-    Within this method, you can create \bt_p_msg_iter on your sink
-    component's \bt_p_iport. You can also manipulate those message
+    Within this method, you can create \bt_p_msg_iter on
+    \bt_p_iport of your sink
+    component. You can also manipulate those message
     iterators, for example get and process initial messages or make
     them.
 
-    This method is called \em after the component's
-    \ref api-comp-cls-dev-meth-init "initialization method"
-    is called. You cannot create a message iterator in the
+    This method is called \em after the
+    \ref api-comp-cls-dev-meth-init "initialization method" of the
+    component is called. You cannot create a message iterator in the
     initialization method.
 
     Within this method, you \em cannot add an \bt_iport with
@@ -361,13 +361,14 @@ The available component class methods to implement are:
     \ref api-comp-cls-dev-meth-oport-connected "output port connected"
     methods.
 
-    You can create user data and set it as the \bt_self_comp's user data
-    with bt_self_component_set_data().
+    You can create user data and set it as the user data of the
+    \bt_self_comp with bt_self_component_set_data().
 
     If you return #BT_COMPONENT_CLASS_INITIALIZE_METHOD_STATUS_OK from
-    this method, then your component's
-    \ref api-comp-cls-dev-meth-fini "finalization method" will be
-    called, if it exists, when your component is finalized.
+    this method, then the
+    \ref api-comp-cls-dev-meth-fini "finalization method" of
+    your component will be called, if it exists, when your component is
+    finalized.
 
     Set this optional method with
     bt_component_class_source_set_initialize_method(),
@@ -429,12 +430,13 @@ The available component class methods to implement are:
     You also receive a private view of the query executor which you can
     cast to a \c const query executor with
     bt_private_query_executor_as_query_executor_const() to access the
-    executor's logging level with bt_query_executor_get_logging_level().
+    logging level of the executor with
+    bt_query_executor_get_logging_level().
 
-    On success, set \bt_p{*result} to the query operation's result: a
-    \em new \bt_val reference.
+    On success, set \bt_p{*result} to the result of the query operation:
+    a \em new \bt_val reference.
 
-    If the queried object's name (\bt_p{object_name} parameter) is
+    If the name of the queried object (\bt_p{object_name} parameter) is
     unknown, return
     #BT_COMPONENT_CLASS_QUERY_METHOD_STATUS_UNKNOWN_OBJECT.
 
@@ -458,8 +460,8 @@ The available component class methods to implement are:
       bt_component_sink_get_ref() on your own (upcasted) \bt_self_comp
       to avoid reference cycles.
 
-      You can keep a borrowed (weak) \bt_self_comp reference in your
-      component's user data (see bt_self_component_set_data()).
+      You can keep a borrowed (weak) \bt_self_comp reference in the
+      user data of your component (see bt_self_component_set_data()).
 
     - \em Never call bt_port_get_ref(), bt_port_input_get_ref(), or
       bt_port_output_get_ref() on one of your own (upcasted)
@@ -473,8 +475,8 @@ The available component class methods to implement are:
     @endparblock
 
 Within any \ref api-comp-cls-dev-instance-meth "instance method", you
-can access the \bt_comp's configured
-\ref #bt_logging_level "logging level" by first upcasting the
+can access the configured \ref #bt_logging_level "logging level" of the
+\bt_comp by first upcasting the
 \bt_self_comp to the #bt_component type with
 bt_self_component_as_component(), and then with
 bt_component_get_logging_level().
@@ -661,7 +663,7 @@ to \bt_p{supported_versions}.
     \bt_p{init_method_data} parameter of
     bt_component_descriptor_set_add_descriptor_with_initialize_method_data().
 @param[in] logging_level
-    Logging level to use during this method's execution, as passed
+    Logging level to use during the execution of this method, as passed
     as the \bt_p{logging_level} parameter of
     bt_get_greatest_operative_mip_version() and
     bt_get_greatest_operative_mip_version_with_restriction().
@@ -720,7 +722,7 @@ to \bt_p{supported_versions}.
     \bt_p{init_method_data} parameter of
     bt_component_descriptor_set_add_descriptor_with_initialize_method_data().
 @param[in] logging_level
-    Logging level to use during this method's execution, as passed
+    Logging level to use during the execution of this method, as passed
     as the \bt_p{logging_level} parameter of
     bt_get_greatest_operative_mip_version() and
     bt_get_greatest_operative_mip_version_with_restriction().
@@ -779,7 +781,7 @@ to \bt_p{supported_versions}.
     \bt_p{init_method_data} parameter of
     bt_component_descriptor_set_add_descriptor_with_initialize_method_data().
 @param[in] logging_level
-    Logging level to use during this method's execution, as passed
+    Logging level to use during the execution of this method, as passed
     as the \bt_p{logging_level} parameter of
     bt_get_greatest_operative_mip_version() and
     bt_get_greatest_operative_mip_version_with_restriction().
@@ -1074,7 +1076,7 @@ method.
 @param[in] self_port
     Connected \bt_oport of \bt_p{self_component}.
 @param[in] other_port
-    \bt_c_conn's other (input) port.
+    Other (input) port of the \bt_conn.
 
 @retval #BT_COMPONENT_CLASS_PORT_CONNECTED_METHOD_STATUS_OK
     Success.
@@ -1109,7 +1111,7 @@ method.
 @param[in] self_port
     Connected \bt_iport of \bt_p{self_component}.
 @param[in] other_port
-    \bt_c_conn's other (output) port.
+    Other (output) port of the \bt_conn.
 
 @retval #BT_COMPONENT_CLASS_PORT_CONNECTED_METHOD_STATUS_OK
     Success.
@@ -1144,7 +1146,7 @@ method.
 @param[in] self_port
     Connected \bt_oport of \bt_p{self_component}.
 @param[in] other_port
-    \bt_c_conn's other (input) port.
+    Other (input) port of the \bt_conn.
 
 @retval #BT_COMPONENT_CLASS_PORT_CONNECTED_METHOD_STATUS_OK
     Success.
@@ -1179,7 +1181,7 @@ method.
 @param[in] self_port
     Connected \bt_iport of \bt_p{self_component}.
 @param[in] other_port
-    \bt_c_conn's other (output) port.
+    Other (output) port of the \bt_conn.
 
 @retval #BT_COMPONENT_CLASS_PORT_CONNECTED_METHOD_STATUS_OK
     Success.
@@ -1249,31 +1251,31 @@ See the \ref api-comp-cls-dev-meth-query "query" method.
 @param[in] self_component_class
     Source component class, as passed as the \bt_p{component_class}
     parameter of bt_query_executor_create() or
-    bt_query_executor_create_with_method_data() when creating this query
-    operation's \ref api-qexec "executor".
+    bt_query_executor_create_with_method_data() when creating the
+    \ref api-qexec "executor" of this query operation.
 @param[in] query_executor
-    Private view of this query operation's executor.
+    Private view of the executor of this query operation.
 @param[in] object_name
     Name of the object to query, as passed as the \bt_p{object_name}
     parameter of bt_query_executor_create() or
-    bt_query_executor_create_with_method_data() when creating this query
-    operation's executor.
+    bt_query_executor_create_with_method_data() when creating the
+    executor of this query operation.
 @param[in] params
     @parblock
     Query parameters, as passed as the \bt_p{params}
     parameter of bt_query_executor_create() or
-    bt_query_executor_create_with_method_data() when creating this query
-    operation's executor.
+    bt_query_executor_create_with_method_data() when creating the
+    executor of this query operation.
 
     \bt_p{params} is frozen.
     @endparblock
 @param[in] method_data
     User data for this method, as passed as the \bt_p{method_data}
     parameter of bt_query_executor_create_with_method_data() when
-    creating this query operation's executor.
+    creating the executor of this query operation.
 @param[out] result
     <strong>On success</strong>, \bt_p{*result} is
-    a \em new reference of this query operation's result.
+    a \em new reference of the result of this query operation.
 
 @retval #BT_COMPONENT_CLASS_QUERY_METHOD_STATUS_OK
     Success.
@@ -1314,31 +1316,31 @@ See the \ref api-comp-cls-dev-meth-query "query" method.
 @param[in] self_component_class
     Filter component class, as passed as the \bt_p{component_class}
     parameter of bt_query_executor_create() or
-    bt_query_executor_create_with_method_data() when creating this query
-    operation's \ref api-qexec "executor".
+    bt_query_executor_create_with_method_data() when creating the
+    \ref api-qexec "executor" of this query operation.
 @param[in] query_executor
-    Private view of this query operation's executor.
+    Private view of the executor of this query operation.
 @param[in] object_name
     Name of the object to query, as passed as the \bt_p{object_name}
     parameter of bt_query_executor_create() or
-    bt_query_executor_create_with_method_data() when creating this query
-    operation's executor.
+    bt_query_executor_create_with_method_data() when creating the
+    executor of this query operation.
 @param[in] params
     @parblock
     Query parameters, as passed as the \bt_p{params}
     parameter of bt_query_executor_create() or
-    bt_query_executor_create_with_method_data() when creating this query
-    operation's executor.
+    bt_query_executor_create_with_method_data() when creating the
+    executor of this query operation.
 
     \bt_p{params} is frozen.
     @endparblock
 @param[in] method_data
     User data for this method, as passed as the \bt_p{method_data}
     parameter of bt_query_executor_create_with_method_data() when
-    creating this query operation's executor.
+    creating the executor of this query operation.
 @param[out] result
     <strong>On success</strong>, \bt_p{*result} is
-    a \em new reference of this query operation's result.
+    a \em new reference of the result of this query operation.
 
 @retval #BT_COMPONENT_CLASS_QUERY_METHOD_STATUS_OK
     Success.
@@ -1379,31 +1381,31 @@ See the \ref api-comp-cls-dev-meth-query "query" method.
 @param[in] self_component_class
     Sink component class, as passed as the \bt_p{component_class}
     parameter of bt_query_executor_create() or
-    bt_query_executor_create_with_method_data() when creating this query
-    operation's \ref api-qexec "executor".
+    bt_query_executor_create_with_method_data() when creating the
+    \ref api-qexec "executor" of this query operation.
 @param[in] query_executor
-    Private view of this query operation's executor.
+    Private view of the executor of this query operation.
 @param[in] object_name
     Name of the object to query, as passed as the \bt_p{object_name}
     parameter of bt_query_executor_create() or
-    bt_query_executor_create_with_method_data() when creating this query
-    operation's executor.
+    bt_query_executor_create_with_method_data() when creating the
+    executor of this query operation.
 @param[in] params
     @parblock
     Query parameters, as passed as the \bt_p{params}
     parameter of bt_query_executor_create() or
-    bt_query_executor_create_with_method_data() when creating this query
-    operation's executor.
+    bt_query_executor_create_with_method_data() when creating the
+    executor of this query operation.
 
     \bt_p{params} is frozen.
     @endparblock
 @param[in] method_data
     User data for this method, as passed as the \bt_p{method_data}
     parameter of bt_query_executor_create_with_method_data() when
-    creating this query operation's executor.
+    creating the executor of this query operation.
 @param[out] result
     <strong>On success</strong>, \bt_p{*result} is
-    a \em new reference of this query operation's result.
+    a \em new reference of the result of this query operation.
 
 @retval #BT_COMPONENT_CLASS_QUERY_METHOD_STATUS_OK
     Success.

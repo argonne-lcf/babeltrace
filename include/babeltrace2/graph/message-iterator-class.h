@@ -32,12 +32,12 @@ A <strong><em>message iterator class</em></strong> is the class of a
 \bt_cp_src_comp_cls and \bt_p_flt_comp_cls contain a message iterator
 class. For such a component class, its message iterator class is the
 class of any message iterator created for any \bt_oport of the
-component class's instances (\bt_p_comp).
+instances of the component class (\bt_p_comp).
 
 Therefore, the only thing you can do with a message iterator class is to
 pass it to bt_component_class_source_create() or
-bt_component_class_filter_create() to set it as the created component
-class's message iterator class.
+bt_component_class_filter_create() to set it as the
+message iterator class of the created component class.
 
 A message iterator class has <em>methods</em>. This API
 essentially offers:
@@ -51,9 +51,9 @@ essentially offers:
 
 A message iterator class method is a user function. All message iterator
 class methods operate on an instance (a \bt_msg_iter). The type of the
-method's first parameter is #bt_self_message_iterator. This is similar
-to an instance method in Python (where the instance object name is
-generally <code>self</code>) or a member function in C++ (where the
+first parameter of the method is #bt_self_message_iterator. This is
+similar to an instance method in Python (where the instance object name
+is generally <code>self</code>) or a member function in C++ (where the
 instance pointer is named <code>this</code>), for example.
 
 See \ref api-msg-iter-cls-methods "Methods" to learn more about the
@@ -71,9 +71,9 @@ postcondition.
 The type of a message iterator class is #bt_message_iterator_class.
 
 Create a message iterator class with bt_message_iterator_class_create().
-When you call this function, you must pass the message iterator
-class's mandatory
-\link api-msg-iter-cls-meth-next "next" method\endlink.
+When you call this function, you must pass the mandatory
+\link api-msg-iter-cls-meth-next "next" method\endlink of the
+message iterator class.
 
 <h1>\anchor api-msg-iter-cls-methods Methods</h1>
 
@@ -138,8 +138,8 @@ The available message iterator class methods to implement are:
 
     The message iterator of a \bt_flt_comp will typically consider
     the beginning seeking capability of its own upstream message
-    iterator(s) (with bt_message_iterator_can_seek_beginning()) in this
-    method's implementation.
+    iterator(s) (with bt_message_iterator_can_seek_beginning()) in the
+    implementation of this method.
 
     If you need to block the thread to compute whether or not your
     message iterator can seek its beginning, you can instead report to
@@ -177,7 +177,7 @@ The available message iterator class methods to implement are:
     The message iterator of a \bt_flt_comp will typically consider
     the time seeking capability of its own upstream message
     iterator(s) (with bt_message_iterator_can_seek_ns_from_origin()) in
-    this method's implementation.
+    the implementation of this method.
 
     If you need to block the thread to compute whether or not your
     message iterator can seek a message occurring at or after a given
@@ -205,9 +205,9 @@ The available message iterator class methods to implement are:
     The library guarantees that all message iterators are destroyed
     before their component is destroyed.
 
-    This method is \em not called if the message iterator's
-    \ref api-msg-iter-cls-meth-init "initialization method"
-    previously returned an error status code.
+    This method is \em not called if the
+    \ref api-msg-iter-cls-meth-init "initialization method" of the
+    message iterator previously returned an error status code.
 
     Set this optional method with
     bt_message_iterator_class_set_finalize_method().
@@ -222,7 +222,7 @@ The available message iterator class methods to implement are:
     or bt_message_iterator_create_from_sink_component() to initialize
     your \bt_msg_iter.
 
-    Within this method, you can access your \bt_comp's user data
+    Within this method, you can access the user data of your \bt_comp
     by first borrowing it with
     bt_self_message_iterator_borrow_component() and then using
     bt_self_component_get_data().
@@ -231,20 +231,21 @@ The available message iterator class methods to implement are:
     typically where you create an upstream \bt_msg_iter
     with bt_message_iterator_create_from_message_iterator().
 
-    You can create user data and set it as the \bt_self_msg_iter's user
-    data with bt_self_message_iterator_set_data().
+    You can create user data and set it as the user data of the
+    \bt_self_msg_iter with bt_self_message_iterator_set_data().
 
     If you return #BT_MESSAGE_ITERATOR_CLASS_INITIALIZE_METHOD_STATUS_OK
-    from this method, then your message iterator's
-    \ref api-msg-iter-cls-meth-fini "finalization method" will be
-    called, if it exists, when your message iterator is finalized.
+    from this method, then the
+    \ref api-msg-iter-cls-meth-fini "finalization method" of your
+    message iterator will be called, if it exists, when your message
+    iterator is finalized.
 
     This method receives a message iterator configuration object
     (#bt_self_message_iterator_configuration type). As of
     \bt_name_version_min_maj, you can use
     bt_self_message_iterator_configuration_set_can_seek_forward()
-    during, and only during, this method's execution to set whether or
-    not your message iterator can <em>seek forward</em>.
+    during, and only during, the execution of this method to set whether
+    or not your message iterator can <em>seek forward</em>.
 
     For a message iterator to be able to seek forward, all the \bt_p_msg
     of its message sequence must have some \bt_cs.
@@ -271,7 +272,7 @@ The available message iterator class methods to implement are:
     Within this method, you receive:
 
     - An array of \bt_p_msg to fill (\bt_p{messages} parameter)
-      with your message iterator's next messages, if any.
+      with the next messages of your message iterator, if any.
 
       Note that this array needs its own message
       \ref api-fund-shared-object "references". In other
@@ -302,22 +303,22 @@ The available message iterator class methods to implement are:
     This method typically:
 
     <dl>
-      <dt>For a \bt_src_comp's message iterator</dt>
+      <dt>For the message iterator of a \bt_src_comp</dt>
       <dd>
         Creates brand new \bt_p_msg to represent one or more input
         traces.
       </dd>
 
-      <dt>For a \bt_flt_comp's message iterator</dt>
+      <dt>For the message iterator of a \bt_flt_comp</dt>
       <dd>
         Gets \em one message batch from one (or more) upstream
         \bt_msg_iter and filters them.
       </dd>
     </dl>
 
-    For a source component's message iterator, you are free to create
-    as many as \bt_p{capacity} messages. For a filter component's
-    message iterator, you are free to get more than one batch of
+    For the message iterator of a source component, you are free to
+    create as many as \bt_p{capacity} messages. For the message iterator
+    of a filter component, you are free to get more than one batch of
     messages from upstream message iterators if needed. However, in both
     cases, keep in mind that the \bt_name project recommends that this
     method executes fast enough so as not to block an interactive
@@ -337,8 +338,8 @@ The available message iterator class methods to implement are:
     When you return this status code, you must \em not put any message
     into the message array.
 
-    If your message iterator's iteration process is done (you have no
-    more messages to emit), then return
+    If the iteration process of your message iterator is done (you have
+    no more messages to emit), then return
     #BT_MESSAGE_ITERATOR_CLASS_NEXT_METHOD_STATUS_END. When you return
     this status code, you must \em not put any message into the message
     array.
@@ -362,7 +363,7 @@ The available message iterator class methods to implement are:
     successfully
     (it returns
     #BT_MESSAGE_ITERATOR_CLASS_SEEK_BEGINNING_METHOD_STATUS_OK),
-    then your message iterator's next messages (the next time your
+    then the next messages of your message iterator (the next time your
     \link api-msg-iter-cls-meth-next "next" method\endlink
     is called) must be A, B, C, D, and E.
 
@@ -467,8 +468,9 @@ The available message iterator class methods to implement are:
   </dd>
 </dl>
 
-Within any method, you can access the \bt_msg_iter's \bt_comp's
-configured \ref #bt_logging_level "logging level" by first upcasting the
+Within any method, you can access the
+configured \ref #bt_logging_level "logging level" of the \bt_comp of the
+\bt_msg_iter by first upcasting the
 \bt_self_comp to the #bt_component type with
 bt_self_component_as_component(), and then with
 bt_component_get_logging_level().
@@ -685,7 +687,7 @@ See the \ref api-msg-iter-cls-meth-init "initialize" method.
 @param[in] self_message_iterator
     Message iterator instance.
 @param[in] configuration
-    Message iterator's configuration.
+    Configuration of the message iterator.
 @param[in] port
     \bt_c_oport for which \bt_p{self_message_iterator} was created.
 

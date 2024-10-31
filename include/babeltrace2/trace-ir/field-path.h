@@ -77,7 +77,8 @@ A field path has the following properties:
     See \ref api-tir-field-path-lookup-algo "Lookup algorithm" to
     learn more.
 
-    Get a field path's root scope with bt_field_path_get_root_scope().
+    Get the root scope of a field path with
+    bt_field_path_get_root_scope().
   </dd>
 
   <dt>
@@ -85,8 +86,8 @@ A field path has the following properties:
     Items
   </dt>
   <dd>
-    Each item in a field path's item list indicates which action to take
-    to follow the path to the linked \bt_field.
+    Each item in the item list of a field path indicates which action to
+    take to follow the path to the linked \bt_field.
 
     See \ref api-tir-field-path-lookup-algo "Lookup algorithm" to
     learn more.
@@ -131,23 +132,23 @@ The field resolution algorithm using a field path is:
 
 -# For each field path item (use bt_field_path_get_item_count()
    and bt_field_path_borrow_item_by_index_const()), depending on
-   the item's type (as returned by bt_field_path_item_get_type()):
+   the type of the item (as returned by bt_field_path_item_get_type()):
 
    <dl>
      <dt>#BT_FIELD_PATH_ITEM_TYPE_INDEX</dt>
      <dd>
-       Call bt_field_path_item_index_get_index() to get the item's
-       index value.
+       Call bt_field_path_item_index_get_index() to get the index value
+       of the item.
 
-       Depending on the current field's class's type (as
+       Depending on the type of the class of the current field (as
        returned by bt_field_get_class_type()):
 
        <dl>
          <dt>\bt_c_struct_fc</dt>
          <dd>
            Call bt_field_structure_borrow_member_field_by_index_const()
-           with the current field and with the item's index to set the
-           new current field.
+           with the current field and with the index of the item to set
+           the new current field.
          </dd>
 
          <dt>\bt_c_var_fc</dt>
@@ -396,8 +397,8 @@ This macro effectively moves a field path reference from the expression
 typedef enum bt_field_path_item_type {
 	/*!
 	@brief
-	    Index of a \bt_struct_field member or selected \bt_var_field
-	    option's field.
+	    Index of a \bt_struct_field member or the field of a
+	    selected \bt_var_field option.
 	*/
 	BT_FIELD_PATH_ITEM_TYPE_INDEX				= 1 << 0,
 

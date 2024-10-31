@@ -36,18 +36,18 @@ as well as functions to control libbabeltrace2's internal logging.
 libbabeltrace2 contains many hundreds of logging statements to help you
 follow and debug your plugin or program.
 
-The library's initial logging level is controlled by the
-\c LIBBABELTRACE2_INIT_LOG_LEVEL environment variable. If this
-environment variable is not set at library load time, the library's
-initial logging level is #BT_LOGGING_LEVEL_NONE. See
-\ref api-fund-logging to learn more.
+The \c LIBBABELTRACE2_INIT_LOG_LEVEL environment variable controls
+the initial logging level of the library. If this
+environment variable is not set at library load time, the initial
+logging level of the library is #BT_LOGGING_LEVEL_NONE.
+See \ref api-fund-logging to learn more.
 
 Set libbabeltrace2's current logging level with
 bt_logging_set_global_level().
 
 \anchor api-logging-extra-lib bt_logging_set_global_level() only
-controls <strong>libbabeltrace2</strong>'s logging level; it does \em
-not control the logging level of:
+controls <strong>libbabeltrace2</strong>'s logging level; it does
+\em not control the logging level of:
 
 - Individual \bt_p_comp: bt_graph_add_source_component(),
   bt_graph_add_source_component_with_initialize_method_data(),
@@ -66,7 +66,7 @@ not control the logging level of:
 
 As of \bt_name_version_min_maj, there's no module-specific logging level
 control: bt_logging_set_global_level() sets the logging level of all the
-library's modules.
+modules of the library.
 
 libbabeltrace2 writes its logging statements to the standard error
 stream. A logging line looks like this:
@@ -75,17 +75,17 @@ stream. A logging line looks like this:
 05-11 00:58:03.691 23402 23402 D VALUES bt_value_destroy@values.c:498 Destroying value: addr=0xb9c3eb0
 @endcode
 
-See \ref api-fund-logging to learn more about the logging statement
-line's format.
+See \ref api-fund-logging to learn more about the format of a
+logging statement line.
 
-You can set a \em minimal logging level at the \bt_name project's build
+You can set a \em minimal logging level at the \bt_name project build
 time (see \ref api-fund-logging to learn how). The logging statements
 with a level that's less severe than the minimal logging level are \em
 not built. For example, if the minimal logging level is
 #BT_LOGGING_LEVEL_INFO, the #BT_LOGGING_LEVEL_TRACE and
 #BT_LOGGING_LEVEL_DEBUG logging statements are not built. Use
-bt_logging_get_minimal_level() to get the library's minimal logging
-level.
+bt_logging_get_minimal_level() to get the minimal logging
+level of the library.
 */
 
 /*! @{ */
@@ -180,15 +180,15 @@ typedef enum bt_logging_level {
     Sets the logging level of all the libbabeltrace2 modules to
     \bt_p{logging_level}.
 
-The library's global logging level
+The global logging level of the library
 \ref api-logging-extra-lib "does not affect" the logging level of
 individual components and query operations.
 
 @param[in] logging_level
-    New library's global logging level.
+    New global logging level of the library.
 
 @sa bt_logging_get_global_level() &mdash;
-    Returns the current library's global logging level.
+    Returns the current global logging level of the library.
 */
 extern void bt_logging_set_global_level(bt_logging_level logging_level)
 		__BT_NOEXCEPT;
@@ -198,16 +198,16 @@ extern void bt_logging_set_global_level(bt_logging_level logging_level)
     Returns the current logging level of all the libbabeltrace2 modules.
 
 @returns
-    Library's current global logging level.
+    Current global logging level of the library.
 
 @sa bt_logging_set_global_level() &mdash;
-    Sets the current library's global logging level.
+    Sets the global logging level of the current library.
 */
 extern bt_logging_level bt_logging_get_global_level(void) __BT_NOEXCEPT;
 
 /*!
 @brief
-    Returns the library's minimal (build-time) logging level.
+    Returns the minimal (build-time) logging level of the library.
 
 The library logging statements with a level that's less severe than the
 minimal logging level are \em not built.
@@ -217,10 +217,10 @@ For example, if the minimal logging level is #BT_LOGGING_LEVEL_INFO, the
 are not built.
 
 @returns
-    Library's minimal logging level.
+    Minimal logging level of the library.
 
 @sa bt_logging_get_global_level() &mdash;
-    Returns the current library's global logging level.
+    Returns the current global logging level of the library.
 */
 extern bt_logging_level bt_logging_get_minimal_level(void) __BT_NOEXCEPT;
 

@@ -51,13 +51,13 @@ typedef enum bt_util_clock_cycles_to_ns_from_origin_status {
 /*!
 @brief
     Converts the clock value \bt_p{cycles} from cycles to nanoseconds
-    from the clock's origin and sets \bt_p{*ns_from_origin} to the
+    from the origin of the clock and sets \bt_p{*ns_from_origin} to the
     result.
 
-This function considers the clock's frequency in Hz (\bt_p{frequency}),
-an offset from its origin in seconds (\bt_p{offset_seconds}) which
-can be negative, and an additional offset in cycles
-(\bt_p{offset_cycles}).
+This function considers the frequency of the clock in Hz
+(\bt_p{frequency}), an offset from its origin in seconds
+(\bt_p{offset_seconds}) which can be negative, and an additional offset
+in cycles (\bt_p{offset_cycles}).
 
 This function:
 
@@ -88,18 +88,18 @@ This function can fail and return the
 code if any step of the computation process causes an integer overflow.
 
 @param[in] cycles
-    Clock's value (cycles).
+    Value of the clock (cycles).
 @param[in] frequency
-    Clock's frequency (Hz, or cycles/second).
+    Frequency of the clock (Hz, or cycles/second).
 @param[in] offset_seconds
-    Offset, in seconds, from the clock's origin to add to
+    Offset, in seconds, from the origin of the clock to add to
     \bt_p{cycles} (once converted to seconds).
 @param[in] offset_cycles
     Offset, in cycles, to add to \bt_p{cycles}.
 @param[out] ns_from_origin
     <strong>On success</strong>, \bt_p{*ns_from_origin} is \bt_p{cycles}
-    converted to nanoseconds from origin considering the clock's
-    properties.
+    converted to nanoseconds from origin considering the properties
+    of the clock.
 
 @retval #BT_UTIL_CLOCK_CYCLES_TO_NS_FROM_ORIGIN_STATUS_OK
     Success.

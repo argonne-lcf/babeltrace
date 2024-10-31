@@ -162,7 +162,7 @@ A plugin has the following properties:
   <dd>
     Name of the plugin.
 
-    The plugin's name is not related to its file name. For example,
+    The name of the plugin is not related to its file name. For example,
     a plugin found in the file \c patente.so can be named
     <code>Dan</code>.
 
@@ -184,7 +184,7 @@ A plugin has the following properties:
     \bt_dt_opt Author name(s)
   </dt>
   <dd>
-    Name(s) of the plugin's author(s).
+    Name(s) of the author(s) of the plugin.
 
     Use bt_plugin_get_author().
   </dd>
@@ -218,9 +218,9 @@ A plugin has the following properties:
   <dd>
     Version of the plugin (major, minor, patch, and extra information).
 
-    The plugin's version is completely user-defined: the library does
-    not use this property in any way to verify the plugin's
-    compatibility.
+    The version of the plugin is completely user-defined: the library
+    does not use this property in any way to verify the compatibility
+    of the plugin.
 
     Use bt_plugin_get_version().
   </dd>
@@ -312,7 +312,7 @@ This function returns the first plugin which has the name
    the static plugins.
 
 @note
-    A plugin's name is not related to the name of its file (shared
+    The name of a plugin is not related to the name of its file (shared
     object or Python file). For example, a plugin found in the file
     \c patente.so can be named <code>Dan</code>.
 
@@ -540,12 +540,12 @@ typedef enum bt_plugin_find_all_from_file_status {
     setting \bt_p{*plugins} to the result.
 
 @note
-    A plugin's name is not related to the name of its file (shared
+    The name of a plugin is not related to the name of its file (shared
     object or Python file). For example, a plugin found in the file
     \c patente.so can be named <code>Dan</code>.
 
-If any plugin loading error occurs during this function's execution, the
-function:
+If any plugin loading error occurs during the execution of this
+function, it:
 
 <dl>
   <dt>If \bt_p{fail_on_load_error} is #BT_TRUE</dt>
@@ -636,8 +636,8 @@ already loaded plugin, this function ignores it and continues.
     As of \bt_name_version_min_maj, the file and directory traversal
     order is undefined.
 
-If any plugin loading error occurs during this function's execution, the
-function:
+If any plugin loading error occurs during the execution of this
+function, it:
 
 <dl>
   <dt>If \bt_p{fail_on_load_error} is #BT_TRUE</dt>
@@ -724,8 +724,8 @@ typedef enum bt_plugin_find_all_from_static_status {
 A static plugin is built directly into the application or library
 instead of being a separate shared object file.
 
-If any plugin loading error occurs during this function's execution, the
-function:
+If any plugin loading error occurs during the execution of this
+function, it:
 
 <dl>
   <dt>If \bt_p{fail_on_load_error} is #BT_TRUE</dt>
@@ -863,7 +863,7 @@ This function returns \c NULL if \bt_p{plugin} is a static plugin
 because a static plugin has no path property.
 
 @param[in] plugin
-    Plugin of which to get the containing file's path.
+    Plugin of which to get the path of the containing file.
 
 @returns
     @parblock
@@ -901,10 +901,10 @@ See the \ref api-plugin-prop-version "version" property.
     @parblock
     <strong>If not \c NULL and this function returns
     #BT_PROPERTY_AVAILABILITY_AVAILABLE</strong>, \bt_p{*extra} is the
-    version's extra information of \bt_p{plugin}.
+    extra information of the version of \bt_p{plugin}.
 
-    \bt_p{*extra} can be \c NULL if the plugin's version has no extra
-    information.
+    \bt_p{*extra} can be \c NULL if the version of the plugin has no
+    extra information.
 
     \bt_p{*extra} remains valid as long as \bt_p{plugin} exists.
     @endparblock

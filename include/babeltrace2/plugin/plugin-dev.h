@@ -74,14 +74,15 @@ The structure of a \bt_name plugin definition C file is as such:
   </li>
 
   <li>
-    Define a \bt_name plugin with BT_PLUGIN() if the plugin's name is a
-    valid C identifier, or with BT_PLUGIN_WITH_ID() otherwise.
+    Define a \bt_name plugin with BT_PLUGIN() if the name of the plugin
+    is a valid C identifier, or with BT_PLUGIN_WITH_ID() otherwise.
 
     See \ref api-plugin-dev-custom-plugin-id "Custom plugin ID" to
     learn more about plugin IDs.
 
     @note
-        When you use BT_PLUGIN(), the plugin's ID is <code>auto</code>.
+        When you use BT_PLUGIN(), the ID of the plugin is
+        <code>auto</code>.
   </li>
 
   <li>
@@ -103,12 +104,12 @@ The structure of a \bt_name plugin definition C file is as such:
     - BT_PLUGIN_INITIALIZE_FUNC()
     - BT_PLUGIN_FINALIZE_FUNC()
 
-    A plugin's initialization function is executed when the shared
+    The initialization function of a plugin is executed when the shared
     object is loaded (see \ref api-plugin).
 
-    A plugin's finalization function is executed when the \bt_plugin
-    object is destroyed, if the initialization function (if any)
-    succeeded.
+    The finalization function of a plugin is executed when the
+    \bt_plugin object is destroyed, if the initialization function (if
+    any) succeeded.
   </li>
 
   <li>
@@ -254,8 +255,8 @@ BT_PLUGIN_SINK_COMPONENT_CLASS() add a component class with a specific
 name to the plugin having the ID <code>auto</code>.
 
 The name you pass to those macros must be a valid C identifier and it
-also serves as the component class's ID within the <code>auto</code>
-plugin.
+also serves as the ID of the component class within the
+<code>auto</code> plugin.
 
 There are two situations which demand that you use a custom component
 class ID:
@@ -396,14 +397,14 @@ any other <code>BT_PLUGIN*()</code> macro.
     @parblock
     C identifier.
 
-    Plugin's ID, unique amongst all the plugin IDs of the same shared
-    object.
+    ID of the plugin, unique amongst all the plugin IDs of the same
+    shared object.
     @endparblock
 @param[in] _name
     @parblock
     <code>const char *</code>
 
-    Plugin's name.
+    Name of the plugin.
     @endparblock
 
 @bt_pre_not_null{_name}
@@ -445,7 +446,7 @@ See the \ref api-comp-cls-prop-descr "description" property.
     @parblock
     <code>const char *</code>
 
-    Plugin's description.
+    Description of the plugin.
     @endparblock
 
 @bt_pre_not_null{_description}
@@ -477,7 +478,7 @@ See the \ref api-plugin-prop-author "author name(s)" property.
     @parblock
     <code>const char *</code>
 
-    Plugin's author(s).
+    Author(s) of the plugin.
     @endparblock
 
 @bt_pre_not_null{_author}
@@ -509,7 +510,7 @@ See the \ref api-plugin-prop-license "license" property.
     @parblock
     <code>const char *</code>
 
-    Plugin's license.
+    License of the plugin.
     @endparblock
 
 @bt_pre_not_null{_license}
@@ -541,27 +542,28 @@ See the \ref api-plugin-prop-version "version" property.
     @parblock
     <code>unsigned int</code>
 
-    Plugin's major version.
+    Major version of the plugin.
     @endparblock
 @param[in] _minor
     @parblock
     <code>unsigned int</code>
 
-    Plugin's minor version.
+    Minor version of the plugin.
     @endparblock
 @param[in] _patch
     @parblock
     <code>unsigned int</code>
 
-    Plugin's patch version.
+    Patch version of the plugin.
     @endparblock
 @param[in] _extra
     @parblock
     <code>const char *</code>
 
-    Plugin's version's extra information.
+    Extra information of the version of the plugin.
 
-    Can be \c NULL if the plugin's version has no extra information.
+    Can be \c NULL if the version of the plugin has no
+    extra information.
     @endparblock
 */
 #define BT_PLUGIN_VERSION_WITH_ID(_id, _major, _minor, _patch, _extra) \
@@ -646,7 +648,7 @@ typedef bt_plugin_initialize_func_status (*bt_plugin_initialize_func)(
     @parblock
     #bt_plugin_initialize_func
 
-    Plugin's initialization function.
+    Initialization function of the plugin.
     @endparblock
 
 @bt_pre_not_null{_func}
@@ -682,7 +684,7 @@ typedef void (*bt_plugin_finalize_func)(void);
     @parblock
     #bt_plugin_finalize_func
 
-    Plugin's finalization function.
+    Finalization function of the plugin.
     @endparblock
 
 @bt_pre_not_null{_func}
@@ -707,8 +709,9 @@ typedef void (*bt_plugin_finalize_func)(void);
 /*!
 @brief
     Adds a \bt_src_comp_cls named \bt_p{_name}, having the ID
-    \bt_p{_component_class_id} and the message iterator class's "next"
-    method \bt_p{_message_iterator_class_next_method}, to the plugin
+    \bt_p{_component_class_id} and the
+    "next" method \bt_p{_message_iterator_class_next_method} of
+    the message iterator class, to the plugin
     having the ID \bt_p{_plugin_id}.
 
 @param[in] _plugin_id
@@ -721,21 +724,22 @@ typedef void (*bt_plugin_finalize_func)(void);
     @parblock
     C identifier.
 
-    Source component class's ID, unique amongst all the source component
-    class IDs of the same plugin.
+    ID of the source component class, unique amongst all the source
+    component class IDs of the same plugin.
     @endparblock
 @param[in] _name
     @parblock
     <code>const char *</code>
 
-    Source component class's name, unique amongst all the source
+    Name of the source component class, unique amongst all the source
     component class names of the same plugin.
     @endparblock
 @param[in] _message_iterator_class_next_method
     @parblock
     #bt_message_iterator_class_next_method
 
-    Source component class's message iterator class's "next" method.
+    "Next" method of the message iterator class of the source component
+    class.
     @endparblock
 
 @bt_pre_not_null{_name}
@@ -772,9 +776,9 @@ typedef void (*bt_plugin_finalize_func)(void);
 /*!
 @brief
     Adds a \bt_flt_comp_cls named \bt_p{_name}, having the ID
-    \bt_p{_component_class_id} and the message iterator class's "next"
-    method \bt_p{_message_iterator_class_next_method}, to the plugin
-    having the ID \bt_p{_plugin_id}.
+    \bt_p{_component_class_id} and the "next"
+    method \bt_p{_message_iterator_class_next_method} of the message
+    iterator class, to the plugin having the ID \bt_p{_plugin_id}.
 
 @param[in] _plugin_id
     @parblock
@@ -786,21 +790,22 @@ typedef void (*bt_plugin_finalize_func)(void);
     @parblock
     C identifier.
 
-    Filter component class's ID, unique amongst all the filter component
-    class IDs of the same plugin.
+    ID of the filter component class, unique amongst all the filter
+    component class IDs of the same plugin.
     @endparblock
 @param[in] _name
     @parblock
     <code>const char *</code>
 
-    Filter component class's name, unique amongst all the filter
+    Name of the filter component class, unique amongst all the filter
     component class names of the same plugin.
     @endparblock
 @param[in] _message_iterator_class_next_method
     @parblock
     #bt_message_iterator_class_next_method
 
-    Filter component class's message iterator class's "next" method.
+    "Next" method of the message iterator class of the filter component
+    class.
     @endparblock
 
 @bt_pre_not_null{_name}
@@ -851,21 +856,22 @@ typedef void (*bt_plugin_finalize_func)(void);
     @parblock
     C identifier.
 
-    Sink component class's ID, unique amongst all the sink component
-    class IDs of the same plugin.
+    ID of the sink component class, unique amongst all the sink
+    component class IDs of the same plugin.
     @endparblock
 @param[in] _name
     @parblock
     <code>const char *</code>
 
-    Sink component class's name, unique amongst all the sink
+    Name of the sink component class, unique amongst all the sink
     component class names of the same plugin.
     @endparblock
 @param[in] _consume_method
     @parblock
     #bt_component_class_sink_consume_method
 
-    Sink component class's message iterator class's "next" method.
+    "Next" method of the message iterator class of the sink component
+    class.
     @endparblock
 
 @bt_pre_not_null{_name}
@@ -933,7 +939,7 @@ See the \ref api-comp-cls-prop-descr "description" property.
     @parblock
     <code>const char *</code>
 
-    Source component class's description.
+    Description of the source component class.
     @endparblock
 
 @bt_pre_not_null{_description}
@@ -977,7 +983,7 @@ See the \ref api-comp-cls-prop-help "help text" property.
     @parblock
     <code>const char *</code>
 
-    Source component class's help text.
+    Help text of the source component class.
     @endparblock
 
 @bt_pre_not_null{_help_text}
@@ -1028,7 +1034,7 @@ See the \ref api-comp-cls-prop-descr "description" property.
     @parblock
     <code>const char *</code>
 
-    Filter component class's description.
+    Description of the filter component class.
     @endparblock
 
 @bt_pre_not_null{_description}
@@ -1072,7 +1078,7 @@ See the \ref api-comp-cls-prop-help "help text" property.
     @parblock
     <code>const char *</code>
 
-    Filter component class's help text.
+    Help text of the filter component class.
     @endparblock
 
 @bt_pre_not_null{_help_text}
@@ -1123,7 +1129,7 @@ See the \ref api-comp-cls-prop-descr "description" property.
     @parblock
     <code>const char *</code>
 
-    Sink component class's description.
+    Description of the sink component class.
     @endparblock
 
 @bt_pre_not_null{_description}
@@ -1167,7 +1173,7 @@ See the \ref api-comp-cls-prop-help "help text" property.
     @parblock
     <code>const char *</code>
 
-    Sink component class's help text.
+    Help text of the sink component class.
     @endparblock
 
 @bt_pre_not_null{_help_text}
@@ -1218,7 +1224,7 @@ See the \ref api-comp-cls-dev-meth-fini "finalize" method.
     @parblock
     #bt_component_class_source_finalize_method
 
-    Source component class's finalization method.
+    Finalization method of the source component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -1264,7 +1270,7 @@ method.
     @parblock
     #bt_component_class_source_get_supported_mip_versions_method
 
-    Source component class's "get supported MIP versions" method.
+    "Get supported MIP versions" method of the source component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -1309,7 +1315,7 @@ See the \ref api-comp-cls-dev-meth-init "initialize" method.
     @parblock
     #bt_component_class_source_initialize_method
 
-    Source component class's initialization method.
+    Initialization method of the source component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -1354,7 +1360,8 @@ See the \ref api-msg-iter-cls-meth-fini "finalize" method.
     @parblock
     #bt_message_iterator_class_finalize_method
 
-    Source component class's message iterator class's finalization method.
+    Finalization method of the message iterator class of the source
+    component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -1399,8 +1406,8 @@ See the \ref api-msg-iter-cls-meth-init "initialize" method.
     @parblock
     #bt_message_iterator_class_initialize_method
 
-    Source component class's message iterator class's initialization
-    method.
+    Initialization method of the message iterator class of the source
+    component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -1450,15 +1457,15 @@ See the \ref api-msg-iter-cls-meth-seek-beg "seek beginning" and
     @parblock
     #bt_message_iterator_class_seek_beginning_method
 
-    Source component class's message iterator class's "seek beginning"
-    method.
+    "Seek beginning" method of the message iterator class of the source
+    component class.
     @endparblock
 @param[in] _can_seek_method
     @parblock
     #bt_message_iterator_class_can_seek_beginning_method
 
-    Source component class's message iterator class's
-    "can seek beginning?" method.
+    "Can seek beginning?" method of the message iterator class of the
+    source component class.
 
     Can be \c NULL, in which case it is equivalent to setting a method
     which always returns #BT_TRUE.
@@ -1514,15 +1521,15 @@ methods.
     @parblock
     #bt_message_iterator_class_seek_ns_from_origin_method
 
-    Source component class's message iterator class's "seek ns from
-    origin" method.
+    "Seek ns from origin" method of the message iterator class of the
+    source component class.
     @endparblock
 @param[in] _can_seek_method
     @parblock
     #bt_message_iterator_class_can_seek_ns_from_origin_method
 
-    Source component class's message iterator class's "can seek ns from
-    origin?" method.
+    "Can seek ns from origin?" method of the message iterator class of
+    the source component class.
 
     Can be \c NULL, in which case it is equivalent to setting a method
     which always returns #BT_TRUE.
@@ -1574,7 +1581,7 @@ method.
     @parblock
     #bt_component_class_source_output_port_connected_method
 
-    Source component class's "output port connected" method.
+    "Output port connected" method of the source component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -1619,7 +1626,7 @@ See the \ref api-comp-cls-dev-meth-query "query" method.
     @parblock
     #bt_component_class_source_query_method
 
-    Source component class's query method.
+    Query method of the source component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -1671,7 +1678,7 @@ See the \ref api-comp-cls-dev-meth-fini "finalize" method.
     @parblock
     #bt_component_class_filter_finalize_method
 
-    Filter component class's finalization method.
+    Finalization method of the filter component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -1717,7 +1724,7 @@ method.
     @parblock
     #bt_component_class_filter_get_supported_mip_versions_method
 
-    Filter component class's "get supported MIP versions" method.
+    "Get supported MIP versions" method of the filter component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -1762,7 +1769,7 @@ See the \ref api-comp-cls-dev-meth-init "initialize" method.
     @parblock
     #bt_component_class_filter_initialize_method
 
-    Filter component class's initialization method.
+    Initialization method of the filter component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -1809,7 +1816,7 @@ method.
     @parblock
     #bt_component_class_filter_input_port_connected_method
 
-    Filter component class's "input port connected" method.
+    "Input port connected" method of the filter component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -1854,7 +1861,8 @@ See the \ref api-msg-iter-cls-meth-fini "finalize" method.
     @parblock
     #bt_message_iterator_class_finalize_method
 
-    Filter component class's message iterator class's finalization method.
+    Finalization method of the message iterator class of the filter
+    component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -1899,8 +1907,8 @@ See the \ref api-msg-iter-cls-meth-init "initialize" method.
     @parblock
     #bt_message_iterator_class_initialize_method
 
-    Filter component class's message iterator class's initialization
-    method.
+    Initialization method of the message iterator class of the filter
+    component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -1950,15 +1958,15 @@ See the \ref api-msg-iter-cls-meth-seek-beg "seek beginning" and
     @parblock
     #bt_message_iterator_class_seek_beginning_method
 
-    Filter component class's message iterator class's "seek beginning"
-    method.
+    "Seek beginning" method of the message iterator class of the filter
+    component class.
     @endparblock
 @param[in] _can_seek_method
     @parblock
     #bt_message_iterator_class_can_seek_beginning_method
 
-    Filter component class's message iterator class's
-    "can seek beginning?" method.
+    "Can seek beginning?" method of the message iterator class of the
+    filter component class.
 
     Can be \c NULL, in which case it is equivalent to setting a method
     which always returns #BT_TRUE.
@@ -2014,15 +2022,15 @@ methods.
     @parblock
     #bt_message_iterator_class_seek_ns_from_origin_method
 
-    Filter component class's message iterator class's "seek ns from
-    origin" method.
+    "Seek ns from origin" method of the message iterator class of the
+    filter component class.
     @endparblock
 @param[in] _can_seek_method
     @parblock
     #bt_message_iterator_class_can_seek_ns_from_origin_method
 
-    Filter component class's message iterator class's "can seek ns from
-    origin?" method.
+    "Can seek ns from origin?" method of the message iterator class of
+    the filter component class.
 
     Can be \c NULL, in which case it is equivalent to setting a method
     which always returns #BT_TRUE.
@@ -2074,7 +2082,7 @@ method.
     @parblock
     #bt_component_class_filter_output_port_connected_method
 
-    Filter component class's "output port connected" method.
+    "Output port connected" method of the filter component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -2119,7 +2127,7 @@ See the \ref api-comp-cls-dev-meth-query "query" method.
     @parblock
     #bt_component_class_filter_query_method
 
-    Filter component class's query method.
+    Query method of the filter component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -2171,7 +2179,7 @@ See the \ref api-comp-cls-dev-meth-fini "finalize" method.
     @parblock
     #bt_component_class_sink_finalize_method
 
-    Sink component class's finalization method.
+    Finalization method of the sink component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -2217,7 +2225,7 @@ method.
     @parblock
     #bt_component_class_sink_get_supported_mip_versions_method
 
-    Sink component class's "get supported MIP versions" method.
+    "Get supported MIP versions" method of the sink component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -2264,7 +2272,7 @@ method.
     @parblock
     #bt_component_class_sink_graph_is_configured_method
 
-    Sink component class's "graph is configured" method.
+    "Graph is configured" method of the sink component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -2309,7 +2317,7 @@ See the \ref api-comp-cls-dev-meth-init "initialize" method.
     @parblock
     #bt_component_class_sink_initialize_method
 
-    Sink component class's initialization method.
+    Initialization method of the sink component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -2356,7 +2364,7 @@ method.
     @parblock
     #bt_component_class_sink_input_port_connected_method
 
-    Sink component class's "input port connected" method.
+    "Input port connected" method of the sink component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -2401,7 +2409,7 @@ See the \ref api-comp-cls-dev-meth-query "query" method.
     @parblock
     #bt_component_class_sink_query_method
 
-    Sink component class's query method.
+    Query method of the sink component class.
     @endparblock
 
 @bt_pre_not_null{_method}
@@ -2425,7 +2433,7 @@ See the \ref api-comp-cls-dev-meth-query "query" method.
 
 /* Plugin descriptor: describes a single plugin (internal use) */
 struct __bt_plugin_descriptor {
-	/* Plugin's name */
+	/* Name of the plugin */
 	const char *name;
 } __attribute__((packed));
 
@@ -2452,13 +2460,13 @@ struct __bt_plugin_descriptor_attribute {
 	/* Plugin descriptor to which to associate this attribute */
 	const struct __bt_plugin_descriptor *plugin_descriptor;
 
-	/* Name of the attribute's type for debug purposes */
+	/* Name of the type of the attribute for debug purposes */
 	const char *type_name;
 
-	/* Attribute's type */
+	/* Type of the attribute */
 	enum __bt_plugin_descriptor_attribute_type type;
 
-	/* Attribute's value (depends on attribute's type) */
+	/* Value of the attribute (depends on the type of attribute) */
 	union {
 		/* BT_PLUGIN_DESCRIPTOR_ATTRIBUTE_TYPE_INIT */
 		bt_plugin_initialize_func init;
@@ -2540,13 +2548,13 @@ struct __bt_plugin_component_class_descriptor_attribute {
 	 */
 	const struct __bt_plugin_component_class_descriptor *comp_class_descriptor;
 
-	/* Name of the attribute's type for debug purposes */
+	/* Name of the type of the attribute for debug purposes */
 	const char *type_name;
 
-	/* Attribute's type */
+	/* Type of the attribute */
 	enum __bt_plugin_component_class_descriptor_attribute_type type;
 
-	/* Attribute's value (depends on attribute's type) */
+	/* Value of the attribute (depends on the type of attribute) */
 	union {
 		/* BT_PLUGIN_COMPONENT_CLASS_DESCRIPTOR_ATTRIBUTE_TYPE_DESCRIPTION */
 		const char *description;

@@ -24,7 +24,7 @@ extern "C" {
     Library version getters.
 
 This API offers functions to get information about the
-library's version:
+version of the library:
 
 <dl>
   <dt>Major version</dt>
@@ -39,13 +39,13 @@ library's version:
   <dt>\bt_dt_opt Development stage</dt>
   <dd>bt_version_get_development_stage()</dd>
 
-  <dt>\bt_dt_opt Version control system revision's description</dt>
+  <dt>\bt_dt_opt Description of the version control system revision</dt>
   <dd>bt_version_get_vcs_revision_description()</dd>
 
   <dt>\bt_dt_opt Release name</dt>
   <dd>bt_version_get_name()</dd>
 
-  <dt>\bt_dt_opt Release name's description</dt>
+  <dt>\bt_dt_opt Description of the release name</dt>
   <dd>bt_version_get_name_description()</dd>
 
   <dt>\bt_dt_opt Extra name</dt>
@@ -96,21 +96,21 @@ The development stage \em can contain a version suffix such as
 <code>-pre5</code> or <code>-rc1</code>.
 
 @returns
-    Development stage of the library's version, or \c NULL if none.
+    Development stage of the version of the library, or \c NULL if none.
 */
 extern const char *bt_version_get_development_stage(void) __BT_NOEXCEPT;
 
 /*!
 @brief
-    Returns the version control system (VCS) revision's description of
-    libbabeltrace2's version.
+    Returns the description of the version control system (VCS) revision
+    of libbabeltrace2's version.
 
 The VCS revision description is only available for a non-release build
 of the library.
 
 @returns
-    Version control system revision's description of the library's
-    version, or \c NULL if none.
+    Description of the version control system revision of the version
+    of the library, or \c NULL if none.
 */
 extern const char *bt_version_get_vcs_revision_description(void) __BT_NOEXCEPT;
 
@@ -122,7 +122,7 @@ If the release name is not available, which can be the case for a
 development build, this function returns \c NULL.
 
 @returns
-    Library's release name, or \c NULL if not available.
+    Release name of the library, or \c NULL if not available.
 
 @sa bt_version_get_name_description() &mdash;
     Returns the description of libbabeltrace2's release name.
@@ -131,13 +131,14 @@ extern const char *bt_version_get_name(void) __BT_NOEXCEPT;
 
 /*!
 @brief
-    Returns libbabeltrace2's release name's description.
+    Returns the description of libbabeltrace2's release name.
 
-If the release name's description is not available, which can be the
-case for a development build, this function returns \c NULL.
+If the description of the release name is not available, which can be
+the case for a development build, this function returns \c NULL.
 
 @returns
-    Library's release name's description, or \c NULL if not available.
+    Description of the release name of the library,
+    or \c NULL if not available.
 
 @sa bt_version_get_name() &mdash;
     Returns libbabeltrace2's release name.
@@ -148,11 +149,12 @@ extern const char *bt_version_get_name_description(void) __BT_NOEXCEPT;
 @brief
     Returns the extra name of libbabeltrace2's version.
 
-The extra name of the library's version can be set at build time for a
-custom build.
+The extra name of the version of the library can be set at build time
+for a custom build.
 
 @returns
-    Library's version extra name, or \c NULL if not available.
+    Extra name of the version of the library,
+    or \c NULL if not available.
 */
 extern const char *bt_version_get_extra_name(void) __BT_NOEXCEPT;
 
@@ -160,12 +162,13 @@ extern const char *bt_version_get_extra_name(void) __BT_NOEXCEPT;
 @brief
     Returns the extra description of libbabeltrace2's version.
 
-The extra description of the library's version can be set at build time
-for a custom build.
+The extra description of the version of the library can be set at build
+time for a custom build.
 
 @returns
     @parblock
-    Library's version extra description, or \c NULL if not available.
+    Extra description of the version of the library,
+    or \c NULL if not available.
 
     Can contain newlines.
     @endparblock
@@ -176,12 +179,13 @@ extern const char *bt_version_get_extra_description(void) __BT_NOEXCEPT;
 @brief
     Returns the extra patch names of libbabeltrace2's version.
 
-The extra patch names of the library's version can be set at build time
-for a custom build.
+The extra patch names of the version of the library can be set at build
+time for a custom build.
 
 @returns
     @parblock
-    Library's version extra patch names, or \c NULL if not available.
+    Extra patch names of the version of the library,
+    or \c NULL if not available.
 
     Each line of the returned string contains the name of a patch
     applied to Babeltrace's source tree for a custom build.

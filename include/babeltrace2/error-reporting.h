@@ -47,10 +47,10 @@ to the end user.
 
 This error reporting API adds a layer so that each function which
 returns an error status code can append a message which describes the
-cause of the error within the function's context.
+cause of the error within the context of the function.
 
-Functions append error causes to the current thread's error. Having one
-error object per thread makes this API thread-safe.
+Functions append error causes to the error of the current thread. Having
+one error object per thread makes this API thread-safe.
 
 Here's a visual, step-by-step example:
 
@@ -65,8 +65,9 @@ Here's a visual, step-by-step example:
 -# The sink \bt_comp calls bt_message_iterator_next() on its upstream
    source \bt_msg_iter.
 
--# bt_message_iterator_next() calls the source message iterator's
-   \link api-msg-iter-cls-meth-next "next" method\endlink.
+-# bt_message_iterator_next() calls the
+  \link api-msg-iter-cls-meth-next "next" method\endlink of the
+  source message iterator.
 
 @image html error-reporting-step-5.png
 
@@ -81,7 +82,7 @@ Here's a visual, step-by-step example:
 
 <ol start="6">
   <li>
-    The source message iterator's "next" method appends the error
+    The "next" method of the source message iterator appends the error
     cause <em>"Cannot read file /some/file: permission denied"</em>
     and returns
     #BT_MESSAGE_ITERATOR_CLASS_NEXT_METHOD_STATUS_ERROR.
@@ -101,7 +102,7 @@ Here's a visual, step-by-step example:
 
 <ol start="8">
   <li>
-    The sink component's "consume" method appends the error
+    The "consume" method of the sink component appends the error
     cause <em>"Cannot consume upstream message iterator's messages"</em>
     and returns #BT_COMPONENT_CLASS_SINK_CONSUME_METHOD_STATUS_ERROR.
 
@@ -111,7 +112,7 @@ Here's a visual, step-by-step example:
     returns #BT_GRAPH_RUN_STATUS_ERROR.
 </ol>
 
-At this point, the current thread's error contains four causes:
+At this point, the error of the current thread contains four causes:
 
 - <em>"Cannot read file /some/file: permission denied"</em>
 - <em>"Message iterator's 'next' method failed"</em>
@@ -135,8 +136,8 @@ When your function returns an error status code, use one of the
 <code>bt_current_thread_error_append_cause_from_*()</code>
 functions or <code>BT_CURRENT_THREAD_ERROR_APPEND_CAUSE_FROM_*()</code>
 macros to append an error cause to the
-current thread's error. Use the appropriate function or macro
-depending on your function's actor amongst:
+error of the current thread. Use the appropriate function or macro
+depending on the actor of your function amongst:
 
 <dl>
   <dt>Component</dt>
@@ -187,10 +188,10 @@ one of:
 - Return an error status code too.
 
   In that case, you \em can
-  \ref api-error-append-cause "append an error cause" to the current
-  thread's error.
+  \ref api-error-append-cause "append an error cause" to the error of
+  the current thread.
 
-- \em Take the current thread's error with
+- \em Take the error of the current thread with
   bt_current_thread_take_error().
 
   This function moves the ownership of the error object from the library
@@ -205,8 +206,8 @@ one of:
     In <a href="https://en.wikipedia.org/wiki/Object-oriented_programming">object-oriented programming</a>
     terms, this corresponds to catching an exception and discarding it.
 
-  - Call bt_current_thread_move_error() to move back the error object's
-    ownership to the library.
+  - Call bt_current_thread_move_error() to move the ownership of
+    the error object back to the library.
 
     In object-oriented programming terms, this corresponds to catching
     an exception and rethrowing it.
@@ -228,7 +229,7 @@ There are four types of error cause actors:
 - \bt_c_comp_cls
 - Unknown
 
-Get the type enumerator of an error cause's actor with
+Get the type enumerator of the actor of an error cause with
 bt_error_cause_get_actor_type().
 
 An error cause has the following common properties:
@@ -281,21 +282,22 @@ properties:
 
   <dt>Component class name</dt>
   <dd>
-    Name of the component's \ref api-comp-cls "class".
+    Name of the \ref api-comp-cls "class" of the component.
 
     Use bt_error_cause_component_actor_get_component_class_type().
   </dd>
 
   <dt>Component class type</dt>
   <dd>
-    Type of the component's class.
+    Type of the class of the component.
 
     Use bt_error_cause_component_actor_get_component_class_name().
   </dd>
 
   <dt>\bt_dt_opt Plugin name</dt>
   <dd>
-    Name of the \bt_plugin which provides the component's class, if any.
+    Name of the \bt_plugin which provides the class of the component,
+    if any.
 
     Use bt_error_cause_component_actor_get_plugin_name().
   </dd>
@@ -326,21 +328,22 @@ properties:
 
   <dt>Component class name</dt>
   <dd>
-    Name of the component's \ref api-comp-cls "class".
+    Name of the \ref api-comp-cls "class" of the component.
 
     Use bt_error_cause_component_actor_get_component_class_type().
   </dd>
 
   <dt>Component class type</dt>
   <dd>
-    Type of the component's class.
+    Type of the class of the component.
 
     Use bt_error_cause_component_actor_get_component_class_name().
   </dd>
 
   <dt>\bt_dt_opt Plugin name</dt>
   <dd>
-    Name of the \bt_plugin which provides the component's class, if any.
+    Name of the \bt_plugin which provides the class of the component,
+    if any.
 
     Use bt_error_cause_component_actor_get_plugin_name().
   </dd>
@@ -395,14 +398,14 @@ properties:
 */
 
 /*!
-@name Current thread's error
+@name Error of the current thread
 @{
 */
 
 /*!
 @brief
-    \em Takes the current thread's error, that is, moves its ownership
-    from the library to the caller.
+    \em Takes the error of the current thread, that is, moves its
+    ownership from the library to the caller.
 
 This function can return \c NULL if the current thread has no error.
 
@@ -413,15 +416,15 @@ Once you are done with the returned error, do one of:
   In <a href="https://en.wikipedia.org/wiki/Object-oriented_programming">object-oriented programming</a>
   terms, this corresponds to catching an exception and discarding it.
 
-- Call bt_current_thread_move_error() to move back the error object's
-  ownership to the library.
+- Call bt_current_thread_move_error() to move the ownership of the error
+  object back to the library.
 
   In object-oriented programming terms, this corresponds to catching
   an exception and rethrowing it.
 
 @returns
-    Unique reference of the current thread's error, or \c NULL if the
-    current thread has no error.
+    Unique reference of the error of the current thread, or \c NULL if
+    the current thread has no error.
 
 @post
     <strong>If this function does not return <code>NULL</code></strong>,
@@ -430,7 +433,7 @@ Once you are done with the returned error, do one of:
 @sa bt_error_release() &mdash;
     Releases (frees) an error.
 @sa bt_current_thread_move_error() &mdash;
-    Moves an error's ownership to the library.
+    Moves the ownership of an error to the library.
 */
 extern
 const bt_error *bt_current_thread_take_error(void) __BT_NOEXCEPT;
@@ -485,7 +488,7 @@ void bt_current_thread_move_error(const bt_error *error) __BT_NOEXCEPT;
     The library owns \bt_p{_error}.
 
 @sa bt_current_thread_move_error() &mdash;
-    Moves an error's ownership to the library.
+    Moves the ownership of an error to the library.
 */
 #define BT_CURRENT_THREAD_MOVE_ERROR_AND_RESET(_error)	\
 	do {						\
@@ -495,7 +498,7 @@ void bt_current_thread_move_error(const bt_error *error) __BT_NOEXCEPT;
 
 /*!
 @brief
-    Releases the current thread's error, if any.
+    Releases the error of the current thread, if any.
 
 This function is equivalent to:
 
@@ -509,7 +512,7 @@ bt_error_release(bt_current_thread_take_error());
 @sa bt_error_release() &mdash;
     Releases (frees) an error.
 @sa bt_current_thread_take_error &mdash;
-    Takes the current thread's error, moving its ownership from the
+    Takes the error of the current thread, moving its ownership from the
     library to the caller.
 */
 extern
@@ -544,13 +547,13 @@ typedef enum bt_current_thread_error_append_cause_status {
 
 /*!
 @brief
-    Appends an error cause to the current thread's error from a
+    Appends an error cause to the error of the current thread from a
     \bt_comp method.
 
 This this a <code>printf()</code>-like function starting from the
 format string parameter \bt_p{message_format}.
 
-On success, the appended error cause's module name
+On success, the appended module name of the error cause
 (see bt_error_cause_get_module_name()) is:
 
 @code{.unparsed}
@@ -608,7 +611,7 @@ if no \bt_plugin provides the class of \bt_p{self_component}, with:
 
 @post
     <strong>On success</strong>, the number of error causes in the
-    current thread's error is incremented.
+    error of the current thread is incremented.
 
 @sa BT_CURRENT_THREAD_ERROR_APPEND_CAUSE_FROM_COMPONENT() &mdash;
     Calls this function with \c __FILE__ and \c __LINE__ as the
@@ -623,7 +626,7 @@ bt_current_thread_error_append_cause_from_component(
 
 /*!
 @brief
-    Appends an error cause to the current thread's error from a
+    Appends an error cause to the error of the current thread from a
     \bt_comp method using \c __FILE__ and \c __LINE__ as the source
     file name and line number.
 
@@ -637,13 +640,13 @@ with \c __FILE__ and \c __LINE__ as its
 
 /*!
 @brief
-    Appends an error cause to the current thread's error from a
+    Appends an error cause to the error of the current thread from a
     \bt_msg_iter method.
 
 This this a <code>printf()</code>-like function starting from the
 format string parameter \bt_p{message_format}.
 
-On success, the appended error cause's module name
+On success, the appended module name of the error cause
 (see bt_error_cause_get_module_name()) is:
 
 @code{.unparsed}
@@ -708,7 +711,7 @@ if no \bt_plugin provides the component class of
 
 @post
     <strong>On success</strong>, the number of error causes in the
-    current thread's error is incremented.
+    error of the current thread is incremented.
 
 @sa BT_CURRENT_THREAD_ERROR_APPEND_CAUSE_FROM_MESSAGE_ITERATOR() &mdash;
     Calls this function with \c __FILE__ and \c __LINE__ as the
@@ -723,7 +726,7 @@ bt_current_thread_error_append_cause_from_message_iterator(
 
 /*!
 @brief
-    Appends an error cause to the current thread's error from a
+    Appends an error cause to the error of the current thread from a
     \bt_msg_iter method using \c __FILE__ and \c __LINE__ as the source file
     name and line number.
 
@@ -738,7 +741,7 @@ bt_current_thread_error_append_cause_from_message_iterator() with
 
 /*!
 @brief
-    Appends an error cause to the current thread's error from a
+    Appends an error cause to the error of the current thread from a
     \bt_comp_cls method.
 
 This this a <code>printf()</code>-like function starting from the
@@ -747,7 +750,7 @@ format string parameter \bt_p{message_format}.
 As of \bt_name_version_min_maj, the only component class method is the
 \ref api-qexec "query" method.
 
-On success, the appended error cause's module name
+On success, the appended module name of the error cause
 (see bt_error_cause_get_module_name()) is:
 
 @code{.unparsed}
@@ -800,7 +803,7 @@ if no \bt_plugin provides \bt_p{self_component_class}, with:
 
 @post
     <strong>On success</strong>, the number of error causes in the
-    current thread's error is incremented.
+    error of the current thread is incremented.
 
 @sa BT_CURRENT_THREAD_ERROR_APPEND_CAUSE_FROM_COMPONENT_CLASS() &mdash;
     Calls this function with \c __FILE__ and \c __LINE__ as the
@@ -815,7 +818,7 @@ bt_current_thread_error_append_cause_from_component_class(
 
 /*!
 @brief
-    Appends an error cause to the current thread's error from a
+    Appends an error cause to the error of the current thread from a
     component class method using \c __FILE__ and \c __LINE__ as the
     source file name and line number.
 
@@ -830,7 +833,7 @@ with \c __FILE__ and \c __LINE__ as its
 
 /*!
 @brief
-    Appends an error cause to the current thread's error from any
+    Appends an error cause to the error of the current thread from any
     function.
 
 Use this function when you cannot use
@@ -864,7 +867,7 @@ format string parameter \bt_p{message_format}.
 
 @post
     <strong>On success</strong>, the number of error causes in the
-    current thread's error is incremented.
+    error of the current thread is incremented.
 
 @sa BT_CURRENT_THREAD_ERROR_APPEND_CAUSE_FROM_UNKNOWN() &mdash;
     Calls this function with \c __FILE__ and \c __LINE__ as the
@@ -879,7 +882,7 @@ bt_current_thread_error_append_cause_from_unknown(
 
 /*!
 @brief
-    Appends an error cause to the current thread's error from any
+    Appends an error cause to the error of the current thread from any
     function using \c __FILE__ and \c __LINE__ as the source
     file name and line number.
 
@@ -952,7 +955,7 @@ const bt_error_cause *bt_error_borrow_cause_by_index(
 
 After you call this function, \bt_p{error} does not exist.
 
-Take the current thread's error with bt_current_thread_take_error().
+Take the error of the current thread with bt_current_thread_take_error().
 
 In <a href="https://en.wikipedia.org/wiki/Object-oriented_programming">object-oriented programming</a>
 terms, calling this function corresponds to catching an
@@ -972,7 +975,7 @@ corresponds to catching an exception and rethrowing it.
     \bt_p{error} does not exist.
 
 @sa bt_current_thread_move_error() &mdash;
-    Moves an error's ownership to the library.
+    Moves the ownership of an error to the library.
 */
 extern
 void bt_error_release(const bt_error *error) __BT_NOEXCEPT;
@@ -1077,7 +1080,7 @@ const char *bt_error_cause_get_module_name(
 @brief
     Returns the name of the source file which contains the function
     which appended the error cause \bt_p{error_cause} to the
-    current thread's error.
+    error of the current thread.
 
 @param[in] error_cause
     Error cause of which to get the source file name.
@@ -1100,13 +1103,13 @@ const char *bt_error_cause_get_file_name(
 @brief
     Returns the line number of the statement
     which appended the error cause \bt_p{error_cause} to the
-    current thread's error.
+    error of the current thread.
 
 @param[in] error_cause
-    Error cause of which to get the source statement's line number.
+    Error cause of which to get the line number of the source statement.
 
 @returns
-    Source statement's line number of \bt_p{error_cause}.
+    Line number of the source statement of \bt_p{error_cause}.
 
 @bt_pre_not_null{error_cause}
 */
@@ -1124,8 +1127,8 @@ uint64_t bt_error_cause_get_line_number(
 /*!
 @brief
     Returns the name of the \bt_comp of which a method
-    appended the error cause \bt_p{error_cause} to the current
-    thread's error.
+    appended the error cause \bt_p{error_cause} to the error of the
+    current thread.
 
 @param[in] error_cause
     Error cause of which to get the component name.
@@ -1151,7 +1154,7 @@ const char *bt_error_cause_component_actor_get_component_name(
 @brief
     Returns the \ref api-comp-cls "class" type of the
     \bt_comp of which a method appended the error cause
-    \bt_p{error_cause} to the current thread's error.
+    \bt_p{error_cause} to the error of the current thread.
 
 @param[in] error_cause
     Error cause of which to get the component class type.
@@ -1172,7 +1175,7 @@ bt_component_class_type bt_error_cause_component_actor_get_component_class_type(
 @brief
     Returns the \ref api-comp-cls "class" name of the
     \bt_comp of which a method appended the error cause
-    \bt_p{error_cause} to the current thread's error.
+    \bt_p{error_cause} to the error of the current thread.
 
 @param[in] error_cause
     Error cause of which to get the component class name.
@@ -1199,10 +1202,10 @@ const char *bt_error_cause_component_actor_get_component_class_name(
     Returns the name of the \bt_plugin which provides the
     \ref api-comp-cls "class" of the \bt_comp of which a method
     appended the error cause \bt_p{error_cause} to the
-    current thread's error.
+    error of the current thread.
 
-This function returns \c NULL if no plugin provides the error cause's
-component class.
+This function returns \c NULL if no plugin provides the component class
+of the error cause.
 
 @param[in] error_cause
     Error cause of which to get the plugin name.
@@ -1236,8 +1239,8 @@ const char *bt_error_cause_component_actor_get_plugin_name(
 @brief
     Returns the name of the \bt_oport from which was created
     the message iterator of which the method
-    appended the error cause \bt_p{error_cause} to the current
-    thread's error.
+    appended the error cause \bt_p{error_cause} to the error of the
+    current thread.
 
 @param[in] error_cause
     Error cause of which to get the output port name.
@@ -1262,8 +1265,8 @@ const char *bt_error_cause_message_iterator_actor_get_component_output_port_name
 /*!
 @brief
     Returns the name of the \bt_comp of which a message iterator method
-    appended the error cause \bt_p{error_cause} to the current
-    thread's error.
+    appended the error cause \bt_p{error_cause} to the error of the
+    current thread.
 
 @param[in] error_cause
     Error cause of which to get the component name.
@@ -1289,7 +1292,7 @@ const char *bt_error_cause_message_iterator_actor_get_component_name(
 @brief
     Returns the \ref api-comp-cls "class" type of the
     \bt_comp of which a message iterator method appended the error cause
-    \bt_p{error_cause} to the current thread's error.
+    \bt_p{error_cause} to the error of the current thread.
 
 @param[in] error_cause
     Error cause of which to get the component class type.
@@ -1311,7 +1314,7 @@ bt_error_cause_message_iterator_actor_get_component_class_type(
 @brief
     Returns the \ref api-comp-cls "class" name of the
     \bt_comp of which a message iterator method appended the error cause
-    \bt_p{error_cause} to the current thread's error.
+    \bt_p{error_cause} to the error of the current thread.
 
 @param[in] error_cause
     Error cause of which to get the component class name.
@@ -1339,10 +1342,10 @@ const char *bt_error_cause_message_iterator_actor_get_component_class_name(
     \ref api-comp-cls "class" of the \bt_comp of which a
     message iterator method
     appended the error cause \bt_p{error_cause} to the
-    current thread's error.
+    error of the current thread.
 
-This function returns \c NULL if no plugin provides the error cause's
-component class.
+This function returns \c NULL if no plugin provides the component class
+of the error cause.
 
 @param[in] error_cause
     Error cause of which to get the plugin name.
@@ -1376,7 +1379,7 @@ const char *bt_error_cause_message_iterator_actor_get_plugin_name(
 @brief
     Returns the name of the \bt_comp_cls
     of which a method appended the error cause
-    \bt_p{error_cause} to the current thread's error.
+    \bt_p{error_cause} to the error of the current thread.
 
 @param[in] error_cause
     Error cause of which to get the component class name.
@@ -1398,7 +1401,7 @@ bt_error_cause_component_class_actor_get_component_class_type(
 @brief
     Returns the name of the \bt_comp_cls
     of which a method appended the error cause
-    \bt_p{error_cause} to the current thread's error.
+    \bt_p{error_cause} to the error of the current thread.
 
 @param[in] error_cause
     Error cause of which to get the component class name.
@@ -1425,10 +1428,10 @@ const char *bt_error_cause_component_class_actor_get_component_class_name(
     Returns the name of the \bt_plugin which provides the
     \bt_comp_cls of which a method
     appended the error cause \bt_p{error_cause} to the
-    current thread's error.
+    error of the current thread.
 
-This function returns \c NULL if no plugin provides the error cause's
-component class.
+This function returns \c NULL if no plugin provides the component class
+of the error cause.
 
 @param[in] error_cause
     Error cause of which to get the plugin name.

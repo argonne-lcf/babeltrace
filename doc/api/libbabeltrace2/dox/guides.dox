@@ -58,9 +58,10 @@ as the minimal logging level:
     <a href="https://babeltrace.org/#bt2-get">Download the
     \bt_name tarball</a> and extract it.
 
-    See the project's
+    See the
     <a href="https://github.com/efficios/babeltrace/blob/stable-\bt_version_min_maj/README.adoc">README</a>
-    for build-time requirements and detailed build instructions.
+    of the project for build-time requirements and detailed build
+    instructions.
   <li>
     Configure the build in developer mode and with the \em TRACE
     minimal logging level:
@@ -104,7 +105,7 @@ To compile and link a \bt_name shared object plugin:
 
 <ol>
   <li>
-    Compile the plugin's C/C++ source files with the
+    Compile the C/C++ source files of the plugin with the
     <a href="https://gcc.gnu.org/onlinedocs/gcc/Code-Gen-Options.html"><code>\-fPIC</code></a>
     and
     <a href="https://gcc.gnu.org/onlinedocs/gcc/Overall-Options.html"><code>\-c</code></a>

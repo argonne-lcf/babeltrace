@@ -67,12 +67,12 @@ bt_stream_borrow_trace_const().
 
 A \bt_stream can conceptually contain a default clock if its class
 has a \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
-There's no function to access a stream's default clock because it's
+There's no function to access the default clock of a stream because it's
 a stateful object: \bt_p_msg cannot refer to stateful objects
 because they must not change while being transported from one
 \bt_comp to the other. Instead of having a stream default clock object,
-\bt_p_msg have a default \bt_cs: this is a snapshot of the value of a
-stream's default clock (a \bt_clock_cls instance):
+\bt_p_msg have a default \bt_cs: this is a snapshot of the value of the
+default clock of a stream (a \bt_clock_cls instance):
 
 @image html clocks.png
 
@@ -84,14 +84,14 @@ In the illustration above, notice that:
 - A stream class has a default \bt_clock_cls (orange bell alarm clock).
 
 - Each stream has a default clock (yellow bell alarm clock): this is an
-  instance of the stream's class's default clock class.
+  instance of the default clock class of the class of the the stream.
 
 - Each \bt_msg (objects in blue stream rectangles) created for a given
   stream has a default \bt_cs (yellow star): this is a snapshot of the
-  stream's default clock.
+  default clock of the stream.
 
   In other words, a default clock snapshot contains the value of the
-  stream's default clock when this message occurred.
+  default clock of the stream when this message occurred.
 
 To create a stream:
 
@@ -126,20 +126,20 @@ A stream has the following property:
 <dl>
   <dt>\anchor api-tir-stream-prop-id Numeric ID</dt>
   <dd>
-    Numeric ID, unique amongst the numeric IDs of the stream's
-    \bt_trace's streams for a given \bt_stream_cls. In other words,
+    Numeric ID, unique amongst the numeric IDs of the streams of
+    the parent \bt_trace for a given \bt_stream_cls. In other words,
     two streams which belong to the same trace can have the same numeric
     ID if they aren't instances of the same class.
 
-    Depending on whether or not the stream's class
+    Depending on whether or not the class of the stream
     automatically assigns stream IDs
     (see bt_stream_class_assigns_automatic_stream_id()),
-    set the stream's numeric ID on creation with
+    set the numeric ID of the stream on creation with
     bt_stream_create() or bt_stream_create_with_id().
 
     You cannot change the numeric ID once the stream is created.
 
-    Get a stream's numeric ID with bt_stream_get_id().
+    Get the numeric ID of a stream with bt_stream_get_id().
   </dd>
 
   <dt>\anchor api-tir-stream-prop-name \bt_dt_opt Name</dt>
@@ -490,10 +490,10 @@ property.
 
 @note
     When you create a default stream with bt_stream_create()
-    or bt_stream_create_with_id(), the stream's initial user
-    attributes is an empty \bt_map_val. Therefore you can borrow it with
-    bt_stream_borrow_user_attributes() and fill it directly
-    instead of setting a new one with this function.
+    or bt_stream_create_with_id(), the initial user
+    attributes of the stream is an empty \bt_map_val. Therefore you can
+    borrow it with bt_stream_borrow_user_attributes() and fill it
+    directly instead of setting a new one with this function.
 
 @param[in] stream
     Stream of which to set the user attributes to
@@ -522,8 +522,8 @@ property.
 
 @note
     When you create a default stream with bt_stream_create()
-    or bt_stream_create_with_id(), the stream's initial user
-    attributes is an empty \bt_map_val.
+    or bt_stream_create_with_id(), the initial user
+    attributes of the stream is an empty \bt_map_val.
 
 @param[in] stream
     Stream from which to borrow the user attributes.

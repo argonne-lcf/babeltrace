@@ -46,7 +46,7 @@ There are two ways to obtain a component class:
 - Borrow one from a \bt_plugin.
 
   Note that, as of \bt_name_version_min_maj, you cannot access a
-  component class's plugin, if any.
+  the plugin of component class, if any.
 
 A component class is a \ref api-fund-shared-object "shared object": get
 a new reference with bt_component_class_get_ref() and put an existing
@@ -62,7 +62,7 @@ There are three types of component classes:
     A source component class instance (a \bt_src_comp) \bt_msg_iter
     emits fresh \bt_p_msg.
 
-    A source component class's specific type is
+    The specific type of a source component class is
     #bt_component_class_source and its type enumerator is
     #BT_COMPONENT_CLASS_TYPE_SOURCE.
 
@@ -81,7 +81,7 @@ There are three types of component classes:
     emits fresh and transformed messages. It can also discard
     existing messages.
 
-    A filter component class's specific type is
+    The specific type of a filter component class is
     #bt_component_class_filter and its type enumerator is
     #BT_COMPONENT_CLASS_TYPE_FILTER.
 
@@ -99,8 +99,9 @@ There are three types of component classes:
     A sink component class instance (a \bt_sink_comp) consumes messages
     from a source or filter message iterator.
 
-    A filter component class's specific type is #bt_component_class_sink
-    and its type enumerator is #BT_COMPONENT_CLASS_TYPE_SINK.
+    The specific type of a filter component class is
+    #bt_component_class_sink and its type enumerator is
+    #BT_COMPONENT_CLASS_TYPE_SINK.
 
     \ref api-fund-c-typing "Upcast" the #bt_component_class_sink type to
     the #bt_component_class type with
@@ -112,7 +113,7 @@ There are three types of component classes:
   </dd>
 </dl>
 
-Get a component's class type enumerator with
+Get the type enumerator of the class of a component with
 bt_component_class_get_type(). You can also use the
 bt_component_class_is_source(), bt_component_class_is_filter(), and
 bt_component_class_is_sink() helper functions.
@@ -132,7 +133,8 @@ A component class has the following common properties:
     Within a \bt_plugin, for a given component class type, each
     component class has a unique name.
 
-    Get a component class's name with bt_component_class_get_name().
+    Get the name of a component class with
+    bt_component_class_get_name().
   </dd>
 
   <dt>
@@ -142,7 +144,7 @@ A component class has the following common properties:
   <dd>
     Textual description of the component class.
 
-    Get a component class's description with
+    Get the description of a component class with
     bt_component_class_get_description().
   </dd>
 
@@ -153,7 +155,7 @@ A component class has the following common properties:
   <dd>
     Help text of the component class.
 
-    Get a component class's help text with
+    Get the help text of a component class with
     bt_component_class_get_help().
   </dd>
 </dl>

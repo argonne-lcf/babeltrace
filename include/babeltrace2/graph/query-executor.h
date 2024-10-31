@@ -35,8 +35,8 @@ A component class can implement a query method to offer one or more
 
 Both the query parameters and the returned objects are \bt_p_val.
 
-The query operation feature exists so that you can benefit from a
-component class's implementation to get information about a trace, a
+The query operation feature exists so that you can benefit from the
+implementation of a component class to get information about a trace, a
 stream, a distant server, and so on. For example, the
 <code>source.ctf.lttng-live</code> component class (see
 \bt_man{babeltrace2-source.ctf.lttng-live,7}) offers the \c sessions
@@ -49,13 +49,13 @@ completely defined by the component class implementation: the library
 does not enforce or suggest any layout. The best way to know which
 objects you can query from a component class, what are the expected and
 optional parameters, and what the returned object contains is to read
-this component class's documentation.
+the documentation of this component class.
 
 The purpose of the query executor itself is to keep some state for a
-specific query operation. For example, you can set a query executor's
-logging level with bt_query_executor_set_logging_level(); then a
-component class's query method can get the executor's current logging
-level with bt_query_executor_get_logging_level().
+specific query operation. For example, you can set the logging level
+of a query executor with bt_query_executor_set_logging_level(); then the
+query method of a component class can get the current logging
+level of the executor with bt_query_executor_get_logging_level().
 
 Also, the query executor is an interruptible object: a long or blocking
 query operation can run, checking whether the executor is interrupted
@@ -75,8 +75,7 @@ name of the object to query, from which component class to query the
 object, and what are the query parameters. You cannot change those
 properties once the query executor is created. With
 bt_query_executor_create_with_method_data(), you can also pass
-a custom, \bt_voidp pointer to the component class's
-query method.
+a custom, \bt_voidp pointer to the query method of the component class.
 
 Perform a query operation with bt_query_executor_query(). This function
 can return #BT_QUERY_EXECUTOR_QUERY_STATUS_AGAIN, in which case you can
@@ -86,7 +85,7 @@ component class does not offer the requested object.
 
 To interrupt a running query operation, either:
 
-- Borrow the query executor's default \bt_intr with
+- Borrow the default \bt_intr of the query executor with
   bt_query_executor_borrow_default_interrupter() and set it with
   bt_interrupter_set().
 
@@ -110,7 +109,7 @@ A query executor has the following property:
     Logging level
   </dt>
   <dd>
-    Logging level of the query executor's query operations.
+    Logging level of the query operations of the query executor.
 
     Use bt_query_executor_set_logging_level() and
     bt_query_executor_get_logging_level().
@@ -247,11 +246,11 @@ typedef enum bt_query_executor_query_status {
 /*!
 @brief
     Performs a query operation using the query executor
-    \bt_p{query_executor}, setting \bt_p{*result} to the operation's
-    result on success.
+    \bt_p{query_executor}, setting \bt_p{*result} to the result of
+    the operation on success.
 
-This function calls the query executor's target \bt_comp_cls's
-query method, passing:
+This function calls query method of the target \bt_comp_cls of the
+query executor, passing:
 
 - The object name of \bt_p{query_executor} as the
   \bt_p{object_name} parameter.
@@ -270,7 +269,7 @@ bt_query_executor_create_with_method_data().
     Query executor to use to execute the query operation.
 @param[out] result
     <strong>On success</strong>, \bt_p{*result} is a \em strong
-    reference of the query operation's result.
+    reference of the result of the query operation.
 
 @retval #BT_QUERY_EXECUTOR_QUERY_STATUS_OK
     Success.

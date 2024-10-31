@@ -35,7 +35,7 @@ trace data (\bt_p_ev, for example).
 A message iterator is a \bt_msg_iter_cls instance. Because a message
 iterator class is part of a \bt_src_comp_cls or \bt_flt_comp_cls, a
 message iterator is part of a \bt_src_comp or \bt_flt_comp. Borrow
-a message iterator's component with
+the component of a message iterator with
 bt_message_iterator_borrow_component().
 
 A message iterator is a \ref api-fund-shared-object "shared object": get
@@ -49,7 +49,7 @@ There are two contexts from which you can create a message iterator:
 <dl>
   <dt>From another message iterator</dt>
   <dd>
-    This is the case for a \bt_flt_comp's message iterator.
+    This is the case for the message iterator of a \bt_flt_comp.
 
     Use bt_message_iterator_create_from_message_iterator().
 
@@ -87,12 +87,12 @@ other \bt_p_comp. Then:
   on any of its connected input ports.
 
 - Any message iterator is free to create one or more message iterators
-  on any of its component's connected input ports.
+  on any of the connected input ports of its component.
 
 The following illustration shows a very simple use case where the
 \ref api-comp-cls-dev-meth-consume "consuming method" of a sink
-component uses a single \bt_flt_comp's message iterator which itself
-uses a single \bt_src_comp's message iterator:
+component uses a single \bt_flt_comp message iterator which itself
+uses a single \bt_src_comp message iterator:
 
 @image html msg-iter.png
 
@@ -108,11 +108,11 @@ operations:
 <dl>
   <dt>
     \anchor api-msg-iter-op-next
-    Get the message iterator's next messages
+    Get the next messages of the message iterator.
   </dt>
   <dd>
-    This operation returns a batch of the message iterator's next
-    \bt_p_msg considering its current state.
+    This operation returns a batch of the next
+    \bt_p_msg of the message iterator considering its current state.
 
     This operation returns a batch of messages instead of a single
     message for performance reasons.
@@ -128,12 +128,12 @@ operations:
     Make the message iterator seek its beginning
   </dt>
   <dd>
-    This operation resets the message iterator's position to the
+    This operation resets the position of the message iterator to the
     beginning of its \ref api-msg-seq "message sequence".
 
     If the operation is successful, then the next call to
     bt_message_iterator_next() returns the first \bt_p_msg of the
-    message iterator's sequence.
+    sequence of the message iterator.
 
     If bt_message_iterator_seek_ns_from_origin() returns something
     else than #BT_MESSAGE_ITERATOR_SEEK_BEGINNING_STATUS_OK, you
@@ -162,11 +162,11 @@ operations:
     the operation, your pass the specific time to seek as the
     \bt_p{ns_from_origin} parameter. You don't pass any
     \bt_clock_cls: the function operates at the nanosecond from some
-    origin level and it is left to the message iterator's implementation
-    to seek a message having at least this time.
+    origin level and it is left to the implementation of the message
+    iterator to seek a message having at least this time.
 
-    If the requested time point is \em after the message iterator's
-    sequence's last message, then the next call to
+    If the requested time point is \em after the last message of the
+    sequence of the message iterator, then the next call to
     bt_message_iterator_next() returns
     #BT_MESSAGE_ITERATOR_NEXT_STATUS_END.
 
@@ -232,8 +232,8 @@ typedef enum bt_message_iterator_create_from_message_iterator_status {
     another message iterator \bt_p{self_message_iterator}, and sets
     \bt_p{*message_iterator} to the resulting message iterator.
 
-On success, the message iterator's position is at the beginning
-of its \ref api-msg-seq "message sequence".
+On success, the position of \bt_p{*message_iterator} is at the
+beginning of its \ref api-msg-seq "message sequence".
 
 @param[in] self_message_iterator
     Other message iterator from which to create the message iterator.
@@ -248,8 +248,9 @@ of its \ref api-msg-seq "message sequence".
 @retval #BT_MESSAGE_ITERATOR_CREATE_FROM_MESSAGE_ITERATOR_STATUS_MEMORY_ERROR
     Out of memory.
 @retval #BT_MESSAGE_ITERATOR_CREATE_FROM_MESSAGE_ITERATOR_STATUS_ERROR
-    Other error, for example, the created message iterator's
-    \ref api-msg-iter-cls-meth-init "initialization method" failed.
+    Other error, for example, the
+    \ref api-msg-iter-cls-meth-init "initialization method" of the
+    created message iterator failed.
 
 @bt_pre_not_null{self_message_iterator}
 @bt_pre_not_null{port}
@@ -296,7 +297,7 @@ typedef enum bt_message_iterator_create_from_sink_component_status {
     \bt_sink_comp \bt_p{self_component_sink}, and sets
     \bt_p{*message_iterator} to the resulting message iterator.
 
-On success, the message iterator's position is at the beginning
+On success, the position of \bt_p{*message_iterator} is at the beginning
 of its \ref api-msg-seq "message sequence".
 
 @param[in] self_component_sink
@@ -312,8 +313,9 @@ of its \ref api-msg-seq "message sequence".
 @retval #BT_MESSAGE_ITERATOR_CREATE_FROM_MESSAGE_ITERATOR_STATUS_MEMORY_ERROR
     Out of memory.
 @retval #BT_MESSAGE_ITERATOR_CREATE_FROM_MESSAGE_ITERATOR_STATUS_ERROR
-    Other error, for example, the created message iterator's
-    \ref api-msg-iter-cls-meth-init "initialization method" failed.
+    Other error, for example, the
+    \ref api-msg-iter-cls-meth-init "initialization method" of the
+    created message iterator failed.
 
 @bt_pre_not_null{self_component_sink}
 @bt_pre_not_null{port}
@@ -404,10 +406,10 @@ typedef enum bt_message_iterator_next_status {
     \bt_p{message_iterator} into the \bt_p{*messages} array of size
     \bt_p{*count}, effectively advancing \bt_p{message_iterator}.
 
-See \ref api-msg-iter-op-next "this operation's documentation".
+See \ref api-msg-iter-op-next "the documentation of this operation".
 
-On success, the message iterator's position is advanced by \bt_p{*count}
-messages.
+On success, the position of \bt_p{message_iterator} is advanced by
+\bt_p{*count} messages.
 
 @param[in] message_iterator
     Message iterator from which to get the next messages.
@@ -568,7 +570,7 @@ typedef enum bt_message_iterator_seek_beginning_status {
     Makes the message iterator \bt_p{message_iterator} seek its
     beginning (first \bt_msg).
 
-See \ref api-msg-iter-op-seek-beg "this operation's documentation".
+See \ref api-msg-iter-op-seek-beg "the documentation of this operation".
 
 Make sure to call bt_message_iterator_can_seek_beginning(),
 without performing any other \ref api-msg-iter-ops "operation" on
@@ -713,7 +715,7 @@ typedef enum bt_message_iterator_seek_ns_from_origin_status {
     occurring at or after \bt_p{ns_from_origin} nanoseconds from its
     \ref api-tir-clock-cls-origin "clock class origin".
 
-See \ref api-msg-iter-op-seek-ns "this operation's documentation".
+See \ref api-msg-iter-op-seek-ns "the documentation of this operation".
 
 Make sure to call bt_message_iterator_can_seek_ns_from_origin(),
 without performing any other \ref api-msg-iter-ops "operation" on

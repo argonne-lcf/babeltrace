@@ -341,7 +341,7 @@ A bit array field class has the following property:
     You cannot change the length once the bit array field class is
     created.
 
-    Get a bit array field class's length with
+    Get the length of instances of a bit array field class with
     bt_field_class_bit_array_get_length().
   </dd>
 
@@ -359,8 +359,8 @@ A bit array field class has the following property:
     A bit array field class flag is a label (string) and an
     \bt_uint_rs, a set of bit index ranges. In the value of an
     instance (a \bt_ba_field) returned by
-    bt_field_bit_array_get_value_as_integer(), the least significant
-    bit's index is&nbsp;0.
+    bt_field_bit_array_get_value_as_integer(), the index of the
+    least significant bit is&nbsp;0.
 
     The integer ranges of a given flag or of multiple flags of
     the same bit array field class can overlap. For example,
@@ -579,7 +579,7 @@ Enumeration field classes have the following common property:
     belongs to the enumeration field class which contains it.
 
     There are two enumeration field class mapping types, depending on
-    the field class's type:
+    the type of the field class:
     #bt_field_class_enumeration_unsigned_mapping and
     #bt_field_class_enumeration_signed_mapping.
 
@@ -685,7 +685,7 @@ one. The concrete BLOB field classes are:
         You cannot change the length once the static BLOB field class is
         created.
 
-        Get a static BLOB field class's length with
+        Get the length of instances of a static BLOB field class with
         bt_field_class_blob_static_get_length().
       </dd>
     </dl>
@@ -719,7 +719,8 @@ one. The concrete BLOB field classes are:
         \bt_c_field_loc to locate the linked length field of an
         instance.
 
-        Get a dynamic BLOB field class's length field location with
+        Borrow the length field location of a dynamic BLOB field class
+        with
         bt_field_class_blob_dynamic_with_length_field_borrow_length_field_location_const().
       </dd>
     </dl>
@@ -776,7 +777,7 @@ one. The concrete array field classes are:
         You cannot change the length once the static array field class
         is created.
 
-        Get a static array field class's length with
+        Get the length of instances of a static array field class with
         bt_field_class_array_static_get_length().
       </dd>
     </dl>
@@ -822,7 +823,7 @@ one. The concrete array field classes are:
         \bt_c_field_path to locate the linked length field of
         an instance.
 
-        Borrow a dynamic array field class's length field path with
+        Borrow the length field path of a dynamic array field class with
         bt_field_class_array_dynamic_with_length_field_borrow_length_field_path_const().
       </dd>
 
@@ -834,7 +835,8 @@ one. The concrete array field classes are:
         \bt_c_field_loc to locate the linked length field of an
         instance.
 
-        Borrow a dynamic array field class's length field location with
+        Borrow the length field location of a dynamic array field class
+        with
         bt_field_class_array_dynamic_with_length_field_borrow_length_field_location_const().
       </dd>
     </dl>
@@ -855,7 +857,7 @@ Array field classes have the following common property:
     You cannot change the element field class once the array field class
     is created.
 
-    Borrow an array field class's element field class with
+    Borrow the element field class of an array field class with
     bt_field_class_array_borrow_element_field_class() and
     bt_field_class_array_borrow_element_field_class_const().
   </dd>
@@ -912,17 +914,17 @@ A structure field class has the following specific property:
     The type of a structure field class member is
     #bt_field_class_structure_member.
 
-    Get a structure field class member's name with
+    Get the name of a structure field class member with
     bt_field_class_structure_member_get_name().
 
-    Borrow a structure field class member's field class with
+    Borrow the field class of a structure field class member with
     bt_field_class_structure_member_borrow_field_class() and
     bt_field_class_structure_member_borrow_field_class_const().
 
-    Set a structure field class member's user attributes with
+    Set the user attributes of a structure field class member with
     bt_field_class_structure_member_set_user_attributes().
 
-    Borrow a structure field class member's user attributes with
+    Borrow the user attributes of a structure field class member with
     bt_field_class_structure_member_borrow_user_attributes() and
     bt_field_class_structure_member_borrow_user_attributes_const().
   </dd>
@@ -963,7 +965,7 @@ or none. Therefore, the concrete option field classes are:
 
   <dt>Option field class (instances with a linked boolean selector field)</dt>
   <dd>
-    The linked selector field of an option field class's instance
+    The linked selector field of an option field class instance
     (an option field) is a \bt_bool_field.
 
     @image html opt-link.png "Option field class with a boolean selector field."
@@ -988,7 +990,7 @@ or none. Therefore, the concrete option field classes are:
       </dt>
       <dd>
         Whether or not the linked boolean selector field make the
-        option field class's instance (an option field) \em contain a
+        option field class instance (an option field) \em contain a
         field when it's #BT_TRUE or when it's #BT_FALSE.
 
         If this property is #BT_TRUE, then if the linked selector field
@@ -1004,7 +1006,7 @@ or none. Therefore, the concrete option field classes are:
 
   <dt>Option field class (instances with a linked unsigned integer selector field)</dt>
   <dd>
-    The linked selector field of an option field class's instance
+    The linked selector field of an option field class instance
     (an option field) is an \bt_uint_field.
 
     Create with, depending on the effective \bt_mip (MIP) version
@@ -1027,18 +1029,18 @@ or none. Therefore, the concrete option field classes are:
     <dl>
       <dt>
         \anchor api-tir-fc-opt-prop-uint-rs
-        Selector's unsigned integer ranges
+        Unsigned integer ranges of the selector
       </dt>
       <dd>
         If the linked unsigned integer selector field of an option
-        field class's instance (an option field) has a value which
-        intersects with the selector's unsigned integer ranges, then
-        the option field \em contains a field.
+        field class instance (an option field) has a value which
+        intersects with the unsigned integer ranges of the selector,
+        then the option field \em contains a field.
 
-        You cannot change the selector's unsigned integer ranges once
-        the option field class is created.
+        You cannot change the unsigned integer ranges of the selector
+        once the option field class is created.
 
-        Borrow the selector's unsigned integer ranges from such an
+        Borrow the unsigned integer ranges of the selector from such an
         option field class with
         bt_field_class_option_with_selector_field_integer_unsigned_borrow_selector_ranges_const().
       </dd>
@@ -1047,7 +1049,7 @@ or none. Therefore, the concrete option field classes are:
 
   <dt>Option field class (instances with a linked signed integer selector field)</dt>
   <dd>
-    The linked selector field of an option field class's instance
+    The linked selector field of an option field class instance
     (an option field) is a \bt_sint_field.
 
     Create with, depending on the effective \bt_mip (MIP) version of
@@ -1070,18 +1072,18 @@ or none. Therefore, the concrete option field classes are:
     <dl>
       <dt>
         \anchor api-tir-fc-opt-prop-sint-rs
-        Selector's signed integer ranges
+        Signed integer ranges of the selector
       </dt>
       <dd>
         If the linked signed integer selector field of an option
-        field class's instance (an option field) has a value which
-        intersects with the selector's signed integer ranges, then
+        field class instance (an option field) has a value which
+        intersects with the signed integer ranges of the selector, then
         the option field \em contains a field.
 
-        You cannot change the selector's signed integer ranges once
+        You cannot change the signed integer ranges of the selector once
         the option field class is created.
 
-        Borrow the selector's signed integer ranges from such an
+        Borrow the signed integer ranges of the selector from such an
         option field class with
         bt_field_class_option_with_selector_field_integer_signed_borrow_selector_ranges_const().
       </dd>
@@ -1101,7 +1103,7 @@ the following common properties, depending on the effective
   <dd>
     \bt_c_field_path to locate the linked selector field of an instance.
 
-    Borrow such an option field class's selector field path with
+    Borrow the selector field path of such an option field class with
     bt_field_class_option_with_selector_field_borrow_selector_field_path_const().
   </dd>
 
@@ -1112,7 +1114,8 @@ the following common properties, depending on the effective
   <dd>
     \bt_c_field_loc to locate the linked selector field of an instance.
 
-    Borrow such an option field class's selector field location with
+    Borrow the selector field location of such an option field class
+    with
     bt_field_class_option_with_selector_field_borrow_selector_field_location_const().
   </dd>
 </dl>
@@ -1131,7 +1134,7 @@ Option field classes have the following common property:
     You cannot change the optional field class once the option field
     class is created.
 
-    Borrow an option field class's optional field class with
+    Borrow the optional field class of an option field class with
     bt_field_class_option_borrow_field_class() and
     bt_field_class_option_borrow_field_class_const().
   </dd>
@@ -1181,7 +1184,7 @@ or none. Therefore, the concrete variant field classes are:
 
   <dt>Variant field class (instances with a linked unsigned selector field)</dt>
   <dd>
-    The linked selector field of a variant field class's instance
+    The linked selector field of a variant field class instance
     (a variant field) is an \bt_uint_field.
 
     @image html var-link.png "A variant field linked to an unsigned integer selector field."
@@ -1207,7 +1210,7 @@ or none. Therefore, the concrete variant field classes are:
     the selector field can make the variant field have a given
     current option.
 
-    Borrow such a variant field class's option with
+    Borrow an option of such a variant field class with
     bt_field_class_variant_with_selector_field_integer_unsigned_borrow_option_by_index_const()
     and
     bt_field_class_variant_with_selector_field_integer_unsigned_borrow_option_by_name_const().
@@ -1215,7 +1218,7 @@ or none. Therefore, the concrete variant field classes are:
 
   <dt>Variant field class (instances with a linked signed selector field)</dt>
   <dd>
-    The linked selector field of a variant field class's instance
+    The linked selector field of a variant field class instance
     (a variant field) is a \bt_sint_field.
 
     Create with, depending on the effective \bt_mip (MIP) version of the
@@ -1239,7 +1242,7 @@ or none. Therefore, the concrete variant field classes are:
     the selector field can make the variant field have a given
     current option.
 
-    Borrow such a variant field class's option with
+    Borrow an option of such a variant field class with
     bt_field_class_variant_with_selector_field_integer_signed_borrow_option_by_index_const()
     and
     bt_field_class_variant_with_selector_field_integer_signed_borrow_option_by_name_const().
@@ -1258,7 +1261,7 @@ the following common properties, depending on the effective
   <dd>
     \bt_c_field_path to locate the linked selector field of an instance.
 
-    Borrow such a variant field class's selector field path with
+    Borrow the selector field path of such a variant field class with
     bt_field_class_variant_with_selector_field_borrow_selector_field_path_const().
   </dd>
 
@@ -1269,7 +1272,8 @@ the following common properties, depending on the effective
   <dd>
     \bt_c_field_loc to locate the linked selector field of an instance.
 
-    Borrow such a variant field class's selector field location with
+    Borrow the selector field location of such a variant field class
+    with
     bt_field_class_variant_with_selector_field_borrow_selector_field_location_const().
   </dd>
 </dl>
@@ -1317,7 +1321,7 @@ Variant field classes have the following common property:
     \ref api-fund-unique-object "unique object": it
     belongs to the variant field class which contains it.
 
-    Borrow any variant field class's option with
+    Borrow an option of any variant field class with
     bt_field_class_variant_borrow_option_by_index(),
     bt_field_class_variant_borrow_option_by_name(),
     bt_field_class_variant_borrow_option_by_index_const(), and
@@ -1325,8 +1329,8 @@ Variant field classes have the following common property:
 
     Those functions return the common #bt_field_class_variant_option
     type. Get the name of a variant field class option with
-    bt_field_class_variant_option_get_name(). Borrow a variant field
-    class option's field class with
+    bt_field_class_variant_option_get_name(). Borrow the field class
+    of a variant field class option with
     bt_field_class_variant_option_borrow_field_class() and
     bt_field_class_variant_option_borrow_field_class_const().
 
@@ -1336,7 +1340,7 @@ Variant field classes have the following common property:
     bt_field_class_variant_with_selector_field_integer_unsigned_borrow_option_by_name_const(),
     bt_field_class_variant_with_selector_field_integer_signed_borrow_option_by_index_const(), or
     bt_field_class_variant_with_selector_field_integer_signed_borrow_option_by_name_const(),
-    depending on the selector field class's type.
+    depending on the type of the selector field class.
 
     Those functions return the
     #bt_field_class_variant_with_selector_field_integer_unsigned_option or
@@ -1347,16 +1351,16 @@ Variant field classes have the following common property:
     or
     bt_field_class_variant_with_selector_field_integer_signed_option_as_option_const().
 
-    Borrow the option's ranges from the class of a variant field with a
-    linked selector field with
+    Borrow ranges of an option from the class of a variant field
+    with a linked selector field with
     bt_field_class_variant_with_selector_field_integer_unsigned_option_borrow_ranges_const()
     or
     bt_field_class_variant_with_selector_field_integer_signed_option_borrow_ranges_const().
 
-    Set a variant field class option's user attributes with
+    Set the user attributes of a variant field class option with
     bt_field_class_variant_option_set_user_attributes().
 
-    Borrow a variant field class option's user attributes with
+    Borrow the user attributes of a variant field class option with
     bt_field_class_variant_option_borrow_user_attributes() and
     bt_field_class_variant_option_borrow_user_attributes_const().
   </dd>
@@ -1392,8 +1396,8 @@ dynamic property of the "dependent" field. Those properties are:
 
   <dt>\bt_c_var_field</dt>
   <dd>
-    The linked field, an \bt_int_field, indicates the variant field's
-    current selected field.
+    The linked field, an \bt_int_field, indicates the current selected
+    field of a variant field.
   </dd>
 </dl>
 
@@ -1408,7 +1412,7 @@ The purpose of this feature is to eventually save space when a
 \bt_sink_comp writes trace files: if, for example, the trace format can
 convey that an anterior, existing field represents the length of a
 dynamic array field, then the sink component doesn't need to write the
-dynamic array field's length twice. This is the case of the
+length of the dynamic array field twice. This is the case of the
 <a href="https://diamon.org/ctf/">Common Trace Format</a>, for example.
 
 @image html darray-link.png "A dynamic array field linked to an unsigned integer length field."
@@ -1987,10 +1991,10 @@ See the \ref api-tir-fc-prop-user-attrs "user attributes" property.
 
 @note
     When you create a field class with one of the
-    <code>bt_field_class_*_create()</code> functions, the field class's
-    initial user attributes is an empty \bt_map_val. Therefore you can
-    borrow it with bt_field_class_borrow_user_attributes() and fill it
-    directly instead of setting a new one with this function.
+    <code>bt_field_class_*_create()</code> functions, the initial user
+    attributes of the field class is an empty \bt_map_val. Therefore you
+    can borrow it with bt_field_class_borrow_user_attributes() and fill
+    it directly instead of setting a new one with this function.
 
 @param[in] field_class
     Field class of which to set the user attributes to
@@ -2018,8 +2022,8 @@ See the \ref api-tir-fc-prop-user-attrs "user attributes" property.
 
 @note
     When you create a field class with one of the
-    <code>bt_field_class_*_create()</code> functions, the field class's
-    initial user attributes is an empty \bt_map_val.
+    <code>bt_field_class_*_create()</code> functions, the
+    initial user attributes of the field class is an empty \bt_map_val.
 
 @param[in] field_class
     Field class from which to borrow the user attributes.
@@ -4357,9 +4361,9 @@ See the \ref api-tir-fc-struct-prop-members "members" property.
 
 @note
     When you append a member to a structure field class with
-    bt_field_class_structure_append_member(), the member's
-    initial user attributes is an empty \bt_map_val. Therefore you can
-    borrow it with
+    bt_field_class_structure_append_member(), the
+    initial user attributes of the member is an empty \bt_map_val.
+    Therefore you can borrow it with
     bt_field_class_structure_member_borrow_user_attributes() and fill it
     directly instead of setting a new one with this function.
 
@@ -4390,8 +4394,8 @@ See the \ref api-tir-fc-struct-prop-members "members" property.
 
 @note
     When you append a member to a structure field class with
-    bt_field_class_structure_append_member(), the member's
-    initial user attributes is an empty \bt_map_val.
+    bt_field_class_structure_append_member(), the
+    initial user attributes of the member is an empty \bt_map_val.
 
 @param[in] member
     Structure field class member from which to borrow the user
@@ -4887,7 +4891,7 @@ values:
       \em None (this property becomes available when the returned field
       class becomes part of an \bt_ev_cls or of a \bt_stream_cls)
   <tr>
-    <td>\ref api-tir-fc-opt-prop-uint-rs "Selector's unsigned integer ranges"
+    <td>\ref api-tir-fc-opt-prop-uint-rs "Unsigned integer ranges of selector"
     <td>\bt_p{ranges}
   <tr>
     <td>\ref api-tir-fc-prop-user-attrs "User attributes"
@@ -4902,7 +4906,7 @@ values:
 @param[in] selector_field_class
     Linked selector field class of the option field class to create.
 @param[in] ranges
-    Selector's unsigned integer ranges of the option field class to
+    Unsigned integer ranges of selector of the option field class to
     create.
 
 @returns
@@ -4961,7 +4965,7 @@ values:
       See \ref api-tir-fc-link "Fields with links to other fields"
       to learn more.
   <tr>
-    <td>\ref api-tir-fc-opt-prop-uint-rs "Selector's unsigned integer ranges"
+    <td>\ref api-tir-fc-opt-prop-uint-rs "Unsigned integer ranges of selector"
     <td>\bt_p{ranges}
   <tr>
     <td>\ref api-tir-fc-prop-user-attrs "User attributes"
@@ -4976,7 +4980,7 @@ values:
 @param[in] selector_field_location
     Selector field location of the option field class to create.
 @param[in] ranges
-    Selector's unsigned integer ranges of the option field class to
+    Unsigned integer ranges of selector of the option field class to
     create.
 
 @returns
@@ -5015,7 +5019,7 @@ bt_field_class_option_with_selector_field_location_integer_unsigned_create(
     integer selector field) \bt_p{field_class}.
 
 See the
-\ref api-tir-fc-opt-prop-uint-rs "selector's unsigned integer ranges"
+\ref api-tir-fc-opt-prop-uint-rs "Unsigned integer ranges of selector"
 property.
 
 @param[in] field_class
@@ -5072,7 +5076,7 @@ values:
       \em None (this property becomes available when the returned field
       class becomes part of an \bt_ev_cls or of a \bt_stream_cls)
   <tr>
-    <td>\ref api-tir-fc-opt-prop-sint-rs "Selector's signed integer ranges"
+    <td>\ref api-tir-fc-opt-prop-sint-rs "Signed integer ranges of selector"
     <td>\bt_p{ranges}
   <tr>
     <td>\ref api-tir-fc-prop-user-attrs "User attributes"
@@ -5087,7 +5091,7 @@ values:
 @param[in] selector_field_class
     Linked selector field class of the option field class to create.
 @param[in] ranges
-    Selector's signed integer ranges of the option field class to
+    Signed integer ranges of selector of the option field class to
     create.
 
 @returns
@@ -5145,7 +5149,7 @@ values:
       See \ref api-tir-fc-link "Fields with links to other fields"
       to learn more.
   <tr>
-    <td>\ref api-tir-fc-opt-prop-uint-rs "Selector's signed integer ranges"
+    <td>\ref api-tir-fc-opt-prop-uint-rs "Signed integer ranges of selector"
     <td>\bt_p{ranges}
   <tr>
     <td>\ref api-tir-fc-prop-user-attrs "User attributes"
@@ -5160,7 +5164,7 @@ values:
 @param[in] selector_field_location
     Selector field location of the option field class to create.
 @param[in] ranges
-    Selector's signed integer ranges of the option field class to
+    Signed integer ranges of selector of the option field class to
     create.
 
 @returns
@@ -5199,7 +5203,7 @@ bt_field_class_option_with_selector_field_location_integer_signed_create(
     integer selector field) \bt_p{field_class}.
 
 See the
-\ref api-tir-fc-opt-prop-sint-rs "selector's signed integer ranges"
+\ref api-tir-fc-opt-prop-sint-rs "Signed integer ranges of selector"
 property.
 
 @param[in] field_class
@@ -5511,7 +5515,7 @@ See the \ref api-tir-fc-var-prop-opts "options" property.
     bt_field_class_variant_with_selector_field_integer_unsigned_append_option(),
     or
     bt_field_class_variant_with_selector_field_integer_signed_append_option(),
-    the option's initial user attributes is an empty \bt_map_val.
+    the initial user attributes of the option is an empty \bt_map_val.
     Therefore you can borrow it with
     bt_field_class_variant_option_borrow_user_attributes() and fill it
     directly instead of setting a new one with this function.
@@ -5546,7 +5550,7 @@ See the \ref api-tir-fc-var-prop-opts "options" property.
     bt_field_class_variant_with_selector_field_integer_unsigned_append_option(),
     or
     bt_field_class_variant_with_selector_field_integer_signed_append_option(),
-    the option's initial user attributes is an empty \bt_map_val.
+    the initial user attributes of the option is an empty \bt_map_val.
 
 @param[in] option
     Variant field class option from which to borrow the user

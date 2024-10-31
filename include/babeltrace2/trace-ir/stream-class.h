@@ -75,7 +75,8 @@ A stream class controls what its instances (\bt_p_stream) support:
 <dl>
   <dt>Default clock</dt>
   <dd>
-    By default, a stream class's streams do not have default clocks.
+    By default, the streams of a a stream class do not have default
+    clocks.
 
     Set the default \bt_clock_cls of a stream class with
     bt_stream_class_set_default_clock_class(). This makes all its
@@ -84,53 +85,53 @@ A stream class controls what its instances (\bt_p_stream) support:
 
   <dt>\anchor api-tir-stream-cls-pkt-support Packets</dt>
   <dd>
-    By default, a stream class's streams do not support \bt_p_pkt.
+    By default, the streams of a stream class do not support \bt_p_pkt.
 
     In other words, you cannot create a packet for such a stream,
     therefore you cannot create \bt_p_pb_msg and \bt_p_pe_msg for this
     stream either.
 
-    Enable packet support for a stream class's streams with
+    Enable packet support for the streams of a stream class with
     bt_stream_class_set_supports_packets().
 
     bt_stream_class_set_supports_packets() also configures whether or
-    not the packets of the stream class's instances have beginning
+    not the packets of the instances of the stream class have beginning
     and/or end default \bt_p_cs.
   </dd>
 
   <dt>Discarded events</dt>
   <dd>
-    By default, a stream class's streams do not support discarded
+    By default, the streams of a stream class do not support discarded
     events.
 
     In other words, you cannot create \bt_p_disc_ev_msg for such a
     stream.
 
-    Enable discarded events support for a stream class's streams with
+    Enable discarded events support for the streams of a stream class with
     bt_stream_class_set_supports_discarded_events().
 
     bt_stream_class_set_supports_discarded_events() also configures
-    whether or not the discarded events messages of the stream class's
-    instances have beginning and end default \bt_p_cs to indicate the
+    whether or not the discarded events messages of the instances of the
+    stream class have beginning and end default \bt_p_cs to indicate the
     discarded events time range.
   </dd>
 
   <dt>Discarded packets</dt>
   <dd>
-    By default, a stream class's streams do not support discarded
+    By default, the streams of a stream class do not support discarded
     packets.
 
     In other words, you cannot create \bt_p_disc_pkt_msg for such a
     stream.
 
-    Enable discarded packets support for a stream class's streams with
+    Enable discarded packets support for the streams of a stream class with
     bt_stream_class_set_supports_discarded_packets(). This also implies
     that you must enable packet support with
     bt_stream_class_set_supports_packets().
 
     bt_stream_class_set_supports_discarded_packets() also configures
-    whether or not the discarded packets messages of the stream class's
-    instances have beginning and end \bt_p_cs to indicate the
+    whether or not the discarded packets messages of the instances of the
+    stream class have beginning and end \bt_p_cs to indicate the
     discarded packets time range.
   </dd>
 </dl>
@@ -163,18 +164,18 @@ A stream class has the following properties:
 <dl>
   <dt>\anchor api-tir-stream-cls-prop-id Numeric ID</dt>
   <dd>
-    Numeric ID, unique amongst the numeric IDs of the stream class's
-    \bt_trace_cls's stream classes.
+    Numeric ID, unique amongst the numeric IDs of the stream classes
+    of the parent \bt_trace_cls.
 
-    Depending on whether or not the stream class's trace class
+    Depending on whether or not the parent trace class
     automatically assigns \bt_ev_cls IDs
     (see bt_trace_class_assigns_automatic_stream_class_id()),
-    set the stream class's numeric ID on creation with
+    set numeric ID of the the stream class on creation with
     bt_stream_class_create() or bt_stream_class_create_with_id().
 
     You cannot change the numeric ID once the stream class is created.
 
-    Get a stream class's numeric ID with bt_stream_class_get_id().
+    Get the numeric ID of a stream class with bt_stream_class_get_id().
   </dd>
 
   <dt>
@@ -225,7 +226,7 @@ A stream class has the following properties:
 
     When a stream class has a default clock class, then all its
     instances (\bt_p_stream) have a default clock which is an instance
-    of the stream class's default clock class.
+    of the default clock class of the stream class.
 
     Use bt_stream_class_set_default_clock_class(),
     bt_stream_class_borrow_default_clock_class(), and
@@ -243,7 +244,7 @@ A stream class has the following properties:
     \ref api-tir-stream-cls-prop-supports-pkt "supports packets".
 
     The context of a \bt_pkt contains data which is common to all the
-    packet's \bt_p_ev.
+    \bt_p_ev of the packet.
 
     Use bt_stream_class_set_packet_context_field_class()
     bt_stream_class_borrow_packet_context_field_class(),
@@ -258,7 +259,7 @@ A stream class has the following properties:
     \bt_c_ev common context \bt_fc of the stream class.
 
     The common context of an \bt_ev contains contextual data of which
-    the layout is common to all the stream class's \bt_p_ev_cls.
+    the layout is common to all the \bt_p_ev_cls of the stream class.
 
     Use bt_stream_class_set_event_common_context_field_class()
     bt_stream_class_borrow_event_common_context_field_class(),
@@ -327,7 +328,7 @@ A stream class has the following properties:
     Whether or not the streams you create from the stream class
     have \bt_p_pkt.
 
-    If a stream has packets, then all the stream's \bt_p_ev are
+    If a stream has packets, then all the \bt_p_ev of the stream are
     conceptually contained within packets, which means you must
     create \bt_p_ev_msg for such streams with
     bt_message_event_create_with_packet() or
@@ -336,8 +337,8 @@ A stream class has the following properties:
     bt_message_event_create_with_default_clock_snapshot().
 
     It also means you must create \bt_p_pb_msg and \bt_p_pe_msg to
-    indicate where packets begin and end within the stream's
-    \ref api-msg-seq "message sequence".
+    indicate where packets begin and end within the
+    \ref api-msg-seq "message sequence" of the stream.
 
     Use bt_stream_class_set_supports_packets() and
     bt_stream_class_supports_packets().
@@ -407,7 +408,7 @@ A stream class has the following properties:
     Discarded events have default clock snapshots?
   </dt>
   <dd>
-    Whether or not the stream's \bt_p_disc_ev_msg have
+    Whether or not the \bt_p_disc_ev_msg of the stream have
     default beginning and end \bt_p_cs to indicate the discarded events
     time range.
 
@@ -416,8 +417,8 @@ A stream class has the following properties:
     and has a
     \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
 
-    If the stream's discarded events messages have beginning and end
-    default clock snapshots, then you must create them with
+    If the discarded events messages of the stream have beginning and
+    end default clock snapshots, then you must create them with
     bt_message_discarded_events_create_with_default_clock_snapshots()
     instead of bt_message_discarded_events_create().
 
@@ -448,7 +449,7 @@ A stream class has the following properties:
     Discarded packets have default clock snapshots?
   </dt>
   <dd>
-    Whether or not the stream's \bt_p_disc_pkt_msg have
+    Whether or not the \bt_p_disc_pkt_msg of the stream have
     default beginning and end \bt_p_cs to indicate the discarded
     packets time range.
 
@@ -457,7 +458,7 @@ A stream class has the following properties:
     and has a
     \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
 
-    If the stream's discarded packets messages have default clock
+    If the discarded packets messages of the stream have default clock
     snapshots, then you must create them with
     bt_message_discarded_packets_create_with_default_clock_snapshots()
     instead of bt_message_discarded_packets_create().
@@ -1533,12 +1534,12 @@ properties.
     \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
 
 @sa bt_stream_class_supports_packets() &mdash;
-    Returns whether or not a stream class's streams have packets.
+    Returns whether or not the streams of a stream class have packets.
 @sa bt_stream_class_packets_have_beginning_default_clock_snapshot() &mdash;
-    Returns whether or not the packets of a stream class's streams
+    Returns whether or not the packets of the streams of a stream class
     have a beginning default clock snapshot.
 @sa bt_stream_class_packets_have_end_default_clock_snapshot() &mdash;
-    Returns whether or not the packets of a stream class's streams
+    Returns whether or not the packets of the streams of a stream class
     have an end default clock snapshot.
 */
 extern void bt_stream_class_set_supports_packets(
@@ -1564,7 +1565,7 @@ property.
 @bt_pre_not_null{stream_class}
 
 @sa bt_stream_class_set_supports_packets() &mdash;
-    Sets whether or not a stream class's streams have packets.
+    Sets whether or not the streams of a stream class have packets.
 */
 extern bt_bool bt_stream_class_supports_packets(
 		const bt_stream_class *stream_class) __BT_NOEXCEPT;
@@ -1580,8 +1581,8 @@ See the
 property.
 
 @param[in] stream_class
-    Stream class of which to get whether or not its streams's packets
-    have a beginning default clock snapshot.
+    Stream class of which to get whether or not the packets of its
+    streams have a beginning default clock snapshot.
 
 @returns
     #BT_TRUE if the packets of the streams of \bt_p{stream_class} have a
@@ -1590,9 +1591,9 @@ property.
 @bt_pre_not_null{stream_class}
 
 @sa bt_stream_class_set_supports_packets() &mdash;
-    Sets whether or not a stream class's streams have packets.
+    Sets whether or not the streams of a stream class have packets.
 @sa bt_stream_class_packets_have_end_default_clock_snapshot() &mdash;
-    Returns whether or not the packets of a stream class's streams
+    Returns whether or not the packets of the streams of a stream class
     have an end default clock snapshot.
 */
 extern bt_bool bt_stream_class_packets_have_beginning_default_clock_snapshot(
@@ -1609,8 +1610,8 @@ See the
 property.
 
 @param[in] stream_class
-    Stream class of which to get whether or not its streams's packets
-    have an end default clock snapshot.
+    Stream class of which to get whether or not the packets of its
+    streams have an end default clock snapshot.
 
 @returns
     #BT_TRUE if the packets of the streams of \bt_p{stream_class} have
@@ -1619,9 +1620,9 @@ property.
 @bt_pre_not_null{stream_class}
 
 @sa bt_stream_class_set_supports_packets() &mdash;
-    Sets whether or not a stream class's streams have packets.
+    Sets whether or not the streams of a stream class have packets.
 @sa bt_stream_class_packets_have_beginning_default_clock_snapshot() &mdash;
-    Returns whether or not the packets of a stream class's streams
+    Returns whether or not the packets of the streams of a stream class
     have a beginning default clock snapshot.
 */
 extern bt_bool bt_stream_class_packets_have_end_default_clock_snapshot(
@@ -1661,12 +1662,11 @@ properties.
     \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
 
 @sa bt_stream_class_supports_discarded_events() &mdash;
-    Returns whether or not a stream class's streams can have
+    Returns whether or not the streams of a stream class can have
     discarded events.
 @sa bt_stream_class_discarded_events_have_default_clock_snapshots() &mdash;
-    Returns whether or not the discarded events messages of a
-    stream class's streams have beginning and end default clock
-    snapshots.
+    Returns whether or not the discarded events messages of the streams
+    of a stream class have beginning and end default clock snapshots.
 */
 extern void bt_stream_class_set_supports_discarded_events(
 		bt_stream_class *stream_class,
@@ -1693,7 +1693,7 @@ property.
 @bt_pre_not_null{stream_class}
 
 @sa bt_stream_class_set_supports_discarded_events() &mdash;
-    Sets whether or not a stream class's streams can have discarded
+    Sets whether or not the streams of a stream class can have discarded
     events.
 */
 extern bt_bool bt_stream_class_supports_discarded_events(
@@ -1710,8 +1710,9 @@ See the
 property.
 
 @param[in] stream_class
-    Stream class of which to get whether or not its streams's discarded
-    events messages have a beginning and end default clock snapshots.
+    Stream class of which to get whether or not the discarded events
+    messages of its streams have a beginning and end default clock
+    snapshots.
 
 @returns
     #BT_TRUE if the discarded events messages of the streams of
@@ -1720,7 +1721,7 @@ property.
 @bt_pre_not_null{stream_class}
 
 @sa bt_stream_class_set_supports_discarded_events() &mdash;
-    Sets whether or not a stream class's streams can have discarded
+    Sets whether or not the streams of a stream class can have discarded
     events.
 */
 extern bt_bool bt_stream_class_discarded_events_have_default_clock_snapshots(
@@ -1766,11 +1767,11 @@ bt_stream_class_set_supports_packets()).
     \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
 
 @sa bt_stream_class_supports_discarded_packets() &mdash;
-    Returns whether or not a stream class's streams can have
+    Returns whether or not the streams of a stream class can have
     discarded packets.
 @sa bt_stream_class_discarded_packets_have_default_clock_snapshots() &mdash;
-    Returns whether or not the discarded packets messages of a
-    stream class's streams have beginning and end default clock
+    Returns whether or not the discarded packets messages of the streams
+    of a stream class have beginning and end default clock
     snapshots.
 */
 extern void bt_stream_class_set_supports_discarded_packets(
@@ -1798,7 +1799,7 @@ property.
 @bt_pre_not_null{stream_class}
 
 @sa bt_stream_class_set_supports_discarded_packets() &mdash;
-    Sets whether or not a stream class's streams can have discarded
+    Sets whether or not the streams of a stream class can have discarded
     packets.
 */
 extern bt_bool bt_stream_class_supports_discarded_packets(
@@ -1815,8 +1816,9 @@ See the
 property.
 
 @param[in] stream_class
-    Stream class of which to get whether or not its streams's discarded
-    packets messages have a beginning and end default clock snapshots.
+    Stream class of which to get whether or not the discarded packets
+    messages of its streams have a beginning and end default clock
+    snapshots.
 
 @returns
     #BT_TRUE if the discarded packets messages of the streams of
@@ -1825,7 +1827,7 @@ property.
 @bt_pre_not_null{stream_class}
 
 @sa bt_stream_class_set_supports_discarded_packets() &mdash;
-    Sets whether or not a stream class's streams can have discarded
+    Sets whether or not the streams of a stream class can have discarded
     packets.
 */
 extern bt_bool bt_stream_class_discarded_packets_have_default_clock_snapshots(
@@ -1841,10 +1843,10 @@ property.
 
 @note
     When you create a default stream class with bt_stream_class_create()
-    or bt_stream_class_create_with_id(), the stream class's initial user
-    attributes is an empty \bt_map_val. Therefore you can borrow it with
-    bt_stream_class_borrow_user_attributes() and fill it directly
-    instead of setting a new one with this function.
+    or bt_stream_class_create_with_id(), the initial user
+    attributes of the stream class is an empty \bt_map_val. Therefore
+    you can borrow it with bt_stream_class_borrow_user_attributes() and
+    fill it directly instead of setting a new one with this function.
 
 @param[in] stream_class
     Stream class of which to set the user attributes to
@@ -1873,8 +1875,8 @@ property.
 
 @note
     When you create a default stream class with bt_stream_class_create()
-    or bt_stream_class_create_with_id(), the stream class's initial user
-    attributes is an empty \bt_map_val.
+    or bt_stream_class_create_with_id(), the initial user attributes of
+    the stream class is an empty \bt_map_val.
 
 @param[in] stream_class
     Stream class from which to borrow the user attributes.

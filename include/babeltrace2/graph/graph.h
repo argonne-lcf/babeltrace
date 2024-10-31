@@ -81,8 +81,8 @@ being said,
 or filter-to-sink connection makes it
 possible for a sink component to create a \bt_msg_iter on its end of
 the connection (an \bt_iport). In turn, a filter component message
-iterator can create other message iterators on one or more of the
-component's input ports. For a single connection, there can exist
+iterator can create other message iterators on one or more input ports
+of the component. For a single connection, there can exist
 multiple message iterators.
 
 A trace processing graph is a
@@ -102,7 +102,7 @@ run it.
 To interrupt a \ref api-graph-lc-run "running" trace processing graph,
 either:
 
-- Borrow the graph's default \bt_intr with
+- Borrow the default \bt_intr of the graph with
   bt_graph_borrow_default_interrupter() and set it with
   bt_interrupter_set().
 
@@ -208,8 +208,10 @@ to add a component to a trace processing graph:
 </dl>
 
 The <code>*_with_initialize_method_data()</code> versions can pass a
-custom, \bt_voidp pointer to the component's
-\ref api-comp-cls-dev-meth-init "initialization method".
+custom, \bt_voidp pointer to the
+\ref api-comp-cls-dev-meth-init "initialization method" of the
+component.
+
 The other versions pass \c NULL as this parameter.
 
 All the functions above accept the same parameters:
@@ -255,11 +257,12 @@ this function, you pass three user functions:
 
   <dt>Consume</dt>
   <dd>
-    Called every time the sink component's
-    \ref api-comp-cls-dev-meth-consume "consuming method" is called.
+    Called every time the
+    \ref api-comp-cls-dev-meth-consume "consuming method" of the
+    sink component is called.
 
-    You can get the next messages from the component's message
-    iterator and process them.
+    You can get the next messages from the message
+    iterator of the component and process them.
   </dd>
 
   <dt>\bt_dt_opt Finalization</dt>
@@ -319,13 +322,13 @@ bt_graph_run() does \em not return until one of:
 
   This feature exists to allow blocking operations within components
   to be postponed until they don't block. The graph user can perform
-  other tasks instead of the graph's thread blocking.
+  other tasks instead of blocking the thread of the graph.
 
 - The trace processing graph is interrupted (see
   bt_graph_borrow_default_interrupter() and bt_graph_add_interrupter()):
   bt_graph_run() returns #BT_GRAPH_RUN_STATUS_AGAIN.
 
-  Check the \bt_intr's state with bt_interrupter_is_set() to
+  Check the state of the \bt_intr with bt_interrupter_is_set() to
   distinguish between a sink component returning "try again" and
   the trace processing graph getting interrupted.
 
@@ -547,8 +550,9 @@ components call it.
 
 The returned graph has a default \bt_intr. Any \bt_comp you add with the
 <code>bt_graph_add_*_component*()</code> functions and all their
-\bt_p_msg_iter also have this same default interrupter. Borrow the graph's
-default interrupter with bt_graph_borrow_default_interrupter().
+\bt_p_msg_iter also have this same default interrupter. Borrow the
+default interrupter of the graph
+with bt_graph_borrow_default_interrupter().
 
 @param[in] mip_version
     Version of the Message Interchange Protocol to use within the
@@ -619,11 +623,11 @@ bt_graph_add_source_component(bt_graph *graph,
 See \ref api-graph-lc-add "Add components" to learn more about adding
 components to a trace processing graph.
 
-This function calls the source component's
-\ref api-comp-cls-dev-meth-init "initialization method" after
-creating it.
+This function calls the
+\ref api-comp-cls-dev-meth-init "initialization method" of
+the source component after creating it.
 
-The created source component's initialization method receives:
+The initialization method of the created source component receives:
 
 - \bt_p{params} as its own \bt_p{params} parameter (or an empty
   \bt_map_val if \bt_p{params} is \c NULL).
@@ -644,13 +648,13 @@ The created source component can get its logging level
     @parblock
     Initialization parameters to use when creating the source component.
 
-    Can be \c NULL, in which case the created source component's
-    initialization method receives an empty \bt_map_val as its
+    Can be \c NULL, in which case the initialization method of the
+    created source component receives an empty \bt_map_val as its
     \bt_p{params} parameter.
     @endparblock
 @param[in] initialize_method_data
-    User data passed as is to the created source component's
-    initialization method.
+    User data passed as is to the initialization method of the
+    created source component.
 @param[in] logging_level
     Initial logging level of the source component to create.
 @param[out] component
@@ -662,8 +666,8 @@ The created source component can get its logging level
 @retval #BT_GRAPH_ADD_COMPONENT_STATUS_MEMORY_ERROR
     Out of memory.
 @retval #BT_GRAPH_ADD_COMPONENT_STATUS_ERROR
-    Other error, for example, the created source component's
-    initialization method failed.
+    Other error, for example, the initialization method of the
+    created source component failed.
 
 @bt_pre_not_null{graph}
 @bt_pre_graph_not_configured{graph}
@@ -712,11 +716,11 @@ bt_graph_add_filter_component(bt_graph *graph,
 See \ref api-graph-lc-add "Add components" to learn more about adding
 components to a trace processing graph.
 
-This function calls the filter component's
-\ref api-comp-cls-dev-meth-init "initialization method" after
-creating it.
+This function calls the
+\ref api-comp-cls-dev-meth-init "initialization method" of the
+filter component after creating it.
 
-The created filter component's initialization method receives:
+The initialization method of the created filter component receives:
 
 - \bt_p{params} as its own \bt_p{params} parameter (or an empty
   \bt_map_val if \bt_p{params} is \c NULL).
@@ -737,13 +741,13 @@ The created filter component can get its logging level
     @parblock
     Initialization parameters to use when creating the filter component.
 
-    Can be \c NULL, in which case the created filter component's
-    initialization method receives an empty \bt_map_val as its
+    Can be \c NULL, in which case the initialization method of the
+    created filter component receives an empty \bt_map_val as its
     \bt_p{params} parameter.
     @endparblock
 @param[in] initialize_method_data
-    User data passed as is to the created filter component's
-    initialization method.
+    User data passed as is to the initialization method of the
+    created filter component.
 @param[in] logging_level
     Initial logging level of the filter component to create.
 @param[out] component
@@ -755,8 +759,8 @@ The created filter component can get its logging level
 @retval #BT_GRAPH_ADD_COMPONENT_STATUS_MEMORY_ERROR
     Out of memory.
 @retval #BT_GRAPH_ADD_COMPONENT_STATUS_ERROR
-    Other error, for example, the created filter component's
-    initialization method failed.
+    Other error, for example, the initialization method of the
+    created filter component failed.
 
 @bt_pre_not_null{graph}
 @bt_pre_graph_not_configured{graph}
@@ -805,11 +809,11 @@ bt_graph_add_sink_component(
 See \ref api-graph-lc-add "Add components" to learn more about adding
 components to a trace processing graph.
 
-This function calls the sink component's
-\ref api-comp-cls-dev-meth-init "initialization method" after
-creating it.
+This function calls the
+\ref api-comp-cls-dev-meth-init "initialization method"
+of the sink component after creating it.
 
-The created sink component's initialization method receives:
+The initialization method of the created sink component receives:
 
 - \bt_p{params} as its own \bt_p{params} parameter (or an empty
   \bt_map_val if \bt_p{params} is \c NULL).
@@ -830,13 +834,13 @@ The created sink component can get its logging level
     @parblock
     Initialization parameters to use when creating the sink component.
 
-    Can be \c NULL, in which case the created sink component's
-    initialization method receives an empty \bt_map_val as its
+    Can be \c NULL, in which case the initialization method of the
+    created sink component receives an empty \bt_map_val as its
     \bt_p{params} parameter.
     @endparblock
 @param[in] initialize_method_data
-    User data passed as is to the created sink component's
-    initialization method.
+    User data passed as is to the initialization method of the
+    created sink component.
 @param[in] logging_level
     Initial logging level of the sink component to create.
 @param[out] component
@@ -848,8 +852,8 @@ The created sink component can get its logging level
 @retval #BT_GRAPH_ADD_COMPONENT_STATUS_MEMORY_ERROR
     Out of memory.
 @retval #BT_GRAPH_ADD_COMPONENT_STATUS_ERROR
-    Other error, for example, the created sink component's
-    initialization method failed.
+    Other error, for example, the initialization method of the
+    created sink component failed.
 
 @bt_pre_not_null{graph}
 @bt_pre_graph_not_configured{graph}
@@ -919,10 +923,10 @@ about adding a simple component to a trace processing graph.
 
 @param[in] message_iterator
     @parblock
-    Simple sink component's upstream message iterator.
+    Upstream message iterator of the simple sink component.
 
-    This user function is free to get the message iterator's next
-    message or to make it seek.
+    This user function is free to get the next
+    message of the message iterator or to make it seek.
     @endparblock
 @param[in] user_data
     User data, as passed as the \bt_p{user_data} parameter of
@@ -990,11 +994,10 @@ typedef enum bt_graph_simple_sink_component_consume_func_status {
 @brief
     User consuming function for bt_graph_add_simple_sink_component().
 
-Such a consuming function is called when the simple sink component's own
-\ref api-comp-cls-dev-meth-consume "consuming method" is called. This
-occurs in a loop within bt_graph_run() or when it's this sink
-component's turn to consume in
-bt_graph_run_once().
+Such a consuming function is called when the own
+\ref api-comp-cls-dev-meth-consume "consuming method" of the simple sink
+component is called. This occurs in a loop within bt_graph_run() or when
+it's the turn of this sink component to consume in bt_graph_run_once().
 
 See \ref api-graph-lc-add-ss "Add a simple sink component" to learn more
 about adding a simple component to a trace processing graph.
@@ -1011,10 +1014,10 @@ bt_graph_run() or bt_graph_run_once() aware, return
 
 @param[in] message_iterator
     @parblock
-    Simple sink component's upstream message iterator.
+    Upstream message iterator of the simple sink component.
 
-    This user function is free to get the message iterator's next
-    message or to make it seek.
+    This user function is free to get the next message of the message
+    iterator or to make it seek.
     @endparblock
 @param[in] user_data
     User data, as passed as the \bt_p{user_data} parameter of
@@ -1114,8 +1117,9 @@ as their own \bt_p{user_data} parameter.
 @retval #BT_GRAPH_ADD_COMPONENT_STATUS_MEMORY_ERROR
     Out of memory.
 @retval #BT_GRAPH_ADD_COMPONENT_STATUS_ERROR
-    Other error, for example, the created sink component's
-    \ref api-comp-cls-dev-meth-init "initialization method" failed.
+    Other error, for example, the
+    \ref api-comp-cls-dev-meth-init "initialization method" of the
+    created sink component failed.
 
 @bt_pre_not_null{graph}
 @bt_pre_graph_not_configured{graph}
@@ -1260,11 +1264,10 @@ typedef enum bt_graph_run_status {
 
 /*!
 @brief
-    Runs the trace processing graph \bt_p{graph}, calling each
-    \bt_sink_comp's
-    \ref api-comp-cls-dev-meth-consume "consuming method" in a round
-    robin fashion until they are all done consuming or an exception
-    occurs.
+    Runs the trace processing graph \bt_p{graph}, calling the
+    \ref api-comp-cls-dev-meth-consume "consuming method" of each
+    \bt_sink_comp in a round robin fashion until they are all done
+    consuming or an exception occurs.
 
 See \ref api-graph-lc-run "Run" to learn more about running a trace
 processing graph.
@@ -1286,18 +1289,18 @@ This function does \em not return until one of:
 
   This feature exists to allow blocking operations within components
   to be postponed until they don't block. The graph user can perform
-  other tasks instead of the graph's thread blocking.
+  other tasks instead of blocking the thread of the graph.
 
 - \bt_p{graph} is interrupted (see bt_graph_borrow_default_interrupter()
   and bt_graph_add_interrupter()), in which case this function returns
   #BT_GRAPH_RUN_STATUS_AGAIN.
 
-  Check the \bt_intr's state with bt_interrupter_is_set() to
+  Check the state of the \bt_intr with bt_interrupter_is_set() to
   distinguish between a sink component returning "try again" and
   \bt_p{graph} getting interrupted.
 
-To make a single sink component consume, then get the thread's control
-back, use bt_graph_run_once().
+To make a single sink component consume, then get the control of the
+thread back, use bt_graph_run_once().
 
 When you call this function or bt_graph_run_once() for the first time,
 \bt_p{graph} becomes <em>configured</em>. See
@@ -1332,8 +1335,8 @@ and what you can and cannot do with a configured graph.
     \bt_p{graph} contains at least one sink component.
 
 @sa bt_graph_run_once() &mdash;
-    Calls a single trace processing graph's sink component's consuming
-    method once.
+    Calls the consuming method of a single sink component of a trace
+    processing graph once.
 */
 extern bt_graph_run_status bt_graph_run(bt_graph *graph) __BT_NOEXCEPT;
 
@@ -1393,7 +1396,7 @@ example, if \bt_p{graph} has two non-ended sink components A and B:
 Considering this, if \bt_p{graph} contains a single non-ended sink
 component, this function \em always makes this sink component consume.
 
-If the sink component's consuming method:
+If the consuming method of the sink component:
 
 <dl>
   <dt>Succeeds</dt>
@@ -1483,7 +1486,7 @@ Message iterators can check whether or not they are interrupted
 with bt_self_message_iterator_is_interrupted().
 
 The bt_graph_run() loop intermittently checks whether or not any of the
-graph's interrupters is set. If so, bt_graph_run() returns
+interrupters of the graph is set. If so, bt_graph_run() returns
 #BT_GRAPH_RUN_STATUS_AGAIN.
 
 @note

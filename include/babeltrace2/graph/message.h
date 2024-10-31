@@ -65,7 +65,7 @@ specific <em>\bt_stream</em>, which represents a conceptual
 
 Some types of messages can have a default \bt_cs, depending on whether
 or not their stream has a conceptual default clock, that is, whether or
-not the stream's \ref api-tir-stream-cls "class" has a
+not the \ref api-tir-stream-cls "class" of the stream has a
 \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
 The creation functions for those types of messages contain
 <code>_with_default_clock_snapshot</code> (for example,
@@ -162,7 +162,7 @@ A stream beginning message has the following properties:
 
     You cannot change the stream once the message is created.
 
-    Borrow a stream beginning message's stream with
+    Borrow the stream of a stream beginning message with
     bt_message_stream_beginning_borrow_stream() and
     bt_message_stream_beginning_borrow_stream_const().
   </dd>
@@ -172,20 +172,20 @@ A stream beginning message has the following properties:
     \bt_dt_opt Default \bt_cs
   </dt>
   <dd>
-    Snapshot of the message's \bt_stream's default clock when the
-    stream begins.
+    Snapshot of the default clock of the \bt_stream of the message when
+    the stream begins.
 
     A stream beginning message can only have a default clock snapshot
-    if its stream's \ref api-tir-stream-cls "class" has a
+    if the \ref api-tir-stream-cls "class" of its stream has a
     \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
 
     When a stream beginning message has no default clock snapshot,
     then its time is <em>unknown</em>.
 
-    Set a stream beginning message's default clock snapshot with
+    Set the default clock snapshot of a stream beginning message with
     bt_message_stream_beginning_set_default_clock_snapshot().
 
-    Borrow a stream beginning message's default clock snapshot with
+    Borrow the default clock snapshot of a stream beginning message with
     bt_message_stream_beginning_borrow_default_clock_snapshot_const().
   </dd>
 </dl>
@@ -213,7 +213,7 @@ A stream end message has the following properties:
 
     You cannot change the stream once the message is created.
 
-    Borrow a stream end message's stream with
+    Borrow the stream of a stream end message with
     bt_message_stream_end_borrow_stream() and
     bt_message_stream_end_borrow_stream_const().
   </dd>
@@ -223,20 +223,20 @@ A stream end message has the following properties:
     \bt_dt_opt Default \bt_cs
   </dt>
   <dd>
-    Snapshot of the message's \bt_stream's default clock when the
-    stream ends.
+    Snapshot of the default clock of the \bt_stream of the message
+    when the stream ends.
 
     A stream end message can only have a default clock snapshot
-    if its stream's \ref api-tir-stream-cls "class" has a
+    if the \ref api-tir-stream-cls "class" of its stream has a
     \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
 
     When a stream end message has no default clock snapshot, then its
     time is <em>unknown</em>.
 
-    Set a stream end message's default clock snapshot with
+    Set the default clock snapshot of a stream end message with
     bt_message_stream_end_set_default_clock_snapshot().
 
-    Borrow a stream end message's default clock snapshot with
+    Borrow the default clock snapshot of a stream end message with
     bt_message_stream_end_borrow_default_clock_snapshot_const().
   </dd>
 </dl>
@@ -246,18 +246,18 @@ A stream end message has the following properties:
 An <strong><em>event message</em></strong> transports an \bt_ev and has,
 possibly, a default \bt_cs.
 
-Within its \bt_stream's \ref api-msg-seq "message sequence", an event
-message can only occur:
+Within the \ref api-msg-seq "message sequence" of its \bt_stream, an
+event message can only occur:
 
 <dl>
   <dt>
-    If the stream's \ref api-tir-stream-cls "class"
+    If the \ref api-tir-stream-cls "class" of the stream
     \ref api-tir-stream-cls-prop-supports-pkt "supports packets"
   </dt>
   <dd>After a \bt_pb_msg and before a \bt_pe_msg.</dd>
 
   <dt>
-    If the stream's class does not support packets
+    If the class of the stream does not support packets
   </dt>
   <dd>After the \bt_sb_msg and before the \bt_se_msg.</dd>
 </dl>
@@ -266,41 +266,41 @@ To create an event message for a given stream, use:
 
 <dl>
   <dt>
-    If the stream's \ref api-tir-stream-cls "class"
+    If the \ref api-tir-stream-cls "class" of the stream
     \ref api-tir-stream-cls-prop-supports-pkt "supports packets"
   </dt>
   <dd>
     <dl>
       <dt>
-        If the stream's class has a
+        If the class of the stream has a
         \ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
       </dt>
       <dd>bt_message_event_create_with_packet_and_default_clock_snapshot()</dd>
 
       <dt>
-        If the stream's class does not have a
+        If the class of the stream does not have a
         \ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
       </dt>
       <dd>bt_message_event_create_with_packet()</dd>
     </dl>
 
     Those two creation functions accept a \bt_pkt parameter which is
-    the packet logically containing the message's event. A packet is
-    part of a stream.
+    the packet logically containing the event of the message. A packet
+    is part of a stream.
   </dd>
 
   <dt>
-    If the stream's class does not supports packets
+    If the class of the stream does not supports packets
   </dt>
   <dd>
     <dl>
       <dt>
-        If the stream's class has a default clock class
+        If the class of the stream has a default clock class
       </dt>
       <dd>bt_message_event_create_with_default_clock_snapshot()</dd>
 
       <dt>
-        If the stream's class does not have a
+        If the class of the stream does not have a
         \ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
       </dt>
       <dd>bt_message_event_create()</dd>
@@ -311,12 +311,13 @@ To create an event message for a given stream, use:
 The four creation functions above accept an \bt_ev_cls parameter. When
 you create the message, the library instantiates this event class as an
 \bt_ev. Borrow the resulting event with bt_message_event_borrow_event().
-This event class must be part of the class of the event message's
-stream.
+This event class must be part of the class of the stream of the
+event message.
 
-An event message's event is initially <em>not set</em>: before you emit
-the event message from a \bt_msg_iter's
-\link api-msg-iter-cls-meth-next "next" method\endlink, you need to
+The event of an event message is initially <em>not set</em>: before you
+emit the event message from the
+\link api-msg-iter-cls-meth-next "next" method\endlink of a
+\bt_msg_iter, you need to
 borrow each of its \bt_p_field (with bt_event_borrow_payload_field(),
 bt_event_borrow_specific_context_field(), and
 bt_event_borrow_common_context_field()) and, recursively, set the values
@@ -330,13 +331,14 @@ An event message has the following properties:
     \bt_c_ev which the message transports.
 
     This is an instance of the \bt_ev_cls which was passed to the
-    message's creation function.
+    creation function of the message.
 
     With this event, you can access its \bt_pkt (if any) with
     bt_event_borrow_packet_const() and its
     \bt_stream with bt_event_borrow_stream_const().
 
-    Borrow an event message's event with bt_message_event_borrow_event()
+    Borrow the event of an event message with
+    bt_message_event_borrow_event()
     and bt_message_event_borrow_event_const().
   </dd>
 
@@ -345,19 +347,19 @@ An event message has the following properties:
     \bt_dt_opt Default \bt_cs
   </dt>
   <dd>
-    Snapshot of the message's \bt_stream's default clock when the
-    event occurs.
+    Snapshot of the default clock of the \bt_stream of the message
+    when the event occurs.
 
     An event message has a default clock snapshot
-    if its stream's \ref api-tir-stream-cls "class" has a
+    if the \ref api-tir-stream-cls "class" of its stream has a
     \ref api-tir-stream-cls-prop-def-clock-cls "default clock class",
     and has none otherwise.
 
-    Within its \bt_msg_iter's \ref api-msg-seq "message sequence",
+    Within the \ref api-msg-seq "message sequence" of its \bt_msg_iter,
     the default clock snapshot of an event message must be greater than
     or equal to any default clock snapshot of any previous message.
 
-    Borrow an event message's default clock snapshot with
+    Borrow the default clock snapshot of an event message with
     bt_message_event_borrow_default_clock_snapshot_const().
   </dd>
 </dl>
@@ -367,28 +369,28 @@ An event message has the following properties:
 A <strong><em>packet beginning message</em></strong> indicates the
 beginning of a \bt_pkt.
 
-A packet beginning message can only exist if its \bt_stream's
-\ref api-tir-stream-cls "class"
+A packet beginning message can only exist if the
+\ref api-tir-stream-cls "class" of its \bt_stream
 \ref api-tir-stream-cls-prop-supports-pkt "supports packets".
 
 For a given packet, there can be only one packet beginning message.
 
-Within its \bt_stream's \ref api-msg-seq "message sequence", a packet
-beginning message can only occur after the \bt_sb_msg and before the
-\bt_se_msg.
+Within the \ref api-msg-seq "message sequence" of its \bt_stream, a
+packet beginning message can only occur after the \bt_sb_msg and before
+the \bt_se_msg.
 
 To create a packet beginning message for a given stream, use:
 
 <dl>
   <dt>
-    If, for this stream's class,
+    If, for the class of this stream,
     \ref api-tir-stream-cls-prop-pkt-beg-cs "packets have a beginning default clock snapshot"
   </dt>
   <dd>bt_message_packet_beginning_create_with_default_clock_snapshot()</dd>
 
   <dt>
-    If, for this stream's class, packets do not have a beginning default
-    clock snapshot
+    If, for the class of this stream, packets do not have a beginning
+    default clock snapshot
   </dt>
   <dd>bt_message_packet_beginning_create()</dd>
 </dl>
@@ -402,7 +404,7 @@ A packet beginning message has the following properties:
 
     You cannot change the packet once the message is created.
 
-    Borrow a packet beginning message's packet with
+    Borrow the packet of a packet beginning message with
     bt_message_packet_beginning_borrow_packet() and
     bt_message_packet_beginning_borrow_packet_const().
   </dd>
@@ -412,22 +414,23 @@ A packet beginning message has the following properties:
     \bt_dt_opt Default \bt_cs
   </dt>
   <dd>
-    Snapshot of the message's \bt_stream's default clock when the
-    packet begins.
+    Snapshot of the default clock of the \bt_stream of the message when
+    the packet begins.
 
     A packet beginning message has a default clock snapshot if:
 
-    - Its stream's \ref api-tir-stream-cls "class" has a
+    - The \ref api-tir-stream-cls "class" of its stream has a
       \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
 
-    - For its stream's class,
+    - For the class of its stream,
       \ref api-tir-stream-cls-prop-pkt-beg-cs "packets have a beginning default clock snapshot".
 
-    Within its \bt_msg_iter's \ref api-msg-seq "message sequence",
-    the default clock snapshot of a packet beginning message must be
-    greater than or equal to any clock snapshot of any previous message.
+    Within its the \ref api-msg-seq "message sequence" of its
+    \bt_msg_iter, the default clock snapshot of a packet beginning
+    message must be greater than or equal to any clock snapshot of any
+    previous message.
 
-    Borrow a packet beginning message's default clock snapshot with
+    Borrow the default clock snapshot of a packet beginning message with
     bt_message_packet_beginning_borrow_default_clock_snapshot_const().
   </dd>
 </dl>
@@ -437,13 +440,13 @@ A packet beginning message has the following properties:
 A <strong><em>packet end message</em></strong> indicates the
 end of a \bt_pkt.
 
-A packet end message can only exist if its \bt_stream's
-\ref api-tir-stream-cls "class"
+A packet end message can only exist if the
+\ref api-tir-stream-cls "class" of its \bt_stream
 \ref api-tir-stream-cls-prop-supports-pkt "supports packets".
 
 For a given packet, there can be only one packet end message.
 
-Within its \bt_stream's \ref api-msg-seq "message sequence", a packet
+Within the \ref api-msg-seq "message sequence" of its \bt_stream, a packet
 end message can only occur:
 
 - After the \bt_sb_msg and before the \bt_se_msg.
@@ -453,13 +456,13 @@ To create a packet end message for a given stream, use:
 
 <dl>
   <dt>
-    If, for this stream's class,
+    If, for the class of this stream,
     \ref api-tir-stream-cls-prop-pkt-end-cs "packets have an end default clock snapshot"
   </dt>
   <dd>bt_message_packet_end_create_with_default_clock_snapshot()</dd>
 
   <dt>
-    If, for this stream's class, packets do not have an end default
+    If, for the class of this stream, packets do not have an end default
     clock snapshot
   </dt>
   <dd>bt_message_packet_end_create()</dd>
@@ -474,7 +477,7 @@ A packet end message has the following properties:
 
     You cannot change the packet once the message is created.
 
-    Borrow a packet end message's packet with
+    Borrow the packet of a packet end message with
     bt_message_packet_end_borrow_packet() and
     bt_message_packet_end_borrow_packet_const().
   </dd>
@@ -484,22 +487,22 @@ A packet end message has the following properties:
     \bt_dt_opt Default \bt_cs
   </dt>
   <dd>
-    Snapshot of the message's \bt_stream's default clock when the
+    Snapshot of the default clock of the \bt_stream of the message when the
     packet ends.
 
     A packet end message has a default clock snapshot if:
 
-    - Its stream's \ref api-tir-stream-cls "class" has a
+    - The \ref api-tir-stream-cls "class" of its stream has a
       \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
 
-    - For its stream's class,
+    - For the class of its stream,
       \ref api-tir-stream-cls-prop-pkt-end-cs "packets have an end default clock snapshot".
 
-    Within its \bt_msg_iter's \ref api-msg-seq "message sequence",
+    Within its the \ref api-msg-seq "message sequence" of its \bt_msg_iter,
     the default clock snapshot of a packet end message must be greater
     than or equal to any clock snapshot of any previous message.
 
-    Borrow a packet end message's default clock snapshot with
+    Borrow the default clock snapshot of a packet end message with
     bt_message_packet_end_borrow_default_clock_snapshot_const().
   </dd>
 </dl>
@@ -510,11 +513,11 @@ A <strong><em>discarded events message</em></strong> indicates that
 events were discarded at <em>tracing time</em>. It does \em not indicate
 that \bt_p_ev_msg were dropped during a trace processing \bt_graph run.
 
-A discarded events message can only exist if its \bt_stream's
-\ref api-tir-stream-cls "class"
+A discarded events message can only exist if the
+\ref api-tir-stream-cls "class" of its \bt_stream
 \ref api-tir-stream-cls-prop-supports-disc-ev "supports discarded events".
 
-Within its \bt_stream's \ref api-msg-seq "message sequence", a discarded
+Within the \ref api-msg-seq "message sequence" of its \bt_stream, a discarded
 events message can only occur after the \bt_sb_msg and before the
 \bt_se_msg.
 
@@ -522,13 +525,13 @@ To create a discarded events message for a given stream, use:
 
 <dl>
   <dt>
-    If, for this stream's class,
+    If, for the class of this stream,
     \ref api-tir-stream-cls-prop-disc-ev-cs "discarded events have default clock snapshots"
   </dt>
   <dd>bt_message_discarded_events_create_with_default_clock_snapshots()</dd>
 
   <dt>
-    If, for this stream's class, discarded events do not have default
+    If, for the class of this stream, discarded events do not have default
     clock snapshots
   </dt>
   <dd>bt_message_discarded_events_create()</dd>
@@ -543,7 +546,7 @@ A discarded events message has the following properties:
 
     You cannot change the stream once the message is created.
 
-    Borrow a discarded events message's stream with
+    Borrow the stream of a discarded events message with
     bt_message_discarded_events_borrow_stream() and
     bt_message_discarded_events_borrow_stream_const().
   </dd>
@@ -553,25 +556,25 @@ A discarded events message has the following properties:
     \bt_dt_opt Beginning default \bt_cs
   </dt>
   <dd>
-    Snapshot of the message's \bt_stream's default clock which indicates
-    the beginning of the discarded events time range.
+    Snapshot of the default clock of the \bt_stream of the message which
+    indicates the beginning of the discarded events time range.
 
     A discarded events message has a beginning default clock snapshot
     if:
 
-    - Its stream's \ref api-tir-stream-cls "class" has a
+    - The \ref api-tir-stream-cls "class" of its stream has a
       \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
 
-    - For its stream's class,
+    - For the class of its stream,
       \ref api-tir-stream-cls-prop-disc-ev-cs "discarded events have default clock snapshots".
 
-    Within its \bt_msg_iter's \ref api-msg-seq "message sequence",
+    Within its the \ref api-msg-seq "message sequence" of its \bt_msg_iter,
     the beginning default clock snapshot of a discarded events message
     must be greater than or equal to any clock snapshot of any previous
     message.
 
-    Borrow a discarded events message's beginning default clock snapshot
-    with
+    Borrow the beginning default clock snapshot of a discarded events
+    message with
     bt_message_discarded_events_borrow_beginning_default_clock_snapshot_const().
   </dd>
 
@@ -580,15 +583,15 @@ A discarded events message has the following properties:
     \bt_dt_opt End default \bt_cs
   </dt>
   <dd>
-    Snapshot of the message's \bt_stream's default clock which indicates
+    Snapshot of the default clock of the \bt_stream of the message which indicates
     the end of the discarded events time range.
 
     A discarded events message has an end default clock snapshot if:
 
-    - Its stream's \ref api-tir-stream-cls "class" has a
+    - The \ref api-tir-stream-cls "class" of its stream has a
       \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
 
-    - For its stream's class,
+    - For the class of its stream,
       \ref api-tir-stream-cls-prop-disc-ev-cs "discarded events have default clock snapshots".
 
     If a discarded events message has both a
@@ -596,11 +599,13 @@ A discarded events message has the following properties:
     clock snapshots, the end default clock snapshot must be greater than
     or equal to the beginning default clock snapshot.
 
-    Within its \bt_msg_iter's \ref api-msg-seq "message sequence",
-    the end default clock snapshot of a discarded events message must be
-    greater than or equal to any clock snapshot of any previous message.
+    Within its the \ref api-msg-seq "message sequence" of its
+    \bt_msg_iter, the end default clock snapshot of a discarded events
+    message must be greater than or equal to any clock snapshot of any
+    previous message.
 
-    Borrow a discarded events message's end default clock snapshot with
+    Borrow the end default clock snapshot of a discarded events message
+    with
     bt_message_discarded_events_borrow_end_default_clock_snapshot_const().
   </dd>
 
@@ -626,11 +631,11 @@ packets were discarded at <em>tracing time</em>. It does \em not
 indicate that whole packets were dropped during a trace processing
 \bt_graph run.
 
-A discarded packets message can only exist if its \bt_stream's
-\ref api-tir-stream-cls "class"
+A discarded packets message can only exist if the
+\ref api-tir-stream-cls "class" of its \bt_stream
 \ref api-tir-stream-cls-prop-supports-disc-pkt "supports discarded packets".
 
-Within its \bt_stream's \ref api-msg-seq "message sequence", a discarded
+Within the \ref api-msg-seq "message sequence" of its \bt_stream, a discarded
 packets message can only occur:
 
 - After the \bt_sb_msg.
@@ -644,13 +649,13 @@ To create a discarded packets message for a given stream, use:
 
 <dl>
   <dt>
-    If, for this stream's class,
+    If, for the class of this stream,
     \ref api-tir-stream-cls-prop-disc-pkt-cs "discarded packets have default clock snapshots"
   </dt>
   <dd>bt_message_discarded_packets_create_with_default_clock_snapshots()</dd>
 
   <dt>
-    If, for this stream's class, discarded packets do not have default
+    If, for the class of this stream, discarded packets do not have default
     clock snapshots
   </dt>
   <dd>bt_message_discarded_packets_create()</dd>
@@ -665,7 +670,7 @@ A discarded packets message has the following properties:
 
     You cannot change the stream once the message is created.
 
-    Borrow a discarded packets message's stream with
+    Borrow the stream of a discarded packets message with
     bt_message_discarded_packets_borrow_stream() and
     bt_message_discarded_packets_borrow_stream_const().
   </dd>
@@ -675,25 +680,25 @@ A discarded packets message has the following properties:
     \bt_dt_opt Beginning default \bt_cs
   </dt>
   <dd>
-    Snapshot of the message's \bt_stream's default clock which indicates
+    Snapshot of the default clock of the \bt_stream of the message which indicates
     the beginning of the discarded packets time range.
 
     A discarded packets message has a beginning default clock snapshot
     if:
 
-    - Its stream's \ref api-tir-stream-cls "class" has a
+    - The \ref api-tir-stream-cls "class" of its stream has a
       \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
 
-    - For its stream's class,
+    - For the class of its stream,
       \ref api-tir-stream-cls-prop-disc-pkt-cs "discarded packets have default clock snapshots".
 
-    Within its \bt_msg_iter's \ref api-msg-seq "message sequence",
+    Within its the \ref api-msg-seq "message sequence" of its \bt_msg_iter,
     the beginning default clock snapshot of a discarded packets message
     must be greater than or equal to any clock snapshot of any previous
     message.
 
-    Borrow a discarded packets message's beginning default clock snapshot
-    with
+    Borrow the beginning default clock snapshot of a discarded packets
+    message with
     bt_message_discarded_packets_borrow_beginning_default_clock_snapshot_const().
   </dd>
 
@@ -702,15 +707,15 @@ A discarded packets message has the following properties:
     \bt_dt_opt End default \bt_cs
   </dt>
   <dd>
-    Snapshot of the message's \bt_stream's default clock which indicates
+    Snapshot of the default clock of the \bt_stream of the message which indicates
     the end of the discarded packets time range.
 
     A discarded packets message has an end default clock snapshot if:
 
-    - Its stream's \ref api-tir-stream-cls "class" has a
+    - The \ref api-tir-stream-cls "class" of its stream has a
       \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
 
-    - For its stream's class,
+    - For the class of its stream,
       \ref api-tir-stream-cls-prop-disc-pkt-cs "discarded packets have default clock snapshots".
 
     If a discarded packets message has both a
@@ -718,12 +723,13 @@ A discarded packets message has the following properties:
     clock snapshots, the end default clock snapshot must be greater than
     or equal to the beginning default clock snapshot.
 
-    Within its \bt_msg_iter's \ref api-msg-seq "message sequence",
+    Within its the \ref api-msg-seq "message sequence" of its \bt_msg_iter,
     the end default clock snapshot of a discarded packets message must
     be greater than or equal to any clock snapshot of any previous
     message.
 
-    Borrow a discarded packets message's end default clock snapshot with
+    Borrow end default clock snapshot of a discarded packets message
+    with
     bt_message_discarded_packets_borrow_end_default_clock_snapshot_const().
   </dd>
 
@@ -775,15 +781,16 @@ A message iterator inactivity message has the following property:
     \bt_dt_opt \bt_c_cs
   </dt>
   <dd>
-    Snapshot of a fictitious instance of the message's \bt_clock_cls
-    which indicates the point in time until when there's no messages
-    in the message iterator's \ref api-msg-seq "message sequence".
+    Snapshot of a fictitious instance of the \bt_clock_cls of the
+    message which indicates the point in time until when there's no
+    messages in the \ref api-msg-seq "message sequence" of
+    the message iterator.
 
-    Within its \bt_msg_iter's message sequence, the clock snapshot of a
-    message iterator inactivity message must be greater than or equal to
-    any clock snapshot of any previous message.
+    Within the message sequence of its \bt_msg_iter, the clock snapshot
+    of a message iterator inactivity message must be greater than or
+    equal to any clock snapshot of any previous message.
 
-    Borrow a message iterator inactivity message's clock snapshot
+    Borrow the clock snapshot of a message iterator inactivity message
     with
     bt_message_message_iterator_inactivity_borrow_clock_snapshot_const().
   </dd>
@@ -813,7 +820,7 @@ For example:
   iterator inactivity.
 
 The MIP has a version which is a single major number, independent from
-the \bt_name project's version.
+the version of the \bt_name project.
 
 If what the MIP covers changes in a breaking or semantical way in the
 future, the MIP and \bt_name's minor versions will be bumped.
@@ -836,15 +843,15 @@ bt_get_greatest_operative_mip_version() or
 bt_get_greatest_operative_mip_version_with_restriction() to get the
 greatest (most recent) MIP version you can use.
 
-To get the library's latest MIP version, use
+To get the latest MIP version of the library, use
 bt_get_maximal_mip_version().
 
 The ultimate goal of the MIP version feature is for the \bt_name project
 to be able to introduce new features or even major breaking changes
 without breaking existing \bt_p_comp_cls. This is especially important
 considering that \bt_name supports \bt_p_plugin written by different
-authors. Of course one of the project's objectives is to bump the MIP
-version as rarely as possible. When it is required, though, it's a
+authors. Of course one of the objectives of the project is to bump the
+MIP version as rarely as possible. When it is required, though, it's a
 welcome tool to make the project evolve gracefully.
 
 The Message Interchange Protocol has no dedicated documentation as this
@@ -854,7 +861,7 @@ functions of the message and trace IR objects have an implicit MIP
 version \ref api-fund-pre-post "precondition". When a given
 function documentation does not explicitly document a MIP version
 precondition, it means that the effective MIP version has no effect on
-said function's behaviour.
+the behaviour of said function.
 
 <h2>\anchor api-msg-seq Message sequence rules</h2>
 
@@ -873,7 +880,7 @@ However, for such a message sequence, the current \bt_mip
 
     - The sequence must begin with a \bt_sb_msg.
     - The sequence must end with a \bt_se_msg.
-    - <strong>If the stream's \ref api-tir-stream-cls "class"
+    - <strong>If the \ref api-tir-stream-cls "class" of the stream
       \ref api-tir-stream-cls-prop-supports-pkt "supports packets"</strong>:
       - Any \bt_pb_msg must be followed with a \bt_pe_msg.
       - All \bt_p_ev_msg must be between a packet beginning and a
@@ -1206,9 +1213,8 @@ bt_message_stream_beginning_borrow_default_clock_snapshot_const(
     Borrows the default \bt_clock_cls of the \bt_stream_cls
     of the \bt_sb_msg \bt_p{message}.
 
-See the stream class's
-\ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
-property.
+See the \ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
+property of a stream class.
 
 This is a helper which is equivalent to
 
@@ -1219,8 +1225,8 @@ bt_stream_class_borrow_default_clock_class_const(
 @endcode
 
 @param[in] message
-    Stream beginning message from which to borrow its stream's class's
-    default clock class.
+    Stream beginning message from which to borrow the default clock class
+    of the class of its stream.
 
 @returns
     \em Borrowed reference of the default clock class of
@@ -1383,9 +1389,9 @@ bt_message_stream_end_borrow_default_clock_snapshot_const(
     Borrows the default \bt_clock_cls of the \bt_stream_cls
     of the \bt_se_msg \bt_p{message}.
 
-See the stream class's
+See the
 \ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
-property.
+property of a stream class.
 
 This is a helper which is equivalent to
 
@@ -1396,8 +1402,8 @@ bt_stream_class_borrow_default_clock_class_const(
 @endcode
 
 @param[in] message
-    Stream end message from which to borrow its stream's class's
-    default clock class.
+    Stream end message from which to borrow the default clock class
+    of the class of its stream.
 
 @returns
     \em Borrowed reference of the default clock class of
@@ -1819,9 +1825,8 @@ bt_message_event_borrow_default_clock_snapshot_const(const bt_message *message)
     Borrows the default \bt_clock_cls of the \bt_stream_cls
     of the \bt_ev_msg \bt_p{message}.
 
-See the stream class's
-\ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
-property.
+See the \ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
+property of a stream class.
 
 This is a helper which is equivalent to
 
@@ -1833,8 +1838,8 @@ bt_stream_class_borrow_default_clock_class_const(
 @endcode
 
 @param[in] message
-    Event message from which to borrow its stream's class's
-    default clock class.
+    Event message from which to borrow the default clock
+    class of the class of its stream.
 
 @returns
     \em Borrowed reference of the default clock class of
@@ -2044,9 +2049,8 @@ bt_message_packet_beginning_borrow_default_clock_snapshot_const(
     Borrows the default \bt_clock_cls of the \bt_stream_cls
     of the \bt_pb_msg \bt_p{message}.
 
-See the stream class's
-\ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
-property.
+See the \ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
+property of a stream class.
 
 This is a helper which is equivalent to
 
@@ -2058,8 +2062,8 @@ bt_stream_class_borrow_default_clock_class_const(
 @endcode
 
 @param[in] message
-    Packet beginning message from which to borrow its stream's class's
-    default clock class.
+    Packet beginning message from which to borrow the default clock
+    class of the class of its stream.
 
 @returns
     \em Borrowed reference of the default clock class of
@@ -2268,9 +2272,8 @@ bt_message_packet_end_borrow_default_clock_snapshot_const(
     Borrows the default \bt_clock_cls of the \bt_stream_cls
     of the \bt_pe_msg \bt_p{message}.
 
-See the stream class's
-\ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
-property.
+See the \ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
+property of a stream class.
 
 This is a helper which is equivalent to
 
@@ -2282,8 +2285,8 @@ bt_stream_class_borrow_default_clock_class_const(
 @endcode
 
 @param[in] message
-    Packet end message from which to borrow its stream's class's
-    default clock class.
+    Packet end message from which to borrow the default clock
+    class of the class of its stream.
 
 @returns
     \em Borrowed reference of the default clock class of
@@ -2534,9 +2537,8 @@ bt_message_discarded_events_borrow_end_default_clock_snapshot_const(
     Borrows the default \bt_clock_cls of the \bt_stream_cls
     of the \bt_disc_ev_msg \bt_p{message}.
 
-See the stream class's
-\ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
-property.
+See the \ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
+property of a stream class.
 
 This is a helper which is equivalent to
 
@@ -2547,8 +2549,8 @@ bt_stream_class_borrow_default_clock_class_const(
 @endcode
 
 @param[in] message
-    Discarded events message from which to borrow its stream's class's
-    default clock class.
+    Discarded events message from which to borrow the default clock
+    class of the class of its stream.
 
 @returns
     \em Borrowed reference of the default clock class of
@@ -2855,9 +2857,8 @@ bt_message_discarded_packets_borrow_end_default_clock_snapshot_const(
     Borrows the default \bt_clock_cls of the \bt_stream_cls
     of the \bt_disc_pkt_msg \bt_p{message}.
 
-See the stream class's
-\ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
-property.
+See the \ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
+property of a stream class.
 
 This is a helper which is equivalent to
 
@@ -2868,8 +2869,8 @@ bt_stream_class_borrow_default_clock_class_const(
 @endcode
 
 @param[in] message
-    Discarded packets message from which to borrow its stream's class's
-    default clock class.
+    Discarded packets message from which to borrow the default clock
+    class of the class of its stream.
 
 @returns
     \em Borrowed reference of the default clock class of

@@ -145,7 +145,7 @@ typedef uint8_t const *bt_uuid;
 
 /*!
 @brief
-    Availability of an object's property.
+    Availability of an object property.
 
 Some getter functions of the API, such as
 bt_event_class_get_log_level(), return, by output parameter, an optional
@@ -153,7 +153,7 @@ object property which is not a pointer. In that case, the function
 either:
 
 - Returns #BT_PROPERTY_AVAILABILITY_AVAILABLE and sets an output
-  parameter to the property's value.
+  parameter to the value of the property.
 - Returns #BT_PROPERTY_AVAILABILITY_NOT_AVAILABLE.
 */
 typedef enum bt_property_availability {

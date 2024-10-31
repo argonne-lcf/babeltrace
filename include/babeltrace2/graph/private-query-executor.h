@@ -38,8 +38,8 @@ A query method receives a private query executor as its
 As of \bt_name_version_min_maj, this API only offers the
 bt_private_query_executor_as_query_executor_const() function to
 \ref api-fund-c-typing "upcast" a private query executor to a
-\c const query executor. You need this to get the query executor's
-\ref api-qexec-prop-log-lvl "logging level".
+\c const query executor. You need this to get the
+\ref api-qexec-prop-log-lvl "logging level" of the query executor.
 */
 
 /*! @{ */

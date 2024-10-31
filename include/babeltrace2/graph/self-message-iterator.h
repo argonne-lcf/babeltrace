@@ -182,7 +182,7 @@ void *bt_self_message_iterator_get_data(
 @bt_pre_not_null{self_message_iterator}
 
 @sa bt_graph_borrow_default_interrupter() &mdash;
-    Borrows a trace processing graph's default interrupter.
+    Borrows the default interrupter of a trace processing graph.
 @sa bt_graph_add_interrupter() &mdash;
     Adds an interrupter to a graph.
 */
@@ -206,9 +206,9 @@ A message iterator can seek forward if all the \bt_p_msg of its
 message sequence have some \bt_cs.
 
 @attention
-    You can only call this function during the execution of a
-    message iterator's
-    \ref api-msg-iter-cls-meth-init "initialization method".
+    You can only call this function during the execution of the
+    \ref api-msg-iter-cls-meth-init "initialization method" of a
+    message iterator.
 
 @param[in] configuration
     Configuration of the message iterator of which to set whether or

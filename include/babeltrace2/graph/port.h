@@ -48,7 +48,7 @@ There are two types of ports:
 
     Filter and sink components have input ports.
 
-    An input port's specific type is #bt_port_input and its type
+    The specific type of an input port is #bt_port_input and its type
     enumerator is #BT_PORT_TYPE_INPUT.
 
     \ref api-fund-c-typing "Upcast" the #bt_port_input type to the
@@ -64,7 +64,7 @@ There are two types of ports:
 
     Source and filter components have output ports.
 
-    An output port's specific type is #bt_port_output and its type
+    The specific type of an output port is #bt_port_output and its type
     enumerator is #BT_PORT_TYPE_OUTPUT.
 
     \ref api-fund-c-typing "Upcast" the #bt_port_output type to the
@@ -75,8 +75,8 @@ There are two types of ports:
   </dd>
 </dl>
 
-Get a port's type enumerator with bt_port_get_type(). You can also use
-the bt_port_is_input() and bt_port_is_output() helper functions.
+Get the type enumerator of a port with bt_port_get_type(). You can also
+use the bt_port_is_input() and bt_port_is_output() helper functions.
 
 A \bt_comp can add a port with:
 
@@ -85,7 +85,7 @@ A \bt_comp can add a port with:
 - bt_self_component_filter_add_output_port()
 - bt_self_component_sink_add_input_port()
 
-Borrow a port's \bt_conn, if any, with
+Borrow the \bt_conn of a port, if any, with
 bt_port_borrow_connection_const().
 
 Borrow the component to which a port belongs with
@@ -108,10 +108,10 @@ A port has the following common properties:
     - Each input port has a unique name.
     - Each output port has a unique name.
 
-    A port's name is set when the component adds it; you cannot change
-    it afterwards.
+    The name of a port is set when the component adds it; you cannot
+    change it afterwards.
 
-    Get a port's name with bt_port_get_name().
+    Get the name of a port with bt_port_get_name().
   </dd>
 
   <dt>

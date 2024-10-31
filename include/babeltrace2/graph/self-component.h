@@ -56,8 +56,8 @@ bt_self_component_sink_borrow_input_port_by_name().
 Set and get user data attached to a component with
 bt_self_component_set_data() and bt_self_component_get_data().
 
-Get a component's owning trace processing \bt_graph's effective
-\bt_mip version with bt_self_component_get_graph_mip_version().
+Get the effective \bt_mip version of the owning trace processing
+\bt_graph of a component with bt_self_component_get_graph_mip_version().
 
 Check whether or not a \bt_sink_comp is interrupted with
 bt_self_component_sink_is_interrupted().
@@ -631,7 +631,7 @@ extern void *bt_self_component_get_data(
 /*! @} */
 
 /*!
-@name Trace processing graph's effective MIP version access
+@name Effective MIP version access of a trace processing graph
 @{
 */
 
@@ -660,7 +660,7 @@ uint64_t bt_self_component_get_graph_mip_version(
 /*! @} */
 
 /*!
-@name Sink component's interruption query
+@name Interruption query of a sink component
 @{
 */
 
@@ -680,7 +680,7 @@ uint64_t bt_self_component_get_graph_mip_version(
 @bt_pre_not_null{self_component}
 
 @sa bt_graph_borrow_default_interrupter() &mdash;
-    Borrows a trace processing graph's default interrupter.
+    Borrows the default interrupter of a trace processing graph.
 @sa bt_graph_add_interrupter() &mdash;
     Adds an interrupter to a graph.
 */

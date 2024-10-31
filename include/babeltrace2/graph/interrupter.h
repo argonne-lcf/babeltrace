@@ -64,11 +64,11 @@ You can add more than one interrupter to a trace processing graph and
 to a query executor. The bt_self_component_sink_is_interrupted(),
 bt_self_message_iterator_is_interrupted(), and
 bt_query_executor_is_interrupted() functions return the logical
-disjunction of all the added interrupters's states, so that \em any
+disjunction of the states of all the added interrupters, so that \em any
 interrupter can interrupt the thread.
 
 Once a trace processing graph or a query executor is interrupted and
-you get the thread's control back, you can reset the interrupter
+you get back the control of the thread, you can reset the interrupter
 with bt_interrupter_reset() and continue the previous operation,
 calling bt_graph_run() or bt_query_executor_query() again.
 
