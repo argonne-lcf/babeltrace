@@ -125,6 +125,11 @@ To compile and link a \bt_name shared object plugin:
     @code{.unparsed}
     $ ld my-plugin.o analysis.o -o my-plugin.so -shared $(pkg-config --libs babeltrace2)
     @endcode
+
+    @note
+        If you're using <a href="https://lld.llvm.org/">LLD</a>, then
+        make sure to pass the <code>-z&nbsp;notext</code> option to
+        the linker to allow relocations in read-only segments.
   </li>
 </ol>
 
