@@ -1684,7 +1684,7 @@ bt_field_class_variant_borrow_option_by_index(
 @endcode
 
 @param[in] field
-    Variant field of which to get the class of its selected option.
+    Variant field of which to borrow the class of its selected option.
 
 @returns
     Class of the selected option of \bt_p{field}.
@@ -1709,7 +1709,7 @@ bt_field_class_variant_with_selector_field_integer_unsigned_borrow_option_by_ind
 @endcode
 
 @param[in] field
-    Variant field of which to get the class of its selected option.
+    Variant field of which to borrow the class of its selected option.
 
 @returns
     Class of the selected option of \bt_p{field}.
@@ -1734,7 +1734,7 @@ bt_field_class_variant_with_selector_field_integer_signed_borrow_option_by_index
 @endcode
 
 @param[in] field
-    Variant field of which to get the class of its selected option.
+    Variant field of which to borrow the class of its selected option.
 
 @returns
     Class of the selected option of \bt_p{field}.
