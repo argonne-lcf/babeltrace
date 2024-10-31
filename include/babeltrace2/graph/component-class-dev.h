@@ -297,13 +297,11 @@ The available component class methods to implement are:
     bt_get_greatest_operative_mip_version_with_restriction() is called.
 
     Considering those initialization parameters, you need to fill the
-    received \bt_uint_rs \bt_p{supported_versions} with the rangs of
+    received \bt_uint_rs \bt_p{supported_versions} with the ranges of
     MIP versions you support.
 
-    As of \bt_name_version_min_maj, you can only support MIP version 0.
-
-    Not having this method is equivalent to having one which adds the
-    [0,&nbsp;0] range to the \bt_p{supported_versions} set.
+    Not having this method means that any instance of this class only
+    supports MIP version&nbsp;0 (also known as the OG&nbsp;MIP).
 
     Set this optional method with
     bt_component_class_source_set_get_supported_mip_versions_method(),
@@ -645,9 +643,6 @@ typedef enum bt_component_class_get_supported_mip_versions_method_status {
 See the \ref api-comp-cls-dev-meth-mip "get supported MIP versions"
 method.
 
-As of \bt_name_version_min_maj, you can only add the range [0,&nbsp;0]
-to \bt_p{supported_versions}.
-
 @param[in] self_component_class
     Source component class.
 @param[in] params
@@ -685,6 +680,9 @@ to \bt_p{supported_versions}.
 @bt_pre_not_null{supported_versions}
 @pre
     \bt_p{supported_versions} is empty.
+@post
+    The upper value of any range within \bt_p{supported_versions}
+    is&nbsp;≤&nbsp;what bt_get_maximal_mip_version() returns.
 
 @sa bt_component_class_source_set_get_supported_mip_versions_method() &mdash;
     Sets the "get supported MIP versions" method of a source
@@ -703,9 +701,6 @@ typedef bt_component_class_get_supported_mip_versions_method_status
 
 See the \ref api-comp-cls-dev-meth-mip "get supported MIP versions"
 method.
-
-As of \bt_name_version_min_maj, you can only add the range [0,&nbsp;0]
-to \bt_p{supported_versions}.
 
 @param[in] self_component_class
     Filter component class.
@@ -744,6 +739,9 @@ to \bt_p{supported_versions}.
 @bt_pre_not_null{supported_versions}
 @pre
     \bt_p{supported_versions} is empty.
+@post
+    The upper value of any range within \bt_p{supported_versions}
+    is&nbsp;≤&nbsp;what bt_get_maximal_mip_version() returns.
 
 @sa bt_component_class_filter_set_get_supported_mip_versions_method() &mdash;
     Sets the "get supported MIP versions" method of a filter
@@ -762,9 +760,6 @@ typedef bt_component_class_get_supported_mip_versions_method_status
 
 See the \ref api-comp-cls-dev-meth-mip "get supported MIP versions"
 method.
-
-As of \bt_name_version_min_maj, you can only add the range [0,&nbsp;0]
-to \bt_p{supported_versions}.
 
 @param[in] self_component_class
     Sink component class.
@@ -803,6 +798,9 @@ to \bt_p{supported_versions}.
 @bt_pre_not_null{supported_versions}
 @pre
     \bt_p{supported_versions} is empty.
+@post
+    The upper value of any range within \bt_p{supported_versions}
+    is&nbsp;≤&nbsp;what bt_get_maximal_mip_version() returns.
 
 @sa bt_component_class_sink_set_get_supported_mip_versions_method() &mdash;
     Sets the "get supported MIP versions" method of a sink
