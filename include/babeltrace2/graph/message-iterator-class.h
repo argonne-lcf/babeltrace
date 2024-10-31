@@ -388,7 +388,7 @@ The available message iterator class methods to implement are:
     The optional
     \ref api-msg-iter-cls-meth-can-seek-beg "can seek beginning?"
     method can indicate whether or not your message iterator can
-    currently seek its beginning. If you implement it, the library
+    currently seek its beginning. If you implement it, then the library
     guarantees that it's called and returns #BT_TRUE before this "seek
     beginning" is called, without any other message iterator methods
     being called in between.
@@ -458,9 +458,9 @@ The available message iterator class methods to implement are:
     The optional
     \ref api-msg-iter-cls-meth-can-seek-ns "can seek ns from origin?"
     method can indicate whether or not your message iterator can
-    currently seek a specific time. If you implement it, the library
-    guarantees that it's called and returns #BT_TRUE before this "seek
-    ns from origin" is called, without any other message iterator
+    currently seek a specific time. If you implement it, then the
+    library guarantees that it's called and returns #BT_TRUE before this
+    "seek ns from origin" is called, without any other message iterator
     methods being called in between.
 
     Set this optional method with the \bt_p{seek_method} parameter

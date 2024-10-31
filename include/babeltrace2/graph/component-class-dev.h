@@ -229,7 +229,7 @@ The available component class methods to implement are:
     try again later to the bt_graph_run() or bt_graph_run_once() caller
     by returning #BT_COMPONENT_CLASS_SINK_CONSUME_METHOD_STATUS_AGAIN.
 
-    If your sink component is done consuming and processing, return
+    If your sink component is done consuming and processing, then return
     #BT_COMPONENT_CLASS_SINK_CONSUME_METHOD_STATUS_END from this method.
     The trace processing \bt_graph can continue to run afterwards if
     other sink components are still consuming.
@@ -437,7 +437,7 @@ The available component class methods to implement are:
     a \em new \bt_val reference.
 
     If the name of the queried object (\bt_p{object_name} parameter) is
-    unknown, return
+    unknown, then return
     #BT_COMPONENT_CLASS_QUERY_METHOD_STATUS_UNKNOWN_OBJECT.
 
     If you need to block the thread, you can instead report to

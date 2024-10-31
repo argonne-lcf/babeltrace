@@ -460,7 +460,7 @@ extern bt_stream_set_name_status bt_stream_set_name(bt_stream *stream,
 
 See the \ref api-tir-stream-prop-name "name" property.
 
-If \bt_p{stream} has no name, this function returns \c NULL.
+If \bt_p{stream} has no name, then this function returns \c NULL.
 
 @param[in] stream
     Stream of which to get the name.

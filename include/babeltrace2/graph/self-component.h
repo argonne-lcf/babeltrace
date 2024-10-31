@@ -469,7 +469,7 @@ bt_self_component_sink_borrow_input_port_by_index(
     Borrows the \bt_self_comp_oport named \bt_p{name} from the
     \bt_src_comp \bt_p{self_component}.
 
-If \bt_p{self_component} has no output port named \bt_p{name}, this
+If \bt_p{self_component} has no output port named \bt_p{name}, then this
 function returns \c NULL.
 
 @param[in] self_component
@@ -499,7 +499,7 @@ bt_self_component_source_borrow_output_port_by_name(
     Borrows the \bt_self_comp_iport named \bt_p{name} from the
     \bt_flt_comp \bt_p{self_component}.
 
-If \bt_p{self_component} has no input port named \bt_p{name}, this
+If \bt_p{self_component} has no input port named \bt_p{name}, then this
 function returns \c NULL.
 
 @param[in] self_component
@@ -529,7 +529,7 @@ bt_self_component_filter_borrow_input_port_by_name(
     Borrows the \bt_self_comp_oport named \bt_p{name} from the
     \bt_flt_comp \bt_p{self_component}.
 
-If \bt_p{self_component} has no output port named \bt_p{name}, this
+If \bt_p{self_component} has no output port named \bt_p{name}, then this
 function returns \c NULL.
 
 @param[in] self_component
@@ -559,7 +559,7 @@ bt_self_component_filter_borrow_output_port_by_name(
     Borrows the \bt_self_comp_iport named \bt_p{name} from the
     \bt_sink_comp \bt_p{self_component}.
 
-If \bt_p{self_component} has no input port named \bt_p{name}, this
+If \bt_p{self_component} has no input port named \bt_p{name}, then this
 function returns \c NULL.
 
 @param[in] self_component

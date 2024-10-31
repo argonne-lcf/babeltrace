@@ -596,8 +596,8 @@ A discarded events message has the following properties:
 
     If a discarded events message has both a
     \ref api-msg-disc-ev-prop-cs-beg "beginning" and an end default
-    clock snapshots, the end default clock snapshot must be greater than
-    or equal to the beginning default clock snapshot.
+    clock snapshots, then the end default clock snapshot must be greater
+    than or equal to the beginning default clock snapshot.
 
     Within its the \ref api-msg-seq "message sequence" of its
     \bt_msg_iter, the end default clock snapshot of a discarded events
@@ -720,8 +720,8 @@ A discarded packets message has the following properties:
 
     If a discarded packets message has both a
     \ref api-msg-disc-pkt-prop-cs-beg "beginning" and an end default
-    clock snapshots, the end default clock snapshot must be greater than
-    or equal to the beginning default clock snapshot.
+    clock snapshots, then the end default clock snapshot must be greater
+    than or equal to the beginning default clock snapshot.
 
     Within its the \ref api-msg-seq "message sequence" of its \bt_msg_iter,
     the end default clock snapshot of a discarded packets message must
@@ -823,7 +823,7 @@ The MIP has a version which is a single major number, independent from
 the version of the \bt_name project.
 
 If what the MIP covers changes in a breaking or semantical way in the
-future, the MIP and \bt_name's minor versions will be bumped.
+future, then the MIP and \bt_name's minor versions will be bumped.
 
 When you create a trace processing \bt_graph with bt_graph_create(), you
 must pass the effective MIP version to use. Then, the components you
@@ -1184,8 +1184,8 @@ See the \ref api-msg-sb-prop-cs "default clock snapshot" property.
 @param[out] clock_snapshot
     <strong>If this function returns
     #BT_MESSAGE_STREAM_CLOCK_SNAPSHOT_STATE_KNOWN</strong>,
-    \bt_p{*clock_snapshot} is a \em borrowed reference of the default
-    clock snapshot of \bt_p{message}.
+    then \bt_p{*clock_snapshot} is a \em borrowed reference of the
+    default clock snapshot of \bt_p{message}.
 
 @retval #BT_MESSAGE_STREAM_CLOCK_SNAPSHOT_STATE_KNOWN
     The default clock snapshot of \bt_p{message} is known and returned
@@ -1359,7 +1359,7 @@ See the \ref api-msg-se-prop-cs "default clock snapshot" property.
     snapshot.
 @param[out] clock_snapshot
     <strong>If this function returns
-    #BT_MESSAGE_STREAM_CLOCK_SNAPSHOT_STATE_KNOWN</strong>,
+    #BT_MESSAGE_STREAM_CLOCK_SNAPSHOT_STATE_KNOWN</strong>, then
     \bt_p{*clock_snapshot} is a \em borrowed reference of the default
     clock snapshot of \bt_p{message}.
 
@@ -2603,7 +2603,7 @@ property.
     events.
 @param[out] count
     <strong>If this function returns
-    #BT_PROPERTY_AVAILABILITY_AVAILABLE</strong>, \bt_p{*count} is
+    #BT_PROPERTY_AVAILABILITY_AVAILABLE</strong>, then \bt_p{*count} is
     the number of discarded events of \bt_p{message}.
 
 @retval #BT_PROPERTY_AVAILABILITY_AVAILABLE
@@ -2923,7 +2923,7 @@ property.
     packets.
 @param[out] count
     <strong>If this function returns
-    #BT_PROPERTY_AVAILABILITY_AVAILABLE</strong>, \bt_p{*count} is
+    #BT_PROPERTY_AVAILABILITY_AVAILABLE</strong>, then \bt_p{*count} is
     the number of discarded packets of \bt_p{message}.
 
 @retval #BT_PROPERTY_AVAILABILITY_AVAILABLE

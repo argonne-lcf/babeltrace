@@ -318,7 +318,7 @@ This function returns the first plugin which has the name
 
 If this function finds a file which looks like a plugin (shared object
 file or Python file with the \c bt_plugin_ prefix), but it fails to load
-it for any reason, the function:
+it for any reason, then this function:
 
 <dl>
   <dt>If \bt_p{fail_on_load_error} is #BT_TRUE</dt>
@@ -454,7 +454,7 @@ it for any reason, the function:
   <dd>Ignores the loading error and continues searching.</dd>
 </dl>
 
-If this function doesn't find any plugin, it returns
+If this function doesn't find any plugin, then it returns
 #BT_PLUGIN_FIND_ALL_STATUS_NOT_FOUND and does \em not set
 \bt_p{*plugins}.
 
@@ -545,7 +545,7 @@ typedef enum bt_plugin_find_all_from_file_status {
     \c patente.so can be named <code>Dan</code>.
 
 If any plugin loading error occurs during the execution of this
-function, it:
+function, then it:
 
 <dl>
   <dt>If \bt_p{fail_on_load_error} is #BT_TRUE</dt>
@@ -555,7 +555,7 @@ function, it:
   <dd>Ignores the loading error and continues.</dd>
 </dl>
 
-If this function doesn't find any plugin, it returns
+If this function doesn't find any plugin, then it returns
 #BT_PLUGIN_FIND_ALL_FROM_FILE_STATUS_NOT_FOUND and does \em not set
 \bt_p{*plugins}.
 
@@ -626,7 +626,7 @@ typedef enum bt_plugin_find_all_from_dir_status {
     Finds and loads all the plugins from the directory with path
     \bt_p{path}, setting \bt_p{*plugins} to the result.
 
-If \bt_p{recurse} is #BT_TRUE, this function recurses into the
+If \bt_p{recurse} is #BT_TRUE, then this function recurses into the
 subdirectories of \bt_p{path} to find plugins.
 
 During the search process, if a found plugin shares the name of an
@@ -637,7 +637,7 @@ already loaded plugin, this function ignores it and continues.
     order is undefined.
 
 If any plugin loading error occurs during the execution of this
-function, it:
+function, then it:
 
 <dl>
   <dt>If \bt_p{fail_on_load_error} is #BT_TRUE</dt>
@@ -647,7 +647,7 @@ function, it:
   <dd>Ignores the loading error and continues.</dd>
 </dl>
 
-If this function doesn't find any plugin, it returns
+If this function doesn't find any plugin, then it returns
 #BT_PLUGIN_FIND_ALL_FROM_DIR_STATUS_NOT_FOUND and does \em not set
 \bt_p{*plugins}.
 
@@ -725,7 +725,7 @@ A static plugin is built directly into the application or library
 instead of being a separate shared object file.
 
 If any plugin loading error occurs during the execution of this
-function, it:
+function, then it:
 
 <dl>
   <dt>If \bt_p{fail_on_load_error} is #BT_TRUE</dt>
@@ -735,7 +735,7 @@ function, it:
   <dd>Ignores the loading error and continues.</dd>
 </dl>
 
-If this function doesn't find any plugin, it returns
+If this function doesn't find any plugin, then it returns
 #BT_PLUGIN_FIND_ALL_FROM_STATIC_STATUS_NOT_FOUND and does \em not set
 \bt_p{*plugins}.
 
@@ -1081,7 +1081,7 @@ bt_plugin_borrow_sink_component_class_by_index_const(
     plugin \bt_p{plugin}.
 
 If no source component class has the name \bt_p{name} within
-\bt_p{plugin}, this function returns \c NULL.
+\bt_p{plugin}, then this function returns \c NULL.
 
 @param[in] plugin
     Plugin from which to borrow the source component class named
@@ -1114,7 +1114,7 @@ bt_plugin_borrow_source_component_class_by_name_const(
     plugin \bt_p{plugin}.
 
 If no filter component class has the name \bt_p{name} within
-\bt_p{plugin}, this function returns \c NULL.
+\bt_p{plugin}, then this function returns \c NULL.
 
 @param[in] plugin
     Plugin from which to borrow the filter component class named
@@ -1147,7 +1147,7 @@ bt_plugin_borrow_filter_component_class_by_name_const(
     plugin \bt_p{plugin}.
 
 If no sink component class has the name \bt_p{name} within
-\bt_p{plugin}, this function returns \c NULL.
+\bt_p{plugin}, then this function returns \c NULL.
 
 @param[in] plugin
     Plugin from which to borrow the sink component class named

@@ -38,7 +38,7 @@ follow and debug your plugin or program.
 
 The \c LIBBABELTRACE2_INIT_LOG_LEVEL environment variable controls
 the initial logging level of the library. If this
-environment variable isn't set at library load time, the initial
+environment variable isn't set at library load time, then the initial
 logging level of the library is #BT_LOGGING_LEVEL_NONE.
 See \ref api-fund-logging to learn more.
 
@@ -82,7 +82,7 @@ You can set a \em minimal logging level at the \bt_name project build
 time (see \ref api-fund-logging to learn how). The logging statements
 with a level that's less severe than the minimal logging level are \em
 not built. For example, if the minimal logging level is
-#BT_LOGGING_LEVEL_INFO, the #BT_LOGGING_LEVEL_TRACE and
+#BT_LOGGING_LEVEL_INFO, then the #BT_LOGGING_LEVEL_TRACE and
 #BT_LOGGING_LEVEL_DEBUG logging statements aren't built. Use
 bt_logging_get_minimal_level() to get the minimal logging
 level of the library.
@@ -212,9 +212,9 @@ extern bt_logging_level bt_logging_get_global_level(void) __BT_NOEXCEPT;
 The library logging statements with a level that's less severe than the
 minimal logging level are \em not built.
 
-For example, if the minimal logging level is #BT_LOGGING_LEVEL_INFO, the
-#BT_LOGGING_LEVEL_TRACE and #BT_LOGGING_LEVEL_DEBUG logging statements
-aren't built.
+For example, if the minimal logging level is #BT_LOGGING_LEVEL_INFO,
+then the #BT_LOGGING_LEVEL_TRACE and #BT_LOGGING_LEVEL_DEBUG logging
+statements aren't built.
 
 @returns
     Minimal logging level of the library.

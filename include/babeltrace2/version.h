@@ -119,7 +119,7 @@ extern const char *bt_version_get_vcs_revision_description(void) __BT_NOEXCEPT;
     Returns libbabeltrace2's release name.
 
 If the release name isn't available, which can be the case for a
-development build, this function returns \c NULL.
+development build, then this function returns \c NULL.
 
 @returns
     Release name of the library, or \c NULL if not available.
@@ -134,7 +134,7 @@ extern const char *bt_version_get_name(void) __BT_NOEXCEPT;
     Returns the description of libbabeltrace2's release name.
 
 If the description of the release name isn't available, which can be
-the case for a development build, this function returns \c NULL.
+the case for a development build, then this function returns \c NULL.
 
 @returns
     Description of the release name of the library,

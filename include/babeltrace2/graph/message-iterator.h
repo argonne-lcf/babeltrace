@@ -136,7 +136,7 @@ operations:
     sequence of the message iterator.
 
     If bt_message_iterator_seek_ns_from_origin() returns something
-    else than #BT_MESSAGE_ITERATOR_SEEK_BEGINNING_STATUS_OK, you
+    else than #BT_MESSAGE_ITERATOR_SEEK_BEGINNING_STATUS_OK, then you
     \em cannot call bt_message_iterator_next() afterwards. In that case,
     you can only call bt_message_iterator_seek_beginning() again or
     bt_message_iterator_seek_ns_from_origin().
@@ -171,10 +171,10 @@ operations:
     #BT_MESSAGE_ITERATOR_NEXT_STATUS_END.
 
     If bt_message_iterator_seek_ns_from_origin() returns something
-    else than #BT_MESSAGE_ITERATOR_SEEK_NS_FROM_ORIGIN_STATUS_OK, you
-    \em cannot call bt_message_iterator_next() afterwards. In that case,
-    you can only call bt_message_iterator_seek_ns_from_origin() again
-    or bt_message_iterator_seek_beginning().
+    else than #BT_MESSAGE_ITERATOR_SEEK_NS_FROM_ORIGIN_STATUS_OK, then
+    you \em cannot call bt_message_iterator_next() afterwards. In that
+    case, you can only call bt_message_iterator_seek_ns_from_origin()
+    again or bt_message_iterator_seek_beginning().
 
     Before you call bt_message_iterator_seek_ns_from_origin() to make
     the message iterator seek a specific point in time, check if it can

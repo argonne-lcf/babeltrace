@@ -274,7 +274,7 @@ When you call one of the four functions above:
 
 - If an instance of any of the field classes recursively contained in
   the passed field class has a
-  \ref api-tir-fc-link "link to an anterior field", it must
+  \ref api-tir-fc-link "link to an anterior field", then it must
   honor the field link rules.
 
 Once you have called one of the four functions above, the passed field
@@ -2281,7 +2281,7 @@ bt_field_class_bit_array_borrow_flag_by_index_const(
 See the \ref api-tir-fc-ba-prop-flags "flags" property.
 
 If there's no flag having the label \bt_p{label} in
-\bt_p{field_class}, this function returns \c NULL.
+\bt_p{field_class}, then this function returns \c NULL.
 
 @param[in] field_class
     Bit array field class from which to borrow the flag
@@ -2987,7 +2987,7 @@ bt_field_class_enumeration_unsigned_borrow_mapping_by_index_const(
 See the \ref api-tir-fc-enum-prop-mappings "mappings" property.
 
 If there's no mapping having the label \bt_p{label} in
-\bt_p{field_class}, this function returns \c NULL.
+\bt_p{field_class}, then this function returns \c NULL.
 
 @param[in] field_class
     Unsigned enumeration field class from which to borrow the mapping
@@ -3256,7 +3256,7 @@ bt_field_class_enumeration_signed_borrow_mapping_by_index_const(
 See the \ref api-tir-fc-enum-prop-mappings "mappings" property.
 
 If there's no mapping having the label \bt_p{label} in
-\bt_p{field_class}, this function returns \c NULL.
+\bt_p{field_class}, then this function returns \c NULL.
 
 @param[in] field_class
     Signed enumeration field class from which to borrow the mapping
@@ -3670,7 +3670,8 @@ bt_field_class_blob_set_media_type(bt_field_class *field_class,
 
 See the \ref api-tir-fc-blob-prop-media-type "media type" property.
 
-If \bt_p{field_class} has no media type, this function returns \c NULL.
+If \bt_p{field_class} has no media type, then this function
+returns \c NULL.
 
 @param[in] field_class
     BLOB field class of which to get the media type.
@@ -4243,7 +4244,7 @@ bt_field_class_structure_borrow_member_by_index_const(
 See the \ref api-tir-fc-struct-prop-members "members" property.
 
 If there's no member having the name \bt_p{name} in
-\bt_p{field_class}, this function returns \c NULL.
+\bt_p{field_class}, then this function returns \c NULL.
 
 @param[in] field_class
     Structure field class from which to borrow the member having the
@@ -5287,7 +5288,7 @@ property values:
 @bt_pre_tc_with_mip{trace_class, 0}
 @pre
     <strong>If \bt_p{selector_field_class} isn't \c NULL</strong>,
-    \bt_p{selector_field_class} is an \bt_int_fc.
+    then \bt_p{selector_field_class} is an \bt_int_fc.
 
 @bt_post_success_frozen{element_field_class}
 @bt_post_success_frozen{selector_field_class}
@@ -5384,7 +5385,7 @@ bt_field_class_variant_borrow_option_by_index_const(
 See the \ref api-tir-fc-var-prop-opts "options" property.
 
 If there's no option having the name \bt_p{name} in
-\bt_p{field_class}, this function returns \c NULL.
+\bt_p{field_class}, then this function returns \c NULL.
 
 @param[in] field_class
     Variant field class from which to borrow the option having the
@@ -5952,7 +5953,7 @@ bt_field_class_variant_with_selector_field_integer_unsigned_borrow_option_by_ind
 See the \ref api-tir-fc-var-prop-opts "options" property.
 
 If there's no option having the name \bt_p{name} in
-\bt_p{field_class}, this function returns \c NULL.
+\bt_p{field_class}, then this function returns \c NULL.
 
 @param[in] field_class
     Variant field class from which to borrow the option having the
@@ -6211,7 +6212,7 @@ bt_field_class_variant_with_selector_field_integer_signed_borrow_option_by_index
 See the \ref api-tir-fc-var-prop-opts "options" property.
 
 If there's no option having the name \bt_p{name} in
-\bt_p{field_class}, this function returns \c NULL.
+\bt_p{field_class}, then this function returns \c NULL.
 
 @param[in] field_class
     Variant field class from which to borrow the option having the

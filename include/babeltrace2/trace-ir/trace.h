@@ -339,7 +339,7 @@ extern const bt_stream *bt_trace_borrow_stream_by_index_const(
     trace \bt_p{trace}.
 
 If there's no stream having the numeric ID \bt_p{id} in
-\bt_p{trace}, this function returns \c NULL.
+\bt_p{trace}, then this function returns \c NULL.
 
 @param[in] trace
     Trace from which to borrow the stream having the
@@ -433,7 +433,7 @@ extern bt_trace_set_namespace_status bt_trace_set_namespace(bt_trace *trace,
 
 See the \ref api-tir-trace-prop-ns "namespace" property.
 
-If \bt_p{trace} has no namespace, this function returns \c NULL.
+If \bt_p{trace} has no namespace, then this function returns \c NULL.
 
 @param[in] trace
     Trace of which to get the namespace.
@@ -504,7 +504,7 @@ extern bt_trace_set_name_status bt_trace_set_name(bt_trace *trace,
 
 See the \ref api-tir-trace-prop-name "name" property.
 
-If \bt_p{trace} has no name, this function returns \c NULL.
+If \bt_p{trace} has no name, then this function returns \c NULL.
 
 @param[in] trace
     Trace of which to get the name.
@@ -591,7 +591,7 @@ typedef enum bt_trace_set_uid_status {
 
 See the \ref api-tir-trace-prop-uuid "UUID" property.
 
-If \bt_p{trace} has no UUID, this function returns \c NULL.
+If \bt_p{trace} has no UUID, then this function returns \c NULL.
 
 @param[in] trace
     Trace of which to get the UUID.
@@ -641,7 +641,7 @@ extern bt_trace_set_uid_status bt_trace_set_uid(bt_trace *trace, const char *uid
 
 See the \ref api-tir-trace-prop-uid "UID" property.
 
-If \bt_p{trace} has no UID, this function returns \c NULL.
+If \bt_p{trace} has no UID, then this function returns \c NULL.
 
 @param[in] trace
     Trace of which to get the UID.
@@ -826,8 +826,8 @@ extern void bt_trace_borrow_environment_entry_by_index_const(
 
 See the \ref api-tir-trace-prop-env "environment" property.
 
-If there's no environment entry named \bt_p{name} in \bt_p{trace}, this
-function returns \c NULL.
+If there's no environment entry named \bt_p{name} in \bt_p{trace}, then
+this function returns \c NULL.
 
 @param[in] trace
     Trace from which to borrow the value of the environment entry

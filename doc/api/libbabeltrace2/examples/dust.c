@@ -264,9 +264,9 @@ void dust_in_message_iterator_finalize(
  * Creates a message from the message iterator's input file's current
  * line.
  *
- * If there's a line to process, this function creates an event message.
- * Otherwise it creates a stream end message and sets the message
- * iterator's state accordingly.
+ * If there's a line to process, then this function creates an event
+ * message. Otherwise it creates a stream end message and sets the
+ * message iterator's state accordingly.
  */
 static
 bt_message *create_message_from_line(

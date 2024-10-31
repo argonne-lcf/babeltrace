@@ -214,7 +214,7 @@ descriptions in the same section. For example, **do not** write this:
 . **Return value** (if any).
 +
 --
-* If the function returns a status code, use the `@retval` command
+* If the function returns a status code, then use the `@retval` command
   multiple times to document each status:
 +
 ----
@@ -241,8 +241,8 @@ descriptions in the same section. For example, **do not** write this:
     Out of memory.
 ----
 
-* If the function returns a simple value, use the `@returns` command
-  to document it.
+* If the function returns a simple value, then use the `@returns`
+  command to document it.
 +
 Refer to parameters (with `\bt_p`) when useful for the reader.
 +

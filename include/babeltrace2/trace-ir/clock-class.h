@@ -613,8 +613,8 @@ See the \ref api-tir-clock-cls-prop-precision "precision" property.
 @param[out] precision
     @parblock
     <strong>If this function returns
-    #BT_PROPERTY_AVAILABILITY_AVAILABLE</strong>, \bt_p{*precision} is
-    the precision (cycles) of \bt_p{clock_class}.
+    #BT_PROPERTY_AVAILABILITY_AVAILABLE</strong>, then \bt_p{*precision}
+    is the precision (cycles) of \bt_p{clock_class}.
 
     Otherwise, the precision of \bt_p{clock_class} is unknown.
     @endparblock
@@ -1073,7 +1073,8 @@ extern bt_clock_class_set_namespace_status bt_clock_class_set_namespace(
 
 See the \ref api-tir-clock-cls-prop-iden "identity" property.
 
-If \bt_p{clock_class} has no namespace, this function returns \c NULL.
+If \bt_p{clock_class} has no namespace, then this function
+returns \c NULL.
 
 @param[in] clock_class
     Clock class of which to get the namespace.
@@ -1146,7 +1147,7 @@ extern bt_clock_class_set_name_status bt_clock_class_set_name(
 
 See the \ref api-tir-clock-cls-prop-iden "identity" property.
 
-If \bt_p{clock_class} has no name, this function returns \c NULL.
+If \bt_p{clock_class} has no name, then this function returns \c NULL.
 
 @param[in] clock_class
     Clock class of which to get the name.
@@ -1220,7 +1221,7 @@ extern bt_clock_class_set_uid_status bt_clock_class_set_uid(
 
 See the \ref api-tir-clock-cls-prop-iden "identity" property.
 
-If \bt_p{clock_class} has no UID, this function returns \c NULL.
+If \bt_p{clock_class} has no UID, then this function returns \c NULL.
 
 @param[in] clock_class
     Clock class of which to get the UID.
@@ -1333,7 +1334,7 @@ extern void bt_clock_class_set_uuid(bt_clock_class *clock_class,
 
 See the \ref api-tir-clock-cls-prop-iden "identity" property.
 
-If \bt_p{clock_class} has no UUID, this function returns \c NULL.
+If \bt_p{clock_class} has no UUID, then this function returns \c NULL.
 
 @param[in] clock_class
     Clock class of which to get the UUID.
@@ -1389,7 +1390,8 @@ extern bt_clock_class_set_description_status bt_clock_class_set_description(
 
 See the \ref api-tir-clock-cls-prop-descr "description" property.
 
-If \bt_p{clock_class} has no description, this function returns \c NULL.
+If \bt_p{clock_class} has no description, then this function
+returns \c NULL.
 
 @param[in] clock_class
     Clock class of which to get the description.

@@ -814,7 +814,7 @@ bt_stream_class_borrow_event_class_by_index_const(
     stream class \bt_p{stream_class}.
 
 If there's no event class having the numeric ID \bt_p{id} in
-\bt_p{stream_class}, this function returns \c NULL.
+\bt_p{stream_class}, then this function returns \c NULL.
 
 @param[in] stream_class
     Stream class from which to borrow the event class having the
@@ -932,7 +932,8 @@ extern bt_stream_class_set_namespace_status bt_stream_class_set_namespace(
 
 See the \ref api-tir-stream-cls-prop-ns "namespace" property.
 
-If \bt_p{stream_class} has no namespace, this function returns \c NULL.
+If \bt_p{stream_class} has no namespace, then this function
+returns \c NULL.
 
 @param[in] stream_class
     Stream class of which to get the namespace.
@@ -1005,7 +1006,7 @@ extern bt_stream_class_set_name_status bt_stream_class_set_name(
 
 See the \ref api-tir-stream-cls-prop-name "name" property.
 
-If \bt_p{stream_class} has no name, this function returns \c NULL.
+If \bt_p{stream_class} has no name, then this function returns \c NULL.
 
 @param[in] stream_class
     Stream class of which to get the name.
@@ -1080,7 +1081,7 @@ extern bt_stream_class_set_uid_status bt_stream_class_set_uid(
 
 See the \ref api-tir-stream-cls-prop-uid "UID" property.
 
-If \bt_p{stream_class} has no UID, this function returns \c NULL.
+If \bt_p{stream_class} has no UID, then this function returns \c NULL.
 
 @param[in] stream_class
     Stream class of which to get the UID.
@@ -1153,7 +1154,7 @@ bt_stream_class_set_default_clock_class(
 See the \ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
 property.
 
-If \bt_p{stream_class} has no default clock class, this function
+If \bt_p{stream_class} has no default clock class, then this function
 returns \c NULL.
 
 @param[in] stream_class
@@ -1238,13 +1239,13 @@ bt_stream_class_set_supports_packets()).
 @pre
     If any of the field classes recursively contained in
     \bt_p{field_class} has a
-    \ref api-tir-fc-link "link to another field class", it must honor
-    the field class link rules.
+    \ref api-tir-fc-link "link to another field class", then it must
+    honor the field class link rules.
 @pre
     If any of the field classes recursively contained in
     \bt_p{field_class} has a
-    \ref api-tir-fc-link "link to another field class", it must honor
-    the field class link rules.
+    \ref api-tir-fc-link "link to another field class", then it must
+    honor the field class link rules.
 
 @bt_post_success_frozen{field_class}
 
@@ -1267,8 +1268,8 @@ bt_stream_class_set_packet_context_field_class(
 See the \ref api-tir-stream-cls-prop-pc-fc "packet context field class"
 property.
 
-If \bt_p{stream_class} has no packet context field class, this function
-returns \c NULL.
+If \bt_p{stream_class} has no packet context field class, then this
+function returns \c NULL.
 
 @param[in] stream_class
     Stream class from which to borrow the packet context field class.
@@ -1328,8 +1329,8 @@ property.
 @pre
     If any of the field classes recursively contained in
     \bt_p{field_class} has a
-    \ref api-tir-fc-link "link to another field class", it must honor
-    the field class link rules.
+    \ref api-tir-fc-link "link to another field class", then it must
+    honor the field class link rules.
 
 @bt_post_success_frozen{field_class}
 
@@ -1352,8 +1353,8 @@ bt_stream_class_set_event_common_context_field_class(
 See the \ref api-tir-stream-cls-prop-pc-fc "event common context field class"
 property.
 
-If \bt_p{stream_class} has no event common context field class, this
-function returns \c NULL.
+If \bt_p{stream_class} has no event common context field class, then
+this function returns \c NULL.
 
 @param[in] stream_class
     Stream class from which to borrow the event common context
@@ -1521,16 +1522,16 @@ properties.
 @bt_pre_hot{stream_class}
 @pre
     <strong>If \bt_p{with_beginning_default_clock_snapshot} is
-    #BT_TRUE</strong>,
+    #BT_TRUE</strong>, then
     \bt_p{supports_packets} is also #BT_TRUE.
 @pre
     <strong>If \bt_p{with_beginning_default_clock_snapshot} is
-    #BT_TRUE</strong>,
+    #BT_TRUE</strong>, then
     \bt_p{supports_packets} is also #BT_TRUE.
 @pre
     <strong>If \bt_p{with_beginning_default_clock_snapshot} or
     \bt_p{with_end_default_clock_snapshot} is #BT_TRUE</strong>,
-    \bt_p{stream_class} has a
+    then \bt_p{stream_class} has a
     \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
 
 @sa bt_stream_class_supports_packets() &mdash;
@@ -1655,10 +1656,10 @@ properties.
 @bt_pre_hot{stream_class}
 @pre
     <strong>If \bt_p{with_default_clock_snapshots} is #BT_TRUE</strong>,
-    \bt_p{supports_discarded_events} is also #BT_TRUE.
+    then \bt_p{supports_discarded_events} is also #BT_TRUE.
 @pre
     <strong>If \bt_p{with_default_clock_snapshots} is #BT_TRUE</strong>,
-    \bt_p{stream_class} has a
+    then \bt_p{stream_class} has a
     \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
 
 @sa bt_stream_class_supports_discarded_events() &mdash;
@@ -1760,10 +1761,10 @@ bt_stream_class_set_supports_packets()).
     returns #BT_TRUE.
 @pre
     <strong>If \bt_p{with_default_clock_snapshots} is #BT_TRUE</strong>,
-    \bt_p{supports_discarded_packets} is also #BT_TRUE.
+    then \bt_p{supports_discarded_packets} is also #BT_TRUE.
 @pre
     <strong>If \bt_p{with_default_clock_snapshots} is #BT_TRUE</strong>,
-    \bt_p{stream_class} has a
+    then \bt_p{stream_class} has a
     \ref api-tir-stream-cls-prop-def-clock-cls "default clock class".
 
 @sa bt_stream_class_supports_discarded_packets() &mdash;

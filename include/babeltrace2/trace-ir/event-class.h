@@ -491,7 +491,8 @@ extern bt_event_class_set_namespace_status bt_event_class_set_namespace(
 
 See the \ref api-tir-ev-cls-prop-ns "namespace" property.
 
-If \bt_p{event_class} has no namespace, this function returns \c NULL.
+If \bt_p{event_class} has no namespace, then this function returns
+\c NULL.
 
 @param[in] event_class
     Event class of which to get the namespace.
@@ -612,7 +613,7 @@ extern bt_event_class_set_uid_status bt_event_class_set_uid(
 
 See the \ref api-tir-ev-cls-prop-uid "UID" property.
 
-If \bt_p{event_class} has no UID, this function returns \c NULL.
+If \bt_p{event_class} has no UID, then this function returns \c NULL.
 
 @param[in] event_class
     Event class of which to get the UID.
@@ -640,7 +641,7 @@ bt_event_class_get_uid(const bt_event_class *event_class) __BT_NOEXCEPT;
 
 See the \ref api-tir-ev-cls-prop-name "name" property.
 
-If \bt_p{event_class} has no name, this function returns \c NULL.
+If \bt_p{event_class} has no name, then this function returns \c NULL.
 
 @param[in] event_class
     Event class of which to get the name.
@@ -793,8 +794,8 @@ See the \ref api-tir-ev-cls-prop-log-lvl "log level" property.
     Event class of which to get the log level.
 @param[out] log_level
     <strong>If this function returns
-    #BT_PROPERTY_AVAILABILITY_AVAILABLE</strong>, \bt_p{*log_level} is
-    the log level of \bt_p{event_class}.
+    #BT_PROPERTY_AVAILABILITY_AVAILABLE</strong>, then
+    \bt_p{*log_level} is the log level of \bt_p{event_class}.
 
 @retval #BT_PROPERTY_AVAILABILITY_AVAILABLE
     The log level of \bt_p{event_class} is available.
@@ -863,7 +864,8 @@ extern bt_event_class_set_emf_uri_status bt_event_class_set_emf_uri(
 
 See the \ref api-tir-ev-cls-prop-emf-uri "EMF URI" property.
 
-If \bt_p{event_class} has no EMF URI, this function returns \c NULL.
+If \bt_p{event_class} has no EMF URI, then this function
+returns \c NULL.
 
 @param[in] event_class
     Event class of which to get the EMF URI.
@@ -931,8 +933,8 @@ See the \ref api-tir-ev-cls-prop-p-fc "payload field class" property.
 @pre
     If any of the field classes recursively contained in
     \bt_p{field_class} has a
-    \ref api-tir-fc-link "link to another field class", it must honor
-    the field class link rules.
+    \ref api-tir-fc-link "link to another field class", then it must
+    honor the field class link rules.
 
 @bt_post_success_frozen{field_class}
 
@@ -952,7 +954,7 @@ bt_event_class_set_payload_field_class(bt_event_class *event_class,
 
 See the \ref api-tir-ev-cls-prop-p-fc "payload field class" property.
 
-If \bt_p{event_class} has no payload field class, this function
+If \bt_p{event_class} has no payload field class, then this function
 returns \c NULL.
 
 @param[in] event_class
@@ -1011,8 +1013,8 @@ property.
 @pre
     If any of the field classes recursively contained in
     \bt_p{field_class} has a
-    \ref api-tir-fc-link "link to another field class", it must honor
-    the field class link rules.
+    \ref api-tir-fc-link "link to another field class", then it must
+    honor the field class link rules.
 
 @bt_post_success_frozen{field_class}
 
@@ -1034,8 +1036,8 @@ bt_event_class_set_specific_context_field_class(bt_event_class *event_class,
 See the \ref api-tir-ev-cls-prop-sc-fc "specific context field class"
 property.
 
-If \bt_p{event_class} has no specific context field class, this function
-returns \c NULL.
+If \bt_p{event_class} has no specific context field class, then this
+function returns \c NULL.
 
 @param[in] event_class
     Event class from which to borrow the specific context field class.

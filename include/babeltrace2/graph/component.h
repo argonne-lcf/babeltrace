@@ -589,8 +589,8 @@ bt_component_source_borrow_output_port_by_index_const(
     Borrows the \bt_oport named \bt_p{name} from the \bt_src_comp
     \bt_p{component}.
 
-If \bt_p{component} has no output port named \bt_p{name}, this function
-returns \c NULL.
+If \bt_p{component} has no output port named \bt_p{name}, then this
+function returns \c NULL.
 
 @param[in] component
     Source component from which to borrow the output port
@@ -825,8 +825,8 @@ bt_component_filter_borrow_input_port_by_index_const(
     Borrows the \bt_iport named \bt_p{name} from the \bt_flt_comp
     \bt_p{component}.
 
-If \bt_p{component} has no input port named \bt_p{name}, this function
-returns \c NULL.
+If \bt_p{component} has no input port named \bt_p{name}, then this
+function returns \c NULL.
 
 @param[in] component
     Filter component from which to borrow the input port
@@ -906,8 +906,8 @@ bt_component_filter_borrow_output_port_by_index_const(
     Borrows the \bt_oport named \bt_p{name} from the \bt_flt_comp
     \bt_p{component}.
 
-If \bt_p{component} has no output port named \bt_p{name}, this function
-returns \c NULL.
+If \bt_p{component} has no output port named \bt_p{name}, then this
+function returns \c NULL.
 
 @param[in] component
     Filter component from which to borrow the output port
@@ -1142,8 +1142,8 @@ bt_component_sink_borrow_input_port_by_index_const(
     Borrows the \bt_oport named \bt_p{name} from the \bt_sink_comp
     \bt_p{component}.
 
-If \bt_p{component} has no output port named \bt_p{name}, this function
-returns \c NULL.
+If \bt_p{component} has no output port named \bt_p{name}, then this
+function returns \c NULL.
 
 @param[in] component
     Sink component from which to borrow the output port

@@ -1100,7 +1100,7 @@ typedef enum bt_field_string_append_status {
     the \bt_string_field \bt_p{field}.
 
 @attention
-    If you didn't set the value of \bt_p{field} yet, you must call
+    If you didn't set the value of \bt_p{field} yet, then you must call
     bt_field_string_clear() before you call this function.
 
 @param[in] field
@@ -1133,7 +1133,7 @@ extern bt_field_string_append_status bt_field_string_append(
     \bt_p{field}.
 
 @attention
-    If you didn't set the value of \bt_p{field} yet, you must call
+    If you didn't set the value of \bt_p{field} yet, then you must call
     bt_field_string_clear() before you call this function.
 
 @param[in] field
@@ -1462,7 +1462,7 @@ bt_field_structure_borrow_member_field_by_index_const(
     \bt_struct_field \bt_p{field}.
 
 If there's no member having the name \bt_p{name} in the
-\ref api-tir-fc-struct "class" of \bt_p{field}, this function
+\ref api-tir-fc-struct "class" of \bt_p{field}, then this function
 returns \c NULL.
 
 @param[in] field
@@ -1531,7 +1531,7 @@ extern void bt_field_option_set_has_field(bt_field *field, bt_bool has_field)
     You must call bt_field_option_set_has_field() before you call
     this function.
 
-If \bt_p{field} has no field, this function returns \c NULL.
+If \bt_p{field} has no field, then this function returns \c NULL.
 
 @param[in] field
     Option field from which to borrow the field.

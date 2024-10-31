@@ -68,8 +68,8 @@ event with bt_event_borrow_stream() and bt_event_borrow_stream_const().
 
 If the stream class of the event
 \ref api-tir-stream-cls-prop-supports-pkt "supports packets",
-the event also belongs to a \bt_pkt. In that case, borrow the packet of
-an event with bt_event_borrow_packet() and
+then the event also belongs to a \bt_pkt. In that case, borrow the
+packet of an event with bt_event_borrow_packet() and
 bt_event_borrow_packet_const().
 
 Because a stream or a packet could contain millions of events, there are

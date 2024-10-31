@@ -248,7 +248,7 @@ bt_trace_class_borrow_stream_class_by_index_const(
     trace class \bt_p{trace_class}.
 
 If there's no stream class having the numeric ID \bt_p{id} in
-\bt_p{trace_class}, this function returns \c NULL.
+\bt_p{trace_class}, then this function returns \c NULL.
 
 @param[in] trace_class
     Trace class from which to borrow the stream class having the

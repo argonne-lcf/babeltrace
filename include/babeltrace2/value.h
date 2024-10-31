@@ -80,7 +80,7 @@ The \em null value is special in that it's a singleton variable,
 #bt_value_null. You can directly compare any value pointer to
 #bt_value_null to check if it's a null value. Like other types of
 values, the null value is a shared object: if you get a new null value
-reference, you must eventually put it.
+reference, then you must eventually put it.
 
 Create a value with one of the <code>bt_value_*_create()</code> or
 <code>bt_value_*_create_init()</code> functions.
@@ -590,10 +590,10 @@ bt_bool bt_value_is_map(const bt_value *value) __BT_NOEXCEPT
 This is the \em only instance of a null value.
 
 Like any type of value, the null value is a shared object: if you get a
-new null value reference with bt_value_get_ref(), you must eventually
-put it with bt_value_put_ref(). The reference count of the null value
-singleton must never reach 0: libbabeltrace2 logs a warning message when
-this programming error occurs.
+new null value reference with bt_value_get_ref(), then you must
+eventually put it with bt_value_put_ref(). The reference count of the
+null value singleton must never reach 0: libbabeltrace2 logs a warning
+message when this programming error occurs.
 
 Because all null values point to the same null value singleton, you can
 directly compare a value to the \c bt_value_null variable.
@@ -1819,8 +1819,8 @@ bt_value_map_insert_empty_map_entry(bt_value *value, const char *key,
     Borrows the value of the entry with the key \bt_p{key} in the map
     value \bt_p{value}.
 
-If no entry with key \bt_p{key} exists in \bt_p{value}, this function
-returns \c NULL.
+If no entry with key \bt_p{key} exists in \bt_p{value}, then this
+function returns \c NULL.
 
 @param[in] value
     Map value from which to borrow the value of the entry with the

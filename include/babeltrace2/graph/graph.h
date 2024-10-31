@@ -157,7 +157,7 @@ In general, as of \bt_name_version_min_maj:
 - Components cannot remove ports.
 
 If \em any error occurs (a function returns a status code which ends
-with <code>ERROR</code>) during step 1 or 2, the trace processing
+with <code>ERROR</code>) during step 1 or 2, then the trace processing
 graph is considered <strong>faulty</strong>: you cannot use it anymore.
 The only functions you can call with a faulty graph are
 bt_graph_get_ref() and bt_graph_put_ref().
@@ -1002,14 +1002,14 @@ it's the turn of this sink component to consume in bt_graph_run_once().
 See \ref api-graph-lc-add-ss "Add a simple sink component" to learn more
 about adding a simple component to a trace processing graph.
 
-If you're not done consuming messages, return
+If you're not done consuming messages, then return
 #BT_GRAPH_SIMPLE_SINK_COMPONENT_CONSUME_FUNC_STATUS_OK.
 
-If you're done consuming messages, return
+If you're done consuming messages, then return
 #BT_GRAPH_SIMPLE_SINK_COMPONENT_CONSUME_FUNC_STATUS_END.
 
 If you wish to avoid a blocking operation and make
-bt_graph_run() or bt_graph_run_once() aware, return
+bt_graph_run() or bt_graph_run_once() aware, then return
 #BT_GRAPH_SIMPLE_SINK_COMPONENT_CONSUME_FUNC_STATUS_AGAIN.
 
 @param[in] message_iterator
@@ -1486,7 +1486,7 @@ Message iterators can check whether or not they're interrupted
 with bt_self_message_iterator_is_interrupted().
 
 The bt_graph_run() loop intermittently checks whether or not any of the
-interrupters of the graph is set. If so, bt_graph_run() returns
+interrupters of the graph is set. If so, then bt_graph_run() returns
 #BT_GRAPH_RUN_STATUS_AGAIN.
 
 @note

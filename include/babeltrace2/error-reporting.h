@@ -182,8 +182,8 @@ parameters of their corresponding
 
 <h1>\anchor api-error-handle Handle an error</h1>
 
-If any libbabeltrace2 function you call returns an error status code, do
-one of:
+If any libbabeltrace2 function you call returns an error status code,
+then do one of:
 
 - Return an error status code too.
 
@@ -428,7 +428,7 @@ Once you're done with the returned error, do one of:
 
 @post
     <strong>If this function doesn't return <code>NULL</code></strong>,
-    the caller owns the returned error.
+    then the caller owns the returned error.
 
 @sa bt_error_release() &mdash;
     Releases (frees) an error.
