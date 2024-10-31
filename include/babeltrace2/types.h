@@ -139,7 +139,7 @@ typedef uint64_t bt_listener_id;
 @brief
     A
     <a href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID</a>,
-    that is, an array of 16&nbsp;constant bytes.
+    that is, an array of&nbsp;16&nbsp;constant bytes.
 */
 typedef uint8_t const *bt_uuid;
 

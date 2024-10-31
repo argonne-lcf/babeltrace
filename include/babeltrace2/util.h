@@ -64,8 +64,9 @@ This function:
 -# Converts the \bt_p{offset_cycles} value to seconds using
    \bt_p{frequency}.
 -# Converts the \bt_p{cycles} value to seconds using \bt_p{frequency}.
--# Adds the values of 1., 2., and \bt_p{offset_seconds}.
--# Converts the value of 3. to nanoseconds and sets
+-# Adds the values of step&nbsp;1, step&nbsp;2,
+   and \bt_p{offset_seconds}.
+-# Converts the value of step&nbsp;3 to nanoseconds and sets
    \bt_p{*ns_from_origin} to this result.
 
 The following illustration shows the possible scenarios:

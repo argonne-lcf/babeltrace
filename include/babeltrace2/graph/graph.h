@@ -157,9 +157,9 @@ In general, as of \bt_name_version_min_maj:
 - Components cannot remove ports.
 
 If \em any error occurs (a function returns a status code which ends
-with <code>ERROR</code>) during step 1 or 2, then the trace processing
-graph is considered <strong>faulty</strong>: you cannot use it anymore.
-The only functions you can call with a faulty graph are
+with <code>ERROR</code>) during step&nbsp;1 or&nbsp;2, then the trace
+processing graph is considered <strong>faulty</strong>: you cannot use
+it anymore. The only functions you can call with a faulty graph are
 bt_graph_get_ref() and bt_graph_put_ref().
 
 <h2>\anchor api-graph-lc-add Add components</h2>
@@ -546,7 +546,8 @@ bt_self_component_get_graph_mip_version() returns this version when
 components call it.
 
 @note
-    As of \bt_name_version_min_maj, the only available MIP version is 0.
+    As of \bt_name_version_min_maj, the only available MIP version
+    is&nbsp;0.
 
 The returned graph has a default \bt_intr. Any \bt_comp you add with the
 <code>bt_graph_add_*_component*()</code> functions and all their

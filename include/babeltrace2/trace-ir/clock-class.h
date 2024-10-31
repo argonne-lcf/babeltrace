@@ -1544,10 +1544,10 @@ This function:
    \ref api-tir-clock-cls-prop-freq "frequency".
 -# Converts the \bt_p{value} value to seconds using the frequency of
    \bt_p{clock_class}.
--# Adds the values of 1., 2., and the
+-# Adds the values of step&nbsp;1, step&nbsp;2, and the
    \link api-tir-clock-cls-prop-offset "offset in seconds"\endlink
    property of \bt_p{clock_class}.
--# Converts the value of 3. to nanoseconds and sets
+-# Converts the value of step&nbsp;3 to nanoseconds and sets
    \bt_p{*ns_from_origin} to this result.
 
 The following illustration shows the possible scenarios:

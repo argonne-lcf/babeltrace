@@ -336,7 +336,7 @@ A bit array field class has the following property:
     the bit array field class.
 
     As of \bt_name_version_min_maj, the maximum length of a bit array
-    field is 64.
+    field is&nbsp;64.
 
     You cannot change the length once the bit array field class is
     created.
@@ -384,12 +384,12 @@ A bit array field class has the following property:
     @endcode
 
     where the first element is the first bit of the bit array field (the
-    value as an integer being 0xad):
+    value as an integer being&nbsp;0xad):
 
-    - A flag targeting bits 1, 3, and&nbsp;6 would be active because
+    - A flag targeting bits&nbsp;1,&nbsp;3, and&nbsp;6 would be active because
       bit&nbsp;3 is set.
 
-    - A flag targeting bits 1 and&nbsp;4 wouldn't be active because both
+    - A flag targeting bits&nbsp;1 and&nbsp;4 wouldn't be active because both
       bits are cleared.
 
     Two flags of the same bit array field class cannot have the
@@ -468,7 +468,7 @@ Integer field classes have the following common properties:
 
     For example, if the field value range of an unsigned integer
     field class is [0,&nbsp;16383], then its unsigned integer fields
-    can only contain the values from 0 to 16383.
+    can only contain the values from&nbsp;0 to&nbsp;16383.
 
     \bt_cp_sink_comp can benefit from this property to make some space
     optimizations when writing trace data.
@@ -508,8 +508,8 @@ field class <em>mapping</em>.
 
 For example, if an enumeration field class maps the label \c SUGAR to
 the integer ranges [1,&nbsp;19] and [25,&nbsp;31], then an instance
-(enumeration field) of this field class with the value 15 or 28 has the
-label <code>SUGAR</code>.
+(enumeration field) of this field class with the value&nbsp;15
+or&nbsp;28 has the label <code>SUGAR</code>.
 
 An enumeration field class is an \em abstract field class: you cannot
 create one. The concrete enumeration field classes are:
@@ -3026,7 +3026,7 @@ This function sets \bt_p{*labels} to the resulting array and
 \bt_p{*count} to the number of labels in \bt_p{*labels}.
 
 On success, if there's no mapping ranges containing the value
-\bt_p{value}, \bt_p{*count} is 0.
+\bt_p{value}, \bt_p{*count} is&nbsp;0.
 
 @param[in] field_class
     Unsigned enumeration field class from which to get the labels of the
@@ -3049,7 +3049,7 @@ On success, if there's no mapping ranges containing the value
     @endparblock
 @param[out] count
     <strong>On success</strong>, \bt_p{*count} is the number of labels
-    in \bt_p{*labels} (can be 0).
+    in \bt_p{*labels} (can be&nbsp;0).
 
 @retval #BT_FIELD_CLASS_ENUMERATION_GET_MAPPING_LABELS_BY_VALUE_STATUS_OK
     Success.
@@ -3295,7 +3295,7 @@ This function sets \bt_p{*labels} to the resulting array and
 \bt_p{*count} to the number of labels in \bt_p{*labels}.
 
 On success, if there's no mapping ranges containing the value
-\bt_p{value}, \bt_p{*count} is 0.
+\bt_p{value}, \bt_p{*count} is&nbsp;0.
 
 @param[in] field_class
     Signed enumeration field class from which to get the labels of the
@@ -3318,7 +3318,7 @@ On success, if there's no mapping ranges containing the value
     @endparblock
 @param[out] count
     <strong>On success</strong>, \bt_p{*count} is the number of labels
-    in \bt_p{*labels} (can be 0).
+    in \bt_p{*labels} (can be&nbsp;0).
 
 @retval #BT_FIELD_CLASS_ENUMERATION_GET_MAPPING_LABELS_BY_VALUE_STATUS_OK
     Success.

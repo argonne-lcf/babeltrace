@@ -124,9 +124,9 @@ See this image:
     @parblock
     Longer description for this specific status.
 
-    Organic locavore sartorial 3 wolf moon brooklyn, VHS pug distillery
-    schlitz tofu banjo chambray you probably haven't heard of them hot
-    chicken copper mug.
+    Organic locavore sartorial&nbsp;3 wolf moon brooklyn, VHS pug
+    distillery schlitz tofu banjo chambray you probably haven't heard of
+    them hot chicken copper mug.
 
     Neutra kale chips kombucha, salvia green juice live-edge swag
     biodiesel scenester austin yuccie dreamcatcher cronut small batch.
@@ -146,7 +146,7 @@ See this image:
     Does something else with a parameter.
 @sa bt_another_function() &mdash;
     Cardigan celiac palo santo, tacos chicharrones pitchfork chambray
-    photo booth subway tile 90's street.
+    photo booth subway tile&nbsp;90's street.
 */
 ----
 
@@ -321,7 +321,7 @@ example, **do not** write this:
 
 @sa bt_another_function() &mdash;
     Cardigan celiac palo santo, tacos chicharrones pitchfork chambray
-    photo booth subway tile 90's street.
+    photo booth subway tile&nbsp;90's street.
 ----
 
 

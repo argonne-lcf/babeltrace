@@ -592,8 +592,8 @@ This is the \em only instance of a null value.
 Like any type of value, the null value is a shared object: if you get a
 new null value reference with bt_value_get_ref(), then you must
 eventually put it with bt_value_put_ref(). The reference count of the
-null value singleton must never reach 0: libbabeltrace2 logs a warning
-message when this programming error occurs.
+null value singleton must never reach&nbsp;0: libbabeltrace2 logs a
+warning message when this programming error occurs.
 
 Because all null values point to the same null value singleton, you can
 directly compare a value to the \c bt_value_null variable.
@@ -698,7 +698,7 @@ extern bt_bool bt_value_bool_get(const bt_value *value) __BT_NOEXCEPT;
 
 /*!
 @brief
-    Creates and returns an unsigned integer value initialized to 0.
+    Creates and returns an unsigned integer value initialized to&nbsp;0.
 
 The returned value has the type #BT_VALUE_TYPE_UNSIGNED_INTEGER.
 
@@ -724,7 +724,7 @@ The returned value has the type #BT_VALUE_TYPE_UNSIGNED_INTEGER.
     New unsigned integer value reference, or \c NULL on memory error.
 
 @sa bt_value_bool_create() &mdash;
-    Creates an unsigned integer value initialized to 0.
+    Creates an unsigned integer value initialized to&nbsp;0.
 */
 extern bt_value *bt_value_integer_unsigned_create_init(uint64_t raw_value) __BT_NOEXCEPT;
 
@@ -776,7 +776,7 @@ extern uint64_t bt_value_integer_unsigned_get(const bt_value *value) __BT_NOEXCE
 
 /*!
 @brief
-    Creates and returns a signed integer value initialized to 0.
+    Creates and returns a signed integer value initialized to&nbsp;0.
 
 The returned value has the type #BT_VALUE_TYPE_SIGNED_INTEGER.
 
@@ -802,7 +802,7 @@ The returned value has the type #BT_VALUE_TYPE_SIGNED_INTEGER.
     New signed integer value reference, or \c NULL on memory error.
 
 @sa bt_value_bool_create() &mdash;
-    Creates a signed integer value initialized to 0.
+    Creates a signed integer value initialized to&nbsp;0.
 */
 extern bt_value *bt_value_integer_signed_create_init(int64_t raw_value) __BT_NOEXCEPT;
 
@@ -853,7 +853,7 @@ extern int64_t bt_value_integer_signed_get(const bt_value *value) __BT_NOEXCEPT;
 
 /*!
 @brief
-    Creates and returns a real value initialized to 0.
+    Creates and returns a real value initialized to&nbsp;0.
 
 The returned value has the type #BT_VALUE_TYPE_REAL.
 
@@ -878,7 +878,7 @@ The returned value has the type #BT_VALUE_TYPE_REAL.
     New real value reference, or \c NULL on memory error.
 
 @sa bt_value_real_create() &mdash;
-    Creates a real value initialized to 0.
+    Creates a real value initialized to&nbsp;0.
 */
 extern bt_value *bt_value_real_create_init(double raw_value) __BT_NOEXCEPT;
 

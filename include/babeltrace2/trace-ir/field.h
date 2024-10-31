@@ -585,7 +585,7 @@ extern bt_bool bt_field_bool_get_value(const bt_field *field) __BT_NOEXCEPT;
     Sets the bits of the \bt_ba_field \bt_p{field} to the bits of
     \bt_p{bits}.
 
-The index of the least significant bit is 0.
+The index of the least significant bit is&nbsp;0.
 
 See \bt_c_ba_field to learn more.
 
@@ -609,7 +609,7 @@ extern void bt_field_bit_array_set_value_as_integer(bt_field *field,
     Returns the bits of the \bt_ba_field \bt_p{field} as an
     unsigned integer.
 
-The index of the least significant bit is 0.
+The index of the least significant bit is&nbsp;0.
 
 See \bt_c_ba_field to learn more.
 

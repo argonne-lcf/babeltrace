@@ -829,9 +829,9 @@ When you create a trace processing \bt_graph with bt_graph_create(), you
 must pass the effective MIP version to use. Then, the components you
 \ref api-graph-lc-add "add" to this graph can access this configured MIP
 version with bt_self_component_get_graph_mip_version() and behave
-accordingly. In other words, if the configured MIP version is 0, then a
-component cannot use features introduced by MIP version&nbsp;1. For
-example, should the project introduce a new type of \bt_fc, the MIP
+accordingly. In other words, if the configured MIP version is&nbsp;0,
+then a component cannot use features introduced by MIP version&nbsp;1.
+For example, should the project introduce a new type of \bt_fc, the MIP
 version would be bumped.
 
 A component which cannot honor a given MIP can fail at

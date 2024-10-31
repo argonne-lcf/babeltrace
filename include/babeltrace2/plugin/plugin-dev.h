@@ -122,9 +122,9 @@ The structure of a \bt_name plugin definition C file is as such:
   </li>
 
   <li>
-    \bt_dt_opt Depending on the type of the component class of step 5,
-    use any of the following macros (or their <code>*_WITH_ID()</code>
-    counterpart)
+    \bt_dt_opt Depending on the type of the component class of
+    step&nbsp;5, use any of the following macros (or their
+    <code>*_WITH_ID()</code> counterpart)
     \em once to set its properties:
 
     <dl>
@@ -149,9 +149,9 @@ The structure of a \bt_name plugin definition C file is as such:
   </li>
 
   <li>
-    \bt_dt_opt Depending on the type of the component class of step 5,
-    use any of the following macros (or their <code>*_WITH_ID()</code>
-    counterpart) to set its optional methods:
+    \bt_dt_opt Depending on the type of the component class of
+    step&nbsp;5, use any of the following macros (or their
+    <code>*_WITH_ID()</code> counterpart) to set its optional methods:
 
     <dl>
       <dt>Source component class</dt>
@@ -190,8 +190,8 @@ The structure of a \bt_name plugin definition C file is as such:
   </li>
 </ol>
 
-You can repeat steps 5 to 7 to add more than one component class to a
-given plugin.
+You can repeat steps&nbsp;5 to&nbsp;7 to add more than one component
+class to a given plugin.
 
 See \ref example-simple-plugin-def-file for a concrete example of how
 to use the macros of this API.
