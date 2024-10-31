@@ -545,10 +545,6 @@ The graph is configured as operating following version
 bt_self_component_get_graph_mip_version() returns this version when
 components call it.
 
-@note
-    As of \bt_name_version_min_maj, the only available MIP version
-    is&nbsp;0.
-
 The returned graph has a default \bt_intr. Any \bt_comp you add with the
 <code>bt_graph_add_*_component*()</code> functions and all their
 \bt_p_msg_iter also have this same default interrupter. Borrow the
@@ -563,7 +559,7 @@ with bt_graph_borrow_default_interrupter().
     New trace processing graph reference, or \c NULL on memory error.
 
 @pre
-    \bt_p{mip_version} is 0.
+    \bt_p{mip_version} is ≤ what bt_get_maximal_mip_version() returns.
 */
 extern bt_graph *bt_graph_create(uint64_t mip_version) __BT_NOEXCEPT;
 
