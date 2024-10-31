@@ -102,7 +102,7 @@ An event has the following properties:
 
     The specific context of an event contains
     any contextual data of which the layout is specific to the
-    \ref api-tir-ev-cls "class" of the event and which does not belong
+    \ref api-tir-ev-cls "class" of the event and which doesn't belong
     to the payload.
 
     The \ref api-tir-fc "class" of the specific context field of an

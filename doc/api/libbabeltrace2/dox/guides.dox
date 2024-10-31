@@ -37,7 +37,7 @@ The available guides are:
 
 @page guide-build-bt2-dev Build Babeltrace 2 for development
 
-If you are developing a \bt_name \bt_plugin or an application which uses
+If you're developing a \bt_name \bt_plugin or an application which uses
 libbabeltrace2, we recommend that:
 
 - You build \bt_name from source in <em>developer mode</em>.

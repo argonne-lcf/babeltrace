@@ -46,7 +46,7 @@ tracing session names and other properties.
 
 The semantics of the query parameters and the returned object are
 completely defined by the component class implementation: the library
-does not enforce or suggest any layout. The best way to know which
+doesn't enforce or suggest any layout. The best way to know which
 objects you can query from a component class, what are the expected and
 optional parameters, and what the returned object contains is to read
 the documentation of this component class.
@@ -81,7 +81,7 @@ Perform a query operation with bt_query_executor_query(). This function
 can return #BT_QUERY_EXECUTOR_QUERY_STATUS_AGAIN, in which case you can
 try to perform a query operation again later. It can also return
 #BT_QUERY_EXECUTOR_QUERY_STATUS_UNKNOWN_OBJECT, which means the
-component class does not offer the requested object.
+component class doesn't offer the requested object.
 
 To interrupt a running query operation, either:
 
@@ -176,7 +176,7 @@ executor, the query method of \bt_p{component_class} receives:
 
     Unlike the \bt_p{params} parameter of
     the <code>bt_graph_add_*_component*()</code>
-    functions (see \ref api-graph), this parameter does not need to
+    functions (see \ref api-graph), this parameter doesn't need to
     be a \bt_map_val.
 
     Can be \c NULL (equivalent to passing #bt_value_null).

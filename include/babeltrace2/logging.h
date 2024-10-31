@@ -38,7 +38,7 @@ follow and debug your plugin or program.
 
 The \c LIBBABELTRACE2_INIT_LOG_LEVEL environment variable controls
 the initial logging level of the library. If this
-environment variable is not set at library load time, the initial
+environment variable isn't set at library load time, the initial
 logging level of the library is #BT_LOGGING_LEVEL_NONE.
 See \ref api-fund-logging to learn more.
 
@@ -83,7 +83,7 @@ time (see \ref api-fund-logging to learn how). The logging statements
 with a level that's less severe than the minimal logging level are \em
 not built. For example, if the minimal logging level is
 #BT_LOGGING_LEVEL_INFO, the #BT_LOGGING_LEVEL_TRACE and
-#BT_LOGGING_LEVEL_DEBUG logging statements are not built. Use
+#BT_LOGGING_LEVEL_DEBUG logging statements aren't built. Use
 bt_logging_get_minimal_level() to get the minimal logging
 level of the library.
 */
@@ -113,7 +113,7 @@ typedef enum bt_logging_level {
 	Debugging information, with a higher level of details than the
 	\em TRACE level.
 
-	The \em DEBUG logging statements do not significantly
+	The \em DEBUG logging statements don't significantly
 	impact performance.
 	*/
 	BT_LOGGING_LEVEL_DEBUG		= __BT_LOGGING_LEVEL_DEBUG,
@@ -125,7 +125,7 @@ typedef enum bt_logging_level {
 	Informational messages that highlight progress or important
 	states of the application, plugins, or library.
 
-	The \em INFO logging statements do not significantly
+	The \em INFO logging statements don't significantly
 	impact performance.
 	*/
 	BT_LOGGING_LEVEL_INFO		= __BT_LOGGING_LEVEL_INFO,
@@ -137,7 +137,7 @@ typedef enum bt_logging_level {
 	Unexpected situations which still allow the execution to
 	continue.
 
-	The \em WARNING logging statements do not significantly
+	The \em WARNING logging statements don't significantly
 	impact performance.
 	*/
 	BT_LOGGING_LEVEL_WARNING	= __BT_LOGGING_LEVEL_WARNING,
@@ -152,7 +152,7 @@ typedef enum bt_logging_level {
 	application, plugin, or library won't perform any more useful
 	task, but it should still exit cleanly.
 
-	The \em ERROR logging statements do not significantly
+	The \em ERROR logging statements don't significantly
 	impact performance.
 	*/
 	BT_LOGGING_LEVEL_ERROR		= __BT_LOGGING_LEVEL_ERROR,
@@ -163,7 +163,7 @@ typedef enum bt_logging_level {
 
 	Severe errors that lead the execution to abort immediately.
 
-	The \em FATAL logging statements do not significantly
+	The \em FATAL logging statements don't significantly
 	impact performance.
 	*/
 	BT_LOGGING_LEVEL_FATAL		= __BT_LOGGING_LEVEL_FATAL,
@@ -181,7 +181,7 @@ typedef enum bt_logging_level {
     \bt_p{logging_level}.
 
 The global logging level of the library
-\ref api-logging-extra-lib "does not affect" the logging level of
+\ref api-logging-extra-lib "doesn't affect" the logging level of
 individual components and query operations.
 
 @param[in] logging_level
@@ -214,7 +214,7 @@ minimal logging level are \em not built.
 
 For example, if the minimal logging level is #BT_LOGGING_LEVEL_INFO, the
 #BT_LOGGING_LEVEL_TRACE and #BT_LOGGING_LEVEL_DEBUG logging statements
-are not built.
+aren't built.
 
 @returns
     Minimal logging level of the library.

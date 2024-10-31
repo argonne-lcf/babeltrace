@@ -457,7 +457,7 @@ This is the user function type for a trace class destruction listener.
 @bt_pre_not_null{trace_class}
 
 @post
-    The reference count of \bt_p{trace_class} is not changed.
+    The reference count of \bt_p{trace_class} isn't changed.
 @bt_post_no_error
 
 @sa bt_trace_class_add_destruction_listener() &mdash;
@@ -492,7 +492,7 @@ typedef enum bt_trace_class_add_listener_status {
 All the destruction listener user functions of a trace class are called
 when it's being destroyed.
 
-If \bt_p{listener_id} is not \c NULL, then this function, on success,
+If \bt_p{listener_id} isn't \c NULL, then this function, on success,
 sets \bt_p{*listener_id} to the ID of the added destruction listener
 within \bt_p{trace_class}. You can then use this ID to remove the
 added destruction listener with

@@ -162,7 +162,7 @@ operations:
     the operation, your pass the specific time to seek as the
     \bt_p{ns_from_origin} parameter. You don't pass any
     \bt_clock_cls: the function operates at the nanosecond from some
-    origin level and it is left to the implementation of the message
+    origin level and it's left to the implementation of the message
     iterator to seek a message having at least this time.
 
     If the requested time point is \em after the last message of the
@@ -422,7 +422,7 @@ On success, the position of \bt_p{message_iterator} is advanced by
 
     The library allocates and manages this array, but until you
     perform another \ref api-msg-iter-ops "operation" on
-    \bt_p{message_iterator}, you are free to modify it. For example,
+    \bt_p{message_iterator}, you're free to modify it. For example,
     you can set its elements to \c NULL if your use case needs it.
 
     You own the references of the messages this array contains. In

@@ -14,7 +14,7 @@ the \ref guides "guides" and \ref examples "examples".
 That being said, we recommend that you read the \ref api-fund to
 understand what the API expects exactly.
 
-If you are developing a \bt_name \bt_plugin or an application which
+If you're developing a \bt_name \bt_plugin or an application which
 uses libbabeltrace2, we recommend that you
 \ref guide-build-bt2-dev "build the \bt_name library for development".
 

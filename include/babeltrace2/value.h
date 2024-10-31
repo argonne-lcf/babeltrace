@@ -606,7 +606,7 @@ directly compare a value to the \c bt_value_null variable.
 
     For example, bt_value_map_borrow_entry_value() can return
     \c bt_value_null if the requested key is mapped to a null value, but
-    it can also return \c NULL if the key is not found.
+    it can also return \c NULL if the key isn't found.
     @endparblock
 
 @sa bt_value_is_null() &mdash;
@@ -1085,7 +1085,7 @@ To append a null value, pass #bt_value_null as \bt_p{element_value}.
 @bt_pre_hot{value}
 @bt_pre_not_null{element_value}
 @pre
-    \bt_p{element_value} does not contain \bt_p{value}, recursively.
+    \bt_p{element_value} doesn't contain \bt_p{value}, recursively.
 
 @post
     <strong>On success</strong>, the length of \bt_p{value} is
@@ -1264,7 +1264,7 @@ bt_value_array_append_string_element(bt_value *value, const char *raw_value) __B
     Creates an empty array value and appends it to the array
     value \bt_p{value}.
 
-On success, if \bt_p{element_value} is not \c NULL, this function sets
+On success, if \bt_p{element_value} isn't \c NULL, this function sets
 \bt_p{*element_value} to a \em borrowed reference of the created empty
 array value.
 
@@ -1299,7 +1299,7 @@ bt_value_array_append_empty_array_element(bt_value *value,
     Creates an empty map value and appends it to the array
     value \bt_p{value}.
 
-On success, if \bt_p{element_value} is not \c NULL, this function sets
+On success, if \bt_p{element_value} isn't \c NULL, this function sets
 \bt_p{*element_value} to a \em borrowed reference of the created empty
 map value.
 
@@ -1375,7 +1375,7 @@ at index \bt_p{index}.
     bt_value_array_get_length()).
 @bt_pre_not_null{element_value}
 @pre
-    \bt_p{element_value} does not contain \bt_p{value}, recursively.
+    \bt_p{element_value} doesn't contain \bt_p{value}, recursively.
 
 @post
     <strong>On success</strong>, the length of \bt_p{value} is
@@ -1535,7 +1535,7 @@ On success, if \bt_p{value} already contains an entry with key
 @bt_pre_not_null{key}
 @bt_pre_not_null{entry_value}
 @pre
-    \bt_p{entry_value} does not contain \bt_p{value}, recursively.
+    \bt_p{entry_value} doesn't contain \bt_p{value}, recursively.
 
 @sa bt_value_map_insert_bool_entry() &mdash;
     Creates a boolean value and uses it to insert an entry in a map
@@ -1741,7 +1741,7 @@ bt_value_map_insert_string_entry(bt_value *value, const char *key,
     Creates an empty array value and inserts or replaces an entry with
     the key \bt_p{key} and this value in the map value \bt_p{value}.
 
-On success, if \bt_p{entry_value} is not \c NULL, this function sets
+On success, if \bt_p{entry_value} isn't \c NULL, this function sets
 \bt_p{*entry_value} to a \em borrowed reference of the created empty
 array value.
 
@@ -1780,7 +1780,7 @@ bt_value_map_insert_empty_array_entry(bt_value *value, const char *key,
     Creates an empty map value and inserts or replaces an entry with
     the key \bt_p{key} and this value in the map value \bt_p{value}.
 
-On success, if \bt_p{entry_value} is not \c NULL, this function sets
+On success, if \bt_p{entry_value} isn't \c NULL, this function sets
 \bt_p{*entry_value} to a \em borrowed reference of the created empty map
 value.
 
@@ -1974,7 +1974,7 @@ order.
 The iteration process stops when one of:
 
 - \bt_p{user_func} was called for each entry.
-- \bt_p{user_func} does not return
+- \bt_p{user_func} doesn't return
   #BT_VALUE_MAP_FOREACH_ENTRY_FUNC_STATUS_OK.
 
 @param[in] value
@@ -2309,7 +2309,7 @@ typedef enum bt_value_copy_status {
 This function deep-copies \bt_p{value} and sets \bt_p{*copy} to the
 result.
 
-Because \bt_p{*copy} is a deep copy, it does not contain, recursively,
+Because \bt_p{*copy} is a deep copy, it doesn't contain, recursively,
 any reference that \bt_p{value} contains, but the raw values are
 identical.
 

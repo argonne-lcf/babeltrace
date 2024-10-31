@@ -70,8 +70,8 @@ A <code>source.dust.input</code> component creates a single
 For each line of the input file, the \bt_msg_iter of
 a <code>source.dust.input</code> component emits an \bt_ev_msg.
 
-To simplify this example, a <code>source.dust.input</code> component is
-not resilient and needs a valid input and valid initialization
+To simplify this example, a <code>source.dust.input</code> component
+isn't resilient and needs a valid input and valid initialization
 parameters. The code also doesn't check the return status codes of API
 functions for simplicity, but you must check them in production code.
 
@@ -136,7 +136,7 @@ A <code>filter.distill.theone</code> component creates a single
 <code>out</code>.
 
 To simplify this example, a <code>filter.distill.theone</code> component
-is not resilient and needs a valid input and valid initialization
+isn't resilient and needs a valid input and valid initialization
 parameters. The code also doesn't check the return status codes of API
 functions for simplicity, but you must check them in production code.
 
@@ -201,7 +201,7 @@ For each line, there is:
   \ref api-tir-ev-prop-payload "payload field" of the \bt_ev
   of the event message.
 
-A <code>sink.epitome.output</code> component does not need any
+A <code>sink.epitome.output</code> component doesn't need any
 \ref api-comp-cls-dev-meth-init "initialization parameter": it just
 prints to the standard output.
 

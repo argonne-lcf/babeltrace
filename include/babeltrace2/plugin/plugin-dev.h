@@ -201,21 +201,21 @@ to use the macros of this API.
 The BT_PLUGIN() macro defines a plugin with a specific name and the
 ID <code>auto</code>.
 
-All the <code>BT_PLUGIN_*()</code> macros which do not end with
+All the <code>BT_PLUGIN_*()</code> macros which don't end with
 <code>_WITH_ID</code> refer to the <code>auto</code> plugin.
 
 There are two situations which demand that you use a custom plugin ID:
 
 - You want more than one plugin contained in your shared object file.
 
-  Although the \bt_name project does not recommend this, it is possible.
+  Although the \bt_name project doesn't recommend this, it's possible.
   This is why bt_plugin_find_all_from_file() returns a \bt_plugin_set
   instead of a single \bt_plugin.
 
   In this case, each plugin of the shared object needs its own, unique
   ID.
 
-- You want to give the plugin a name which is not a valid C identifier.
+- You want to give the plugin a name which isn't a valid C identifier.
 
   The BT_PLUGIN() macro accepts a C identifier as the plugin name, while
   the BT_PLUGIN_WITH_ID() accepts a C identifier for the ID and a C
@@ -239,7 +239,7 @@ BT_PLUGIN_AUTHOR_WITH_ID(my_plugin_id, "Patrick Bouchard");
     @parblock
     You can still use the <code>auto</code> ID with BT_PLUGIN_WITH_ID()
     to use the simpler macros afterwards while still giving the plugin a
-    name which is not a valid C identifier, for example:
+    name which isn't a valid C identifier, for example:
 
     @code
     BT_PLUGIN_WITH_ID(auto, "my-plugin-name");
@@ -264,7 +264,7 @@ class ID:
 - You want to add the component class to a specific plugin (other than
   <code>auto</code>, if you have more than one).
 
-- You want to give the component class a name which is not a valid C
+- You want to give the component class a name which isn't a valid C
   identifier.
 
   The <code>BT_PLUGIN_*_COMPONENT_CLASS_WITH_ID()</code> macros accept a
@@ -1467,7 +1467,7 @@ See the \ref api-msg-iter-cls-meth-seek-beg "seek beginning" and
     "Can seek beginning?" method of the message iterator class of the
     source component class.
 
-    Can be \c NULL, in which case it is equivalent to setting a method
+    Can be \c NULL, in which case it's equivalent to setting a method
     which always returns #BT_TRUE.
     @endparblock
 
@@ -1531,7 +1531,7 @@ methods.
     "Can seek ns from origin?" method of the message iterator class of
     the source component class.
 
-    Can be \c NULL, in which case it is equivalent to setting a method
+    Can be \c NULL, in which case it's equivalent to setting a method
     which always returns #BT_TRUE.
     @endparblock
 
@@ -1968,7 +1968,7 @@ See the \ref api-msg-iter-cls-meth-seek-beg "seek beginning" and
     "Can seek beginning?" method of the message iterator class of the
     filter component class.
 
-    Can be \c NULL, in which case it is equivalent to setting a method
+    Can be \c NULL, in which case it's equivalent to setting a method
     which always returns #BT_TRUE.
     @endparblock
 
@@ -2032,7 +2032,7 @@ methods.
     "Can seek ns from origin?" method of the message iterator class of
     the filter component class.
 
-    Can be \c NULL, in which case it is equivalent to setting a method
+    Can be \c NULL, in which case it's equivalent to setting a method
     which always returns #BT_TRUE.
     @endparblock
 
@@ -2667,7 +2667,7 @@ struct __bt_plugin_component_class_descriptor_attribute const * const *__bt_get_
  * Clang supports the no_sanitize variable attribute on global variables.
  * GCC only supports the no_sanitize_address function attribute, which is
  * not what we need. This is fine because, as far as we have seen, gcc
- * does not insert red zones around global variables.
+ * doesn't insert red zones around global variables.
  */
 #if defined(__clang__)
 # if __has_feature(address_sanitizer)

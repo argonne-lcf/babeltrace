@@ -28,7 +28,7 @@ extern "C" {
 @brief
     Containers of trace data.
 
-<strong><em>Fields</em></strong> are containers of trace data: they are
+<strong><em>Fields</em></strong> are containers of trace data: they're
 found in \bt_p_ev and \bt_p_pkt.
 
 Fields are instances of \bt_p_fc:

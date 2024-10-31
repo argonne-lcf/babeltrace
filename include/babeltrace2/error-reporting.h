@@ -34,7 +34,7 @@ errors from a user function (a \bt_comp_cls method, a
 listener, for example) to any function caller.
 
 Because \bt_name orchestrates pieces written by different authors,
-it is important that an error which occurs deep into the function call
+it's important that an error which occurs deep into the function call
 stack can percolate up to its callers.
 
 The very basic mechanism to report an error from a function is to
@@ -409,7 +409,7 @@ properties:
 
 This function can return \c NULL if the current thread has no error.
 
-Once you are done with the returned error, do one of:
+Once you're done with the returned error, do one of:
 
 - Call bt_error_release() to free the error object.
 
@@ -427,7 +427,7 @@ Once you are done with the returned error, do one of:
     the current thread has no error.
 
 @post
-    <strong>If this function does not return <code>NULL</code></strong>,
+    <strong>If this function doesn't return <code>NULL</code></strong>,
     the caller owns the returned error.
 
 @sa bt_error_release() &mdash;
@@ -953,7 +953,7 @@ const bt_error_cause *bt_error_borrow_cause_by_index(
 @brief
     Releases (frees) the error \bt_p{error}.
 
-After you call this function, \bt_p{error} does not exist.
+After you call this function, \bt_p{error} doesn't exist.
 
 Take the error of the current thread with bt_current_thread_take_error().
 
@@ -972,7 +972,7 @@ corresponds to catching an exception and rethrowing it.
 @bt_pre_not_null{error}
 
 @post
-    \bt_p{error} does not exist.
+    \bt_p{error} doesn't exist.
 
 @sa bt_current_thread_move_error() &mdash;
     Moves the ownership of an error to the library.

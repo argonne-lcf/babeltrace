@@ -583,7 +583,7 @@ Enumeration field classes have the following common property:
     #bt_field_class_enumeration_unsigned_mapping and
     #bt_field_class_enumeration_signed_mapping.
 
-    There is also the #bt_field_class_enumeration_mapping type for
+    There's also the #bt_field_class_enumeration_mapping type for
     common properties and operations (for example,
     bt_field_class_enumeration_mapping_get_label()).
     \ref api-fund-c-typing "Upcast" a specific enumeration field class
@@ -1919,7 +1919,7 @@ typedef enum bt_field_class_type {
 	 * Make sure the enumeration type is a 64-bit integer in case
 	 * the project needs field class types in the future.
 	 *
-	 * This is not part of the API.
+	 * This isn't part of the API.
 	 */
 	__BT_FIELD_CLASS_TYPE_BIG_VALUE						= 1ULL << 62,
 } bt_field_class_type;
@@ -2254,7 +2254,7 @@ See the \ref api-tir-fc-ba-prop-flags "flags" property.
     \bt_p{field_class} at index \bt_p{index}.
 
     The returned pointer remains valid as long as \bt_p{field_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{field_class}
@@ -2296,7 +2296,7 @@ If there's no flag having the label \bt_p{label} in
     if none.
 
     The returned pointer remains valid as long as \bt_p{field_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{field_class}
@@ -2371,7 +2371,7 @@ On success, if there's no active flags for \bt_p{value_as_integer},
     The array is owned by \bt_p{field_class} and remains valid as long
     as:
 
-    - \bt_p{field_class} is not modified.
+    - \bt_p{field_class} isn't modified.
     - You don't call this function again with \bt_p{field_class}.
     @endparblock
 @param[out] count
@@ -2960,7 +2960,7 @@ See the \ref api-tir-fc-enum-prop-mappings "mappings" property.
     \bt_p{field_class} at index \bt_p{index}.
 
     The returned pointer remains valid as long as \bt_p{field_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{field_class}
@@ -3002,7 +3002,7 @@ If there's no mapping having the label \bt_p{label} in
     if none.
 
     The returned pointer remains valid as long as \bt_p{field_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{field_class}
@@ -3044,7 +3044,7 @@ On success, if there's no mapping ranges containing the value
     The array is owned by \bt_p{field_class} and remains valid as long
     as:
 
-    - \bt_p{field_class} is not modified.
+    - \bt_p{field_class} isn't modified.
     - You don't call this function again with \bt_p{field_class}.
     @endparblock
 @param[out] count
@@ -3229,7 +3229,7 @@ See the \ref api-tir-fc-enum-prop-mappings "mappings" property.
     \bt_p{field_class} at index \bt_p{index}.
 
     The returned pointer remains valid as long as \bt_p{field_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{field_class}
@@ -3271,7 +3271,7 @@ If there's no mapping having the label \bt_p{label} in
     if none.
 
     The returned pointer remains valid as long as \bt_p{field_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{field_class}
@@ -3313,7 +3313,7 @@ On success, if there's no mapping ranges containing the value
     The array is owned by \bt_p{field_class} and remains valid as long
     as:
 
-    - \bt_p{field_class} is not modified.
+    - \bt_p{field_class} isn't modified.
     - You don't call this function again with \bt_p{field_class}.
     @endparblock
 @param[out] count
@@ -3680,7 +3680,7 @@ If \bt_p{field_class} has no media type, this function returns \c NULL.
     Media type of \bt_p{field_class}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{field_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{field_class}
@@ -3830,7 +3830,7 @@ extern uint64_t bt_field_class_array_static_get_length(
     or bt_field_class_array_dynamic_with_length_field_location_create().
     @endparblock
 
-If \bt_p{length_field_class} is not \c NULL, then an instance of
+If \bt_p{length_field_class} isn't \c NULL, then an instance of
 the created dynamic array field class has a linked length field.
 See \ref api-tir-fc-link "Fields with links to other fields"
 to learn more.
@@ -3848,7 +3848,7 @@ property values:
   <tr>
     <td>\ref api-tir-fc-darray-prop-len-fp "Length field path"
     <td>
-      \em None (if \bt_p{length_field_class} is not \c NULL, this
+      \em None (if \bt_p{length_field_class} isn't \c NULL, this
       property becomes available when the returned field class becomes
       part of an \bt_ev_cls or of a \bt_stream_cls)
   <tr>
@@ -3877,7 +3877,7 @@ property values:
 @bt_pre_not_null{element_field_class}
 @bt_pre_fc_not_in_tc{element_field_class}
 @pre
-    <strong>If \bt_p{length_field_class} is not \c NULL</strong>,
+    <strong>If \bt_p{length_field_class} isn't \c NULL</strong>,
     \bt_p{length_field_class} is an \bt_uint_fc.
 
 @bt_post_success_frozen{element_field_class}
@@ -4204,7 +4204,7 @@ See the \ref api-tir-fc-struct-prop-members "members" property.
     \bt_p{field_class} at index \bt_p{index}.
 
     The returned pointer remains valid as long as \bt_p{field_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{field_class}
@@ -4258,7 +4258,7 @@ If there's no member having the name \bt_p{name} in
     if none.
 
     The returned pointer remains valid as long as \bt_p{field_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{field_class}
@@ -5244,7 +5244,7 @@ bt_field_class_option_with_selector_field_integer_signed_borrow_selector_ranges_
     or bt_field_class_variant_with_selector_field_location_integer_signed_create().
     @endparblock
 
-If \bt_p{selector_field_class} is not \c NULL, then an instance of
+If \bt_p{selector_field_class} isn't \c NULL, then an instance of
 the created variant field class has a linked selector field.
 See \ref api-tir-fc-link "Fields with links to other fields"
 to learn more.
@@ -5259,7 +5259,7 @@ property values:
   <tr>
     <td>\ref api-tir-fc-var-prop-sel-fp "Selector field path"
     <td>
-      \em None (if \bt_p{selector_field_class} is not \c NULL, this
+      \em None (if \bt_p{selector_field_class} isn't \c NULL, this
       property becomes available when the returned field class becomes
       part of an \bt_ev_cls or of a \bt_stream_cls)
   <tr>
@@ -5286,7 +5286,7 @@ property values:
 @bt_pre_not_null{trace_class}
 @bt_pre_tc_with_mip{trace_class, 0}
 @pre
-    <strong>If \bt_p{selector_field_class} is not \c NULL</strong>,
+    <strong>If \bt_p{selector_field_class} isn't \c NULL</strong>,
     \bt_p{selector_field_class} is an \bt_int_fc.
 
 @bt_post_success_frozen{element_field_class}
@@ -5345,7 +5345,7 @@ See the \ref api-tir-fc-var-prop-opts "options" property.
     \bt_p{field_class} at index \bt_p{index}.
 
     The returned pointer remains valid as long as \bt_p{field_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{field_class}
@@ -5399,7 +5399,7 @@ If there's no option having the name \bt_p{name} in
     if none.
 
     The returned pointer remains valid as long as \bt_p{field_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{field_class}
@@ -5678,7 +5678,7 @@ See the \ref api-tir-fc-var-prop-opts "options" property.
 @bt_pre_hot{field_class}
 @bt_pre_is_var_wos_fc{field_class}
 @pre
-    <strong>If \bt_p{name} is not \c NULL</strong>, then
+    <strong>If \bt_p{name} isn't \c NULL</strong>, then
     \bt_p{field_class} has no option with the name \bt_p{name}.
 @pre
     <strong>If \bt_p{field_class} was created from a
@@ -5880,7 +5880,7 @@ See the \ref api-tir-fc-var-prop-opts "options" property.
 @bt_pre_hot{field_class}
 @bt_pre_is_var_wuis_fc{field_class}
 @pre
-    <strong>If \bt_p{name} is not \c NULL</strong>, then
+    <strong>If \bt_p{name} isn't \c NULL</strong>, then
     \bt_p{field_class} has no option with the name \bt_p{name}.
 @pre
     <strong>If \bt_p{field_class} was created from a
@@ -5893,7 +5893,7 @@ See the \ref api-tir-fc-var-prop-opts "options" property.
 @pre
     \bt_p{ranges} contains one or more unsigned integer ranges.
 @pre
-    The unsigned integer ranges in \bt_p{ranges} do not overlap
+    The unsigned integer ranges in \bt_p{ranges} don't overlap
     any unsigned integer range of any existing option in
     \bt_p{field_class}.
 
@@ -5925,7 +5925,7 @@ See the \ref api-tir-fc-var-prop-opts "options" property.
     \bt_p{field_class} at index \bt_p{index}.
 
     The returned pointer remains valid as long as \bt_p{field_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{field_class}
@@ -5967,7 +5967,7 @@ If there's no option having the name \bt_p{name} in
     if none.
 
     The returned pointer remains valid as long as \bt_p{field_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{field_class}
@@ -6138,7 +6138,7 @@ See the \ref api-tir-fc-var-prop-opts "options" property.
 @bt_pre_hot{field_class}
 @bt_pre_is_var_wsis_fc{field_class}
 @pre
-    <strong>If \bt_p{name} is not \c NULL</strong>, then
+    <strong>If \bt_p{name} isn't \c NULL</strong>, then
     \bt_p{field_class} has no option with the name \bt_p{name}.
 @pre
     <strong>If \bt_p{field_class} was created from a
@@ -6151,7 +6151,7 @@ See the \ref api-tir-fc-var-prop-opts "options" property.
 @pre
     \bt_p{ranges} contains one or more signed integer ranges.
 @pre
-    The signed integer ranges in \bt_p{ranges} do not overlap with
+    The signed integer ranges in \bt_p{ranges} don't overlap with
     any signed integer range of any existing option in
     \bt_p{field_class}.
 
@@ -6184,7 +6184,7 @@ See the \ref api-tir-fc-var-prop-opts "options" property.
     \bt_p{field_class} at index \bt_p{index}.
 
     The returned pointer remains valid as long as \bt_p{field_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{field_class}
@@ -6226,7 +6226,7 @@ If there's no option having the name \bt_p{name} in
     if none.
 
     The returned pointer remains valid as long as \bt_p{field_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{field_class}

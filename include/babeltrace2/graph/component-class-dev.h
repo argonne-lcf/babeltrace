@@ -212,14 +212,14 @@ The available component class methods to implement are:
     \bt_sink_comp consume and process \bt_p_msg.
 
     This method typically gets \em one message batch from one (or more)
-    upstream \bt_msg_iter. You are free to get more than one batch of
+    upstream \bt_msg_iter. You're free to get more than one batch of
     messages if needed; however, keep in mind that the \bt_name project
     recommends that this method executes fast enough so as not to block
     an interactive application running on the same thread.
 
     During what you consider to be a long, blocking operation, the
-    project recommends that you periodically check whether or not you
-    are interrupted with bt_self_component_sink_is_interrupted(). When
+    project recommends that you periodically check whether or not you're
+    interrupted with bt_self_component_sink_is_interrupted(). When
     you are, you can return either
     #BT_COMPONENT_CLASS_SINK_CONSUME_METHOD_STATUS_AGAIN or
     #BT_COMPONENT_CLASS_SINK_CONSUME_METHOD_STATUS_ERROR, depending on
@@ -250,7 +250,7 @@ The available component class methods to implement are:
     destroy/free/finalize any user data you have (retrieved with
     bt_self_component_get_data()).
 
-    The \bt_name library does not specify exactly when this method is
+    The \bt_name library doesn't specify exactly when this method is
     called, but guarantees that it's called before the component is
     destroyed.
 
@@ -900,7 +900,7 @@ typedef enum bt_component_class_initialize_method_status {
 See the \ref api-comp-cls-dev-meth-init "initialize" method.
 
 As of \bt_name_version_min_maj, the \bt_p{configuration} parameter
-is not used.
+isn't used.
 
 @param[in] self_component
     Source component instance.
@@ -947,7 +947,7 @@ typedef bt_component_class_initialize_method_status
 See the \ref api-comp-cls-dev-meth-init "initialize" method.
 
 As of \bt_name_version_min_maj, the \bt_p{configuration} parameter
-is not used.
+isn't used.
 
 @param[in] self_component
     Filter component instance.
@@ -994,7 +994,7 @@ typedef bt_component_class_initialize_method_status
 See the \ref api-comp-cls-dev-meth-init "initialize" method.
 
 As of \bt_name_version_min_maj, the \bt_p{configuration} parameter
-is not used.
+isn't used.
 
 @param[in] self_component
     Sink component instance.

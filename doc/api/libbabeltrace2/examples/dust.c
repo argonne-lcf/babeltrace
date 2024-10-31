@@ -352,7 +352,7 @@ end:
  * messages.
  *
  * To keep this example simple, we put a single message into `messages`
- * and set `*count` to 1 (if the message iterator is not ended).
+ * and set `*count` to 1 (if the message iterator isn't ended).
  */
 static
 bt_message_iterator_class_next_method_status dust_in_message_iterator_next(

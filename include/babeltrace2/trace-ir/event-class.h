@@ -181,7 +181,7 @@ An event class has the following properties:
 
     The specific context of an event class instance (\bt_ev) contains
     any contextual data of which the layout is specific to the
-    class of the event and which does not belong to the payload.
+    class of the event and which doesn't belong to the payload.
 
     Use bt_event_class_set_specific_context_field_class()
     bt_event_class_borrow_specific_context_field_class(),
@@ -363,7 +363,7 @@ On success, the returned event class has the following property values:
     <code>bt_stream_class_assigns_automatic_event_class_id(stream_class)</code>
     returns #BT_FALSE.
 @pre
-    \bt_p{stream_class} does not contain an event class with the numeric
+    \bt_p{stream_class} doesn't contain an event class with the numeric
     ID \bt_p{id}.
 
 @bt_post_success_frozen{stream_class}
@@ -501,7 +501,7 @@ If \bt_p{event_class} has no namespace, this function returns \c NULL.
     Namespace of \bt_p{event_class}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{event_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{event_class}
@@ -622,7 +622,7 @@ If \bt_p{event_class} has no UID, this function returns \c NULL.
     UID of \bt_p{event_class}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{event_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{event_class}
@@ -650,7 +650,7 @@ If \bt_p{event_class} has no name, this function returns \c NULL.
     Name of \bt_p{event_class}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{event_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{event_class}
@@ -799,7 +799,7 @@ See the \ref api-tir-ev-cls-prop-log-lvl "log level" property.
 @retval #BT_PROPERTY_AVAILABILITY_AVAILABLE
     The log level of \bt_p{event_class} is available.
 @retval #BT_PROPERTY_AVAILABILITY_NOT_AVAILABLE
-    The log level of \bt_p{event_class} is not available.
+    The log level of \bt_p{event_class} isn't available.
 
 @bt_pre_not_null{event_class}
 @bt_pre_not_null{log_level}
@@ -873,7 +873,7 @@ If \bt_p{event_class} has no EMF URI, this function returns \c NULL.
     EMF URI of \bt_p{event_class}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{event_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{event_class}
@@ -927,7 +927,7 @@ See the \ref api-tir-ev-cls-prop-p-fc "payload field class" property.
 @bt_pre_is_struct_fc{field_class}
 @pre
     \bt_p{field_class}, or any of its contained field classes,
-    is not already part of a \bt_stream_cls or of an event class.
+    isn't already part of a \bt_stream_cls or of an event class.
 @pre
     If any of the field classes recursively contained in
     \bt_p{field_class} has a
@@ -1007,7 +1007,7 @@ property.
 @bt_pre_is_struct_fc{field_class}
 @pre
     \bt_p{field_class}, or any of its contained field classes,
-    is not already part of a \bt_stream_cls or of an event class.
+    isn't already part of a \bt_stream_cls or of an event class.
 @pre
     If any of the field classes recursively contained in
     \bt_p{field_class} has a

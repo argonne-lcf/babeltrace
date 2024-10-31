@@ -257,7 +257,7 @@ event message can only occur:
   <dd>After a \bt_pb_msg and before a \bt_pe_msg.</dd>
 
   <dt>
-    If the class of the stream does not support packets
+    If the class of the stream doesn't support packets
   </dt>
   <dd>After the \bt_sb_msg and before the \bt_se_msg.</dd>
 </dl>
@@ -278,7 +278,7 @@ To create an event message for a given stream, use:
       <dd>bt_message_event_create_with_packet_and_default_clock_snapshot()</dd>
 
       <dt>
-        If the class of the stream does not have a
+        If the class of the stream doesn't have a
         \ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
       </dt>
       <dd>bt_message_event_create_with_packet()</dd>
@@ -290,7 +290,7 @@ To create an event message for a given stream, use:
   </dd>
 
   <dt>
-    If the class of the stream does not supports packets
+    If the class of the stream doesn't supports packets
   </dt>
   <dd>
     <dl>
@@ -300,7 +300,7 @@ To create an event message for a given stream, use:
       <dd>bt_message_event_create_with_default_clock_snapshot()</dd>
 
       <dt>
-        If the class of the stream does not have a
+        If the class of the stream doesn't have a
         \ref api-tir-stream-cls-prop-def-clock-cls "default clock class"
       </dt>
       <dd>bt_message_event_create()</dd>
@@ -389,7 +389,7 @@ To create a packet beginning message for a given stream, use:
   <dd>bt_message_packet_beginning_create_with_default_clock_snapshot()</dd>
 
   <dt>
-    If, for the class of this stream, packets do not have a beginning
+    If, for the class of this stream, packets don't have a beginning
     default clock snapshot
   </dt>
   <dd>bt_message_packet_beginning_create()</dd>
@@ -462,7 +462,7 @@ To create a packet end message for a given stream, use:
   <dd>bt_message_packet_end_create_with_default_clock_snapshot()</dd>
 
   <dt>
-    If, for the class of this stream, packets do not have an end default
+    If, for the class of this stream, packets don't have an end default
     clock snapshot
   </dt>
   <dd>bt_message_packet_end_create()</dd>
@@ -531,7 +531,7 @@ To create a discarded events message for a given stream, use:
   <dd>bt_message_discarded_events_create_with_default_clock_snapshots()</dd>
 
   <dt>
-    If, for the class of this stream, discarded events do not have default
+    If, for the class of this stream, discarded events don't have default
     clock snapshots
   </dt>
   <dd>bt_message_discarded_events_create()</dd>
@@ -655,7 +655,7 @@ To create a discarded packets message for a given stream, use:
   <dd>bt_message_discarded_packets_create_with_default_clock_snapshots()</dd>
 
   <dt>
-    If, for the class of this stream, discarded packets do not have default
+    If, for the class of this stream, discarded packets don't have default
     clock snapshots
   </dt>
   <dd>bt_message_discarded_packets_create()</dd>
@@ -762,7 +762,7 @@ message iterator, and can occur at any position within the sequence.
 This message is mostly significant for real-time message iterators: if a
 message iterator A indicates that there's no messages until a given
 point in time T, then a downstream filter message iterator B which
-relies on multiple upstream message iterators does not have to wait for
+relies on multiple upstream message iterators doesn't have to wait for
 new messages from A until T.
 
 In other words, a message iterator inactivity message can help
@@ -803,7 +803,7 @@ used by \bt_p_comp and \bt_p_msg_iter to exchange messages within a
 trace processing graph.
 
 The MIP covers everything related to messages and what they contain, as
-well as how they are ordered within the \ref api-msg-seq "sequence" that
+well as how they're ordered within the \ref api-msg-seq "sequence" that
 a message iterator produces.
 
 For example:
@@ -851,7 +851,7 @@ to be able to introduce new features or even major breaking changes
 without breaking existing \bt_p_comp_cls. This is especially important
 considering that \bt_name supports \bt_p_plugin written by different
 authors. Of course one of the objectives of the project is to bump the
-MIP version as rarely as possible. When it is required, though, it's a
+MIP version as rarely as possible. When it's required, though, it's a
 welcome tool to make the project evolve gracefully.
 
 The Message Interchange Protocol has no dedicated documentation as this
@@ -859,7 +859,7 @@ very message API (and its contained APIs, like \ref api-tir)
 documentation is enough. You can consider that all the
 functions of the message and trace IR objects have an implicit MIP
 version \ref api-fund-pre-post "precondition". When a given
-function documentation does not explicitly document a MIP version
+function documentation doesn't explicitly document a MIP version
 precondition, it means that the effective MIP version has no effect on
 the behaviour of said function.
 
@@ -1461,7 +1461,7 @@ values:
   <tr>
     <td>\ref api-msg-ev-prop-ev "Event"
     <td>
-      An instance (with \bt_p_field that are not set) of
+      An instance (with \bt_p_field that aren't set) of
       \bt_p{event_class}.
   <tr>
     <td>\ref api-msg-se-prop-cs "Default clock snapshot"
@@ -1542,7 +1542,7 @@ values:
   <tr>
     <td>\ref api-msg-ev-prop-ev "Event"
     <td>
-      An instance (with \bt_p_field that are not set) of
+      An instance (with \bt_p_field that aren't set) of
       \bt_p{event_class}.
   <tr>
     <td>\ref api-msg-se-prop-cs "Default clock snapshot"
@@ -1628,7 +1628,7 @@ values:
   <tr>
     <td>\ref api-msg-ev-prop-ev "Event"
     <td>
-      An instance (with \bt_p_field that are not set) of
+      An instance (with \bt_p_field that aren't set) of
       \bt_p{event_class}.
   <tr>
     <td>\ref api-msg-se-prop-cs "Default clock snapshot"
@@ -1714,7 +1714,7 @@ values:
   <tr>
     <td>\ref api-msg-ev-prop-ev "Event"
     <td>
-      An instance (with \bt_p_field that are not set) of
+      An instance (with \bt_p_field that aren't set) of
       \bt_p{event_class}.
   <tr>
     <td>\ref api-msg-se-prop-cs "Default clock snapshot"
@@ -2609,7 +2609,7 @@ property.
 @retval #BT_PROPERTY_AVAILABILITY_AVAILABLE
     The number of discarded events of \bt_p{message} is available.
 @retval #BT_PROPERTY_AVAILABILITY_NOT_AVAILABLE
-    The number of discarded events of \bt_p{message} is not available.
+    The number of discarded events of \bt_p{message} isn't available.
 
 @bt_pre_not_null{message}
 @bt_pre_is_disc_ev_msg{message}
@@ -2929,7 +2929,7 @@ property.
 @retval #BT_PROPERTY_AVAILABILITY_AVAILABLE
     The number of discarded packets of \bt_p{message} is available.
 @retval #BT_PROPERTY_AVAILABILITY_NOT_AVAILABLE
-    The number of discarded packets of \bt_p{message} is not available.
+    The number of discarded packets of \bt_p{message} isn't available.
 
 @bt_pre_not_null{message}
 @bt_pre_is_disc_pkt_msg{message}
@@ -3260,7 +3260,7 @@ If this function doesn't find an operative MIP version within
     \bt_p{component_descriptors} contains one or more component
     descriptors.
 @pre
-    <strong>If \bt_p{mip_version_restriction} is not \c NULL</strong>,
+    <strong>If \bt_p{mip_version_restriction} isn't \c NULL</strong>,
     then no upper value within the ranges of
     \bt_p{mip_version_restriction} is greater
     than&nbsp;\bt_max_mip_version

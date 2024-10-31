@@ -47,7 +47,7 @@ In the illustration above, notice that:
 A stream is a \ref api-tir "trace IR" data object.
 
 A stream is said to be a \em conceptual sequence of messages because the
-stream object itself does not contain messages: it only represents a
+stream object itself doesn't contain messages: it only represents a
 common timeline to which messages are associated.
 
 \bt_cp_comp exchange messages, within a trace processing \bt_graph,
@@ -56,8 +56,8 @@ which can belong to different streams, as long as the stream clocks are
 
 A typical use case for streams is to use one for each traced CPU. Then
 the messages related to a given stream are the ones which occurred on a
-given CPU. Other schemes are possible: they are completely
-application-specific, and \bt_name does not enforce any specific
+given CPU. Other schemes are possible: they're completely
+application-specific, and \bt_name doesn't enforce any specific
 stream arrangement pattern.
 
 A \bt_trace contains streams. All the streams of a
@@ -299,7 +299,7 @@ On success, the returned stream has the following property values:
     returns #BT_FALSE.
 @bt_pre_not_null{trace}
 @pre
-    \bt_p{trace} does not contain an instance of \bt_p{stream_class}
+    \bt_p{trace} doesn't contain an instance of \bt_p{stream_class}
     with the numeric ID \bt_p{id}.
 
 @bt_post_success_frozen{stream_class}
@@ -470,7 +470,7 @@ If \bt_p{stream} has no name, this function returns \c NULL.
     Name of \bt_p{stream}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{stream}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{stream}

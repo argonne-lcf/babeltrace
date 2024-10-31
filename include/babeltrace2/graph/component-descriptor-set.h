@@ -33,7 +33,7 @@ A <strong><em>component descriptor set</em></strong>
 is an \em unordered set of component descriptors.
 
 A <strong><em>component descriptor</em></strong> describes a
-prospective \bt_comp, that is, everything that is needed to
+prospective \bt_comp, that is, everything that's needed to
 \ref api-graph-lc-add "instantiate a component class" within a
 trace processing \bt_graph without actually doing it:
 
@@ -157,7 +157,7 @@ bt_component_descriptor_set_add_descriptor(
     Parameters which would be passed to the initialization method of
     the described component as the \bt_p{params} parameter.
 
-    Can be \c NULL, in which case it is equivalent to passing an empty
+    Can be \c NULL, in which case it's equivalent to passing an empty
     \bt_map_val.
     @endparblock
 @param[in] initialize_method_data

@@ -33,8 +33,8 @@ of a \bt_stream clock (a \bt_clock_cls instance).
 
 A clock snapshot is a \ref api-tir "trace IR" data object.
 
-<em>Stream clocks</em> only exist conceptually in \bt_name because they
-are stateful objects. \bt_cp_msg cannot refer to stateful objects
+<em>Stream clocks</em> only exist conceptually in \bt_name because
+they're stateful objects. \bt_cp_msg cannot refer to stateful objects
 because they must not change while being transported from one
 \bt_comp to the other.
 

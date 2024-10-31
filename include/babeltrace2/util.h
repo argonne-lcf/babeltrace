@@ -107,9 +107,9 @@ code if any step of the computation process causes an integer overflow.
     Integer overflow while computing the result.
 
 @pre
-    \bt_p{frequency} is not 0.
+    \bt_p{frequency} isn't 0.
 @pre
-    \bt_p{frequency} is not <code>UINT64_C(-1)</code>.
+    \bt_p{frequency} isn't <code>UINT64_C(-1)</code>.
 @pre
     \bt_p{frequency} is greater than \bt_p{offset_cycles}.
 @pre

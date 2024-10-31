@@ -139,7 +139,7 @@ void distill_message_iterator_finalize(
  * Returns `true` if `message` passes, that is, one of:
  *
  * * It's not an event message.
- * * The event message does not need to be discarded based on its event
+ * * The event message doesn't need to be discarded based on its event
  *   class's name.
  */
 static
@@ -184,7 +184,7 @@ end:
  * messages.
  *
  * To keep this example simple, we put a single message into `messages`
- * and set `*count` to 1 (if the message iterator is not ended).
+ * and set `*count` to 1 (if the message iterator isn't ended).
  */
 static
 bt_message_iterator_class_next_method_status distill_message_iterator_next(

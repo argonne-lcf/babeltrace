@@ -8,7 +8,7 @@
 #define BABELTRACE2_BABELTRACE_H
 
 /*
- * Tell the specific headers that they are included from this header.
+ * Tell the specific headers that they're included from this header.
  *
  * Do NOT define `__BT_IN_BABELTRACE_H` in user code.
  */

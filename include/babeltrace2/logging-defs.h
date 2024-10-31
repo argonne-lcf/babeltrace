@@ -5,7 +5,7 @@
  */
 
 /*
- * No include guards here: it is safe to include this file multiple
+ * No include guards here: it's safe to include this file multiple
  * times.
  */
 

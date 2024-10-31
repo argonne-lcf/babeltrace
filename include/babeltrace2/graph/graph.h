@@ -77,7 +77,7 @@ dynamically (see \ref api-comp-cls-dev).
 The connections between component ports in a trace processing graph
 indicate the needed topology to achieve a trace processing task. That
 being said,
-\bt_p_msg do not flow within connections. Instead, a source-to-sink
+\bt_p_msg don't flow within connections. Instead, a source-to-sink
 or filter-to-sink connection makes it
 possible for a sink component to create a \bt_msg_iter on its end of
 the connection (an \bt_iport). In turn, a filter component message
@@ -302,7 +302,7 @@ when you \ref api-graph-lc-run "run" the trace processing graph:
 
 <h2>\anchor api-graph-lc-run Run</h2>
 
-When you are done configuring a trace processing graph, you can run it
+When you're done configuring a trace processing graph, you can run it
 with bt_graph_run().
 
 bt_graph_run() does \em not return until one of:
@@ -942,7 +942,7 @@ about adding a simple component to a trace processing graph.
 @bt_pre_not_null{message_iterator}
 
 @post
-    The reference count of \bt_p{message_iterator} is not changed.
+    The reference count of \bt_p{message_iterator} isn't changed.
 
 @sa bt_graph_add_simple_sink_component() &mdash;
     Creates and adds a simple sink component to a trace processing
@@ -1002,10 +1002,10 @@ it's the turn of this sink component to consume in bt_graph_run_once().
 See \ref api-graph-lc-add-ss "Add a simple sink component" to learn more
 about adding a simple component to a trace processing graph.
 
-If you are not done consuming messages, return
+If you're not done consuming messages, return
 #BT_GRAPH_SIMPLE_SINK_COMPONENT_CONSUME_FUNC_STATUS_OK.
 
-If you are done consuming messages, return
+If you're done consuming messages, return
 #BT_GRAPH_SIMPLE_SINK_COMPONENT_CONSUME_FUNC_STATUS_END.
 
 If you wish to avoid a blocking operation and make
@@ -1037,7 +1037,7 @@ bt_graph_run() or bt_graph_run_once() aware, return
 @bt_pre_not_null{message_iterator}
 
 @post
-    The reference count of \bt_p{message_iterator} is not changed.
+    The reference count of \bt_p{message_iterator} isn't changed.
 
 @sa bt_graph_add_simple_sink_component() &mdash;
     Creates and adds a simple sink component to a trace processing
@@ -1217,7 +1217,7 @@ this function.
     \bt_p{downstream_port} is unconnected
     (bt_port_is_connected() returns #BT_FALSE).
 @pre
-    Connecting \bt_p{upstream_port} to \bt_p{downstream_port} does not
+    Connecting \bt_p{upstream_port} to \bt_p{downstream_port} doesn't
     form a connection cycle within \bt_p{graph}.
 */
 extern bt_graph_connect_ports_status bt_graph_connect_ports(bt_graph *graph,
@@ -1266,7 +1266,7 @@ typedef enum bt_graph_run_status {
 @brief
     Runs the trace processing graph \bt_p{graph}, calling the
     \ref api-comp-cls-dev-meth-consume "consuming method" of each
-    \bt_sink_comp in a round robin fashion until they are all done
+    \bt_sink_comp in a round robin fashion until they're all done
     consuming or an exception occurs.
 
 See \ref api-graph-lc-run "Run" to learn more about running a trace
@@ -1479,10 +1479,10 @@ typedef enum bt_graph_add_interrupter_status {
     \bt_p_sink_comp and \bt_p_msg_iter of the trace processing graph
     \bt_p{graph}, as well as to the graph itself.
 
-Sink components can check whether or not they are interrupted
+Sink components can check whether or not they're interrupted
 with bt_self_component_sink_is_interrupted().
 
-Message iterators can check whether or not they are interrupted
+Message iterators can check whether or not they're interrupted
 with bt_self_message_iterator_is_interrupted().
 
 The bt_graph_run() loop intermittently checks whether or not any of the

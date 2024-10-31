@@ -31,7 +31,7 @@ a single boolean state: set or not set.
 
 You can use an interrupter to interrupt a running trace processing
 \bt_graph or \ref api-qexec "query". The user and library functions periodically
-check if they are interrupted (with
+check if they're interrupted (with
 bt_self_component_sink_is_interrupted(),
 bt_self_message_iterator_is_interrupted(), or
 bt_query_executor_is_interrupted()); meanwhile, another thread or

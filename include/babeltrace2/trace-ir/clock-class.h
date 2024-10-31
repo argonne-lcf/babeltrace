@@ -462,9 +462,9 @@ See the \ref api-tir-clock-cls-prop-freq "frequency" property.
 @bt_pre_not_null{clock_class}
 @bt_pre_hot{clock_class}
 @pre
-    \bt_p{frequency} is not 0.
+    \bt_p{frequency} isn't 0.
 @pre
-    \bt_p{frequency} is not <code>UINT64_C(-1)</code>.
+    \bt_p{frequency} isn't <code>UINT64_C(-1)</code>.
 @pre
     \bt_p{frequency} is greater than the offset in cycles of the
     clock class
@@ -937,7 +937,7 @@ See the \ref api-tir-clock-cls-prop-origin "origin" property.
     Origin namespace of \bt_p{clock_class}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{clock_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{clock_class}
@@ -971,7 +971,7 @@ See the \ref api-tir-clock-cls-prop-origin "origin" property.
     bt_clock_class_get_origin_uid() also doesn't return \c NULL.
 
     The returned pointer remains valid as long as \bt_p{clock_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{clock_class}
@@ -1005,7 +1005,7 @@ See the \ref api-tir-clock-cls-prop-origin "origin" property.
     bt_clock_class_get_origin_name() also doesn't return \c NULL.
 
     The returned pointer remains valid as long as \bt_p{clock_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{clock_class}
@@ -1083,7 +1083,7 @@ If \bt_p{clock_class} has no namespace, this function returns \c NULL.
     Namespace of \bt_p{clock_class}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{clock_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{clock_class}
@@ -1156,7 +1156,7 @@ If \bt_p{clock_class} has no name, this function returns \c NULL.
     Name of \bt_p{clock_class}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{clock_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{clock_class}
@@ -1230,7 +1230,7 @@ If \bt_p{clock_class} has no UID, this function returns \c NULL.
     UID of \bt_p{clock_class}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{clock_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{clock_class}
@@ -1343,7 +1343,7 @@ If \bt_p{clock_class} has no UUID, this function returns \c NULL.
     UUID of \bt_p{clock_class}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{clock_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{clock_class}
@@ -1399,7 +1399,7 @@ If \bt_p{clock_class} has no description, this function returns \c NULL.
     Description of \bt_p{clock_class}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{clock_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{clock_class}

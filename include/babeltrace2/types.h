@@ -149,7 +149,7 @@ typedef uint8_t const *bt_uuid;
 
 Some getter functions of the API, such as
 bt_event_class_get_log_level(), return, by output parameter, an optional
-object property which is not a pointer. In that case, the function
+object property which isn't a pointer. In that case, the function
 either:
 
 - Returns #BT_PROPERTY_AVAILABILITY_AVAILABLE and sets an output
@@ -165,7 +165,7 @@ typedef enum bt_property_availability {
 
 	/*!
 	@brief
-	    Property is not available.
+	    Property isn't available.
 	*/
 	BT_PROPERTY_AVAILABILITY_NOT_AVAILABLE	= 0,
 } bt_property_availability;

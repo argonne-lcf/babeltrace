@@ -83,17 +83,17 @@ example).
 
 Common function preconditions are:
 
-- A pointer parameter is not \c NULL.
+- A pointer parameter isn't \c NULL.
 
-- An index parameter is not ouf of bounds.
+- An index parameter isn't ouf of bounds.
 
-- A string or container parameter is not empty.
+- A string or container parameter isn't empty.
 
 - An object parameter has a given conceptual type. For example, you
   cannot call bt_value_array_get_length() with a
   \bt_bool_val.
 
-- An object parameter is not \ref api-fund-freezing "frozen".
+- An object parameter isn't \ref api-fund-freezing "frozen".
 
 - An object parameter has some specific state.
 
@@ -169,8 +169,8 @@ Some \bt_name objects are \em shared while some others are \em unique:
     parameter.
 
     When the reference count of a given object reaches zero, it \em can
-    be destroyed. Some shared objects, however, have a lifetime that is
-    managed by another shared object. For example, an \bt_ev_cls is not
+    be destroyed. Some shared objects, however, have a lifetime that's
+    managed by another shared object. For example, an \bt_ev_cls isn't
     destroyed until its parent \bt_stream_cls is also destroyed, even if
     its reference count technically reaches zero.
 
@@ -195,7 +195,7 @@ Some \bt_name objects are \em shared while some others are \em unique:
 
   <dt>\anchor api-fund-unique-object Unique object</dt>
   <dd>
-    A \em unique object does not have a reference count: another object
+    A \em unique object doesn't have a reference count: another object
     is always its sole owner.
 
     Because you cannot get a new unique object reference, you \em must
@@ -311,7 +311,7 @@ Simple property getter functions do not end with \c _const.
 
 \ref api-fund-shared-object "Reference count" changing functions, ending
 with \c _get_ref and \c _put_ref(), accept a \c const object pointer
-parameter: the library does not consider that the nature of an object is
+parameter: the library doesn't consider that the nature of an object is
 altered when its reference count changes.
 
 @subsection api-fund-int-types C integer types
@@ -352,7 +352,7 @@ When a function returns an optional property or object:
         #BT_PROPERTY_AVAILABILITY_AVAILABLE.
       </dd>
 
-      <dt>If the property is not available</dt>
+      <dt>If the property isn't available</dt>
       <dd>
         The function returns #BT_PROPERTY_AVAILABILITY_NOT_AVAILABLE.
       </dd>

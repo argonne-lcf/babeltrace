@@ -166,7 +166,7 @@ The available message iterator class methods to implement are:
     Within this method, your receive the specific time to seek as the
     \bt_p{ns_from_origin} parameter. You don't receive any
     \bt_clock_cls: the method operates at the nanosecond from some
-    origin level and it is left to the implementation to decide whether
+    origin level and it's left to the implementation to decide whether
     or not the message iterator can seek this point in time.
 
     If you don't implement this method, then, if you implement the
@@ -198,7 +198,7 @@ The available message iterator class methods to implement are:
     destroy/free/finalize any user data you have (retrieved with
     bt_self_message_iterator_get_data()).
 
-    The \bt_name library does not specify exactly when this method is
+    The \bt_name library doesn't specify exactly when this method is
     called, but guarantees that it's called before the message iterator
     is destroyed.
 
@@ -253,7 +253,7 @@ The available message iterator class methods to implement are:
     option and the beginning seeking capability of a message iterator
     (bt_message_iterator_can_seek_beginning())
     to make it seek a message occurring at or after a specific time even
-    when the message iterator does not implement the
+    when the message iterator doesn't implement the
     \ref api-msg-iter-cls-meth-seek-ns "seek ns from origin" method.
 
     Set this optional method with
@@ -316,9 +316,9 @@ The available message iterator class methods to implement are:
       </dd>
     </dl>
 
-    For the message iterator of a source component, you are free to
+    For the message iterator of a source component, you're free to
     create as many as \bt_p{capacity} messages. For the message iterator
-    of a filter component, you are free to get more than one batch of
+    of a filter component, you're free to get more than one batch of
     messages from upstream message iterators if needed. However, in both
     cases, keep in mind that the \bt_name project recommends that this
     method executes fast enough so as not to block an interactive
@@ -389,7 +389,7 @@ The available message iterator class methods to implement are:
     \ref api-msg-iter-cls-meth-can-seek-beg "can seek beginning?"
     method can indicate whether or not your message iterator can
     currently seek its beginning. If you implement it, the library
-    guarantees that it is called and returns #BT_TRUE before this "seek
+    guarantees that it's called and returns #BT_TRUE before this "seek
     beginning" is called, without any other message iterator methods
     being called in between.
 
@@ -410,7 +410,7 @@ The available message iterator class methods to implement are:
     Within this method, your receive the specific time to seek as the
     \bt_p{ns_from_origin} parameter. You don't receive any
     \bt_clock_cls: the method operates at the nanosecond from some
-    origin level and it is left to the implementation to seek a message
+    origin level and it's left to the implementation to seek a message
     having at least this time while still honouring the
     \ref api-msg-seq "message sequence rules" the next time your
     \link api-msg-iter-cls-meth-next "next" method\endlink is called.
@@ -459,7 +459,7 @@ The available message iterator class methods to implement are:
     \ref api-msg-iter-cls-meth-can-seek-ns "can seek ns from origin?"
     method can indicate whether or not your message iterator can
     currently seek a specific time. If you implement it, the library
-    guarantees that it is called and returns #BT_TRUE before this "seek
+    guarantees that it's called and returns #BT_TRUE before this "seek
     ns from origin" is called, without any other message iterator
     methods being called in between.
 
@@ -1073,7 +1073,7 @@ methods.
     @parblock
     New "can seek beginning?" method of \bt_p{message_iterator_class}.
 
-    Can be \c NULL, in which case it is equivalent to setting a method
+    Can be \c NULL, in which case it's equivalent to setting a method
     which always returns #BT_TRUE.
     @endparblock
 
@@ -1113,7 +1113,7 @@ methods.
     New "can seek ns from origin?" method of
     \bt_p{message_iterator_class}.
 
-    Can be \c NULL, in which case it is equivalent to setting a method
+    Can be \c NULL, in which case it's equivalent to setting a method
     which always returns #BT_TRUE.
     @endparblock
 

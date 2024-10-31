@@ -40,7 +40,7 @@ ALIASES                += bt_pre_not_null{1}="@pre \bt_p{\1} is \em not \c NULL.
 ALIASES                += bt_pre_hot{1}="@pre \bt_p{\1} is \em not \link api-fund-freezing frozen\endlink."
 ALIASES                += bt_pre_assign_expr{1}="@pre \bt_p{\1} is an assignable expression."
 ALIASES                += bt_pre_valid_fmt{1}="@pre \bt_p{\1} is a valid <code>printf()</code>-like format string."
-ALIASES                += bt_pre_fc_not_in_tc{1}="@pre \bt_p{\1} is not already part of another field class, an \bt_ev_cls, or a \bt_stream_cls."
+ALIASES                += bt_pre_fc_not_in_tc{1}="@pre \bt_p{\1} isn't already part of another field class, an \bt_ev_cls, or a \bt_stream_cls."
 
 # Aliases: postconditions
 ALIASES                += bt_post_success_frozen{1}="@post <strong>On success</strong>, \bt_p{\1} is \link api-fund-freezing frozen\endlink."
@@ -52,7 +52,7 @@ ALIASES                += bt_pre_graph_not_faulty{1}="@pre \bt_p{\1} is \em not 
 ALIASES                += bt_pre_hot{1}="@pre \bt_p{\1} is \em not \link api-fund-freezing frozen\endlink."
 ALIASES                += bt_pre_assign_expr{1}="@pre \bt_p{\1} is an assignable expression."
 ALIASES                += bt_pre_valid_fmt{1}="@pre \bt_p{\1} is a valid <code>printf()</code>-like format string."
-ALIASES                += bt_pre_fc_not_in_tc{1}="@pre \bt_p{\1} is not already part of another field class, an \bt_ev_cls, or a \bt_stream_cls."
+ALIASES                += bt_pre_fc_not_in_tc{1}="@pre \bt_p{\1} isn't already part of another field class, an \bt_ev_cls, or a \bt_stream_cls."
 
 # Aliases: preconditions: field class object type
 ALIASES                += bt_pre_is_ba_fc{1}="@pre \bt_p{\1} is a \link api-tir-fc-ba bit array field class\endlink."

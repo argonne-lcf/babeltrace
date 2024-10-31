@@ -75,7 +75,7 @@ A stream class controls what its instances (\bt_p_stream) support:
 <dl>
   <dt>Default clock</dt>
   <dd>
-    By default, the streams of a a stream class do not have default
+    By default, the streams of a stream class don't have default
     clocks.
 
     Set the default \bt_clock_cls of a stream class with
@@ -85,7 +85,7 @@ A stream class controls what its instances (\bt_p_stream) support:
 
   <dt>\anchor api-tir-stream-cls-pkt-support Packets</dt>
   <dd>
-    By default, the streams of a stream class do not support \bt_p_pkt.
+    By default, the streams of a stream class don't support \bt_p_pkt.
 
     In other words, you cannot create a packet for such a stream,
     therefore you cannot create \bt_p_pb_msg and \bt_p_pe_msg for this
@@ -101,7 +101,7 @@ A stream class controls what its instances (\bt_p_stream) support:
 
   <dt>Discarded events</dt>
   <dd>
-    By default, the streams of a stream class do not support discarded
+    By default, the streams of a stream class don't support discarded
     events.
 
     In other words, you cannot create \bt_p_disc_ev_msg for such a
@@ -118,7 +118,7 @@ A stream class controls what its instances (\bt_p_stream) support:
 
   <dt>Discarded packets</dt>
   <dd>
-    By default, the streams of a stream class do not support discarded
+    By default, the streams of a stream class don't support discarded
     packets.
 
     In other words, you cannot create \bt_p_disc_pkt_msg for such a
@@ -690,7 +690,7 @@ On success, the returned stream class has the following property values:
     <code>bt_trace_class_assigns_automatic_stream_class_id(trace_class)</code>
     returns #BT_FALSE.
 @pre
-    \bt_p{trace_class} does not contain a stream class with the numeric
+    \bt_p{trace_class} doesn't contain a stream class with the numeric
     ID \bt_p{id}.
 
 @bt_post_success_frozen{trace_class}
@@ -942,7 +942,7 @@ If \bt_p{stream_class} has no namespace, this function returns \c NULL.
     Namespace of \bt_p{stream_class}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{stream_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{stream_class}
@@ -1015,7 +1015,7 @@ If \bt_p{stream_class} has no name, this function returns \c NULL.
     Name of \bt_p{stream_class}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{stream_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{stream_class}
@@ -1090,7 +1090,7 @@ If \bt_p{stream_class} has no UID, this function returns \c NULL.
     UID of \bt_p{stream_class}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{stream_class}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{stream_class}
@@ -1234,7 +1234,7 @@ bt_stream_class_set_supports_packets()).
 @bt_pre_is_struct_fc{field_class}
 @pre
     \bt_p{field_class}, or any of its contained field classes,
-    is not already part of a stream class or of an \bt_ev_cls.
+    isn't already part of a stream class or of an \bt_ev_cls.
 @pre
     If any of the field classes recursively contained in
     \bt_p{field_class} has a
@@ -1324,7 +1324,7 @@ property.
 @bt_pre_is_struct_fc{field_class}
 @pre
     \bt_p{field_class}, or any of its contained field classes,
-    is not already part of a stream class or of an \bt_ev_cls.
+    isn't already part of a stream class or of an \bt_ev_cls.
 @pre
     If any of the field classes recursively contained in
     \bt_p{field_class} has a

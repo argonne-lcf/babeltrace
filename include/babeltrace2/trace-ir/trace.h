@@ -443,7 +443,7 @@ If \bt_p{trace} has no namespace, this function returns \c NULL.
     Namespace of \bt_p{trace}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{trace}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{trace}
@@ -514,7 +514,7 @@ If \bt_p{trace} has no name, this function returns \c NULL.
     Name of \bt_p{trace}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{trace}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{trace}
@@ -601,7 +601,7 @@ If \bt_p{trace} has no UUID, this function returns \c NULL.
     UUID of \bt_p{trace}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{trace}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{trace}
@@ -651,7 +651,7 @@ If \bt_p{trace} has no UID, this function returns \c NULL.
     UID of \bt_p{trace}, or \c NULL if none.
 
     The returned pointer remains valid as long as \bt_p{trace}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{trace}
@@ -788,7 +788,7 @@ See the \ref api-tir-trace-prop-env "environment" property.
     environment entry at index \bt_p{index} in \bt_p{trace}.
 
     The returned pointer remains valid as long as \bt_p{trace}
-    is not modified.
+    isn't modified.
     @endparblock
 @param[in] value
     @parblock
@@ -801,7 +801,7 @@ See the \ref api-tir-trace-prop-env "environment" property.
     (#BT_VALUE_TYPE_STRING).
 
     The returned pointer remains valid as long as \bt_p{trace}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{trace}
@@ -845,7 +845,7 @@ function returns \c NULL.
     (#BT_VALUE_TYPE_STRING).
 
     The returned pointer remains valid as long as \bt_p{trace}
-    is not modified.
+    isn't modified.
     @endparblock
 
 @bt_pre_not_null{trace}
@@ -943,7 +943,7 @@ This is the user function type for a trace destruction listener.
 @bt_pre_not_null{trace}
 
 @post
-    The reference count of \bt_p{trace} is not changed.
+    The reference count of \bt_p{trace} isn't changed.
 @bt_post_no_error
 
 @sa bt_trace_add_destruction_listener() &mdash;
@@ -978,7 +978,7 @@ typedef enum bt_trace_add_listener_status {
 All the destruction listener user functions of a trace are called
 when it's being destroyed.
 
-If \bt_p{listener_id} is not \c NULL, then this function, on success,
+If \bt_p{listener_id} isn't \c NULL, then this function, on success,
 sets \bt_p{*listener_id} to the ID of the added destruction listener
 within \bt_p{trace}. You can then use this ID to remove the
 added destruction listener with bt_trace_remove_destruction_listener().

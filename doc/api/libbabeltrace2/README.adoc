@@ -158,7 +158,7 @@ Use `/*!`.
 
 . **Brief description**.
 +
-Use third person singular in the simple present tense: you are
+Use third person singular in the simple present tense: you're
 documenting what the function does. Assume that the sentence implicitly
 starts with "`This function`".
 +
@@ -278,7 +278,7 @@ List all the function's _relevant_ postconditions with the `@post`
 command or any alias which starts with `@bt_post`.
 +
 Anything that the function's documentation body describes and which
-forms the nature of the function does not need to be written as an
+forms the nature of the function doesn't need to be written as an
 explicit postcondition. For example, if a function adds some object A
 to some object B, do not write the postcondition "B contains A".
 +
@@ -303,7 +303,7 @@ Use the `@sa` command, multiple times if needed, to refer to related
 functions or types.
 +
 This is a way for you to inform the reader about other existing, related
-items. Keep in mind that the reader does not always know where to look
+items. Keep in mind that the reader doesn't always know where to look
 for things.
 +
 In the referred item's brief description, do _not_ mention its
@@ -336,7 +336,7 @@ type names try to be.
 Do not hesitate to repeat technical terms, even in the same sentence, if
 needed. For example, if you document a "`value object`", then always use
 the term "`value object`" in the documentation, not "`value`", nor
-"`object`", since they are ambiguous.
+"`object`", since they're ambiguous.
 
 You can use light emphasis to show the importance of a part of the text
 with the `\em` command (one word) or by surrounding the text to

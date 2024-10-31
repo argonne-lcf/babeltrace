@@ -162,7 +162,7 @@ A plugin has the following properties:
   <dd>
     Name of the plugin.
 
-    The name of the plugin is not related to its file name. For example,
+    The name of the plugin isn't related to its file name. For example,
     a plugin found in the file \c patente.so can be named
     <code>Dan</code>.
 
@@ -219,7 +219,7 @@ A plugin has the following properties:
     Version of the plugin (major, minor, patch, and extra information).
 
     The version of the plugin is completely user-defined: the library
-    does not use this property in any way to verify the compatibility
+    doesn't use this property in any way to verify the compatibility
     of the plugin.
 
     Use bt_plugin_get_version().
@@ -312,7 +312,7 @@ This function returns the first plugin which has the name
    the static plugins.
 
 @note
-    The name of a plugin is not related to the name of its file (shared
+    The name of a plugin isn't related to the name of its file (shared
     object or Python file). For example, a plugin found in the file
     \c patente.so can be named <code>Dan</code>.
 
@@ -540,7 +540,7 @@ typedef enum bt_plugin_find_all_from_file_status {
     setting \bt_p{*plugins} to the result.
 
 @note
-    The name of a plugin is not related to the name of its file (shared
+    The name of a plugin isn't related to the name of its file (shared
     object or Python file). For example, a plugin found in the file
     \c patente.so can be named <code>Dan</code>.
 
@@ -912,7 +912,7 @@ See the \ref api-plugin-prop-version "version" property.
 @retval #BT_PROPERTY_AVAILABILITY_AVAILABLE
     The version of \bt_p{plugin} is available.
 @retval #BT_PROPERTY_AVAILABILITY_NOT_AVAILABLE
-    The version of \bt_p{plugin} is not available.
+    The version of \bt_p{plugin} isn't available.
 
 @bt_pre_not_null{plugin}
 */
