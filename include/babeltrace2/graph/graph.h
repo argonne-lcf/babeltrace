@@ -1438,6 +1438,17 @@ and what you can and cannot do with a configured graph.
 
 @bt_pre_not_null{graph}
 @bt_pre_graph_not_faulty{graph}
+@pre
+    For each \bt_src_comp within \bt_p{graph}, at least one \bt_oport
+    is connected.
+@pre
+    For each \bt_flt_comp within \bt_p{graph}, at least one \bt_iport
+    and one \bt_iport are connected.
+@pre
+    For each \bt_sink_comp within \bt_p{graph}, at least one \bt_iport
+    is connected.
+@pre
+    \bt_p{graph} contains at least one sink component.
 
 @sa bt_graph_run() &mdash;
     Runs a trace processing graph, making all its sink components
