@@ -1483,6 +1483,13 @@ See bt_clock_class_borrow_user_attributes().
 extern const bt_value *bt_clock_class_borrow_user_attributes_const(
 		const bt_clock_class *clock_class) __BT_NOEXCEPT;
 
+/*! @} */
+
+/*!
+@name Effective Message Interchange Protocol (MIP) version access
+@{
+*/
+
 /*!
 @brief
     Returns the effective \bt_mip (MIP) version of the trace processing

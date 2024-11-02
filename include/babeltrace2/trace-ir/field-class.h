@@ -6305,6 +6305,13 @@ bt_field_class_variant_with_selector_field_integer_signed_option_as_option_const
 	return __BT_UPCAST_CONST(bt_field_class_variant_option, option);
 }
 
+/*! @} */
+
+/*!
+@name Effective Message Interchange Protocol (MIP) version access
+@{
+*/
+
 /*!
 @brief
     Returns the effective \bt_mip (MIP) version of the trace processing

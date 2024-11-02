@@ -631,7 +631,7 @@ extern void *bt_self_component_get_data(
 /*! @} */
 
 /*!
-@name Effective MIP version access of a trace processing graph
+@name Effective Message Interchange Protocol (MIP) version access
 @{
 */
 
