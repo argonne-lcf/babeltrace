@@ -466,7 +466,7 @@ See the \ref api-tir-ev-cls-prop-ns "namespace" property.
 
 @param[in] event_class
     Event class of which to set the namespace to \bt_p{ns}.
-@param[in] name
+@param[in] ns
     New namespace of \bt_p{event_class} (copied).
 
 @retval #BT_EVENT_CLASS_SET_NAMESPACE_STATUS_OK
@@ -588,7 +588,7 @@ See the \ref api-tir-ev-cls-prop-uid "UID" property.
 
 @param[in] event_class
     Event class of which to set the UID to \bt_p{uid}.
-@param[in] name
+@param[in] uid
     New UID of \bt_p{event_class} (copied).
 
 @retval #BT_EVENT_CLASS_SET_UID_STATUS_OK

@@ -2184,7 +2184,7 @@ See the \ref api-tir-fc-ba-prop-flags "flags" property.
     the label \bt_p{label} and the bit index ranges \bt_p{index_ranges}.
 @param[in] label
     Label of the flag to add to \bt_p{field_class} (copied).
-@param[in] ranges
+@param[in] index_ranges
     Bit index ranges of the flag to add to \bt_p{field_class}.
 
 @retval #BT_FIELD_CLASS_BIT_ARRAY_ADD_FLAG_STATUS_OK
@@ -5195,7 +5195,7 @@ extern bt_field_class *
 bt_field_class_option_with_selector_field_location_integer_signed_create(
 		bt_trace_class *trace_class,
 		bt_field_class *optional_field_class,
-		const bt_field_location *selector_field_class,
+		const bt_field_location *selector_field_location,
 		const bt_integer_range_set_signed *ranges) __BT_NOEXCEPT;
 
 /*!

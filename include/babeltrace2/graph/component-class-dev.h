@@ -749,7 +749,7 @@ method.
 */
 typedef bt_component_class_get_supported_mip_versions_method_status
 (*bt_component_class_filter_get_supported_mip_versions_method)(
-		bt_self_component_class_filter *source_component_class,
+		bt_self_component_class_filter *self_component_class,
 		const bt_value *params, void *initialize_method_data,
 		bt_logging_level logging_level,
 		bt_integer_range_set_unsigned *supported_versions);
@@ -808,7 +808,7 @@ method.
 */
 typedef bt_component_class_get_supported_mip_versions_method_status
 (*bt_component_class_sink_get_supported_mip_versions_method)(
-		bt_self_component_class_sink *source_component_class,
+		bt_self_component_class_sink *self_component_class,
 		const bt_value *params, void *initialize_method_data,
 		bt_logging_level logging_level,
 		bt_integer_range_set_unsigned *supported_versions);

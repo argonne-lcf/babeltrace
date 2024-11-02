@@ -314,30 +314,30 @@ properties:
     Name of the \bt_comp \bt_oport from which the message iterator
     was created.
 
-    Use bt_error_cause_component_actor_get_component_name().
+    Use
+    bt_error_cause_message_iterator_actor_get_component_output_port_name().
   </dd>
 
   <dt>Component name</dt>
   <dd>
     Name of the component.
 
-    Use bt_error_cause_component_actor_get_component_name().
+    Use bt_error_cause_message_iterator_actor_get_component_name().
   </dd>
-
-  bt_error_cause_message_iterator_actor_get_component_output_port_name
 
   <dt>Component class name</dt>
   <dd>
     Name of the \ref api-comp-cls "class" of the component.
 
-    Use bt_error_cause_component_actor_get_component_class_type().
+    Use
+    bt_error_cause_message_iterator_actor_get_component_class_name().
   </dd>
 
   <dt>Component class type</dt>
   <dd>
     Type of the class of the component.
 
-    Use bt_error_cause_component_actor_get_component_class_name().
+    Use bt_error_cause_message_iterator_actor_get_component_class_type().
   </dd>
 
   <dt>\bt_dt_opt Plugin name</dt>
@@ -345,7 +345,7 @@ properties:
     Name of the \bt_plugin which provides the class of the component,
     if any.
 
-    Use bt_error_cause_component_actor_get_plugin_name().
+    Use bt_error_cause_message_iterator_actor_get_plugin_name().
   </dd>
 </dl>
 

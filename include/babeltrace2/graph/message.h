@@ -3274,8 +3274,8 @@ If this function doesn't find an operative MIP version within
 */
 extern enum bt_get_greatest_operative_mip_version_status
 bt_get_greatest_operative_mip_version_with_restriction(
-		const struct bt_component_descriptor_set *comp_descr_set,
-		enum bt_logging_level log_level,
+		const struct bt_component_descriptor_set *component_descriptors,
+		enum bt_logging_level logging_level,
 		const bt_integer_range_set_unsigned *mip_version_restriction,
 		uint64_t *mip_version)
 		__BT_NOEXCEPT;

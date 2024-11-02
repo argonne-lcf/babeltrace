@@ -907,7 +907,7 @@ See the \ref api-tir-stream-cls-prop-ns "namespace" property.
 
 @param[in] stream_class
     Stream class of which to set the namespace to \bt_p{ns}.
-@param[in] name
+@param[in] ns
     New namespace of \bt_p{stream_class} (copied).
 
 @retval #BT_STREAM_CLASS_SET_NAMESPACE_STATUS_OK
@@ -1056,7 +1056,7 @@ See the \ref api-tir-stream-cls-prop-uid "UID" property.
 
 @param[in] stream_class
     Stream class of which to set the UID to \bt_p{uid}.
-@param[in] name
+@param[in] uid
     New UID of \bt_p{stream_class} (copied).
 
 @retval #BT_STREAM_CLASS_SET_UID_STATUS_OK

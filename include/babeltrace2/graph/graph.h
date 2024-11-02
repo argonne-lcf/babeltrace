@@ -57,7 +57,7 @@ In the illustrations above, notice that:
   writes to the standard output or to a file.
 
 - There are two source components having the same
-  \ref api-tir-comp-cls "class": <code>source.ctf.fs</code>.
+  \ref api-comp-cls "class": <code>source.ctf.fs</code>.
 
 - All components are instances of \bt_plugin-provided classes:
   <code>babeltrace2-plugin-ctf.so</code>,
@@ -610,7 +610,7 @@ bt_graph_add_source_component(bt_graph *graph,
 /*!
 @brief
     Creates a \bt_src_comp from the
-    \ref api-tir-comp-cls "class" \bt_p{component_class}
+    \ref api-comp-cls "class" \bt_p{component_class}
     with the initialization parameters \bt_p{params}, the initialization
     user data \bt_p{initialize_method_data}, and the initial
     logging level \bt_p{logging_level}, adds it to the trace processing
@@ -703,7 +703,7 @@ bt_graph_add_filter_component(bt_graph *graph,
 /*!
 @brief
     Creates a \bt_flt_comp from the
-    \ref api-tir-comp-cls "class" \bt_p{component_class}
+    \ref api-comp-cls "class" \bt_p{component_class}
     with the initialization parameters \bt_p{params}, the initialization
     user data \bt_p{initialize_method_data}, and the initial
     logging level \bt_p{logging_level}, adds it to the trace processing
@@ -796,7 +796,7 @@ bt_graph_add_sink_component(
 /*!
 @brief
     Creates a \bt_sink_comp from the
-    \ref api-tir-comp-cls "class" \bt_p{component_class}
+    \ref api-comp-cls "class" \bt_p{component_class}
     with the initialization parameters \bt_p{params}, the initialization
     user data \bt_p{initialize_method_data}, and the initial
     logging level \bt_p{logging_level}, adds it to the trace processing

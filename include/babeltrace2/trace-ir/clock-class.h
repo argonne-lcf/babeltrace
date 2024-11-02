@@ -403,7 +403,7 @@ On success, the returned clock class has the following property values:
   <tr>
     <td>
       \bt_mip version&nbsp;1:
-      \ref api-tir-stream-cls-prop-accuracy "accuracy"
+      \ref api-tir-clock-cls-prop-accuracy "accuracy"
     <td>Unknown
   <tr>
     <td>\ref api-tir-clock-cls-prop-origin "Origin"
@@ -1048,7 +1048,7 @@ See the \ref api-tir-clock-cls-prop-iden "identity" property.
 
 @param[in] clock_class
     Clock class of which to set the namespace to \bt_p{ns}.
-@param[in] namespace
+@param[in] ns
     New namespace of \bt_p{clock_class} (copied).
 
 @retval #BT_CLOCK_CLASS_SET_NAMESPACE_STATUS_OK
@@ -1196,7 +1196,7 @@ See the \ref api-tir-clock-cls-prop-iden "identity" property.
 
 @param[in] clock_class
     Clock class of which to set the UID to \bt_p{uid}.
-@param[in] UID
+@param[in] uid
     New UID of \bt_p{clock_class} (copied).
 
 @retval #BT_CLOCK_CLASS_SET_UID_STATUS_OK

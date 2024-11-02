@@ -408,7 +408,7 @@ See the \ref api-tir-trace-prop-ns "namespace" property.
 
 @param[in] trace
     Trace of which to set the namespace to \bt_p{ns}.
-@param[in] name
+@param[in] ns
     New namespace of \bt_p{trace} (copied).
 
 @retval #BT_TRACE_SET_NAMESPACE_STATUS_OK
@@ -624,6 +624,11 @@ See the \ref api-tir-trace-prop-uid "UID" property.
     Trace of which to set the UID to \bt_p{uid}.
 @param[in] uid
     New UID of \bt_p{trace} (copied).
+
+@retval #BT_TRACE_SET_UID_STATUS_OK
+    Success.
+@retval #BT_TRACE_SET_UID_STATUS_MEMORY_ERROR
+    Out of memory.
 
 @bt_pre_not_null{trace}
 @bt_pre_hot{trace}
