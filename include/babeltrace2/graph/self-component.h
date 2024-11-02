@@ -640,10 +640,6 @@ extern void *bt_self_component_get_data(
     Returns the effective \bt_mip (MIP) version of the trace processing
     \bt_graph which contains the \bt_comp \bt_p{self_component}.
 
-@note
-    As of \bt_name_version_min_maj, because bt_get_maximal_mip_version()
-    returns 0, this function always returns 0.
-
 @param[in] self_component
     Component instance.
 
