@@ -2461,6 +2461,17 @@ bt_bool bt_self_message_iterator_is_interrupted(
 }
 
 BT_EXPORT
+uint64_t bt_self_message_iterator_get_graph_mip_version(
+		const bt_self_message_iterator * const self_msg_iter)
+{
+	const struct bt_message_iterator *iterator =
+		(const void *) self_msg_iter;
+
+	BT_ASSERT_PRE_MSG_ITER_NON_NULL(iterator);
+	return iterator->graph->mip_version;
+}
+
+BT_EXPORT
 void bt_message_iterator_get_ref(
 		const struct bt_message_iterator *iterator)
 {

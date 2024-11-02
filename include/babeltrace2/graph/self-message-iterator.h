@@ -228,6 +228,32 @@ extern void bt_self_message_iterator_configuration_set_can_seek_forward(
 
 /*! @} */
 
+/*!
+@name Effective Message Interchange Protocol (MIP) version access
+@{
+*/
+
+/*!
+@brief
+    Returns the effective \bt_mip (MIP) version of the trace processing
+    \bt_graph which contains the \bt_msg_iter
+    \bt_p{self_message_iterator}.
+
+@param[in] self_message_iterator
+    Message iterator instance.
+
+@returns
+    Effective MIP version of the trace processing graph which
+    contains \bt_p{self_message_iterator}.
+
+@bt_pre_not_null{self_message_iterator}
+*/
+extern uint64_t bt_self_message_iterator_get_graph_mip_version(
+		const bt_self_message_iterator *self_message_iterator)
+		__BT_NOEXCEPT;
+
+/*! @} */
+
 /*! @} */
 
 #ifdef __cplusplus
