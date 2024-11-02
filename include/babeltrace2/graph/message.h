@@ -864,6 +864,9 @@ function documentation doesn't explicitly document a MIP version
 precondition, it means that the effective MIP version has no effect on
 the behaviour of said function.
 
+See \ref guide-mip-0-to-mip-1 to learn how to add MIP&nbsp;1 support
+to a component class written for MIP&nbsp;0.
+
 <h2>\anchor api-msg-seq Message sequence rules</h2>
 
 The purpose of a \bt_msg_iter is to iterate a sequence of messages.

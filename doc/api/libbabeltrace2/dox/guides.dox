@@ -15,6 +15,7 @@ The available guides are:
 - \subpage guide-build-bt2-dev
 - \subpage guide-comp-link-plugin-so
 - \subpage guide-comp-link-app
+- \subpage guide-mip-0-to-mip-1
 
 @if meow
 
@@ -154,6 +155,527 @@ To compile and link an application which uses libbabeltrace2:
     @endcode
   </li>
 </ol>
+
+@page guide-mip-0-to-mip-1 Add MIP&nbsp;1 support to your component class
+
+Babeltrace&nbsp;2.1 introduces new \ref api-tir "trace IR" features
+under the new version&nbsp;1 of the
+\ref api-msg-mip "Message Interchange Protocol" (MIP).
+
+This guide shows the differences between MIP&nbsp;0 and MIP&nbsp;1
+along with how to update your \ref api-comp-cls-dev "component class",
+which already supports MIP&nbsp;0, to also support MIP&nbsp;1.
+
+@section guide-mip-0-to-mip-1-impl-get-supported-mip-versions-meth Implement the "get supported MIP versions" method
+
+Even though you could implement the
+\link api-comp-cls-dev-meth-mip "get supported MIP versions"\endlink
+component class method in Babeltrace&nbsp;2.0, you didn't have to
+because without it, the default supported MIP version is&nbsp;0, which
+was the only available one anyway.
+
+Starting from Babeltrace&nbsp;2.1, your component may support
+MIP&nbsp;0, MIP&nbsp;1, or both.
+
+Your component may still support MIP&nbsp;1 without implementing the
+"get supported MIP versions" method. In other words, an application
+may create it with one of the
+\link api-graph-lc-add <code>bt_graph_add_*_component*()</code> functions\endlink,
+passing a trace processing \bt_graph object configured to work
+under MIP&nbsp;1. That
+being said, a general-purpose trace processing application, for example
+the \bt_cli CLI, typically uses bt_get_greatest_operative_mip_version()
+to determine the most recent MIP version to use to create a graph containing
+specific components. bt_get_greatest_operative_mip_version() in turn
+calls your "get supported MIP versions" method.
+
+To make your component indicate MIP&nbsp;1 support:
+
+-# In your \ref api-plugin-dev "plugin definition C&nbsp;file",
+   use the BT_PLUGIN_SOURCE_COMPONENT_CLASS_GET_SUPPORTED_MIP_VERSIONS_METHOD(),
+   BT_PLUGIN_FILTER_COMPONENT_CLASS_GET_SUPPORTED_MIP_VERSIONS_METHOD(),
+   or BT_PLUGIN_SINK_COMPONENT_CLASS_GET_SUPPORTED_MIP_VERSIONS_METHOD()
+   macro to set the "get supported MIP versions" method of your
+   component class.
+
+   For example:
+
+   @code
+   BT_PLUGIN_SINK_COMPONENT_CLASS_GET_SUPPORTED_MIP_VERSIONS_METHOD(meow,
+       meow_get_supported_mip_versions);
+   @endcode
+
+-# In your "get supported MIP versions" method, include version&nbsp;1
+   in the supported version range.
+
+   For example, to show support for both MIP&nbsp;0 and MIP&nbsp;1:
+
+   @code
+   bt_component_class_get_supported_mip_versions_method_status
+   meow_get_supported_mip_versions(
+       bt_self_component_class_sink * const self_component_class,
+       const bt_value * const params, void * const initialize_method_data,
+       const bt_logging_level logging_level,
+       bt_integer_range_set_unsigned * const supported_versions)
+   {
+       if (bt_integer_range_set_unsigned_add_range(supported_versions, 0, 1) !=
+                BT_INTEGER_RANGE_SET_ADD_RANGE_STATUS_OK) {
+            return BT_COMPONENT_CLASS_GET_SUPPORTED_MIP_VERSIONS_METHOD_STATUS_MEMORY_ERROR;
+       }
+
+       return BT_COMPONENT_CLASS_GET_SUPPORTED_MIP_VERSIONS_METHOD_STATUS_OK;
+   }
+   @endcode
+
+   You may rely on \bt_p{params} and \bt_p{initialize_method_data} to
+   determine the exact MIP versions your component expect to support.
+
+@section guide-mip-0-to-mip-1-get-effective-mip-version Get the effective MIP version
+
+Although most API functions work identically with both MIP&nbsp;0
+and MIP&nbsp;1, some of them are only valid for a specific MIP version.
+
+In a \bt_comp or \bt_msg_iter method, especially if your component
+supports both available versions of the MIP, you might need to decide
+which API function to use at run time depending on the current,
+effective MIP version of the trace processing \bt_graph.
+
+The available MIP version access functions are:
+
+- bt_clock_class_get_graph_mip_version()
+- bt_field_class_get_graph_mip_version()
+- bt_self_component_get_graph_mip_version()
+- bt_self_message_iterator_get_graph_mip_version()
+- bt_trace_class_get_graph_mip_version()
+
+For example, in a \bt_sink_comp printing the details of a \bt_trace,
+you may only get its \ref api-tir-trace-prop-ns "namespace"
+under MIP&nbsp;1:
+
+@code
+if (bt_self_component_get_graph_mip_version(self_component) == 1) {
+    print_opt_string_property("Namespace", bt_trace_get_namespace(the_trace));
+} else {
+    print_none_property("Namespace");
+}
+@endcode
+
+@section guide-mip-0-to-mip-1-changes Changes
+
+MIP&nbsp;1 brings the required changes to support the features of
+<a href="https://diamon.org/ctf/">CTF&nbsp;2</a>. As such:
+
+- \bt_c_clock_cls, \bt_ev_cls, \bt_stream_cls, and \bt_trace
+  objects may have a namespace, a name, and a
+  <a href="https://en.wikipedia.org/wiki/Unique_identifier">unique ID</a>
+  (UID).
+
+  The UUID property of clock class and trace objects is removed
+  in favor of the new UID property.
+
+- Important parts of the clock class API are changed.
+
+- A \bt_ba_fc may have \ref api-tir-fc-ba-prop-flags "flags".
+
+- There are new \ref api-tir-fc-blob "BLOB field classes" and
+  \ref api-tir-field-blob "fields".
+
+- The \ref api-tir-field-loc "field location" system replaces the
+  \ref api-tir-field-path "field path" one.
+
+The following subsections provide details about the changes above
+and how MIP&nbsp;0 translates to MIP&nbsp;1 in their context.
+
+@subsection guide-mip-0-to-mip-1-iden Namespace, name, and unique ID
+
+The \bt_clock_cls, \bt_ev_cls, \bt_stream_cls, and \bt_trace
+objects may have a namespace, a name, and a
+<a href="https://en.wikipedia.org/wiki/Unique_identifier">unique ID</a>
+(UID).
+
+Together, we call those three optional properties the
+\em identity of an object.
+
+\bt_name doesn't specify what's the purpose of an identity and why
+you should use it,
+\ref api-tir-clock-cls-origin "except for clock classes": it exists
+to accomodate trace formats.
+
+On creation, an object has no identity (the values of the namespace,
+name, and UID properties are missing).
+
+For \ref api-tir-clock-cls-prop-uuid "clock class" and
+\ref api-tir-trace-prop-uuid "trace" objects, MIP&nbsp;1 removes the
+UUID property in favor of those new properties. In other words,
+you cannot use the following functions with MIP&nbsp;1:
+
+- bt_clock_class_set_uuid()
+- bt_clock_class_get_uuid()
+- bt_trace_set_uuid()
+- bt_trace_get_uuid()
+
+A good strategy is to set the UID property to the
+<a href="https://en.wikipedia.org/wiki/Universally_unique_identifier#Textual_representation">textual representation</a>
+of the UUID instead.
+
+The new identity property access functions are:
+
+<table>
+  <tr>
+    <th>\em Object
+    <th>Namespace access
+    <th>Name access (also valid with MIP&nbsp;0)
+    <th>UID access
+  <tr>
+    <td><em>\ref api-tir-clock-cls-prop-iden "Clock class"</em>
+    <td>
+      - bt_clock_class_set_namespace()
+      - bt_clock_class_get_namespace()
+    <td>
+      - bt_clock_class_set_name()
+      - bt_clock_class_get_name()
+    <td>
+      - bt_clock_class_set_uid()
+      - bt_clock_class_get_uid()
+  <tr>
+    <td><em>\bt_c_ev_cls</em>
+    <td>
+      - bt_event_class_set_namespace()
+      - bt_event_class_get_namespace()
+    <td>
+      - bt_event_class_set_name()
+      - bt_event_class_get_name()
+    <td>
+      - bt_event_class_set_uid()
+      - bt_event_class_get_uid()
+  <tr>
+    <td><em>\bt_c_stream_cls</em>
+    <td>
+      - bt_stream_class_set_namespace()
+      - bt_stream_class_get_namespace()
+    <td>
+      - bt_stream_class_set_name()
+      - bt_stream_class_get_name()
+    <td>
+      - bt_stream_class_set_uid()
+      - bt_stream_class_get_uid()
+  <tr>
+    <td><em>\bt_c_trace</em>
+    <td>
+      - bt_trace_set_namespace()
+      - bt_trace_get_namespace()
+    <td>
+      - bt_trace_set_name()
+      - bt_trace_get_name()
+    <td>
+      - bt_trace_set_uid()
+      - bt_trace_get_uid()
+</table>
+
+@subsection guide-mip-0-to-mip-1-clock-cls-api Clock class API
+
+The clock class API is changed as such from MIP&nbsp;0 to MIP&nbsp;1:
+
+- The \ref api-tir-clock-cls-prop-iden "identity" is
+  the namespace, name, and UID tuple instead of the name and UUID pair.
+
+  See the \ref guide-mip-0-to-mip-1-iden section above.
+
+- The \ref api-tir-clock-cls-prop-precision "precision" property
+  is optional.
+
+  bt_clock_class_create() makes the initial precision unknown.
+
+  Use the new bt_clock_class_get_opt_precision() function to get
+  whether or not the precision is known and, if it's known, its value.
+
+  bt_clock_class_get_precision() is not available and becomes
+  deprecated.
+
+- There's a new, optional
+  \ref api-tir-clock-cls-prop-precision "accuracy" property.
+
+  The accuracy value is in clock cycles.
+
+  While the precision property describes the random errors of clocks,
+  the accuracy property describes systematic errors. From
+  <a href="https://en.wikipedia.org/wiki/Accuracy_and_precision">Accuracy
+  and precision</a>:
+
+  - Accuracy is how close a given set of measurements (observations or
+    readings) are to their true value.
+
+  - Precision is how close the measurements are to each other.
+
+  bt_clock_class_create() makes the initial accuracy unknown.
+
+  Use the new bt_clock_class_set_accuracy() and
+  bt_clock_class_get_accuracy() functions.
+
+  Having an unknown accuracy makes it possible to set the intended
+  origin of a clock class while communicating that
+  \ref api-tir-cs "clock snapshots" may not align with the true origin.
+
+- The \ref api-tir-clock-cls-prop-origin "origin" property of a clock
+  class, which is either unknown or the
+  <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>
+  with MIP&nbsp;0, can be custom.
+
+  A custom origin is a point on the real timeline which is the base
+  of clock snapshots. The Unix epoch is just a renowned origin with its
+  own dedicated functions in \bt_name.
+
+  Snapshots of clocks having the same origin, whatever the other clock
+  class properties, have a correlation.
+
+  A custom origin is identified by an optional namespace and a mandatory
+  name/UID pair. Set the custom origin of a clock class with
+  bt_clock_class_set_origin().
+
+  Make the origin the Unix epoch with
+  bt_clock_class_set_origin_unix_epoch() or unknown with
+  bt_clock_class_set_origin_unknown().
+
+  bt_clock_class_set_origin_is_unix_epoch() still works but is
+  deprecated.
+
+  The clock class origin property getters are:
+
+  - bt_clock_class_get_origin_namespace()
+  - bt_clock_class_get_origin_name()
+  - bt_clock_class_get_origin_uid()
+  - bt_clock_class_origin_is_known() (also valid with MIP&nbsp;0)
+  - bt_clock_class_origin_is_unix_epoch() (also valid with MIP&nbsp;0)
+
+  bt_clock_class_create() still sets the initial origin to the
+  Unix epoch.
+
+@subsection guide-mip-0-to-mip-1-ba-fc-flags Bit array field class flags
+
+A \bt_ba_fc may have zero or more \ref api-tir-fc-ba-prop-flags "flags".
+
+The bit array field class flag API is very similar to the
+\ref api-tir-fc-enum-prop-mappings "unsigned enumeration field class mapping"
+API.
+
+A flag assigns a label to one or more bits, by indexes, of instances
+(\bt_p_ba_field). When \em any of the bits of some flag is set (true)
+within a bit array field, said flag is known to be <em>active</em>.
+
+The new related functions are:
+
+<dl>
+  <dt>Add a flag to a bit array field class</dt>
+  <dd>bt_field_class_bit_array_add_flag()</dd>
+
+  <dt>Get the number of flags in a bit array field class</dt>
+  <dd>bt_field_class_bit_array_get_flag_count()</dd>
+
+  <dt>Borrow a flag from a bit array field class</dt>
+  <dd>
+    - bt_field_class_bit_array_borrow_flag_by_index_const()
+    - bt_field_class_bit_array_borrow_flag_by_label_const()
+  </dd>
+
+  <dt>Get the label of a bit array field class flag</dt>
+  <dd>bt_field_class_bit_array_flag_get_label()</dd>
+
+  <dt>Borrow the bit index range set of a bit array field class flag</dt>
+  <dd>bt_field_class_bit_array_flag_borrow_index_ranges_const()</dd>
+
+  <dt>
+    Get the labels of all the active flags of a bit array field class
+    for the set bits of some integral value
+  </dt>
+  <dd>bt_field_class_bit_array_get_active_flag_labels_for_value_as_integer()</dd>
+
+  <dt>
+    Get the labels of all the active flags of the class of a bit array
+    field for the set bits of its integral value
+  </dt>
+  <dd>bt_field_bit_array_get_active_flag_labels()</dd>
+</dl>
+
+@subsection guide-mip-0-to-mip-1-blob BLOB field classes and fields
+
+A \bt_blob_fc describes \bt_p_blob_field which contain zero or more
+bytes of binary data.
+
+With MIP&nbsp;0, you can use a \bt_string_fc or an \bt_array_fc with an
+8-bit \ref api-tir-fc-int "unsigned integer element field class" as
+the class of some byte container. However, both have their limitations.
+
+A BLOB field is the perfect container of pure binary data.
+
+Like static and dynamic \bt_p_array_fc, you can create both static and
+dynamic BLOB field classes:
+
+<dl>
+  <dt>bt_field_class_blob_static_create()</dt>
+  <dd>
+    Is a #BT_FIELD_CLASS_TYPE_BLOB and
+    a #BT_FIELD_CLASS_TYPE_STATIC_BLOB.
+  </dd>
+
+  <dt>bt_field_class_blob_dynamic_without_length_field_location_create()</dt>
+  <dd>
+    Is a #BT_FIELD_CLASS_TYPE_BLOB,
+    a #BT_FIELD_CLASS_TYPE_DYNAMIC_BLOB,
+    and a #BT_FIELD_CLASS_TYPE_DYNAMIC_BLOB_WITHOUT_LENGTH_FIELD.
+  </dd>
+
+  <dt>bt_field_class_blob_dynamic_with_length_field_location_create()</dt>
+  <dd>
+    Is a #BT_FIELD_CLASS_TYPE_BLOB,
+    a #BT_FIELD_CLASS_TYPE_DYNAMIC_BLOB,
+    and a #BT_FIELD_CLASS_TYPE_DYNAMIC_BLOB_WITH_LENGTH_FIELD.
+
+    This one accepts a \bt_field_loc: see the
+    \ref guide-mip-0-to-mip-1-field-loc section
+    below to learn more.
+  </dd>
+</dl>
+
+A BLOB field class has a
+\ref api-tir-fc-blob-prop-media-type "media type" property which the
+creation functions initialize to <code>application/octet-stream</code>,
+a very generic one. The media type indicates which kind of data the
+instances hold.
+
+Just like with a \bt_darray_field, set the length of a dynamic BLOB
+field with bt_field_blob_dynamic_set_length() before getting its
+internal buffer.
+
+Get the length of a BLOB field with bt_field_blob_get_length().
+
+Get the internal buffer of a BLOB field with:
+
+<dl>
+  <dt>Write mode</dt>
+  <dd>bt_field_blob_get_data()</dd>
+
+  <dt>Read mode</dt>
+  <dd>bt_field_blob_get_data_const()</dd>
+</dl>
+
+@subsection guide-mip-0-to-mip-1-field-loc Field location API
+
+Starting from MIP&nbsp;1, the classes of all the
+\ref api-tir-fc-link "fields with links to other fields" use a
+\bt_field_loc to show the link instead of a \bt_field_path.
+
+A field location is different from a field path: it contains a
+list of \bt_struct_field member <em>names</em> to follow from some root
+scope to reach the target field. This makes it possible, for example,
+for the length field of some dynamic field to be located within one or
+more distant \bt_p_opt_field and/or \bt_p_var_field.
+
+See \ref api-tir-field-loc-proc "Field location procedure" to learn
+the exact procedure to locate a field.
+
+Whereas libbabeltrace2 creates field path objects for you when you
+provide the target field class at dependent field class creation time,
+you create a field location object yourself. This is because a dependent
+field class may target more than one field class.
+
+The field location API is:
+
+<dl>
+  <dt>Create a field location</dt>
+  <dd>
+    bt_field_location_create()
+
+    You provide the root scope and all the items (structure member
+    names) to this function.
+  </dd>
+
+  <dt>Get the root scope of a field location</dt>
+  <dd>bt_field_location_get_root_scope()</dd>
+
+  <dt>Get an item by index from a field location</dt>
+  <dd>bt_field_location_get_item_count()</dd>
+
+  <dt>Reference count</dt>
+  <dd>
+    - bt_field_location_get_ref()
+    - bt_field_location_put_ref()
+    - BT_FIELD_LOCATION_PUT_REF_AND_RESET()
+    - BT_FIELD_LOCATION_MOVE_REF()
+  </dd>
+</dl>
+
+The new field class creation functions to use are:
+
+<table>
+  <tr>
+    <th>MIP&nbsp;0 function
+    <th>MIP&nbsp;1 function
+  <tr>
+    <td>N/A
+    <td>bt_field_class_blob_dynamic_without_length_field_location_create()
+  <tr>
+    <td>N/A
+    <td>bt_field_class_blob_dynamic_with_length_field_location_create()
+  <tr>
+    <td>
+      bt_field_class_array_dynamic_create() with the
+      \bt_p{length_field_class} parameter set to \c NULL
+    <td>bt_field_class_blob_dynamic_without_length_field_location_create()
+  <tr>
+    <td>
+      bt_field_class_array_dynamic_create() with the
+      \bt_p{length_field_class} parameter not set to an \bt_uint_fc
+    <td>bt_field_class_array_dynamic_with_length_field_location_create()
+  <tr>
+    <td>bt_field_class_option_without_selector_create()
+    <td>bt_field_class_option_without_selector_field_location_create()
+  <tr>
+    <td>bt_field_class_option_with_selector_field_bool_create()
+    <td>bt_field_class_option_with_selector_field_location_bool_create()
+  <tr>
+    <td>bt_field_class_option_with_selector_field_integer_unsigned_create()
+    <td>bt_field_class_option_with_selector_field_location_integer_unsigned_create()
+  <tr>
+    <td>bt_field_class_option_with_selector_field_integer_signed_create()
+    <td>bt_field_class_option_with_selector_field_location_integer_signed_create()
+  <tr>
+    <td>
+      bt_field_class_variant_create() with the
+      \bt_p{selector_field_class} parameter set to \c NULL
+    <td>bt_field_class_variant_without_selector_field_location_create()
+  <tr>
+    <td>
+      bt_field_class_variant_create() with the
+      \bt_p{selector_field_class} parameter set to an unsigned
+      integer field class
+    <td>bt_field_class_variant_with_selector_field_location_integer_unsigned_create()
+  <tr>
+    <td>
+      bt_field_class_variant_create() with the
+      \bt_p{selector_field_class} parameter set to a signed integer
+      field class
+    <td>bt_field_class_variant_with_selector_field_location_integer_signed_create()
+</table>
+
+The new field location borrowing functions are:
+
+- bt_field_class_blob_dynamic_with_length_field_borrow_length_field_location_const()
+- bt_field_class_array_dynamic_with_length_field_borrow_length_field_location_const()
+- bt_field_class_option_with_selector_field_borrow_selector_field_location_const()
+- bt_field_class_variant_with_selector_field_borrow_selector_field_location_const()
+
+The following functions aren't available with MIP&nbsp;1:
+
+- All the \ref api-tir-field-path "field path API" functions
+- bt_field_class_array_dynamic_create()
+- bt_field_class_option_without_selector_create()
+- bt_field_class_option_with_selector_field_bool_create()
+- bt_field_class_option_with_selector_field_integer_unsigned_create()
+- bt_field_class_option_with_selector_field_integer_signed_create()
+- bt_field_class_variant_create()
+- bt_field_class_array_dynamic_with_length_field_borrow_length_field_path_const()
+- bt_field_class_option_with_selector_field_borrow_selector_field_path_const()
+- bt_field_class_variant_with_selector_field_borrow_selector_field_path_const()
 
 @if meow
 
