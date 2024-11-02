@@ -796,7 +796,7 @@ A message iterator inactivity message has the following property:
   </dd>
 </dl>
 
-<h1>\anchor api-msg-mip Message Interchange Protocol</h1>
+<h1>\anchor api-msg-mip Message Interchange Protocol (MIP)</h1>
 
 The <em>Message Interchange Protocol</em> (MIP) is the system of rules
 used by \bt_p_comp and \bt_p_msg_iter to exchange messages within a
