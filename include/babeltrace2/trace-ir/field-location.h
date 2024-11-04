@@ -268,7 +268,7 @@ typedef enum bt_field_location_scope {
 @bt_since{1}
 
 @bt_pre_not_null{trace_class}
-@bt_pre_tc_with_mip{trace_class, 0}
+@bt_pre_tc_with_mip{trace_class, 1}
 @bt_pre_not_null{items}
 @pre
     \bt_p{item_count}&nbsp;≥&nbsp;1.
