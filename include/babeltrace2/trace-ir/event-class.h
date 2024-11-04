@@ -104,7 +104,7 @@ An event class has the following properties:
     \bt_dt_opt Namespace
     (only available when the parent \bt_trace_cls was created
     from a \bt_comp which belongs to a trace processing \bt_graph
-    with the effective \bt_mip version&nbsp;1)
+    with the effective \bt_mip version&nbsp;1; \bt_avail_since{1})
   </dt>
   <dd>
     Namespace of the event class.
@@ -125,7 +125,7 @@ An event class has the following properties:
     \bt_dt_opt UID
     (only available when the parent \bt_trace_cls was created
     from a \bt_comp which belongs to a trace processing \bt_graph
-    with the effective \bt_mip version&nbsp;1)
+    with the effective \bt_mip version&nbsp;1; \bt_avail_since{1})
   </dt>
   <dd>
     <a href="https://en.wikipedia.org/wiki/Unique_identifier">Unique identifier</a>
@@ -251,13 +251,13 @@ On success, the returned event class has the following property values:
     <td>\ref api-tir-ev-cls-prop-id "Numeric ID"
     <td>Automatically assigned by \bt_p{stream_class}
   <tr>
-    <td>\bt_mip version&nbsp;1: \ref api-tir-ev-cls-prop-ns "namespace"
+    <td>\bt_mip version&nbsp;1: \ref api-tir-ev-cls-prop-ns "namespace" (\bt_avail_since{1})
     <td>\em None
   <tr>
     <td>\ref api-tir-ev-cls-prop-name "Name"
     <td>\em None
   <tr>
-    <td>\bt_mip version&nbsp;1: \ref api-tir-ev-cls-prop-uid "UID"
+    <td>MIP&nbsp;1: \ref api-tir-ev-cls-prop-uid "UID" (\bt_avail_since{1})
     <td>\em None
   <tr>
     <td>\ref api-tir-ev-cls-prop-log-lvl "Log level"
@@ -324,13 +324,13 @@ On success, the returned event class has the following property values:
     <td>\ref api-tir-ev-cls-prop-id "Numeric ID"
     <td>\bt_p{id}
   <tr>
-    <td>\bt_mip version&nbsp;1: \ref api-tir-ev-cls-prop-ns "namespace"
+    <td>\bt_mip version&nbsp;1: \ref api-tir-ev-cls-prop-ns "namespace" (\bt_avail_since{1})
     <td>\em None
   <tr>
     <td>\ref api-tir-ev-cls-prop-name "Name"
     <td>\em None
   <tr>
-    <td>\bt_mip version&nbsp;1: \ref api-tir-ev-cls-prop-uid "UID"
+    <td>MIP&nbsp;1: \ref api-tir-ev-cls-prop-uid "UID" (\bt_avail_since{1})
     <td>\em None
   <tr>
     <td>\ref api-tir-ev-cls-prop-log-lvl "Log level"
@@ -442,6 +442,8 @@ extern uint64_t bt_event_class_get_id(
 /*!
 @brief
     Status codes for bt_event_class_set_namespace().
+
+@bt_since{1}
 */
 typedef enum bt_event_class_set_namespace_status {
 	/*!
@@ -474,6 +476,8 @@ See the \ref api-tir-ev-cls-prop-ns "namespace" property.
 @retval #BT_EVENT_CLASS_SET_NAMESPACE_STATUS_MEMORY_ERROR
     Out of memory.
 
+@bt_since{1}
+
 @bt_pre_not_null{event_class}
 @bt_pre_hot{event_class}
 @bt_pre_ev_cls_with_mip{event_class, 1}
@@ -504,6 +508,8 @@ If \bt_p{event_class} has no namespace, then this function returns
     The returned pointer remains valid as long as \bt_p{event_class}
     isn't modified.
     @endparblock
+
+@bt_since{1}
 
 @bt_pre_not_null{event_class}
 @bt_pre_ev_cls_with_mip{event_class, 1}
@@ -562,6 +568,8 @@ extern bt_event_class_set_name_status bt_event_class_set_name(
 /*!
 @brief
     Status codes for bt_event_class_set_uid().
+
+@bt_since{1}
 */
 typedef enum bt_event_class_set_uid_status {
 	/*!
@@ -596,6 +604,8 @@ See the \ref api-tir-ev-cls-prop-uid "UID" property.
 @retval #BT_EVENT_CLASS_SET_UID_STATUS_MEMORY_ERROR
     Out of memory.
 
+@bt_since{1}
+
 @bt_pre_not_null{event_class}
 @bt_pre_hot{event_class}
 @bt_pre_ev_cls_with_mip{event_class, 1}
@@ -625,6 +635,8 @@ If \bt_p{event_class} has no UID, then this function returns \c NULL.
     The returned pointer remains valid as long as \bt_p{event_class}
     isn't modified.
     @endparblock
+
+@bt_since{1}
 
 @bt_pre_not_null{event_class}
 @bt_pre_ev_cls_with_mip{event_class, 1}

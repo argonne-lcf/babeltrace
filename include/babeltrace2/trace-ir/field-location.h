@@ -20,7 +20,7 @@ extern "C" {
 @ingroup api-tir
 
 @brief
-    Location of a \bt_field.
+    Location of a \bt_field (\bt_avail_since{1}).
 
 A <strong><em>field location</em></strong> indicates how to reach a
 given \bt_field from a given <em>root scope</em>.
@@ -213,6 +213,8 @@ After this procedure, \bt_var{CURFIELD} is the located field.
 /*!
 @brief
     Field location scope enumerators.
+
+@bt_since{1}
 */
 typedef enum bt_field_location_scope {
 	/*!
@@ -263,6 +265,8 @@ typedef enum bt_field_location_scope {
 @returns
     New field location reference, or \c NULL on memory error.
 
+@bt_since{1}
+
 @bt_pre_not_null{trace_class}
 @bt_pre_tc_with_mip{trace_class, 0}
 @bt_pre_not_null{items}
@@ -287,6 +291,8 @@ See the \ref api-tir-field-loc-prop-root "root scope" property.
 @returns
     Root scope of \bt_p{field_location}.
 
+@bt_since{1}
+
 @bt_pre_not_null{field_location}
 */
 extern bt_field_location_scope bt_field_location_get_root_scope(
@@ -304,6 +310,8 @@ See the \ref api-tir-field-loc-prop-items "items" property.
 
 @returns
     Number of contained items in \bt_p{field_location}.
+
+@bt_since{1}
 
 @bt_pre_not_null{field_location}
 
@@ -333,6 +341,8 @@ See the \ref api-tir-field-loc-prop-items "items" property.
     exists.
     @endparblock
 
+@bt_since{1}
+
 @bt_pre_not_null{field_location}
 @pre
     \bt_p{index} is less than the number of items in
@@ -358,6 +368,8 @@ extern const char *bt_field_location_get_item_by_index(
     Can be \c NULL.
     @endparblock
 
+@bt_since{1}
+
 @sa bt_field_location_put_ref() &mdash;
     Decrements the reference count of a field location.
 */
@@ -375,6 +387,8 @@ extern void bt_field_location_get_ref(
 
     Can be \c NULL.
     @endparblock
+
+@bt_since{1}
 
 @sa bt_field_location_get_ref() &mdash;
     Increments the reference count of a field location.
@@ -394,6 +408,8 @@ extern void bt_field_location_put_ref(
 
     Can contain \c NULL.
     @endparblock
+
+@bt_since{1}
 
 @bt_pre_assign_expr{_field_location}
 */
@@ -425,6 +441,8 @@ existing \bt_p{_dst} reference.
 
     Can contain \c NULL.
     @endparblock
+
+@bt_since{1}
 
 @bt_pre_assign_expr{_dst}
 @bt_pre_assign_expr{_src}

@@ -80,7 +80,7 @@ A trace has the following properties:
     \bt_dt_opt Namespace
     (only available when the class of the trace was created
     from a \bt_comp which belongs to a trace processing \bt_graph
-    with the effective \bt_mip version&nbsp;1)
+    with the effective \bt_mip version&nbsp;1; \bt_avail_since{1})
   </dt>
   <dd>
     Namespace of the trace.
@@ -120,7 +120,7 @@ A trace has the following properties:
 
       <dt>
         \anchor api-tir-trace-prop-uid
-        MIP&nbsp;1: UID
+        MIP&nbsp;1: UID (\bt_avail_since{1})
       </dt>
       <dd>
         <a href="https://en.wikipedia.org/wiki/Unique_identifier">Unique identifier</a>
@@ -205,16 +205,16 @@ On success, the returned trace has the following property values:
     <th>Property
     <th>Value
   <tr>
-    <td>\bt_mip version&nbsp;1: \ref api-tir-trace-prop-ns "Namespace"
+    <td>\bt_mip version&nbsp;1: \ref api-tir-trace-prop-ns "Namespace" (\bt_avail_since{1})
     <td>\em None
   <tr>
     <td>\ref api-tir-trace-prop-name "Name"
     <td>\em None
   <tr>
-    <td>\bt_mip (MIP) version&nbsp;0: \ref api-tir-trace-prop-uuid "UUID"
+    <td>MIP&nbsp;0: \ref api-tir-trace-prop-uuid "UUID"
     <td>\em None
   <tr>
-    <td>MIP&nbsp;1: \ref api-tir-trace-prop-uid "UID"
+    <td>MIP&nbsp;1: \ref api-tir-trace-prop-uid "UID" (\bt_avail_since{1})
     <td>\em None
   <tr>
     <td>\ref api-tir-trace-prop-env "Environment"
@@ -385,6 +385,8 @@ extern const bt_stream *bt_trace_borrow_stream_by_id_const(
 /*!
 @brief
     Status codes for bt_trace_set_namespace().
+
+@bt_since{1}
 */
 typedef enum bt_trace_set_namespace_status {
 	/*!
@@ -416,6 +418,8 @@ See the \ref api-tir-trace-prop-ns "namespace" property.
 @retval #BT_TRACE_SET_NAMESPACE_STATUS_MEMORY_ERROR
     Out of memory.
 
+@bt_since{1}
+
 @bt_pre_not_null{trace}
 @bt_pre_hot{trace}
 @bt_pre_trace_with_mip{trace, 1}
@@ -445,6 +449,8 @@ If \bt_p{trace} has no namespace, then this function returns \c NULL.
     The returned pointer remains valid as long as \bt_p{trace}
     isn't modified.
     @endparblock
+
+@bt_since{1}
 
 @bt_pre_not_null{trace}
 @bt_pre_stream_cls_with_mip{trace, 1}
@@ -559,24 +565,6 @@ extern void bt_trace_set_uuid(bt_trace *trace, bt_uuid uuid) __BT_NOEXCEPT;
 
 /*!
 @brief
-    Status codes for bt_trace_set_uid().
-*/
-typedef enum bt_trace_set_uid_status {
-	/*!
-	@brief
-	    Success.
-	*/
-	BT_TRACE_SET_UID_STATUS_OK		= __BT_FUNC_STATUS_OK,
-
-	/*!
-	@brief
-	    Out of memory.
-	*/
-	BT_TRACE_SET_UID_STATUS_MEMORY_ERROR	= __BT_FUNC_STATUS_MEMORY_ERROR,
-} bt_trace_set_uid_status;
-
-/*!
-@brief
     Returns the UUID of the trace \bt_p{trace}.
 
 @note
@@ -614,6 +602,26 @@ extern bt_uuid bt_trace_get_uuid(const bt_trace *trace) __BT_NOEXCEPT;
 
 /*!
 @brief
+    Status codes for bt_trace_set_uid().
+
+@bt_since{1}
+*/
+typedef enum bt_trace_set_uid_status {
+	/*!
+	@brief
+	    Success.
+	*/
+	BT_TRACE_SET_UID_STATUS_OK		= __BT_FUNC_STATUS_OK,
+
+	/*!
+	@brief
+	    Out of memory.
+	*/
+	BT_TRACE_SET_UID_STATUS_MEMORY_ERROR	= __BT_FUNC_STATUS_MEMORY_ERROR,
+} bt_trace_set_uid_status;
+
+/*!
+@brief
     Sets the
     <a href="https://en.wikipedia.org/wiki/Unique_identifier">unique identifier</a>
     (UID) of \bt_p{trace} to a copy of \bt_p{uid}.
@@ -629,6 +637,8 @@ See the \ref api-tir-trace-prop-uid "UID" property.
     Success.
 @retval #BT_TRACE_SET_UID_STATUS_MEMORY_ERROR
     Out of memory.
+
+@bt_since{1}
 
 @bt_pre_not_null{trace}
 @bt_pre_hot{trace}
@@ -658,6 +668,8 @@ If \bt_p{trace} has no UID, then this function returns \c NULL.
     The returned pointer remains valid as long as \bt_p{trace}
     isn't modified.
     @endparblock
+
+@bt_since{1}
 
 @bt_pre_not_null{trace}
 @bt_pre_trace_with_mip{trace, 1}

@@ -113,7 +113,8 @@ The origin of a clock is one of, depending on its class:
   <dt>
     Otherwise (only available when the clock class was created
     from a \bt_comp which belongs to a trace processing \bt_graph
-    with the effective \bt_mip version&nbsp;1)
+    with the effective \bt_mip version&nbsp;1;
+    \bt_avail_since{1})
   </dt>
   <dd>
     The namespace, name, and
@@ -218,7 +219,8 @@ A clock class has the following properties:
     \anchor api-tir-clock-cls-prop-precision Precision
     (optional when the clock class was created
     from a \bt_comp which belongs to a trace processing \bt_graph
-    with the effective \bt_mip version&nbsp;1)
+    with the effective \bt_mip version&nbsp;1;
+    \bt_avail_since{1})
   </dt>
   <dd>
     Precision of the clock class instance (stream clocks) values
@@ -239,7 +241,8 @@ A clock class has the following properties:
     \bt_dt_opt Accuracy
     (only available when the clock class was created
     from a \bt_comp which belongs to a trace processing \bt_graph
-    with the effective \bt_mip version&nbsp;1)
+    with the effective \bt_mip version&nbsp;1;
+    \bt_avail_since{1})
   </dt>
   <dd>
     Accuracy of the clock class instance (stream clocks) values
@@ -283,7 +286,7 @@ A clock class has the following properties:
         </dl>
       </dd>
 
-      <dt>MIP&nbsp;1: custom origin</dt>
+      <dt>MIP&nbsp;1: custom origin (\bt_avail_since{1})</dt>
       <dd>
         Use bt_clock_class_set_origin(),
         bt_clock_class_get_origin_namespace(),
@@ -311,7 +314,7 @@ A clock class has the following properties:
         bt_clock_class_set_uuid(), and bt_clock_class_get_uuid().
       </dd>
 
-      <dt>MIP&nbsp;1</dt>
+      <dt>MIP&nbsp;1 (\bt_avail_since{1})</dt>
       <dd>
         The namespace, name, and UID property tuple.
 
@@ -397,13 +400,14 @@ On success, the returned clock class has the following property values:
         <dt>MIP&nbsp;0</dt>
         <dd>0&nbsp;cycles</dd>
 
-        <dt>MIP&nbsp;1</dt>
+        <dt>MIP&nbsp;1 (\bt_avail_since{1})</dt>
         <dd>Unknown</dd>
       </dl>
   <tr>
     <td>
       \bt_mip version&nbsp;1:
       \ref api-tir-clock-cls-prop-accuracy "accuracy"
+      (\bt_avail_since{1})
     <td>Unknown
   <tr>
     <td>\ref api-tir-clock-cls-prop-origin "Origin"
@@ -418,7 +422,7 @@ On success, the returned clock class has the following property values:
         <dt>MIP&nbsp;0</dt>
         <dd>No name and no UUID</dd>
 
-        <dt>MIP&nbsp;1</dt>
+        <dt>MIP&nbsp;1 (\bt_avail_since{1})</dt>
         <dd>No namespace, no name, and no UID</dd>
       </dl>
   <tr>
@@ -624,6 +628,8 @@ See the \ref api-tir-clock-cls-prop-precision "precision" property.
 @retval #BT_PROPERTY_AVAILABILITY_NOT_AVAILABLE
     The precision of \bt_p{clock_class} is unknown.
 
+@bt_since{1}
+
 @bt_pre_not_null{clock_class}
 @bt_pre_not_null{precision}
 
@@ -645,6 +651,8 @@ See the \ref api-tir-clock-cls-prop-accuracy "accuracy" property.
     Clock class of which to set the accuracy to \bt_p{accuracy}.
 @param[in] accuracy
     New accuracy of \bt_p{clock_class}.
+
+@bt_since{1}
 
 @bt_pre_not_null{clock_class}
 @bt_pre_hot{clock_class}
@@ -677,6 +685,8 @@ See the \ref api-tir-clock-cls-prop-accuracy "accuracy" property.
     The accuracy of \bt_p{clock_class} is known.
 @retval #BT_PROPERTY_AVAILABILITY_NOT_AVAILABLE
     The accuracy of \bt_p{clock_class} is unknown.
+
+@bt_since{1}
 
 @bt_pre_not_null{clock_class}
 @bt_pre_not_null{accuracy}
@@ -736,6 +746,8 @@ See the \ref api-tir-clock-cls-prop-origin "origin" property.
 @param[in] clock_class
     Clock class of which to make the origin unknown.
 
+@bt_since{1}
+
 @bt_pre_not_null{clock_class}
 @bt_pre_hot{clock_class}
 
@@ -784,6 +796,8 @@ See the \ref api-tir-clock-cls-prop-origin "origin" property.
 @param[in] clock_class
     Clock class of which to make the origin the Unix epoch.
 
+@bt_since{1}
+
 @bt_pre_not_null{clock_class}
 @bt_pre_hot{clock_class}
 
@@ -801,6 +815,8 @@ bt_clock_class_set_origin_unix_epoch(bt_clock_class *clock_class) __BT_NOEXCEPT;
 /*!
 @brief
     Status codes for bt_clock_class_set_origin().
+
+@bt_since{1}
 */
 typedef enum bt_clock_class_set_origin_status {
 	/*!
@@ -844,6 +860,8 @@ See the \ref api-tir-clock-cls-prop-origin "origin" property.
 @retval #BT_CLOCK_CLASS_SET_ORIGIN_STATUS_MEMORY_ERROR
     Out of memory.
 
+@bt_since{1}
+
 @bt_pre_not_null{clock_class}
 @bt_pre_hot{clock_class}
 @bt_pre_clock_cls_with_mip{clock_class, 1}
@@ -878,6 +896,8 @@ See the \ref api-tir-clock-cls-prop-origin "origin" property.
 @returns
     #BT_TRUE if the origin of \bt_p{clock_class} is known.
 
+@bt_since{1}
+
 @bt_pre_not_null{clock_class}
 
 @sa bt_clock_class_origin_is_unix_epoch() &mdash;
@@ -907,6 +927,8 @@ See the \ref api-tir-clock-cls-prop-origin "origin" property.
 
 @returns
     #BT_TRUE if the origin of \bt_p{clock_class} is the Unix epoch.
+
+@bt_since{1}
 
 @bt_pre_not_null{clock_class}
 
@@ -939,6 +961,8 @@ See the \ref api-tir-clock-cls-prop-origin "origin" property.
     The returned pointer remains valid as long as \bt_p{clock_class}
     isn't modified.
     @endparblock
+
+@bt_since{1}
 
 @bt_pre_not_null{clock_class}
 @bt_pre_clock_cls_with_mip{clock_class, 1}
@@ -974,6 +998,8 @@ See the \ref api-tir-clock-cls-prop-origin "origin" property.
     isn't modified.
     @endparblock
 
+@bt_since{1}
+
 @bt_pre_not_null{clock_class}
 @bt_pre_clock_cls_with_mip{clock_class, 1}
 
@@ -1008,6 +1034,8 @@ See the \ref api-tir-clock-cls-prop-origin "origin" property.
     isn't modified.
     @endparblock
 
+@bt_since{1}
+
 @bt_pre_not_null{clock_class}
 @bt_pre_clock_cls_with_mip{clock_class, 1}
 
@@ -1024,6 +1052,8 @@ extern const char *bt_clock_class_get_origin_uid(
 /*!
 @brief
     Status codes for bt_clock_class_set_namespace().
+
+@bt_since{1}
 */
 typedef enum bt_clock_class_set_namespace_status {
 	/*!
@@ -1056,6 +1086,8 @@ See the \ref api-tir-clock-cls-prop-iden "identity" property.
 @retval #BT_CLOCK_CLASS_SET_NAMESPACE_STATUS_MEMORY_ERROR
     Out of memory.
 
+@bt_since{1}
+
 @bt_pre_not_null{clock_class}
 @bt_pre_hot{clock_class}
 @bt_pre_clock_cls_with_mip{clock_class, 1}
@@ -1086,6 +1118,8 @@ returns \c NULL.
     The returned pointer remains valid as long as \bt_p{clock_class}
     isn't modified.
     @endparblock
+
+@bt_since{1}
 
 @bt_pre_not_null{clock_class}
 @bt_pre_clock_cls_with_mip{clock_class, 1}
@@ -1171,6 +1205,8 @@ extern const char *bt_clock_class_get_name(
 /*!
 @brief
     Status codes for bt_clock_class_set_uid().
+
+@bt_since{1}
 */
 typedef enum bt_clock_class_set_uid_status {
 	/*!
@@ -1204,6 +1240,8 @@ See the \ref api-tir-clock-cls-prop-iden "identity" property.
 @retval #BT_CLOCK_CLASS_SET_UID_STATUS_MEMORY_ERROR
     Out of memory.
 
+@bt_since{1}
+
 @bt_pre_not_null{clock_class}
 @bt_pre_hot{clock_class}
 @bt_pre_clock_cls_with_mip{clock_class, 1}
@@ -1233,6 +1271,8 @@ If \bt_p{clock_class} has no UID, then this function returns \c NULL.
     The returned pointer remains valid as long as \bt_p{clock_class}
     isn't modified.
     @endparblock
+
+@bt_since{1}
 
 @bt_pre_not_null{clock_class}
 @bt_pre_clock_cls_with_mip{clock_class, 1}
@@ -1266,6 +1306,8 @@ true:
 @returns
     #BT_TRUE if \bt_p{clock_class_a} and \bt_p{clock_class_b} share
     the same identity
+
+@bt_since{1}
 
 @bt_pre_not_null{clock_class_a}
 @bt_pre_clock_cls_with_mip{clock_class_a, 1}
@@ -1501,6 +1543,8 @@ extern const bt_value *bt_clock_class_borrow_user_attributes_const(
 
 @returns
     Effective MIP version of \bt_p{clock_class}.
+
+@bt_since{1}
 
 @bt_pre_not_null{clock_class}
 

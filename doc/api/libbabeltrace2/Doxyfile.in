@@ -34,6 +34,8 @@ ALIASES                += bt_man{2}="<a href=\"https://babeltrace.org/docs/v\bt_
 ALIASES                += bt_cli="<a href=\"https://babeltrace.org/docs/v\bt_version_min_maj/man1/babeltrace2.1\"><code>babeltrace2</code></a>"
 ALIASES                += bt_voidp="<code>void&nbsp;*</code>"
 ALIASES                += bt_var{1}="<strong><em>\1</em></strong>"
+ALIASES                += bt_since{1}="@since Babeltrace&nbsp;2.\1"
+ALIASES                += bt_avail_since{1}="available since Babeltrace&nbsp;2.\1"
 
 # Aliases: preconditions: general
 ALIASES                += bt_pre_not_null{1}="@pre \bt_p{\1} is \em not \c NULL."

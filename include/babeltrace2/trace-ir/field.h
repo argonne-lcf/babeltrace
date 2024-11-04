@@ -56,7 +56,7 @@ categories:
     - \ref api-tir-field-enum "Enumeration" (unsigned and signed)
     - \ref api-tir-field-real "Real" (single-precision and double-precision)
     - \ref api-tir-field-string "String"
-    - \ref api-tir-field-blob "BLOB" (static and dynamic)
+    - \ref api-tir-field-blob "BLOB" (static and dynamic; \bt_avail_since{1})
   </dd>
 
   <dt>Container</dt>
@@ -169,7 +169,8 @@ bt_field_bit_array_set_value_as_integer().
 Get the bits of a bit array field with
 bt_field_bit_array_get_value_as_integer().
 
-Get the labels of all the active \ref api-tir-fc-ba-prop-flags "flags"
+Since Babeltrace&nbsp;2.1, get the labels of all the
+active \ref api-tir-fc-ba-prop-flags "flags"
 of the \ref api-tir-fc-ba "class" of a bit array field for the set bits
 of its integral value with bt_field_bit_array_get_active_flag_labels().
 
@@ -317,7 +318,7 @@ bt_field_string_append() and bt_field_string_append_with_length().
 
 Clear a string field with bt_field_string_clear().
 
-<h1>\anchor api-tir-field-blob BLOB fields</h1>
+<h1>\anchor api-tir-field-blob BLOB fields (\bt_avail_since{1})</h1>
 
 <strong><em>BLOB fields</em></strong> are \bt_blob_fc instances.
 
@@ -327,7 +328,7 @@ BLOB fields contain zero or more bytes of binary data.
     BLOB fields are only available when the \bt_trace_cls from
     which you create their classes was created from a \bt_comp
     which belongs to a trace processing \bt_graph with the effective
-    \bt_mip version&nbsp;1.
+    \bt_mip version&nbsp;1 (\bt_avail_since{1}).
 
 A BLOB field is an \em abstract field. The concrete BLOB fields are:
 
@@ -632,6 +633,8 @@ extern uint64_t bt_field_bit_array_get_value_as_integer(
 @brief
     Status codes for
     bt_field_bit_array_get_active_flag_labels().
+
+@bt_since{1}
 */
 typedef enum bt_field_bit_array_get_active_flag_labels_status {
 	/*!
@@ -677,6 +680,8 @@ bt_field_class_bit_array_get_active_flag_labels_for_value_as_integer(
     Success.
 @retval #BT_FIELD_BIT_ARRAY_GET_ACTIVE_FLAG_LABELS_STATUS_MEMORY_ERROR
     Out of memory.
+
+@bt_since{1}
 
 @bt_pre_not_null{field}
 @bt_pre_is_ba_field{field}
@@ -1184,7 +1189,7 @@ extern void bt_field_string_clear(bt_field *field) __BT_NOEXCEPT;
 /*! @} */
 
 /*!
-@name BLOB field
+@name BLOB field (\bt_avail_since{1})
 @{
 */
 
@@ -1197,6 +1202,8 @@ extern void bt_field_string_clear(bt_field *field) __BT_NOEXCEPT;
 
 @returns
     Length of \bt_p{field}.
+
+@bt_since{1}
 
 @bt_pre_not_null{field}
 @bt_pre_is_blob_field{field}
@@ -1223,6 +1230,8 @@ extern uint64_t bt_field_blob_get_length(const bt_field *field);
     The returned pointer remains valid until \bt_p{field} is modified.
     @endparblock
 
+@bt_since{1}
+
 @bt_pre_not_null{field}
 @bt_pre_is_blob_field{field}
 @bt_pre_hot{field}
@@ -1247,6 +1256,8 @@ extern uint8_t *bt_field_blob_get_data(bt_field *field);
     The returned pointer remains valid until \bt_p{field} is modified.
     @endparblock
 
+@bt_since{1}
+
 @bt_pre_not_null{field}
 @bt_pre_is_blob_field{field}
 @bt_pre_field_with_mip{field, 1}
@@ -1259,6 +1270,8 @@ extern const uint8_t *bt_field_blob_get_data_const(const bt_field *field);
 /*!
 @brief
     Status codes for bt_field_blob_dynamic_set_length().
+
+@bt_since{1}
 */
 typedef enum bt_field_blob_dynamic_set_length_status {
 	/*!
@@ -1288,6 +1301,8 @@ typedef enum bt_field_blob_dynamic_set_length_status {
     Success.
 @retval #BT_FIELD_DYNAMIC_BLOB_SET_LENGTH_STATUS_MEMORY_ERROR
     Out of memory.
+
+@bt_since{1}
 
 @bt_pre_not_null{field}
 @bt_pre_is_dblob_field{field}

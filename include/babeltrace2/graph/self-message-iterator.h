@@ -246,6 +246,8 @@ extern void bt_self_message_iterator_configuration_set_can_seek_forward(
     Effective MIP version of the trace processing graph which
     contains \bt_p{self_message_iterator}.
 
+@bt_since{1}
+
 @bt_pre_not_null{self_message_iterator}
 */
 extern uint64_t bt_self_message_iterator_get_graph_mip_version(

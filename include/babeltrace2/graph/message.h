@@ -840,7 +840,8 @@ initialization time, making the corresponding
 surprise, you can create a \bt_comp_descr_set with descriptors of the
 components you intend to add to a trace processing graph and call
 bt_get_greatest_operative_mip_version() or
-bt_get_greatest_operative_mip_version_with_restriction() to get the
+bt_get_greatest_operative_mip_version_with_restriction()
+(\bt_avail_since{1}) to get the
 greatest (most recent) MIP version you can use.
 
 To get the latest MIP version of the library, use
@@ -3256,6 +3257,8 @@ If this function doesn't find an operative MIP version within
     Out of memory.
 @retval #BT_GET_GREATEST_OPERATIVE_MIP_VERSION_STATUS_ERROR
     Other error.
+
+@bt_since{1}
 
 @bt_pre_not_null{component_descriptors}
 @pre

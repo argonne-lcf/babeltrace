@@ -51,7 +51,7 @@ categories:
     - \ref api-tir-fc-enum "Enumeration" (unsigned and signed)
     - \ref api-tir-fc-real "Real" (single-precision and double-precision)
     - \ref api-tir-fc-string "String"
-    - \ref api-tir-fc-blob "BLOB" (static and dynamic)
+    - \ref api-tir-fc-blob "BLOB" (static and dynamic; \bt_avail_since{1})
   </dd>
 
   <dt>Container</dt>
@@ -149,19 +149,19 @@ functions for each type of \em concrete (non-abstract) field class:
     <td>#BT_FIELD_CLASS_TYPE_STRING
     <td>bt_field_class_string_create()
   <tr>
-    <td><em>Static \ref api-tir-fc-blob "BLOB"</em>
+    <td><em>Static \ref api-tir-fc-blob "BLOB" (\bt_avail_since{1})</em>
     <td>#BT_FIELD_CLASS_TYPE_STATIC_BLOB
     <td>bt_field_class_blob_static_create()
   <tr>
     <td>
       <em>Dynamic \ref api-tir-fc-blob "BLOB"
-      (instances without a linked length field)</em>
+      (instances without a linked length field; \bt_avail_since{1})</em>
     <td>#BT_FIELD_CLASS_TYPE_DYNAMIC_BLOB_WITHOUT_LENGTH_FIELD
     <td>bt_field_class_blob_dynamic_without_length_field_location_create()
   <tr>
     <td>
       <em>Dynamic \ref api-tir-fc-blob "BLOB"
-      (instances with a linked length field)</em>
+      (instances with a linked length field; \bt_avail_since{1})</em>
     <td>#BT_FIELD_CLASS_TYPE_DYNAMIC_BLOB_WITH_LENGTH_FIELD
     <td>bt_field_class_blob_dynamic_with_length_field_location_create()
   <tr>
@@ -176,6 +176,7 @@ functions for each type of \em concrete (non-abstract) field class:
     <td>
       - bt_field_class_array_dynamic_create()
       - bt_field_class_array_dynamic_without_length_field_location_create()
+        (\bt_avail_since{1})
   <tr>
     <td>
       <em>Dynamic \ref api-tir-fc-array "array"
@@ -184,6 +185,7 @@ functions for each type of \em concrete (non-abstract) field class:
     <td>
       - bt_field_class_array_dynamic_create()
       - bt_field_class_array_dynamic_with_length_field_location_create()
+        (\bt_avail_since{1})
   <tr>
     <td><em>\ref api-tir-fc-struct "Structure"</em>
     <td>#BT_FIELD_CLASS_TYPE_STRUCTURE
@@ -196,6 +198,7 @@ functions for each type of \em concrete (non-abstract) field class:
     <td>
       - bt_field_class_option_without_selector_create()
       - bt_field_class_option_without_selector_field_location_create()
+        (\bt_avail_since{1})
   <tr>
     <td>
       <em>\ref api-tir-fc-opt "Option"
@@ -204,6 +207,7 @@ functions for each type of \em concrete (non-abstract) field class:
     <td>
       - bt_field_class_option_with_selector_field_bool_create()
       - bt_field_class_option_with_selector_field_location_bool_create()
+        (\bt_avail_since{1})
   <tr>
     <td>
       <em>\ref api-tir-fc-opt "Option"
@@ -212,6 +216,7 @@ functions for each type of \em concrete (non-abstract) field class:
     <td>
       - bt_field_class_option_with_selector_field_integer_unsigned_create()
       - bt_field_class_option_with_selector_field_location_integer_unsigned_create()
+        (\bt_avail_since{1})
   <tr>
     <td>
       <em>\ref api-tir-fc-opt "Option"
@@ -220,6 +225,7 @@ functions for each type of \em concrete (non-abstract) field class:
     <td>
       - bt_field_class_option_with_selector_field_integer_signed_create()
       - bt_field_class_option_with_selector_field_location_integer_signed_create()
+        (\bt_avail_since{1})
   <tr>
     <td>
       <em>\ref api-tir-fc-var "Variant"
@@ -228,6 +234,7 @@ functions for each type of \em concrete (non-abstract) field class:
     <td>
       - bt_field_class_variant_create()
       - bt_field_class_variant_without_selector_field_location_create()
+        (\bt_avail_since{1})
   <tr>
     <td>
       <em>\ref api-tir-fc-var "Variant"
@@ -236,6 +243,7 @@ functions for each type of \em concrete (non-abstract) field class:
     <td>
       - bt_field_class_variant_create()
       - bt_field_class_variant_with_selector_field_location_integer_unsigned_create()
+        (\bt_avail_since{1})
   <tr>
     <td>
       <em>\ref api-tir-fc-var "Variant"
@@ -244,6 +252,7 @@ functions for each type of \em concrete (non-abstract) field class:
     <td>
       - bt_field_class_variant_create()
       - bt_field_class_variant_with_selector_field_location_integer_signed_create()
+        (\bt_avail_since{1})
 </table>
 
 You need a \bt_trace_cls to create a field class: create one from a
@@ -351,7 +360,7 @@ A bit array field class has the following property:
     (only available when the field class was created from a
     \bt_trace_cls which was created
     from a \bt_comp which belongs to a trace processing \bt_graph
-    with the effective \bt_mip version&nbsp;1)
+    with the effective \bt_mip version&nbsp;1; \bt_avail_since{1})
   </dt>
   <dd>
     Set of flags of the bit array field class.
@@ -646,7 +655,7 @@ Create a string field class with bt_field_class_string_create().
 
 A string field class has no specific properties.
 
-<h1>\anchor api-tir-fc-blob BLOB field classes</h1>
+<h1>\anchor api-tir-fc-blob BLOB field classes (\bt_avail_since{1})</h1>
 
 @image html fc-blob.png
 
@@ -659,7 +668,7 @@ BLOB fields contain zero or more bytes of binary data.
     BLOB field classes are only available when the \bt_trace_cls from
     which you create them was created from a \bt_comp which belongs
     to a trace processing \bt_graph with the effective \bt_mip
-    version&nbsp;1.
+    version&nbsp;1 (\bt_avail_since{1}).
 
 A BLOB field class is an \em abstract field class: you cannot create
 one. The concrete BLOB field classes are:
@@ -802,7 +811,7 @@ one. The concrete array field classes are:
       <dt>MIP&nbsp;0</dt>
       <dd>bt_field_class_array_dynamic_create().</dt>
 
-      <dt>MIP&nbsp;1</dt>
+      <dt>MIP&nbsp;1 (\bt_avail_since{1})</dt>
       <dd>
         bt_field_class_array_dynamic_without_length_field_location_create()
         or
@@ -829,7 +838,7 @@ one. The concrete array field classes are:
 
       <dt>
         \anchor api-tir-fc-darray-prop-len-fl
-        MIP&nbsp;1: Length field location
+        MIP&nbsp;1: Length field location (\bt_avail_since{1})
       </dt>
       <dd>
         \bt_c_field_loc to locate the linked length field of an
@@ -955,7 +964,7 @@ or none. Therefore, the concrete option field classes are:
       <dt>MIP&nbsp;0</dt>
       <dd>bt_field_class_option_without_selector_create()</dt>
 
-      <dt>MIP&nbsp;1</dt>
+      <dt>MIP&nbsp;1 (\bt_avail_since{1})</dt>
       <dd>bt_field_class_option_without_selector_field_location_create()</dd>
     </dl>
 
@@ -976,7 +985,7 @@ or none. Therefore, the concrete option field classes are:
       <dt>MIP&nbsp;0</dt>
       <dd>bt_field_class_option_with_selector_field_bool_create()</dt>
 
-      <dt>MIP&nbsp;1</dt>
+      <dt>MIP&nbsp;1 (\bt_avail_since{1})</dt>
       <dd>bt_field_class_option_with_selector_field_location_bool_create()</dd>
     </dl>
 
@@ -1016,7 +1025,7 @@ or none. Therefore, the concrete option field classes are:
       <dt>MIP&nbsp;0</dt>
       <dd>bt_field_class_option_with_selector_field_integer_unsigned_create()</dt>
 
-      <dt>MIP&nbsp;1</dt>
+      <dt>MIP&nbsp;1 (\bt_avail_since{1})</dt>
       <dd>bt_field_class_option_with_selector_field_location_integer_unsigned_create()</dd>
     </dl>
 
@@ -1059,7 +1068,7 @@ or none. Therefore, the concrete option field classes are:
       <dt>MIP&nbsp;0</dt>
       <dd>bt_field_class_option_with_selector_field_integer_signed_create()</dt>
 
-      <dt>MIP&nbsp;1</dt>
+      <dt>MIP&nbsp;1 (\bt_avail_since{1})</dt>
       <dd>bt_field_class_option_with_selector_field_location_integer_signed_create()</dd>
     </dl>
 
@@ -1109,7 +1118,7 @@ the following common properties, depending on the effective
 
   <dt>
     \anchor api-tir-fc-opt-prop-sel-fl
-    MIP&nbsp;1: Selector field location
+    MIP&nbsp;1: Selector field location (\bt_avail_since{1})
   </dt>
   <dd>
     \bt_c_field_loc to locate the linked selector field of an instance.
@@ -1171,7 +1180,7 @@ or none. Therefore, the concrete variant field classes are:
         the selector field class.
       </dt>
 
-      <dt>MIP&nbsp;1</dt>
+      <dt>MIP&nbsp;1 (\bt_avail_since{1})</dt>
       <dd>bt_field_class_variant_without_selector_field_location_create().</dd>
     </dl>
 
@@ -1199,7 +1208,7 @@ or none. Therefore, the concrete variant field classes are:
         field class as the selector field class.
       </dt>
 
-      <dt>MIP&nbsp;1</dt>
+      <dt>MIP&nbsp;1 (\bt_avail_since{1})</dt>
       <dd>bt_field_class_variant_with_selector_field_location_integer_unsigned_create().</dd>
     </dl>
 
@@ -1231,7 +1240,7 @@ or none. Therefore, the concrete variant field classes are:
         field class as the selector field class.
       </dt>
 
-      <dt>MIP&nbsp;1</dt>
+      <dt>MIP&nbsp;1 (\bt_avail_since{1})</dt>
       <dd>bt_field_class_variant_with_selector_field_location_integer_signed_create().</dd>
     </dl>
 
@@ -1267,7 +1276,7 @@ the following common properties, depending on the effective
 
   <dt>
     \anchor api-tir-fc-var-prop-sel-fl
-    MIP&nbsp;1: Selector field location
+    MIP&nbsp;1: Selector field location (\bt_avail_since{1})
   </dt>
   <dd>
     \bt_c_field_loc to locate the linked selector field of an instance.
@@ -1294,7 +1303,7 @@ Variant field classes have the following common property:
       variant field class.
 
       The name is optional when the effective \bt_mip version of the
-      trace processing \bt_graph is&nbsp;1.
+      trace processing \bt_graph is&nbsp;1 (\bt_avail_since{1}).
 
     - A field class.
 
@@ -1368,15 +1377,15 @@ Variant field classes have the following common property:
 
 <h1>\anchor api-tir-fc-link Fields with links to other fields</h1>
 
-An instance of a \bt_dblob_fc, a \bt_darray_fc, a \bt_opt_fc, or a
-\bt_var_fc \em may have a link to another, anterior field within the
-same \bt_pkt or \bt_ev.
+An instance of a \bt_dblob_fc (\bt_avail_since{1}), a \bt_darray_fc, a
+\bt_opt_fc, or a \bt_var_fc \em may have a link to another, anterior
+field within the same \bt_pkt or \bt_ev.
 
 This feature exists so that the linked field can contain the value of a
 dynamic property of the "dependent" field. Those properties are:
 
 <dl>
-  <dt>\bt_c_dblob_field</dt>
+  <dt>\bt_c_dblob_field (\bt_avail_since{1})</dt>
   <dd>
     The linked field, a \bt_uint_field, contains the \b length (number
     of bytes) of the dynamic BLOB field.
@@ -1445,7 +1454,7 @@ processing \bt_graph:
     - bt_field_class_variant_with_selector_field_borrow_selector_field_path_const()
   </dd>
 
-  <dt>MIP&nbsp;1: \bt_c_field_loc API
+  <dt>MIP&nbsp;1: \bt_c_field_loc API (\bt_avail_since{1})
   <dd>
     Pass the field location when you create the class of the
     dependent field.
@@ -1464,13 +1473,13 @@ processing \bt_graph:
 </dl>
 
 Both \bt_p_field_path (MIP&nbsp;0 API) and \bt_p_field_loc (MIP&nbsp;1
-API) indicate how to reach the linked field of a dependent field from
-some specific root <em>scope</em> (the starting point). The available
-scopes are:
+API; \bt_avail_since{1}) indicate how to reach the
+linked field of a dependent field from some specific root <em>scope</em>
+(the starting point). The available scopes are:
 
 <dl>
   <dt>#BT_FIELD_PATH_SCOPE_PACKET_CONTEXT</dt>
-  <dt>#BT_FIELD_LOCATION_SCOPE_PACKET_CONTEXT</dt>
+  <dt>#BT_FIELD_LOCATION_SCOPE_PACKET_CONTEXT (\bt_avail_since{1})</dt>
   <dd>
     Context field of the current \bt_pkt.
 
@@ -1478,7 +1487,7 @@ scopes are:
   </dd>
 
   <dt>#BT_FIELD_PATH_SCOPE_EVENT_COMMON_CONTEXT</dt>
-  <dt>#BT_FIELD_LOCATION_SCOPE_EVENT_COMMON_CONTEXT</dt>
+  <dt>#BT_FIELD_LOCATION_SCOPE_EVENT_COMMON_CONTEXT (\bt_avail_since{1})</dt>
   <dd>
     Common context field of the current \bt_ev.
 
@@ -1486,7 +1495,7 @@ scopes are:
   </dd>
 
   <dt>#BT_FIELD_PATH_SCOPE_EVENT_SPECIFIC_CONTEXT</dt>
-  <dt>#BT_FIELD_LOCATION_SCOPE_EVENT_SPECIFIC_CONTEXT</dt>
+  <dt>#BT_FIELD_LOCATION_SCOPE_EVENT_SPECIFIC_CONTEXT (\bt_avail_since{1})</dt>
   <dd>
     Specific context field of the current event.
 
@@ -1494,7 +1503,7 @@ scopes are:
   </dd>
 
   <dt>#BT_FIELD_PATH_SCOPE_EVENT_PAYLOAD</dt>
-  <dt>#BT_FIELD_LOCATION_SCOPE_EVENT_PAYLOAD</dt>
+  <dt>#BT_FIELD_LOCATION_SCOPE_EVENT_PAYLOAD (\bt_avail_since{1})</dt>
   <dd>
     Payload field of the current event.
 
@@ -1701,6 +1710,8 @@ typedef enum bt_field_class_type {
 
 	No field class has this type: use it with
 	bt_field_class_type_is().
+
+	@bt_since{1}
 	*/
 	BT_FIELD_CLASS_TYPE_BLOB						= (1ULL << 29),
 
@@ -1709,6 +1720,8 @@ typedef enum bt_field_class_type {
 	    \bt_c_sblob_fc.
 
 	This type conceptually inherits #BT_FIELD_CLASS_TYPE_BLOB.
+
+	@bt_since{1}
 	*/
 	BT_FIELD_CLASS_TYPE_STATIC_BLOB						= (1ULL << 30) | BT_FIELD_CLASS_TYPE_BLOB,
 
@@ -1720,6 +1733,8 @@ typedef enum bt_field_class_type {
 
 	No field class has this type: use it with
 	bt_field_class_type_is().
+
+	@bt_since{1}
 	*/
 	BT_FIELD_CLASS_TYPE_DYNAMIC_BLOB					= (1ULL << 31) | BT_FIELD_CLASS_TYPE_BLOB,
 
@@ -1729,6 +1744,8 @@ typedef enum bt_field_class_type {
 
 	This type conceptually inherits
 	#BT_FIELD_CLASS_TYPE_DYNAMIC_BLOB.
+
+	@bt_since{1}
 	*/
 	BT_FIELD_CLASS_TYPE_DYNAMIC_BLOB_WITHOUT_LENGTH_FIELD			= (1ULL << 32) | BT_FIELD_CLASS_TYPE_DYNAMIC_BLOB,
 
@@ -1738,6 +1755,8 @@ typedef enum bt_field_class_type {
 
 	This type conceptually inherits
 	#BT_FIELD_CLASS_TYPE_DYNAMIC_BLOB.
+
+	@bt_since{1}
 	*/
 	BT_FIELD_CLASS_TYPE_DYNAMIC_BLOB_WITH_LENGTH_FIELD			= (1ULL << 33) | BT_FIELD_CLASS_TYPE_DYNAMIC_BLOB,
 
@@ -2113,6 +2132,7 @@ property values:
     <td>
       \bt_mip version&nbsp;1:
       \ref api-tir-fc-ba-prop-flags "flags"
+      (\bt_avail_since{1})
     <td>\em None
   <tr>
     <td>\ref api-tir-fc-prop-user-attrs "User attributes"
@@ -2156,6 +2176,8 @@ extern uint64_t bt_field_class_bit_array_get_length(
 /*!
 @brief
     Status codes for bt_field_class_bit_array_add_flag().
+
+@bt_since{1}
 */
 typedef enum bt_field_class_bit_array_add_flag_status {
 	/*!
@@ -2191,6 +2213,8 @@ See the \ref api-tir-fc-ba-prop-flags "flags" property.
     Success.
 @retval #BT_FIELD_CLASS_BIT_ARRAY_ADD_FLAG_STATUS_MEMORY_ERROR
     Out of memory.
+
+@bt_since{1}
 
 @bt_pre_not_null{field_class}
 @bt_pre_hot{field_class}
@@ -2228,6 +2252,8 @@ See the \ref api-tir-fc-ba-prop-flags "flags" property.
 @returns
     Number of contained flags in \bt_p{field_class}.
 
+@bt_since{1}
+
 @bt_pre_not_null{field_class}
 @bt_pre_is_ba_fc{field_class}
 @bt_pre_fc_with_mip{field_class, 1}
@@ -2256,6 +2282,8 @@ See the \ref api-tir-fc-ba-prop-flags "flags" property.
     The returned pointer remains valid as long as \bt_p{field_class}
     isn't modified.
     @endparblock
+
+@bt_since{1}
 
 @bt_pre_not_null{field_class}
 @bt_pre_is_ba_fc{field_class}
@@ -2299,6 +2327,8 @@ If there's no flag having the label \bt_p{label} in
     isn't modified.
     @endparblock
 
+@bt_since{1}
+
 @bt_pre_not_null{field_class}
 @bt_pre_is_ba_fc{field_class}
 @bt_pre_fc_with_mip{field_class, 1}
@@ -2313,6 +2343,8 @@ bt_field_class_bit_array_borrow_flag_by_label_const(
     Array of \c const \bt_ba_fc flag labels.
 
 Returned by bt_field_class_bit_array_get_active_flag_labels_for_value_as_integer().
+
+@bt_since{1}
 */
 typedef char const * const *bt_field_class_bit_array_flag_label_array;
 
@@ -2320,6 +2352,8 @@ typedef char const * const *bt_field_class_bit_array_flag_label_array;
 @brief
     Status codes for
     bt_field_class_bit_array_get_active_flag_labels_for_value_as_integer().
+
+@bt_since{1}
 */
 typedef enum bt_field_class_bit_array_get_active_flag_labels_for_value_as_integer_status {
 	/*!
@@ -2383,6 +2417,8 @@ On success, if there's no active flags for \bt_p{value_as_integer},
 @retval #BT_FIELD_CLASS_BIT_ARRAY_GET_ACTIVE_FLAG_LABELS_FOR_VALUE_AS_INTEGER_STATUS_MEMORY_ERROR
     Out of memory.
 
+@bt_since{1}
+
 @bt_pre_not_null{field_class}
 @bt_pre_is_ba_fc{field_class}
 @bt_pre_fc_with_mip{field_class, 1}
@@ -2411,6 +2447,8 @@ See the \ref api-tir-fc-ba-prop-flags "flags" property.
     The returned pointer remains valid as long as \bt_p{flag} exists.
     @endparblock
 
+@bt_since{1}
+
 @bt_pre_not_null{flag}
 */
 extern const char *bt_field_class_bit_array_flag_get_label(
@@ -2428,6 +2466,8 @@ See the \ref api-tir-fc-ba-prop-flags "flags" property.
 
 @returns
     Bit index ranges of \bt_p{flag}.
+
+@bt_since{1}
 
 @bt_pre_not_null{flag}
 */
@@ -3435,7 +3475,7 @@ extern bt_field_class *bt_field_class_string_create(
 /*! @} */
 
 /*!
-@name BLOB field class
+@name BLOB field class (\bt_avail_since{1})
 @{
 */
 
@@ -3470,6 +3510,8 @@ property values:
 
 @returns
     New static BLOB field class reference, or \c NULL on memory error.
+
+@bt_since{1}
 
 @bt_pre_not_null{trace_class}
 @bt_pre_tc_with_mip{trace_class, 1}
@@ -3512,6 +3554,8 @@ property values:
 @returns
     New dynamic BLOB field class reference (without a length field),
     or \c NULL on memory error.
+
+@bt_since{1}
 
 @bt_pre_not_null{trace_class}
 @bt_pre_tc_with_mip{trace_class, 1}
@@ -3560,6 +3604,8 @@ property values:
     New dynamic BLOB field class reference (instances with a linked
     length field), or \c NULL on memory error.
 
+@bt_since{1}
+
 @bt_pre_not_null{trace_class}
 @bt_pre_tc_with_mip{trace_class, 1}
 @bt_pre_not_null{length_field_location}
@@ -3586,6 +3632,8 @@ See the \ref api-tir-fc-sblob-prop-len "length" property.
 @returns
     Length of \bt_p{field_class}.
 
+@bt_since{1}
+
 @bt_pre_not_null{field_class}
 @bt_pre_is_sblob_fc{field_class}
 @bt_pre_fc_with_mip{field_class, 1}
@@ -3608,6 +3656,8 @@ property.
 @returns
     Length field location of \bt_p{field_class}.
 
+@bt_since{1}
+
 @bt_pre_not_null{field_class}
 @bt_pre_is_dblob_wl_fc{field_class}
 @bt_pre_fc_with_mip{field_class, 1}
@@ -3619,6 +3669,8 @@ bt_field_class_blob_dynamic_with_length_field_borrow_length_field_location_const
 /*!
 @brief
     Status codes for bt_field_class_blob_set_media_type().
+
+@bt_since{1}
 */
 typedef enum bt_field_class_blob_set_media_type_status {
 	/*!
@@ -3652,6 +3704,8 @@ See the \ref api-tir-fc-blob-prop-media-type "media type" property.
 @retval #BT_FIELD_CLASS_BLOB_SET_MEDIA_TYPE_STATUS_MEMORY_ERROR
     Out of memory.
 
+@bt_since{1}
+
 @bt_pre_not_null{field_class}
 @bt_pre_hot{field_class}
 @bt_pre_is_blob_fc{field_class}
@@ -3683,6 +3737,8 @@ returns \c NULL.
     The returned pointer remains valid as long as \bt_p{field_class}
     isn't modified.
     @endparblock
+
+@bt_since{1}
 
 @bt_pre_not_null{field_class}
 @bt_pre_is_blob_fc{field_class}
@@ -3826,7 +3882,7 @@ extern uint64_t bt_field_class_array_static_get_length(
 
     To create a dynamic array field class from a trace class which was
     created from a self component which belongs to a trace processing
-    graph with the effective MIP version&nbsp;1, use
+    graph with the effective MIP version&nbsp;1 (\bt_avail_since{1}), use
     bt_field_class_array_dynamic_without_length_field_location_create()
     or bt_field_class_array_dynamic_with_length_field_location_create().
     @endparblock
@@ -3931,6 +3987,8 @@ property values:
     New dynamic array field class reference (without a length field),
     or \c NULL on memory error.
 
+@bt_since{1}
+
 @bt_pre_not_null{trace_class}
 @bt_pre_tc_with_mip{trace_class, 1}
 @bt_pre_not_null{element_field_class}
@@ -3992,6 +4050,8 @@ property values:
 @returns
     New dynamic array field class reference (instances with a linked
     length field), or \c NULL on memory error.
+
+@bt_since{1}
 
 @bt_pre_not_null{trace_class}
 @bt_pre_tc_with_mip{trace_class, 1}
@@ -4065,6 +4125,8 @@ with bt_field_class_array_dynamic_with_length_field_location_create().
 
 @returns
     Length field location of \bt_p{field_class}.
+
+@bt_since{1}
 
 @bt_pre_not_null{field_class}
 @bt_pre_is_darray_wl_fc{field_class}
@@ -4488,8 +4550,8 @@ bt_field_class_option_borrow_field_class_const(
 
     To create a similar option field class from a trace class which was
     created from a self component which belongs to a trace processing
-    graph with the effective MIP version&nbsp;1, use
-    bt_field_class_option_without_selector_field_location_create().
+    graph with the effective MIP version&nbsp;1 (\bt_avail_since{1}),
+    use bt_field_class_option_without_selector_field_location_create().
     @endparblock
 
 On success, the returned option field class has the following property
@@ -4560,6 +4622,8 @@ values:
 
 @returns
     New option field class reference, or \c NULL on memory error.
+
+@bt_since{1}
 
 @bt_pre_not_null{trace_class}
 @bt_pre_tc_with_mip{trace_class, 1}
@@ -4635,14 +4699,15 @@ See the \ref api-tir-fc-opt-prop-sel-fl "selector field location"
 property.
 
 This property is only available when \bt_p{field_class} was created
-with bt_field_class_option_with_selector_field_location_bool_create(),
-
+with bt_field_class_option_with_selector_field_location_bool_create().
 
 @param[in] field_class
     Option field class from which to borrow the selector field location.
 
 @returns
     Selector field location of \bt_p{field_class}.
+
+@bt_since{1}
 
 @bt_pre_not_null{field_class}
 @bt_pre_is_opt_ws_fc{field_class}
@@ -4673,7 +4738,7 @@ bt_field_class_option_with_selector_field_borrow_selector_field_location_const(
 
     To create a similar option field class from a trace class which was
     created from a self component which belongs to a trace processing
-    graph with the effective MIP version&nbsp;1, use
+    graph with the effective MIP version&nbsp;1 (\bt_avail_since{1}), use
     bt_field_class_option_with_selector_field_location_bool_create().
     @endparblock
 
@@ -4775,6 +4840,8 @@ values:
 @returns
     New option field class reference, or \c NULL on memory error.
 
+@bt_since{1}
+
 @bt_pre_not_null{trace_class}
 @bt_pre_tc_with_mip{trace_class, 1}
 @bt_pre_not_null{optional_field_class}
@@ -4872,7 +4939,7 @@ bt_field_class_option_with_selector_field_bool_selector_is_reversed(
 
     To create a similar option field class from a trace class which was
     created from a self component which belongs to a trace processing
-    graph with the effective MIP version&nbsp;1, use
+    graph with the effective MIP version&nbsp;1 (\bt_avail_since{1}), use
     bt_field_class_option_with_selector_field_location_integer_unsigned_create().
     @endparblock
 
@@ -4987,6 +5054,8 @@ values:
 @returns
     New option field class reference, or \c NULL on memory error.
 
+@bt_since{1}
+
 @bt_pre_not_null{trace_class}
 @bt_pre_tc_with_mip{trace_class, 1}
 @bt_pre_not_null{optional_field_class}
@@ -5057,7 +5126,7 @@ bt_field_class_option_with_selector_field_integer_unsigned_borrow_selector_range
 
     To create a similar option field class from a trace class which was
     created from a self component which belongs to a trace processing
-    graph with the effective MIP version&nbsp;1, use
+    graph with the effective MIP version&nbsp;1 (\bt_avail_since{1}), use
     bt_field_class_option_with_selector_field_location_integer_signed_create().
     @endparblock
 
@@ -5171,6 +5240,8 @@ values:
 @returns
     New option field class reference, or \c NULL on memory error.
 
+@bt_since{1}
+
 @bt_pre_not_null{trace_class}
 @bt_pre_tc_with_mip{trace_class, 1}
 @bt_pre_not_null{optional_field_class}
@@ -5239,7 +5310,7 @@ bt_field_class_option_with_selector_field_integer_signed_borrow_selector_ranges_
 
     To create a variant field class from a trace class which was
     created from a self component which belongs to a trace processing
-    graph with the effective MIP version&nbsp;1, use
+    graph with the effective MIP version&nbsp;1 (\bt_avail_since{1}), use
     bt_field_class_variant_without_selector_field_location_create(),
     bt_field_class_variant_with_selector_field_location_integer_unsigned_create(),
     or bt_field_class_variant_with_selector_field_location_integer_signed_create().
@@ -5451,7 +5522,7 @@ This function may return \c NULL when the following are true:
 - The variant field class containing \bt_p{option} was created from a
   \bt_trace_cls which was created from a \bt_comp which belongs
   to a trace processing \bt_graph with the effective
-  \bt_mip version&nbsp;1.
+  \bt_mip version&nbsp;1 (\bt_avail_since{1}).
 
 - \bt_p{option} has no name.
 
@@ -5461,7 +5532,7 @@ This function may return \c NULL when the following are true:
 @returns
     @parblock
     Name of \bt_p{option}, or \c NULL if none
-    (possible under MIP&nbsp;1).
+    (possible under MIP&nbsp;1; \bt_avail_since{1}).
 
     The returned pointer remains valid as long as \bt_p{option} exists.
     @endparblock
@@ -5617,6 +5688,8 @@ property values:
 @returns
     New option field class reference, or \c NULL on memory error.
 
+@bt_since{1}
+
 @bt_pre_not_null{trace_class}
 @bt_pre_tc_with_mip{trace_class, 1}
 
@@ -5665,7 +5738,7 @@ See the \ref api-tir-fc-var-prop-opts "options" property.
     Name of the option to append to \bt_p{field_class} (copied).
 
     Can be \c NULL when the effective \bt_mip version of the trace
-    processing \bt_graph is&nbsp;1.
+    processing \bt_graph is&nbsp;1 (\bt_avail_since{1}).
     @endparblock
 @param[in] option_field_class
     Field class of the option to append to \bt_p{field_class}.
@@ -5780,6 +5853,8 @@ bt_field_class_variant_with_selector_field_location_integer_signed_create().
 @returns
     Selector field location of \bt_p{field_class}.
 
+@bt_since{1}
+
 @bt_pre_not_null{field_class}
 @bt_pre_is_var_ws_fc{field_class}
 @bt_pre_fc_with_mip{field_class, 1}
@@ -5832,6 +5907,8 @@ property values:
 @returns
     New variant field class reference, or \c NULL on memory error.
 
+@bt_since{1}
+
 @bt_pre_not_null{trace_class}
 @bt_pre_tc_with_mip{trace_class, 1}
 @bt_pre_not_null{selector_field_location}
@@ -5864,7 +5941,7 @@ See the \ref api-tir-fc-var-prop-opts "options" property.
     Name of the option to append to \bt_p{field_class} (copied).
 
     Can be \c NULL when the effective \bt_mip version of the trace
-    processing \bt_graph is&nbsp;1.
+    processing \bt_graph is&nbsp;1 (\bt_avail_since{1}).
     @endparblock
 @param[in] option_field_class
     Field class of the option to append to \bt_p{field_class}.
@@ -6090,6 +6167,8 @@ property values:
 @returns
     New variant field class reference, or \c NULL on memory error.
 
+@bt_since{1}
+
 @bt_pre_not_null{trace_class}
 @bt_pre_tc_with_mip{trace_class, 1}
 @bt_pre_not_null{selector_field_location}
@@ -6122,7 +6201,7 @@ See the \ref api-tir-fc-var-prop-opts "options" property.
     Name of the option to append to \bt_p{field_class} (copied).
 
     Can be \c NULL when the effective \bt_mip version of the trace
-    processing \bt_graph is&nbsp;1.
+    processing \bt_graph is&nbsp;1 (\bt_avail_since{1}).
     @endparblock
 @param[in] option_field_class
     Field class of the option to append to \bt_p{field_class}.
@@ -6323,6 +6402,8 @@ bt_field_class_variant_with_selector_field_integer_signed_option_as_option_const
 
 @returns
     Effective MIP version of \bt_p{field_class}.
+
+@bt_since{1}
 
 @bt_pre_not_null{field_class}
 
