@@ -79,6 +79,10 @@ The type of a clock class is #bt_clock_class.
 Create a default clock class from a \bt_self_comp with
 bt_clock_class_create().
 
+Since Babeltrace&nbsp;2.1, get the effective \bt_mip version of
+the trace processing \bt_graph containing the \bt_comp from which
+a clock class was created with bt_clock_class_get_graph_mip_version().
+
 <h1>\anchor api-tir-clock-cls-origin Clock value vs. clock origin</h1>
 
 The value of a \bt_stream clock (a conceptual instance of a clock class)
