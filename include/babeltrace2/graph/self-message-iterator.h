@@ -206,7 +206,7 @@ A message iterator can seek forward if all the \bt_p_msg of its
 message sequence have some \bt_cs.
 
 @attention
-    You can only call this function during the execution of the
+    You may only call this function during the execution of the
     \ref api-msg-iter-cls-meth-init "initialization method" of a
     message iterator.
 
