@@ -104,6 +104,10 @@ Get the type enumerator of a field class with bt_field_class_get_type().
 Get whether or not a field class type conceptually \em is a given type
 with the inline bt_field_class_type_is() function.
 
+Since Babeltrace&nbsp;2.1, get the effective \bt_mip (MIP) version of
+the trace processing \bt_graph containing the \bt_comp from which a
+field class was created with bt_field_class_get_graph_mip_version().
+
 The following table shows the available type enumerators and creation
 functions for each type of \em concrete (non-abstract) field class:
 
