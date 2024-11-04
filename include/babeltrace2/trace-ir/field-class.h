@@ -2077,6 +2077,36 @@ extern const bt_value *bt_field_class_borrow_user_attributes_const(
 /*! @} */
 
 /*!
+@name Effective Message Interchange Protocol (MIP) version access
+@{
+*/
+
+/*!
+@brief
+    Returns the effective \bt_mip (MIP) version of the trace processing
+    \bt_graph containing the \bt_comp from which \bt_p{field_class} was
+    created.
+
+@param[in] field_class
+    Field class of which to get the effective MIP version.
+
+@returns
+    Effective MIP version of \bt_p{field_class}.
+
+@bt_since{1}
+
+@bt_pre_not_null{field_class}
+
+@sa bt_self_component_get_graph_mip_version() &mdash;
+    Returns the effective MIP version of the trace processing
+    graph which contains a given component.
+*/
+extern uint64_t bt_field_class_get_graph_mip_version(
+		const bt_field_class *field_class) __BT_NOEXCEPT;
+
+/*! @} */
+
+/*!
 @name Boolean field class
 @{
 */
@@ -6387,36 +6417,6 @@ bt_field_class_variant_with_selector_field_integer_signed_option_as_option_const
 {
 	return __BT_UPCAST_CONST(bt_field_class_variant_option, option);
 }
-
-/*! @} */
-
-/*!
-@name Effective Message Interchange Protocol (MIP) version access
-@{
-*/
-
-/*!
-@brief
-    Returns the effective \bt_mip (MIP) version of the trace processing
-    \bt_graph containing the \bt_comp from which \bt_p{field_class} was
-    created.
-
-@param[in] field_class
-    Field class of which to get the effective MIP version.
-
-@returns
-    Effective MIP version of \bt_p{field_class}.
-
-@bt_since{1}
-
-@bt_pre_not_null{field_class}
-
-@sa bt_self_component_get_graph_mip_version() &mdash;
-    Returns the effective MIP version of the trace processing
-    graph which contains a given component.
-*/
-extern uint64_t bt_field_class_get_graph_mip_version(
-		const bt_field_class *field_class) __BT_NOEXCEPT;
 
 /*! @} */
 
