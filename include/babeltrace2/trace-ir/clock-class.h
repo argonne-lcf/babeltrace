@@ -95,6 +95,9 @@ The origin of a clock is one of, depending on its class:
     Two stream clocks of which the classes have an unknown
     origin only have a correlation if they share the same
     \link api-tir-clock-cls-prop-iden identity\endlink.
+
+    Check whether or not two clock classes share the same identity
+    with bt_clock_class_has_same_identity().
   </dd>
 
   <dt>If bt_clock_class_origin_is_unix_epoch() returns #BT_TRUE</dt>
@@ -105,9 +108,6 @@ The origin of a clock is one of, depending on its class:
     All stream clocks with a Unix epoch origin, whatever their
     \link api-tir-clock-cls-prop-iden identity\endlink,
     have a correlation.
-
-    Check whether or not two clock classes share the same identity
-    with bt_clock_class_has_same_identity().
   </dd>
 
   <dt>
