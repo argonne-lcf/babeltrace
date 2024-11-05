@@ -348,6 +348,11 @@ public:
             internal::CommonClockClassSpec<LibObjT>::userAttributes(this->libObjPtr())};
     }
 
+    std::uint64_t graphMipVersion() const noexcept
+    {
+        return bt_clock_class_get_graph_mip_version(this->libObjPtr());
+    }
+
     std::int64_t cyclesToNsFromOrigin(const std::uint64_t value) const
     {
         std::int64_t nsFromOrigin;
