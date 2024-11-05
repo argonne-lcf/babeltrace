@@ -42,6 +42,7 @@ The trace IR objects are divided into two main categories:
     - \bt_c_clock_cls
     - \bt_c_ev_cls
     - \bt_cp_fc
+    - \bt_c_field_loc
     - \bt_c_field_path
     - \bt_c_stream_cls
     - \bt_c_trace_cls
