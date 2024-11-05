@@ -517,11 +517,11 @@ void bt_field_class_integer_set_field_value_range(
 		size >= 1 && size <= 64,
 		"Unsupported size for integer field class's field value range "
 		"(minimum is 1, maximum is 64): size=%" PRIu64, size);
-	BT_ASSERT_PRE("valid-n-for-enumeration-field-class",
+	BT_ASSERT_PRE("valid-n-for-integer-field-class",
 		int_fc->common.type == BT_FIELD_CLASS_TYPE_UNSIGNED_INTEGER ||
 		int_fc->common.type == BT_FIELD_CLASS_TYPE_SIGNED_INTEGER ||
 		size_is_valid_for_enumeration_field_class(fc, size),
-		"Invalid field value range for enumeration field class: "
+		"Invalid field value range for integer field class: "
 		"at least one of the current mapping ranges contains values "
 		"which are outside this range: %!+F, size=%" PRIu64, fc, size);
 	int_fc->range = size;
