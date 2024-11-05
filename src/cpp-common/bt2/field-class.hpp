@@ -457,6 +457,11 @@ public:
             internal::CommonFieldClassSpec<LibObjT>::userAttributes(this->libObjPtr())};
     }
 
+    std::uint64_t graphMipVersion() const noexcept
+    {
+        return bt_field_class_get_graph_mip_version(this->libObjPtr());
+    }
+
     Shared shared() const noexcept
     {
         return Shared::createWithRef(*this);
