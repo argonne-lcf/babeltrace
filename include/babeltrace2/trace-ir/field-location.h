@@ -323,7 +323,7 @@ extern uint64_t bt_field_location_get_item_count(
 
 /*!
 @brief
-    Borrows the item at index \bt_p{index} from the
+    Returns the item at index \bt_p{index} from the
     field location \bt_p{field_location}.
 
 See the \ref api-tir-field-loc-prop-items "items" property.
