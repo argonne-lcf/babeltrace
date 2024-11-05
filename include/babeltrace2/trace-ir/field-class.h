@@ -491,6 +491,26 @@ Integer field classes have the following common properties:
   </dd>
 
   <dt>
+    \anchor api-tir-fc-int-prop-hints
+    Field value hints (only available when the field class was created
+    from a \bt_trace_cls which was created
+    from a \bt_comp which belongs to a trace processing \bt_graph with
+    the effective \bt_mip version&nbsp;1; \bt_avail_since{1})
+  </dt>
+  <dd>
+    Hints about the values of the instances (integer fields)
+    integer field class.
+
+    As of \bt_name_version_min_maj, the only available hint is
+    #BT_FIELD_CLASS_INTEGER_FIELD_VALUE_HINT_SMALL which means that
+    instances are expected to hold small integer values.
+
+    Use bt_field_class_integer_set_field_value_hints(),
+    bt_field_class_integer_get_field_value_hints(), and
+    bt_field_class_integer_has_field_value_hint().
+  </dd>
+
+  <dt>
     \anchor api-tir-fc-int-prop-base
     Preferred display base
   </dt>
@@ -2586,6 +2606,123 @@ extern uint64_t bt_field_class_integer_get_field_value_range(
 
 /*!
 @brief
+    Integer field class field value hint.
+
+@bt_since{1}
+*/
+typedef enum bt_field_class_integer_field_value_hint {
+	/*!
+	@brief
+	    Expect small integer field values.
+	*/
+	BT_FIELD_CLASS_INTEGER_FIELD_VALUE_HINT_SMALL = 1ULL << 0,
+} bt_field_class_integer_field_value_hint;
+
+/*!
+@brief
+    Sets the field value hints of the \bt_int_fc \bt_p{field_class}
+    to a bitwise disjunction (<em>OR</em>)
+    of #bt_field_class_integer_field_value_hint enumerators.
+
+See the \ref api-tir-fc-int-prop-hints "field value hints" property.
+
+@param[in] field_class
+    Integer field class of which to set the field value hints to
+    \bt_p{hints}.
+@param[in] hints
+    Bitwise disjunction (<em>OR</em>) of
+    of #bt_field_class_integer_field_value_hint enumerators.
+
+@bt_since{1}
+
+@bt_pre_not_null{field_class}
+@bt_pre_hot{field_class}
+@bt_pre_is_int_fc{field_class}
+@bt_pre_fc_with_mip{field_class, 1}
+@pre
+    \bt_p{hints} is 0 or #BT_FIELD_CLASS_INTEGER_FIELD_VALUE_HINT_SMALL.
+
+@sa bt_field_class_integer_get_field_value_hints() &mdash;
+    Returns the field value hints of an integer field class.
+@sa bt_field_class_integer_has_field_value_hint() &mdash;
+    Returns whether or not an integer field class has a given
+    field value hint.
+*/
+void bt_field_class_integer_set_field_value_hints(bt_field_class *field_class,
+		uint64_t hints) __BT_NOEXCEPT;
+
+/*!
+@brief
+    Returns the field value hints of the \bt_int_fc \bt_p{field_class}.
+
+See the \ref api-tir-fc-int-prop-hints "field value hints" property.
+
+@param[in] field_class
+    Integer field class of which to get the field value hints.
+
+@returns
+    Field value hints of \bt_p{field_class} as a bitwise disjunction
+    (<em>OR</em>) of #bt_field_class_integer_field_value_hint
+    enumerators.
+
+@bt_since{1}
+
+@bt_pre_not_null{field_class}
+@bt_pre_is_int_fc{field_class}
+@bt_pre_fc_with_mip{field_class, 1}
+
+@sa bt_field_class_integer_set_field_value_hints() &mdash;
+    Sets the field value hints of an integer field class.
+@sa bt_field_class_integer_has_field_value_hint() &mdash;
+    Returns whether or not an integer field class has a given
+    field value hint.
+*/
+uint64_t bt_field_class_integer_get_field_value_hints(
+		const bt_field_class *field_class) __BT_NOEXCEPT;
+
+/*!
+@brief
+    Returns whether or not the \bt_int_fc \bt_p{field_class} has
+    the field value hint \bt_p{hint}.
+
+See the \ref api-tir-fc-int-prop-hints "field value hints" property.
+
+@param[in] field_class
+    Integer field class of which to get whether or not it has the
+    field value hint \bt_p{hint}.
+@param[in] hint
+    Field value hint to check.
+
+@retval #BT_TRUE
+    \bt_p{field_class} has the field value hint \bt_p{hint}.
+@retval #BT_FALSE
+    \bt_p{field_class} doesn't have the field value hint \bt_p{hint}.
+
+@bt_since{1}
+
+@bt_pre_not_null{field_class}
+@bt_pre_is_int_fc{field_class}
+@bt_pre_fc_with_mip{field_class, 1}
+@pre
+    \bt_p{hint} is 0 or #BT_FIELD_CLASS_INTEGER_FIELD_VALUE_HINT_SMALL.
+
+@sa bt_field_class_integer_set_field_value_hints() &mdash;
+    Sets the field value hints of an integer field class.
+@sa bt_field_class_integer_get_field_value_hints() &mdash;
+    Returns the field value hints of an integer field class.
+*/
+static inline
+bt_bool bt_field_class_integer_has_field_value_hint(
+		const bt_field_class * const field_class,
+		const bt_field_class_integer_field_value_hint hint)
+		__BT_NOEXCEPT
+{
+	return (bt_field_class_integer_get_field_value_hints(field_class) & (uint64_t) hint) ?
+		BT_TRUE : BT_FALSE;
+}
+
+/*!
+@brief
     Integer field class preferred display bases.
 */
 typedef enum bt_field_class_integer_preferred_display_base {
@@ -2690,6 +2827,12 @@ property values:
     <td>\ref api-tir-fc-int-prop-size "Field value range"
     <td>[0,&nbsp;2<sup>64</sup>&nbsp;−&nbsp;1]
   <tr>
+    <td>
+      \bt_mip version&nbsp;1:
+      \ref api-tir-fc-int-prop-hints "field value hints"
+      (\bt_avail_since{1})
+    <td>\em None
+  <tr>
     <td>\ref api-tir-fc-int-prop-base "Preferred display base"
     <td>#BT_FIELD_CLASS_INTEGER_PREFERRED_DISPLAY_BASE_DECIMAL
   <tr>
@@ -2729,6 +2872,12 @@ property values:
   <tr>
     <td>\ref api-tir-fc-int-prop-size "Field value range"
     <td>[−2<sup>63</sup>,&nbsp;2<sup>63</sup>&nbsp;−&nbsp;1]
+  <tr>
+    <td>
+      \bt_mip version&nbsp;1:
+      \ref api-tir-fc-int-prop-hints "field value hints"
+      (\bt_avail_since{1})
+    <td>\em None
   <tr>
     <td>\ref api-tir-fc-int-prop-base "Preferred display base"
     <td>#BT_FIELD_CLASS_INTEGER_PREFERRED_DISPLAY_BASE_DECIMAL
@@ -2955,6 +3104,12 @@ following property values:
   <tr>
     <td>\ref api-tir-fc-int-prop-size "Field value range"
     <td>[0,&nbsp;2<sup>64</sup>&nbsp;−&nbsp;1]
+  <tr>
+    <td>
+      \bt_mip version&nbsp;1:
+      \ref api-tir-fc-int-prop-hints "field value hints"
+      (\bt_avail_since{1})
+    <td>\em None
   <tr>
     <td>\ref api-tir-fc-int-prop-base "Preferred display base"
     <td>#BT_FIELD_CLASS_INTEGER_PREFERRED_DISPLAY_BASE_DECIMAL
@@ -3224,6 +3379,12 @@ following property values:
   <tr>
     <td>\ref api-tir-fc-int-prop-size "Field value range"
     <td>[−2<sup>63</sup>,&nbsp;2<sup>63</sup>&nbsp;−&nbsp;1]
+  <tr>
+    <td>
+      \bt_mip version&nbsp;1:
+      \ref api-tir-fc-int-prop-hints "field value hints"
+      (\bt_avail_since{1})
+    <td>\em None
   <tr>
     <td>\ref api-tir-fc-int-prop-base "Preferred display base"
     <td>#BT_FIELD_CLASS_INTEGER_PREFERRED_DISPLAY_BASE_DECIMAL

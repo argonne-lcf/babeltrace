@@ -100,6 +100,9 @@ struct bt_field_class_integer {
 	 */
 	uint64_t range;
 
+	/* Hints (bitwise OR) */
+	uint64_t hints;
+
 	enum bt_field_class_integer_preferred_display_base base;
 };
 

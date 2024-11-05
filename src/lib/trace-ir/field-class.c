@@ -529,6 +529,36 @@ void bt_field_class_integer_set_field_value_range(
 }
 
 BT_EXPORT
+void bt_field_class_integer_set_field_value_hints(
+		struct bt_field_class *fc, uint64_t hints)
+{
+	struct bt_field_class_integer *int_fc = (void *) fc;
+
+	BT_ASSERT_PRE_FC_NON_NULL(fc);
+	BT_ASSERT_PRE_FC_IS_INT("field-class", fc, "Field class");
+	BT_ASSERT_PRE_DEV_FC_HOT(fc);
+	BT_ASSERT_PRE_FC_MIP_VERSION_GE(fc, 1);
+	BT_ASSERT_PRE("hint-exists",
+		hints == 0 || hints == BT_FIELD_CLASS_INTEGER_FIELD_VALUE_HINT_SMALL,
+		"Integral hints value contains an unknown hint: "
+		"%!+F, hints=%" PRIu64, fc, hints);
+	int_fc->hints = hints;
+	BT_LIB_LOGD("Set integer field class's field value hints: %!+F", fc);
+}
+
+BT_EXPORT
+uint64_t bt_field_class_integer_get_field_value_hints(
+		const struct bt_field_class *fc)
+{
+	const struct bt_field_class_integer *int_fc = (const void *) fc;
+
+	BT_ASSERT_PRE_DEV_FC_NON_NULL(fc);
+	BT_ASSERT_PRE_DEV_FC_IS_INT("field-class", fc, "Field class");
+	BT_ASSERT_PRE_FC_MIP_VERSION_GE(fc, 1);
+	return int_fc->hints;
+}
+
+BT_EXPORT
 enum bt_field_class_integer_preferred_display_base
 bt_field_class_integer_get_preferred_display_base(const struct bt_field_class *fc)
 {

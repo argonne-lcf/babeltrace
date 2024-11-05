@@ -139,8 +139,9 @@ static inline void format_integer_field_class(char **buf_ch, const char *prefix,
 	const struct bt_field_class_integer *int_fc =
 		(const void *) field_class;
 
-	BUF_APPEND(", %srange-size=%" PRIu64 ", %sbase=%s",
+	BUF_APPEND(", %srange-size=%" PRIu64 ", %shints=%" PRIu64 ", %sbase=%s",
 		PRFIELD(int_fc->range),
+		PRFIELD(int_fc->hints),
 		PRFIELD(bt_common_field_class_integer_preferred_display_base_string(int_fc->base)));
 }
 

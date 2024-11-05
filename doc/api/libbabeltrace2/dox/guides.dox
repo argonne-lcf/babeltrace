@@ -277,6 +277,9 @@ MIP&nbsp;1 brings the required changes to support the features of
 
 - A \bt_ba_fc may have \ref api-tir-fc-ba-prop-flags "flags".
 
+- An \bt_int_fc may have
+  \ref api-tir-fc-int-prop-hints "field value hints".
+
 - There are new \ref api-tir-fc-blob "BLOB field classes" and
   \ref api-tir-field-blob "fields".
 
@@ -494,6 +497,35 @@ The new related functions are:
     field for the set bits of its integral value
   </dt>
   <dd>bt_field_bit_array_get_active_flag_labels()</dd>
+</dl>
+
+@subsection guide-mip-0-to-mip-1-int-fc-hints Integer field class field value hints
+
+An \bt_int_fc may have
+\ref api-tir-fc-int-prop-hints "field value hints".
+
+An integer field class field value hint is a marker that provides
+additional context about the expected characteristics of instance
+(integer field) values. These hints serve as non-binding recommendations
+to guide downstream components about specific properties or
+optimizations.
+
+As of \bt_name_version_min_maj, the only available hint is
+#BT_FIELD_CLASS_INTEGER_FIELD_VALUE_HINT_SMALL which means that
+instances of the integer field class are expected to hold small integer
+values.
+
+The new related functions are:
+
+<dl>
+  <dt>Set the field value hints of an integer field class</dt>
+  <dd>bt_field_class_integer_set_field_value_hints()</dd>
+
+  <dt>Get the field value hints of an integer field class</dt>
+  <dd>bt_field_class_integer_get_field_value_hints()</dd>
+
+  <dt>Get whether or not an integer field class has a given field value hint</dt>
+  <dd>bt_field_class_integer_has_field_value_hint()</dd>
 </dl>
 
 @subsection guide-mip-0-to-mip-1-blob BLOB field classes and fields
