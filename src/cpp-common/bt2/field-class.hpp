@@ -646,6 +646,11 @@ public:
     using typename CommonFieldClass<LibObjT>::LibObjPtr;
     using Shared = SharedFieldClass<CommonIntegerFieldClass<LibObjT>, LibObjT>;
 
+    enum
+    {
+        SmallFieldValueHint = BT_FIELD_CLASS_INTEGER_FIELD_VALUE_HINT_SMALL,
+    };
+
     explicit CommonIntegerFieldClass(const LibObjPtr libObjPtr) noexcept :
         _ThisCommonFieldClass {libObjPtr}
     {
@@ -682,6 +687,26 @@ public:
     std::uint64_t fieldValueRange() const noexcept
     {
         return bt_field_class_integer_get_field_value_range(this->libObjPtr());
+    }
+
+    CommonIntegerFieldClass fieldValueHints(const std::uint64_t hints) const noexcept
+    {
+        static_assert(!std::is_const<LibObjT>::value,
+                      "Not available with `bt2::ConstIntegerFieldClass`.");
+
+        bt_field_class_integer_set_field_value_hints(this->libObjPtr(), hints);
+        return *this;
+    }
+
+    std::uint64_t fieldValueHints() const noexcept
+    {
+        return bt_field_class_integer_get_field_value_hints(this->libObjPtr());
+    }
+
+    bool hasFieldValueHint(const std::uint64_t hint) const noexcept
+    {
+        return static_cast<bool>(bt_field_class_integer_has_field_value_hint(
+            this->libObjPtr(), static_cast<bt_field_class_integer_field_value_hint>(hint)));
     }
 
     CommonIntegerFieldClass preferredDisplayBase(const DisplayBase base) const noexcept
