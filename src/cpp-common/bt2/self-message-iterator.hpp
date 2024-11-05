@@ -58,6 +58,11 @@ public:
         return static_cast<bool>(bt_self_message_iterator_is_interrupted(this->libObjPtr()));
     }
 
+    std::uint64_t graphMipVersion() const noexcept
+    {
+        return bt_self_message_iterator_get_graph_mip_version(this->libObjPtr());
+    }
+
     template <typename T>
     T& data() const noexcept
     {
