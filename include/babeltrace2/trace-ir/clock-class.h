@@ -310,6 +310,7 @@ A clock class has the following properties:
     <dl>
       <dt>MIP&nbsp;0</dt>
       <dd>
+        \anchor api-tir-clock-cls-prop-uuid
         The name and UUID property pair.
 
         A valid identity only requires the UUID property.
