@@ -725,6 +725,12 @@ void assert_post_dev_clock_classes_are_compatible_one(
 				"Expecting no clock class, got one: %![cc-]+K",
 				actual_clock_cls);
 
+			/*
+			 * GCC gives bogus `-Wimplicit-fallthrough`
+			 * warnings: convince it that it's not possible.
+			 */
+			bt_common_abort();
+
 		case BT_CLOCK_CORRELATION_VALIDATOR_ERROR_TYPE_EXPECTING_ORIGIN_KNOWN_GOT_NO_CLOCK_CLASS:
 			if (graph_mip_version == 0) {
 				BT_ASSERT_POST_DEV(NEXT_METHOD_NAME,
@@ -769,6 +775,12 @@ void assert_post_dev_clock_classes_are_compatible_one(
 				"clock-class-has-expected-origin", false,
 				"Expecting a clock class with a specific origin: %![cc-]+K, " EXP_CC_ORIGIN_FMT,
 				actual_clock_cls, EXP_CC_ORIGIN_VALUES);
+
+			/*
+			 * GCC gives bogus `-Wimplicit-fallthrough`
+			 * warnings: convince it that it's not possible.
+			 */
+			bt_common_abort();
 
 		case BT_CLOCK_CORRELATION_VALIDATOR_ERROR_TYPE_EXPECTING_ORIGIN_UNKNOWN_WITH_ID_GOT_NO_CLOCK_CLASS:
 			if (graph_mip_version == 0) {
@@ -859,6 +871,12 @@ void assert_post_dev_clock_classes_are_compatible_one(
 				"stream-class-has-clock-class", false,
 				"Expecting a clock class, got none: %![expected-cc-]+K",
 				ref_clock_cls);
+
+			/*
+			 * GCC gives bogus `-Wimplicit-fallthrough`
+			 * warnings: convince it that it's not possible.
+			 */
+			bt_common_abort();
 
 		case BT_CLOCK_CORRELATION_VALIDATOR_ERROR_TYPE_EXPECTING_ORIGIN_UNKNOWN_WITHOUT_ID_GOT_OTHER_CLOCK_CLASS:
 			BT_ASSERT_POST_DEV(NEXT_METHOD_NAME,
