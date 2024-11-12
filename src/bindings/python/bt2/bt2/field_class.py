@@ -460,11 +460,8 @@ class _StructureFieldClass(_StructureFieldClassConst, _FieldClass):
         if name in self:
             raise ValueError("duplicate member name '{}'".format(name))
 
-        user_attributes_value = None
-
-        if user_attributes is not None:
-            # check now that user attributes are valid
-            user_attributes_value = bt2_value.create_value(user_attributes)
+        # check now that user attributes are valid
+        user_attributes_value = bt2_value.create_value(user_attributes)
 
         status = native_bt.field_class_structure_append_member(
             self._ptr, name, field_class._ptr
@@ -799,11 +796,8 @@ class _VariantFieldClassWithoutSelector(
         if name in self:
             raise ValueError("duplicate option name '{}'".format(name))
 
-        user_attributes_value = None
-
-        if user_attributes is not None:
-            # check now that user attributes are valid
-            user_attributes_value = bt2_value.create_value(user_attributes)
+        # check now that user attributes are valid
+        user_attributes_value = bt2_value.create_value(user_attributes)
 
         status = native_bt.field_class_variant_without_selector_append_option(
             self._ptr, name, field_class._ptr
@@ -861,11 +855,8 @@ class _VariantFieldClassWithIntegerSelector(
         if len(ranges) == 0:
             raise ValueError("range set is empty")
 
-        user_attributes_value = None
-
-        if user_attributes is not None:
-            # check now that user attributes are valid
-            user_attributes_value = bt2_value.create_value(user_attributes)
+        # check now that user attributes are valid
+        user_attributes_value = bt2_value.create_value(user_attributes)
 
         # TODO: check overlaps (precondition of self._append_option())
 

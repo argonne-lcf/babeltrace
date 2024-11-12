@@ -554,12 +554,9 @@ class _UserComponentType(type):
         self._bt_ptr = comp_ptr
 
         # call user's __init__() method
-        if params_ptr is not None:
-            params = bt2_value._create_from_const_ptr_and_get_ref(params_ptr)
-        else:
-            params = None
-
-        self.__init__(config, params, obj)
+        self.__init__(
+            config, bt2_value._create_from_const_ptr_and_get_ref(params_ptr), obj
+        )
         return self
 
     def __call__(cls, *args, **kwargs):
@@ -631,13 +628,9 @@ class _UserComponentType(type):
 
     def _bt_get_supported_mip_versions_from_native(cls, params_ptr, obj, log_level):
         # this can raise, but the native side checks the exception
-        if params_ptr is not None:
-            params = bt2_value._create_from_const_ptr_and_get_ref(params_ptr)
-        else:
-            params = None
-
-        # this can raise, but the native side checks the exception
-        range_set = cls._user_get_supported_mip_versions(params, obj, log_level)
+        range_set = cls._user_get_supported_mip_versions(
+            bt2_value._create_from_const_ptr_and_get_ref(params_ptr), obj, log_level
+        )
 
         if type(range_set) is not bt2_integer_range_set.UnsignedIntegerRangeSet:
             # this can raise, but the native side checks the exception
@@ -653,17 +646,16 @@ class _UserComponentType(type):
     def _bt_query_from_native(
         cls, priv_query_exec_ptr, object_name, params_ptr, method_obj
     ):
-        # this can raise, but the native side checks the exception
-        if params_ptr is not None:
-            params = bt2_value._create_from_const_ptr_and_get_ref(params_ptr)
-        else:
-            params = None
-
         priv_query_exec = bt2_query_executor._PrivateQueryExecutor(priv_query_exec_ptr)
 
         try:
             # this can raise, but the native side checks the exception
-            results = cls._user_query(priv_query_exec, object_name, params, method_obj)
+            results = cls._user_query(
+                priv_query_exec,
+                object_name,
+                bt2_value._create_from_const_ptr_and_get_ref(params_ptr),
+                method_obj,
+            )
         finally:
             # the private query executor is a private view on the query
             # executor; it's not a shared object (the library does not
