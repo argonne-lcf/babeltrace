@@ -59,6 +59,9 @@ class _UniqueObject(_BaseObject):
 
     @classmethod
     def _create_from_ptr_and_get_ref(cls, ptr, owner_ptr, owner_get_ref, owner_put_ref):
+        assert ptr is not None
+        assert owner_ptr is not None
+
         obj = cls.__new__(cls)
 
         obj._ptr_internal = ptr
@@ -103,6 +106,8 @@ class _SharedObject(_BaseObject, abc.ABC):
 
     @classmethod
     def _create_from_ptr(cls, ptr_owned):
+        assert ptr_owned is not None
+
         obj = cls.__new__(cls)
         obj._ptr_internal = ptr_owned
         return obj
