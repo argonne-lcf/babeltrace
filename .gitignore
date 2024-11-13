@@ -41,7 +41,7 @@ stamp-h1
 __pycache__
 /src/bindings/python/bt2/dist
 /src/bindings/python/bt2/setup.py
-/src/bindings/python/bt2/bt2/native_bt.c
+/src/bindings/python/bt2/bt2/native_bt.cpp
 /src/bindings/python/bt2/bt2/native_bt.d
 /src/bindings/python/bt2/bt2/native_bt.py
 /src/bindings/python/bt2/bt2/version.py
