@@ -317,7 +317,7 @@ void MsgIter::_validateMsgClkCls(const bt2::ConstMessage msg)
             return formatClkClsOrigin(refClkCls->origin(), "expected-", graphMipVersion);
         };
         const auto clkCls = [&] {
-            return formatClkClsId(*refClkCls, "expected", graphMipVersion);
+            return formatClkClsId(*refClkCls, "expected-", graphMipVersion);
         };
         const auto formatActClkCls = [&] {
             return formatClkCls(*actualClkCls, "", graphMipVersion);
