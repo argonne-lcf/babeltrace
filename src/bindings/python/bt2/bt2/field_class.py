@@ -88,7 +88,7 @@ class _BitArrayFieldClassConst(_FieldClassConst):
     _NAME = "Const bit array"
 
     @property
-    def length(self):
+    def length(self) -> int:
         return native_bt.field_class_bit_array_get_length(self._ptr)
 
 
