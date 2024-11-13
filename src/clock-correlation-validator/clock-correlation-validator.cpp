@@ -114,8 +114,8 @@ void ClockCorrelationValidator::_validate(const bt2::ConstMessage msg,
          * same origin.
          */
         if (graphMipVersion > 0) {
-            if (bt2::isSameClockOrigin(clockCls->origin(), _mRefClockClass->origin(),
-                                       graphMipVersion)) {
+            if (!bt2::isSameClockOrigin(clockCls->origin(), _mRefClockClass->origin(),
+                                        graphMipVersion)) {
                 throw ClockCorrelationError {
                     ClockCorrelationError::Type::ExpectingOriginKnownGotOtherOrigin, *clockCls,
                     *_mRefClockClass, streamCls};

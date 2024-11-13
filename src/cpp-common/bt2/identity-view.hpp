@@ -48,7 +48,7 @@ inline bool operator==(const IdentityView& a, const IdentityView& b) noexcept
      * If an identity misses a name or a UID, it's never considered the
      * same as another identity.
      */
-    if (!a.name() || !a.uid() || !b.name() || b.uid()) {
+    if (!a.name() || !a.uid() || !b.name() || !b.uid()) {
         return false;
     }
 

@@ -152,16 +152,16 @@ private:
     TestSourceData _mData;
 };
 
-class ErrorTestCase final
+template <typename DerivedT>
+class TestCase
 {
 public:
-    /* Intentionally not explicit */
-    ErrorTestCase(CreateClockClass createClockClass1Param, CreateClockClass createClockClass2Param,
-                  const std::uint64_t graphMipVersion, const char * const testName,
-                  const char * const expectedCauseMsg) :
-        _mCreateClockClass1 {createClockClass1Param},
-        _mCreateClockClass2 {createClockClass2Param}, _mGraphMipVersion {graphMipVersion},
-        _mTestName {testName}, _mExpectedCauseMsg {expectedCauseMsg}
+    explicit TestCase(const CreateClockClass createClockClass1,
+                      const CreateClockClass createClockClass2, const std::uint64_t graphMipVersion,
+                      const char * const testName) noexcept :
+        _mCreateClockClass1 {createClockClass1},
+        _mCreateClockClass2 {createClockClass2}, _mGraphMipVersion {graphMipVersion},
+        _mTestName {testName}
     {
     }
 
@@ -174,6 +174,42 @@ private:
     CreateClockClass _mCreateClockClass2;
     std::uint64_t _mGraphMipVersion;
     const char *_mTestName;
+};
+
+class SucceedTestCase final : public TestCase<SucceedTestCase>
+{
+    friend TestCase<SucceedTestCase>;
+
+public:
+    explicit SucceedTestCase(CreateClockClass createClockClass, const std::uint64_t graphMipVersion,
+                             const char * const testName) noexcept :
+        TestCase {createClockClass, createClockClass, graphMipVersion, testName}
+    {
+    }
+
+private:
+    void _handleResult(bool thrown, bt2::UniqueConstError error,
+                       const std::string& specTestName) const noexcept;
+};
+
+class ErrorTestCase final : public TestCase<ErrorTestCase>
+{
+    friend TestCase<ErrorTestCase>;
+
+public:
+    explicit ErrorTestCase(CreateClockClass createClockClass1Param,
+                           CreateClockClass createClockClass2Param,
+                           const std::uint64_t graphMipVersion, const char * const testName,
+                           const char * const expectedCauseMsg) noexcept :
+        TestCase {createClockClass1Param, createClockClass2Param, graphMipVersion, testName},
+        _mExpectedCauseMsg {expectedCauseMsg}
+    {
+    }
+
+private:
+    void _handleResult(bool thrown, bt2::UniqueConstError error,
+                       const std::string& specTestName) const noexcept;
+
     const char *_mExpectedCauseMsg;
 };
 
@@ -182,7 +218,8 @@ bt2::ClockClass::Shared noClockClass(bt2::SelfComponent) noexcept
     return bt2::ClockClass::Shared {};
 }
 
-void ErrorTestCase::run() const noexcept
+template <typename Derived>
+void TestCase<Derived>::run() const noexcept
 {
     static constexpr std::array<MsgType, 2> msgTypes {
         MsgType::Stream,
@@ -239,9 +276,9 @@ std::string makeSpecTestName(const char * const testName, const MsgType msgType1
     return fmt::format("{} ({}, {}, MIP {})", testName, msgType1, msgType2, graphMipVersion);
 }
 
-void ErrorTestCase::_runOne(const MsgType msgType1, const MsgType msgType2) const noexcept
+template <typename Derived>
+void TestCase<Derived>::_runOne(const MsgType msgType1, const MsgType msgType2) const noexcept
 {
-    const auto specTestName = makeSpecTestName(_mTestName, msgType1, msgType2, _mGraphMipVersion);
     const auto srcCompCls = bt2::SourceComponentClass::create<TestSource>();
     const auto graph = bt2::Graph::create(_mGraphMipVersion);
 
@@ -308,10 +345,22 @@ void ErrorTestCase::_runOne(const MsgType msgType1, const MsgType msgType2) cons
         return false;
     });
 
+    static_cast<const Derived&>(*this)._handleResult(
+        thrown, bt2::takeCurrentThreadError(),
+        makeSpecTestName(_mTestName, msgType1, msgType2, _mGraphMipVersion));
+}
+
+void SucceedTestCase::_handleResult(const bool thrown, const bt2::UniqueConstError error,
+                                    const std::string& specTestName) const noexcept
+{
+    ok(!thrown, "%s - no `bt2::Error` thrown", specTestName.c_str());
+    ok(!error, "%s - current thread has no error", specTestName.c_str());
+}
+
+void ErrorTestCase::_handleResult(const bool thrown, const bt2::UniqueConstError error,
+                                  const std::string& specTestName) const noexcept
+{
     ok(thrown, "%s - `bt2::Error` thrown", specTestName.c_str());
-
-    const auto error = bt2::takeCurrentThreadError();
-
     ok(error, "%s - current thread has an error", specTestName.c_str());
     ok(error.length() > 0, "%s - error has at least one cause", specTestName.c_str());
 
@@ -331,6 +380,68 @@ void ErrorTestCase::_runOne(const MsgType msgType1, const MsgType msgType2) cons
 
 const bt2c::Uuid uuidA {"f00aaf65-ebec-4eeb-85b2-fc255cf1aa8a"};
 const bt2c::Uuid uuidB {"03482981-a77b-4d7b-94c4-592bf9e91785"};
+
+std::vector<SucceedTestCase> createSucceedTestCases()
+{
+    std::vector<SucceedTestCase> cases;
+
+    forEachMipVersion([&](const std::uint64_t graphMipVersion) {
+        cases.emplace_back(noClockClass, graphMipVersion, "no clock classes");
+
+        if (graphMipVersion == 0) {
+            cases.emplace_back(
+                [](const bt2::SelfComponent self) {
+                    return self.createClockClass();
+                },
+
+                graphMipVersion, "clock classes with Unix epoch origins");
+
+            cases.emplace_back(
+                [](const bt2::SelfComponent self) {
+                    const auto clockCls = self.createClockClass();
+
+                    clockCls->setOriginIsUnknown().uuid(uuidA);
+                    return clockCls;
+                },
+                graphMipVersion, "clock classes with unknown origins, with equal UUIDs");
+        } else {
+            cases.emplace_back(
+                [](const bt2::SelfComponent self) {
+                    const auto clockCls = self.createClockClass();
+
+                    clockCls->origin("ze-origin-ns", "ze-origin-name", "ze-origin-uid");
+                    return clockCls;
+                },
+                graphMipVersion, "clock classes with known origins");
+
+            cases.emplace_back(
+                [](const bt2::SelfComponent self) {
+                    const auto clockCls = self.createClockClass();
+
+                    clockCls->setOriginIsUnknown().nameSpace("ze-ns").name("ze-name").uid("ze-uid");
+                    return clockCls;
+                },
+                graphMipVersion, "clock classes with unknown origins, with equal identities");
+        }
+
+        static bt2::ClockClass::Shared clockClassUnknownOriginUnknownId;
+
+        cases.emplace_back(
+            [](const bt2::SelfComponent self) {
+                if (clockClassUnknownOriginUnknownId) {
+                    return clockClassUnknownOriginUnknownId;
+                }
+
+                clockClassUnknownOriginUnknownId = self.createClockClass();
+
+                clockClassUnknownOriginUnknownId->setOriginIsUnknown();
+                return clockClassUnknownOriginUnknownId;
+            },
+            graphMipVersion, "clock classes with unknown origins, unknown identities");
+    });
+
+    return cases;
+}
 
 std::vector<ErrorTestCase> createErrorTestCases()
 {
@@ -552,11 +663,13 @@ std::vector<ErrorTestCase> createErrorTestCases()
 
 int main()
 {
-    plan_tests(300);
+    plan_tests(352);
 
-    const auto errorTestCases = createErrorTestCases();
+    for (auto& succeedTestCase : createSucceedTestCases()) {
+        succeedTestCase.run();
+    }
 
-    for (auto& errorTestCase : errorTestCases) {
+    for (auto& errorTestCase : createErrorTestCases()) {
         errorTestCase.run();
     }
 
