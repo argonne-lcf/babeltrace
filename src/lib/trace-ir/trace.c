@@ -105,6 +105,12 @@ void destroy_trace(struct bt_object *obj)
 		}
 	}
 
+	if (trace->streams) {
+		BT_LOGD_STR("Destroying streams.");
+		g_ptr_array_free(trace->streams, TRUE);
+		trace->streams = NULL;
+	}
+
 	g_free(trace->ns);
 	g_free(trace->name);
 
@@ -117,12 +123,6 @@ void destroy_trace(struct bt_object *obj)
 		BT_LOGD_STR("Destroying environment attributes.");
 		bt_attributes_destroy(trace->environment);
 		trace->environment = NULL;
-	}
-
-	if (trace->streams) {
-		BT_LOGD_STR("Destroying streams.");
-		g_ptr_array_free(trace->streams, TRUE);
-		trace->streams = NULL;
 	}
 
 	if (trace->stream_classes_stream_count) {
