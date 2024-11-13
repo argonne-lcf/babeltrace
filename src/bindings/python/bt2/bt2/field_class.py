@@ -2,6 +2,7 @@
 #
 # Copyright (c) 2017 Philippe Proulx <pproulx@efficios.com>
 
+import enum
 import collections.abc
 
 from bt2 import utils as bt2_utils
@@ -45,7 +46,7 @@ def _create_field_class_from_const_ptr_and_get_ref(ptr):
     )
 
 
-class IntegerDisplayBase:
+class IntegerDisplayBase(enum.IntEnum):
     BINARY = native_bt.FIELD_CLASS_INTEGER_PREFERRED_DISPLAY_BASE_BINARY
     OCTAL = native_bt.FIELD_CLASS_INTEGER_PREFERRED_DISPLAY_BASE_OCTAL
     DECIMAL = native_bt.FIELD_CLASS_INTEGER_PREFERRED_DISPLAY_BASE_DECIMAL
@@ -103,7 +104,9 @@ class _IntegerFieldClassConst(_FieldClassConst):
 
     @property
     def preferred_display_base(self) -> IntegerDisplayBase:
-        return native_bt.field_class_integer_get_preferred_display_base(self._ptr)
+        return IntegerDisplayBase(
+            native_bt.field_class_integer_get_preferred_display_base(self._ptr)
+        )
 
 
 class _IntegerFieldClass(_FieldClass, _IntegerFieldClassConst):
@@ -113,18 +116,12 @@ class _IntegerFieldClass(_FieldClass, _IntegerFieldClassConst):
 
         native_bt.field_class_integer_set_field_value_range(self._ptr, size)
 
-    def _set_preferred_display_base(self, base):
-        bt2_utils._check_uint64(base)
+    def _set_preferred_display_base(self, base: IntegerDisplayBase):
+        if isinstance(base, int):
+            base = IntegerDisplayBase(base)
 
-        if base not in (
-            IntegerDisplayBase.BINARY,
-            IntegerDisplayBase.OCTAL,
-            IntegerDisplayBase.DECIMAL,
-            IntegerDisplayBase.HEXADECIMAL,
-        ):
-            raise ValueError("Display base is not a valid IntegerDisplayBase value")
-
-        native_bt.field_class_integer_set_preferred_display_base(self._ptr, base)
+        bt2_utils._check_type(base, IntegerDisplayBase)
+        native_bt.field_class_integer_set_preferred_display_base(self._ptr, base.value)
 
 
 class _UnsignedIntegerFieldClassConst(_IntegerFieldClassConst, _FieldClassConst):

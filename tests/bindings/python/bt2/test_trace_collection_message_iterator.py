@@ -154,11 +154,15 @@ class ComponentSpecTestCase(unittest.TestCase):
             )
 
     def test_create_wrong_log_level_type(self):
-        with self.assertRaisesRegex(TypeError, "'str' is not an 'int' object"):
+        with self.assertRaisesRegex(
+            TypeError, "'str' is not a '<enum 'LoggingLevel'>' object"
+        ):
             bt2.ComponentSpec(self._dmesg_cc, logging_level="banane")
 
     def test_create_from_name_wrong_log_level_type(self):
-        with self.assertRaisesRegex(TypeError, "'str' is not an 'int' object"):
+        with self.assertRaisesRegex(
+            TypeError, "'str' is not a '<enum 'LoggingLevel'>' object"
+        ):
             bt2.ComponentSpec.from_named_plugin_and_component_class(
                 "text", "dmesg", logging_level="banane"
             )

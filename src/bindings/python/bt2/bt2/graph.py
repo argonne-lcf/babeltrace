@@ -65,7 +65,7 @@ class Graph(bt2_object._SharedObject):
         name: str,
         params=None,
         obj: object = None,
-        logging_level: int = bt2_logging.LoggingLevel.NONE,
+        logging_level: bt2_logging.LoggingLevel = bt2_logging.LoggingLevel.NONE,
     ) -> bt2_component._ComponentConst:
         if isinstance(component_class, bt2_component._SourceComponentClassConst):
             cc_ptr = component_class._ptr
@@ -99,7 +99,7 @@ class Graph(bt2_object._SharedObject):
             )
 
         bt2_utils._check_str(name)
-        bt2_utils._check_log_level(logging_level)
+        bt2_utils._check_type(logging_level, bt2_logging.LoggingLevel)
 
         if obj is not None and not native_bt.bt2_is_python_component_class(
             component_class._bt_component_class_ptr()
@@ -116,7 +116,7 @@ class Graph(bt2_object._SharedObject):
             name,
             params._ptr if params is not None else None,
             obj,
-            logging_level,
+            logging_level.value,
         )
         bt2_utils._handle_func_status(status, "cannot add component to graph")
         return bt2_component._create_component_from_const_ptr_and_get_ref(

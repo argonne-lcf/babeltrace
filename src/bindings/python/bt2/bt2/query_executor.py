@@ -7,6 +7,7 @@ from bt2 import error as bt2_error
 from bt2 import utils as bt2_utils
 from bt2 import value as bt2_value
 from bt2 import object as bt2_object
+from bt2 import logging as bt2_logging
 from bt2 import native_bt
 from bt2 import interrupter as bt2_interrupter
 
@@ -32,8 +33,10 @@ class _QueryExecutorCommon:
         return bool(native_bt.query_executor_is_interrupted(self._common_ptr))
 
     @property
-    def logging_level(self) -> int:
-        return native_bt.query_executor_get_logging_level(self._common_ptr)
+    def logging_level(self) -> bt2_logging.LoggingLevel:
+        return bt2_logging.LoggingLevel(
+            native_bt.query_executor_get_logging_level(self._common_ptr)
+        )
 
 
 class QueryExecutor(bt2_object._SharedObject, _QueryExecutorCommon):
@@ -110,9 +113,9 @@ class QueryExecutor(bt2_object._SharedObject, _QueryExecutorCommon):
         )
 
     def _set_logging_level(self, log_level):
-        bt2_utils._check_log_level(log_level)
+        bt2_utils._check_type(log_level, bt2_logging.LoggingLevel)
         bt2_utils._handle_func_status(
-            native_bt.query_executor_set_logging_level(self._ptr, log_level),
+            native_bt.query_executor_set_logging_level(self._ptr, log_level.value),
             "cannot set query executor's logging level",
         )
 

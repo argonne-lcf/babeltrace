@@ -32,20 +32,17 @@ expected_file=$(mktemp -t expected.XXXXXX)
 print_log_level=(--params 'what="log-level"')
 details_sink=("-c" "sink.text.details" "--params=with-metadata=false")
 
-debug=2
-trace=1
-
 # Apply log level to two components from one non-option argument.
 cat > "$expected_file" <<END
 {Trace 0, Stream class ID 0, Stream ID 0}
 Stream beginning:
-  Name: TestSourceA: ${debug}
+  Name: TestSourceA: LoggingLevel.DEBUG
   Trace:
     Stream (ID 0, Class ID 0)
 
 {Trace 1, Stream class ID 0, Stream ID 0}
 Stream beginning:
-  Name: TestSourceB: ${debug}
+  Name: TestSourceB: LoggingLevel.DEBUG
   Trace:
     Stream (ID 0, Class ID 0)
 
@@ -66,13 +63,13 @@ ok "$?" "apply log level to two components from one non-option argument"
 cat > "$expected_file" <<END
 {Trace 0, Stream class ID 0, Stream ID 0}
 Stream beginning:
-  Name: TestSourceA: ${debug}
+  Name: TestSourceA: LoggingLevel.DEBUG
   Trace:
     Stream (ID 0, Class ID 0)
 
 {Trace 1, Stream class ID 0, Stream ID 0}
 Stream beginning:
-  Name: TestSourceB: ${trace}
+  Name: TestSourceB: LoggingLevel.TRACE
   Trace:
     Stream (ID 0, Class ID 0)
 
@@ -93,13 +90,13 @@ ok "$?" "apply log level to two non-option arguments"
 cat > "$expected_file" <<END
 {Trace 0, Stream class ID 0, Stream ID 0}
 Stream beginning:
-  Name: TestSourceA: ${trace}
+  Name: TestSourceA: LoggingLevel.TRACE
   Trace:
     Stream (ID 0, Class ID 0)
 
 {Trace 1, Stream class ID 0, Stream ID 0}
 Stream beginning:
-  Name: TestSourceB: ${trace}
+  Name: TestSourceB: LoggingLevel.TRACE
   Trace:
     Stream (ID 0, Class ID 0)
 
@@ -120,13 +117,13 @@ ok "$?" "apply log level to one component coming from one non-option argument an
 cat > "$expected_file" <<END
 {Trace 0, Stream class ID 0, Stream ID 0}
 Stream beginning:
-  Name: TestSourceA: ${trace}
+  Name: TestSourceA: LoggingLevel.TRACE
   Trace:
     Stream (ID 0, Class ID 0)
 
 {Trace 1, Stream class ID 0, Stream ID 0}
 Stream beginning:
-  Name: TestSourceB: ${debug}
+  Name: TestSourceB: LoggingLevel.DEBUG
   Trace:
     Stream (ID 0, Class ID 0)
 

@@ -15,9 +15,9 @@ def get_greatest_operative_mip_version(
     component_descriptors: typing.Sequence[
         bt2_component_descriptor.ComponentDescriptor
     ],
-    log_level: int = bt2_logging.LoggingLevel.NONE,
+    log_level: bt2_logging.LoggingLevel = bt2_logging.LoggingLevel.NONE,
 ) -> typing.Optional[int]:
-    bt2_utils._check_log_level(log_level)
+    bt2_utils._check_type(log_level, bt2_logging.LoggingLevel)
     comp_descr_set_ptr = native_bt.component_descriptor_set_create()
 
     if comp_descr_set_ptr is None:
@@ -42,7 +42,7 @@ def get_greatest_operative_mip_version(
             )
 
         status, version = native_bt.get_greatest_operative_mip_version(
-            comp_descr_set_ptr, log_level
+            comp_descr_set_ptr, log_level.value
         )
 
         if status == native_bt.__BT_FUNC_STATUS_NO_MATCH:

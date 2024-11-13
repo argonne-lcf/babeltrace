@@ -2,6 +2,8 @@
 #
 # Copyright (c) 2017 Philippe Proulx <pproulx@efficios.com>
 
+import enum
+
 from bt2 import utils as bt2_utils
 from bt2 import value as bt2_value
 from bt2 import object as bt2_object
@@ -21,7 +23,7 @@ def _bt2_stream_class():
     return bt2_stream_class
 
 
-class EventClassLogLevel:
+class EventClassLogLevel(enum.Enum):
     EMERGENCY = native_bt.EVENT_CLASS_LOG_LEVEL_EMERGENCY
     ALERT = native_bt.EVENT_CLASS_LOG_LEVEL_ALERT
     CRITICAL = native_bt.EVENT_CLASS_LOG_LEVEL_CRITICAL
@@ -86,7 +88,7 @@ class _EventClassConst(bt2_object._SharedObject, bt2_user_attrs._WithUserAttrsCo
         if is_available != native_bt.PROPERTY_AVAILABILITY_AVAILABLE:
             return None
 
-        return _EVENT_CLASS_LOG_LEVEL_TO_OBJ[log_level]
+        return EventClassLogLevel(log_level)
 
     @property
     def emf_uri(self) -> typing.Optional[str]:
@@ -139,7 +141,8 @@ class _EventClass(bt2_user_attrs._WithUserAttrs, _EventClassConst):
         return native_bt.event_class_set_name(self._ptr, name)
 
     def _set_log_level(self, log_level):
-        native_bt.event_class_set_log_level(self._ptr, log_level)
+        bt2_utils._check_type(log_level, EventClassLogLevel)
+        native_bt.event_class_set_log_level(self._ptr, log_level.value)
 
     def _set_emf_uri(self, emf_uri):
         bt2_utils._handle_func_status(
@@ -213,22 +216,3 @@ class _EventClass(bt2_user_attrs._WithUserAttrs, _EventClassConst):
             bt2_utils._check_type(
                 payload_field_class, bt2_field_class._StructureFieldClass
             )
-
-
-_EVENT_CLASS_LOG_LEVEL_TO_OBJ = {
-    native_bt.EVENT_CLASS_LOG_LEVEL_EMERGENCY: EventClassLogLevel.EMERGENCY,
-    native_bt.EVENT_CLASS_LOG_LEVEL_ALERT: EventClassLogLevel.ALERT,
-    native_bt.EVENT_CLASS_LOG_LEVEL_CRITICAL: EventClassLogLevel.CRITICAL,
-    native_bt.EVENT_CLASS_LOG_LEVEL_ERROR: EventClassLogLevel.ERROR,
-    native_bt.EVENT_CLASS_LOG_LEVEL_WARNING: EventClassLogLevel.WARNING,
-    native_bt.EVENT_CLASS_LOG_LEVEL_NOTICE: EventClassLogLevel.NOTICE,
-    native_bt.EVENT_CLASS_LOG_LEVEL_INFO: EventClassLogLevel.INFO,
-    native_bt.EVENT_CLASS_LOG_LEVEL_DEBUG_SYSTEM: EventClassLogLevel.DEBUG_SYSTEM,
-    native_bt.EVENT_CLASS_LOG_LEVEL_DEBUG_PROGRAM: EventClassLogLevel.DEBUG_PROGRAM,
-    native_bt.EVENT_CLASS_LOG_LEVEL_DEBUG_PROCESS: EventClassLogLevel.DEBUG_PROCESS,
-    native_bt.EVENT_CLASS_LOG_LEVEL_DEBUG_MODULE: EventClassLogLevel.DEBUG_MODULE,
-    native_bt.EVENT_CLASS_LOG_LEVEL_DEBUG_UNIT: EventClassLogLevel.DEBUG_UNIT,
-    native_bt.EVENT_CLASS_LOG_LEVEL_DEBUG_FUNCTION: EventClassLogLevel.DEBUG_FUNCTION,
-    native_bt.EVENT_CLASS_LOG_LEVEL_DEBUG_LINE: EventClassLogLevel.DEBUG_LINE,
-    native_bt.EVENT_CLASS_LOG_LEVEL_DEBUG: EventClassLogLevel.DEBUG,
-}

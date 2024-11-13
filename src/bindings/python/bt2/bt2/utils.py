@@ -4,7 +4,6 @@
 
 
 from bt2 import error as bt2_error
-from bt2 import logging as bt2_logging
 from bt2 import native_bt
 
 # The purpose of this import is to make the typing module easily accessible
@@ -122,21 +121,6 @@ def _check_alignment(a):
 
     if not _is_pow2(a):
         raise ValueError("{} is not a power of two".format(a))
-
-
-def _check_log_level(log_level):
-    _check_int(log_level)
-
-    if log_level not in (
-        bt2_logging.LoggingLevel.TRACE,
-        bt2_logging.LoggingLevel.DEBUG,
-        bt2_logging.LoggingLevel.INFO,
-        bt2_logging.LoggingLevel.WARNING,
-        bt2_logging.LoggingLevel.ERROR,
-        bt2_logging.LoggingLevel.FATAL,
-        bt2_logging.LoggingLevel.NONE,
-    ):
-        raise ValueError("'{}' is not a valid logging level".format(log_level))
 
 
 def _handle_func_status(status, msg=None):

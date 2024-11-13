@@ -88,17 +88,6 @@ class MipTestCase(unittest.TestCase):
         with self.assertRaises(TypeError):
             bt2.get_greatest_operative_mip_version(descriptors, "lel")
 
-    def test_get_greatest_operative_mip_version_wrong_log_level_value(self):
-        class Source1(
-            bt2._UserSourceComponent, message_iterator_class=bt2._UserMessageIterator
-        ):
-            pass
-
-        descriptors = [bt2.ComponentDescriptor(Source1)]
-
-        with self.assertRaises(ValueError):
-            bt2.get_greatest_operative_mip_version(descriptors, 12345)
-
     def test_get_maximal_mip_version(self):
         self.assertEqual(bt2.get_maximal_mip_version(), 1)
 

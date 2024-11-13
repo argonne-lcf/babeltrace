@@ -2,6 +2,7 @@
 #
 # Copyright (c) 2018 Francis Deslauriers <francis.deslauriers@efficios.com>
 
+import enum
 import collections
 
 from bt2 import utils as bt2_utils
@@ -11,7 +12,7 @@ from bt2 import native_bt
 typing = bt2_utils._typing_mod
 
 
-class FieldPathScope:
+class FieldPathScope(enum.Enum):
     PACKET_CONTEXT = native_bt.FIELD_PATH_SCOPE_PACKET_CONTEXT
     EVENT_COMMON_CONTEXT = native_bt.FIELD_PATH_SCOPE_EVENT_COMMON_CONTEXT
     EVENT_SPECIFIC_CONTEXT = native_bt.FIELD_PATH_SCOPE_EVENT_SPECIFIC_CONTEXT
@@ -50,7 +51,7 @@ class _FieldPathConst(bt2_object._SharedObject, collections.abc.Iterable):
 
     @property
     def root_scope(self) -> FieldPathScope:
-        return _SCOPE_TO_OBJ[native_bt.field_path_get_root_scope(self._ptr)]
+        return FieldPathScope(native_bt.field_path_get_root_scope(self._ptr))
 
     def __len__(self) -> int:
         return native_bt.field_path_get_item_count(self._ptr)
@@ -77,11 +78,3 @@ class _FieldPathConst(bt2_object._SharedObject, collections.abc.Iterable):
                 yield _CurrentOptionContentFieldPathItem()
             else:
                 assert False
-
-
-_SCOPE_TO_OBJ = {
-    native_bt.FIELD_PATH_SCOPE_PACKET_CONTEXT: FieldPathScope.PACKET_CONTEXT,
-    native_bt.FIELD_PATH_SCOPE_EVENT_COMMON_CONTEXT: FieldPathScope.EVENT_COMMON_CONTEXT,
-    native_bt.FIELD_PATH_SCOPE_EVENT_SPECIFIC_CONTEXT: FieldPathScope.EVENT_SPECIFIC_CONTEXT,
-    native_bt.FIELD_PATH_SCOPE_EVENT_PAYLOAD: FieldPathScope.EVENT_PAYLOAD,
-}

@@ -11,6 +11,7 @@ from bt2 import error as bt2_error
 from bt2 import utils as bt2_utils
 from bt2 import value as bt2_value
 from bt2 import object as bt2_object
+from bt2 import logging as bt2_logging
 from bt2 import native_bt
 from bt2 import clock_class as bt2_clock_class
 from bt2 import trace_class as bt2_trace_class
@@ -189,9 +190,9 @@ class _ComponentConst:
         return native_bt.component_get_name(self._bt_as_component_ptr(self._ptr))
 
     @property
-    def logging_level(self) -> int:
-        return native_bt.component_get_logging_level(
-            self._bt_as_component_ptr(self._ptr)
+    def logging_level(self) -> bt2_logging.LoggingLevel:
+        return bt2_logging.LoggingLevel(
+            native_bt.component_get_logging_level(self._bt_as_component_ptr(self._ptr))
         )
 
     @property
@@ -734,10 +735,12 @@ class _UserComponent(metaclass=_UserComponentType):
         )
 
     @property
-    def logging_level(self) -> int:
-        return native_bt.component_get_logging_level(
-            self._bt_as_component_ptr(
-                self._bt_as_not_self_specific_component_ptr(self._bt_ptr)
+    def logging_level(self) -> bt2_logging.LoggingLevel:
+        return bt2_logging.LoggingLevel(
+            native_bt.component_get_logging_level(
+                self._bt_as_component_ptr(
+                    self._bt_as_not_self_specific_component_ptr(self._bt_ptr)
+                )
             )
         )
 

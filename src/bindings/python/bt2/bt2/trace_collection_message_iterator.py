@@ -31,9 +31,11 @@ _ComponentAndSpec = namedtuple("_ComponentAndSpec", ["comp", "spec"])
 class _BaseComponentSpec:
     # Base for any component spec that can be passed to
     # TraceCollectionMessageIterator.
-    def __init__(self, params, obj, logging_level):
+    def __init__(
+        self, params, obj, logging_level: typing.Optional[bt2_logging.LoggingLevel]
+    ):
         if logging_level is not None:
-            bt2_utils._check_log_level(logging_level)
+            bt2_utils._check_type(logging_level, bt2_logging.LoggingLevel)
 
         self._params = bt2_value.create_value(params)
         self._obj = obj
@@ -48,7 +50,7 @@ class _BaseComponentSpec:
         return self._obj
 
     @property
-    def logging_level(self):
+    def logging_level(self) -> typing.Optional[bt2_logging.LoggingLevel]:
         return self._logging_level
 
 
@@ -64,7 +66,7 @@ class ComponentSpec(_BaseComponentSpec):
         ],
         params=None,
         obj=None,
-        logging_level=bt2_logging.LoggingLevel.NONE,
+        logging_level: bt2_logging.LoggingLevel = bt2_logging.LoggingLevel.NONE,
     ):
         if type(params) is str:
             params = {"inputs": [params]}
@@ -112,7 +114,7 @@ class ComponentSpec(_BaseComponentSpec):
         component_class_name: str,
         params=None,
         obj: object = None,
-        logging_level: int = bt2_logging.LoggingLevel.NONE,
+        logging_level: bt2_logging.LoggingLevel = bt2_logging.LoggingLevel.NONE,
     ):
         plugin = bt2_plugin.find_plugin(plugin_name)
 
@@ -142,7 +144,7 @@ class AutoSourceComponentSpec(_BaseComponentSpec):
         input: str,
         params=None,
         obj: object = _no_obj,
-        logging_level: typing.Optional[int] = None,
+        logging_level: typing.Optional[bt2_logging.LoggingLevel] = None,
     ):
         super().__init__(params, obj, logging_level)
         self._input = input

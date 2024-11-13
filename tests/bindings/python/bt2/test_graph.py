@@ -143,14 +143,6 @@ class GraphTestCase(unittest.TestCase):
         with self.assertRaises(TypeError):
             self._graph.add_component(MySink, "salut", logging_level="yo")
 
-    def test_add_component_invalid_logging_level_value(self):
-        class MySink(bt2._UserSinkComponent):
-            def _user_consume(self):
-                pass
-
-        with self.assertRaises(ValueError):
-            self._graph.add_component(MySink, "salut", logging_level=12345)
-
     def test_add_component_invalid_params_type(self):
         class MySink(bt2._UserSinkComponent):
             def _user_consume(self):

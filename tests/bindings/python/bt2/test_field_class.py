@@ -179,12 +179,18 @@ class _TestIntegerFieldClassProps:
         )
         self.assertEqual(fc.preferred_display_base, bt2.IntegerDisplayBase.HEXADECIMAL)
 
+    def test_create_base_int(self):
+        fc = self._create_field_class(preferred_display_base=16)
+        self.assertEqual(fc.preferred_display_base, bt2.IntegerDisplayBase.HEXADECIMAL)
+
     def test_create_invalid_base_type(self):
         with self.assertRaises(TypeError):
             self._create_field_class(preferred_display_base="yes")
 
-    def test_create_invalid_base_value(self):
-        with self.assertRaises(ValueError):
+    def test_create_invalid_base_int_value(self):
+        with self.assertRaisesRegex(
+            ValueError, "444 is not a valid IntegerDisplayBase"
+        ):
             self._create_field_class(preferred_display_base=444)
 
     def test_create_full(self):

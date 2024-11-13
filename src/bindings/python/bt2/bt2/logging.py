@@ -2,10 +2,13 @@
 #
 # Copyright (c) 2017 Philippe Proulx <pproulx@efficios.com>
 
+import enum
+
+from bt2 import utils as bt2_utils
 from bt2 import native_bt
 
 
-class LoggingLevel:
+class LoggingLevel(enum.Enum):
     TRACE = native_bt.LOGGING_LEVEL_TRACE
     DEBUG = native_bt.LOGGING_LEVEL_DEBUG
     INFO = native_bt.LOGGING_LEVEL_INFO
@@ -15,24 +18,14 @@ class LoggingLevel:
     NONE = native_bt.LOGGING_LEVEL_NONE
 
 
-def get_minimal_logging_level() -> int:
-    return native_bt.logging_get_minimal_level()
+def get_minimal_logging_level() -> LoggingLevel:
+    return LoggingLevel(native_bt.logging_get_minimal_level())
 
 
-def get_global_logging_level() -> int:
-    return native_bt.logging_get_global_level()
+def get_global_logging_level() -> LoggingLevel:
+    return LoggingLevel(native_bt.logging_get_global_level())
 
 
-def set_global_logging_level(level: int):
-    if level not in (
-        LoggingLevel.TRACE,
-        LoggingLevel.DEBUG,
-        LoggingLevel.INFO,
-        LoggingLevel.WARNING,
-        LoggingLevel.ERROR,
-        LoggingLevel.FATAL,
-        LoggingLevel.NONE,
-    ):
-        raise TypeError("'{}' is not a valid logging level".format(level))
-
-    return native_bt.logging_set_global_level(level)
+def set_global_logging_level(level: LoggingLevel):
+    bt2_utils._check_type(level, LoggingLevel)
+    return native_bt.logging_set_global_level(level.value)

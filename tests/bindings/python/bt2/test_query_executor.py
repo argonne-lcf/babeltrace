@@ -203,20 +203,6 @@ class QueryExecutorTestCase(unittest.TestCase):
         with self.assertRaises(TypeError):
             query_exec.logging_level = "yeah"
 
-    def test_query_logging_level_invalid_value(self):
-        class MySink(bt2._UserSinkComponent):
-            def _user_consume(self):
-                pass
-
-            @classmethod
-            def _user_query(cls, priv_query_exec, obj, params, method_obj):
-                pass
-
-        query_exec = bt2.QueryExecutor(MySink, "obj", [17, 23])
-
-        with self.assertRaises(ValueError):
-            query_exec.logging_level = 12345
-
     def test_query_try_again(self):
         class MySink(bt2._UserSinkComponent):
             def _user_consume(self):

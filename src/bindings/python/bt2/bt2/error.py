@@ -2,6 +2,7 @@
 #
 # Copyright (c) 2019 Simon Marchi <simon.marchi@efficios.com>
 
+import enum
 from collections import abc
 
 from bt2 import native_bt
@@ -14,7 +15,7 @@ except ImportError:
 typing = _typing_mod
 
 
-class ComponentClassType:
+class ComponentClassType(enum.Enum):
     SOURCE = native_bt.COMPONENT_CLASS_TYPE_SOURCE
     FILTER = native_bt.COMPONENT_CLASS_TYPE_FILTER
     SINK = native_bt.COMPONENT_CLASS_TYPE_SINK
@@ -65,7 +66,7 @@ class _ComponentErrorCause(_ErrorCause):
         self._component_name = native_bt.error_cause_component_actor_get_component_name(
             ptr
         )
-        self._component_class_type = (
+        self._component_class_type = ComponentClassType(
             native_bt.error_cause_component_actor_get_component_class_type(ptr)
         )
         self._component_class_name = (
@@ -78,7 +79,7 @@ class _ComponentErrorCause(_ErrorCause):
         return self._component_name
 
     @property
-    def component_class_type(self) -> int:
+    def component_class_type(self) -> ComponentClassType:
         return self._component_class_type
 
     @property
@@ -93,7 +94,7 @@ class _ComponentErrorCause(_ErrorCause):
 class _ComponentClassErrorCause(_ErrorCause):
     def __init__(self, ptr):
         super().__init__(ptr)
-        self._component_class_type = (
+        self._component_class_type = ComponentClassType(
             native_bt.error_cause_component_class_actor_get_component_class_type(ptr)
         )
         self._component_class_name = (
@@ -104,7 +105,7 @@ class _ComponentClassErrorCause(_ErrorCause):
         )
 
     @property
-    def component_class_type(self) -> int:
+    def component_class_type(self) -> ComponentClassType:
         return self._component_class_type
 
     @property
@@ -127,7 +128,7 @@ class _MessageIteratorErrorCause(_ErrorCause):
                 ptr
             )
         )
-        self._component_class_type = (
+        self._component_class_type = ComponentClassType(
             native_bt.error_cause_message_iterator_actor_get_component_class_type(ptr)
         )
         self._component_class_name = (
@@ -146,7 +147,7 @@ class _MessageIteratorErrorCause(_ErrorCause):
         return self._component_output_port_name
 
     @property
-    def component_class_type(self) -> int:
+    def component_class_type(self) -> ComponentClassType:
         return self._component_class_type
 
     @property
