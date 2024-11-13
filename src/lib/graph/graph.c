@@ -182,7 +182,7 @@ struct bt_graph *bt_graph_create(uint64_t mip_version)
 		"Unknown MIP version: mip-version=%" PRIu64 ", "
 		"max-mip-version=%" PRIu64,
 		mip_version, bt_get_maximal_mip_version());
-	BT_LOGI_STR("Creating graph object.");
+	BT_LOGI("Creating graph object: mip-version=%" PRIu64, mip_version);
 	graph = g_new0(struct bt_graph, 1);
 	if (!graph) {
 		BT_LIB_LOGE_APPEND_CAUSE("Failed to allocate one graph.");
