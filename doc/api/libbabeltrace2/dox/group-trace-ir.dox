@@ -22,9 +22,9 @@ The trace IR objects are divided into two main categories:
 
     A metadata object describes many data objects.
 
-    For example, an \bt_ev_cls describes the numeric ID, name, logging
-    level, and \ref api-tir-fc "classes" of payload \bt_p_field of all
-    the \bt_p_ev you create from it.
+    For example, an \bt_ev_cls describes the numeric class ID, class
+    name, logging level, and \ref api-tir-fc "classes" of payload
+    \bt_p_field of all the \bt_p_ev you create from it.
 
     Metadata objects are one of the most valuable concepts of
     \bt_name: because they describe the structures of many
