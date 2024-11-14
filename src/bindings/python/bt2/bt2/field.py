@@ -713,7 +713,7 @@ class _StructureFieldConst(_ContainerFieldConst, collections.abc.Mapping):
             ", ".join(["{}: {}".format(repr(k), repr(v)) for k, v in self.items()])
         )
 
-    def __getitem__(self, key) -> _FieldConst:
+    def _getitem(self, key):
         bt2_utils._check_str(key)
         field_ptr = self._borrow_member_field_ptr_by_name(self._ptr, key)
 
@@ -723,6 +723,9 @@ class _StructureFieldConst(_ContainerFieldConst, collections.abc.Mapping):
         return self._create_field_from_ptr(
             field_ptr, self._owner_ptr, self._owner_get_ref, self._owner_put_ref
         )
+
+    def __getitem__(self, key) -> _FieldConst:
+        return self._getitem(key)
 
     def member_at_index(self, index) -> _FieldConst:
         bt2_utils._check_uint64(index)
@@ -752,6 +755,9 @@ class _StructureField(
     @property
     def cls(self) -> bt2_field_class._StructureFieldClass:
         return self._cls
+
+    def __getitem__(self, key) -> _Field:
+        return self._getitem(key)
 
     def __setitem__(self, key: str, value):
         # raises if key is somehow invalid
