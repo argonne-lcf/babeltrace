@@ -84,7 +84,7 @@ class _EventConst(bt2_object._UniqueObject, collections.abc.Mapping):
         )
 
     @property
-    def payload_field(self) -> typing.Optional[bt2_field._StructureFieldConst]:
+    def _payload_field(self):
         field_ptr = self._borrow_payload_field_ptr(self._ptr)
 
         if field_ptr is None:
@@ -93,6 +93,10 @@ class _EventConst(bt2_object._UniqueObject, collections.abc.Mapping):
         return self._create_field_from_ptr(
             field_ptr, self._owner_ptr, self._owner_get_ref, self._owner_put_ref
         )
+
+    @property
+    def payload_field(self) -> typing.Optional[bt2_field._StructureFieldConst]:
+        return self._payload_field
 
     def __getitem__(self, key):
         bt2_utils._check_str(key)
@@ -169,3 +173,7 @@ class _Event(_EventConst):
     _event_class_pycls = property(lambda _: bt2_event_class._EventClass)
     _packet_pycls = property(lambda _: bt2_packet._Packet)
     _stream_pycls = property(lambda _: bt2_stream._Stream)
+
+    @property
+    def payload_field(self) -> typing.Optional[bt2_field._StructureField]:
+        return self._payload_field
