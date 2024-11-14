@@ -42,7 +42,7 @@ class _BaseComponentSpec:
         self._logging_level = logging_level
 
     @property
-    def params(self):
+    def params(self) -> typing.Optional[bt2_value._Value]:
         return self._params
 
     @property
@@ -64,7 +64,7 @@ class ComponentSpec(_BaseComponentSpec):
             typing.Type[bt2_component._UserSourceComponent],
             typing.Type[bt2_component._UserFilterComponent],
         ],
-        params=None,
+        params: bt2_component._ComponentParams = None,
         obj=None,
         logging_level: bt2_logging.LoggingLevel = bt2_logging.LoggingLevel.NONE,
     ):
@@ -112,7 +112,7 @@ class ComponentSpec(_BaseComponentSpec):
         cls,
         plugin_name: str,
         component_class_name: str,
-        params=None,
+        params: bt2_component._ComponentParams = None,
         obj: object = None,
         logging_level: bt2_logging.LoggingLevel = bt2_logging.LoggingLevel.NONE,
     ):
@@ -142,7 +142,7 @@ class AutoSourceComponentSpec(_BaseComponentSpec):
     def __init__(
         self,
         input: str,
-        params=None,
+        params: bt2_component._ComponentParams = None,
         obj: object = _no_obj,
         logging_level: typing.Optional[bt2_logging.LoggingLevel] = None,
     ):

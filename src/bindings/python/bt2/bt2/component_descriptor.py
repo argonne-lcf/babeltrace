@@ -2,9 +2,12 @@
 #
 # Copyright (c) 2017 Philippe Proulx <pproulx@efficios.com>
 
+from bt2 import utils as bt2_utils
 from bt2 import value as bt2_value
 from bt2 import component as bt2_component
 from bt2 import native_bt
+
+typing = bt2_utils._typing_mod
 
 
 def _is_source_comp_cls(comp_cls):
@@ -38,7 +41,9 @@ def _is_sink_comp_cls(comp_cls):
 
 
 class ComponentDescriptor:
-    def __init__(self, component_class, params=None, obj=None):
+    def __init__(
+        self, component_class, params: bt2_component._ComponentParams = None, obj=None
+    ):
         if (
             not _is_source_comp_cls(component_class)
             and not _is_filter_comp_cls(component_class)
@@ -64,7 +69,7 @@ class ComponentDescriptor:
         return self._comp_cls
 
     @property
-    def params(self):
+    def params(self) -> typing.Optional[bt2_value._Value]:
         return self._params
 
     @property

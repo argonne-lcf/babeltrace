@@ -54,7 +54,7 @@ def _create_from_const_ptr_and_get_ref(ptr):
     return _create_from_ptr_and_get_ref_template(ptr, _TYPE_TO_CONST_OBJ)
 
 
-def create_value(value) -> typing.Optional["_Value"]:
+def create_value(value: "_ConvertibleToValue") -> typing.Optional["_Value"]:
     if value is None:
         # null value object
         return
@@ -675,6 +675,28 @@ class MapValue(_MapValueConst, _Container, collections.abc.MutableMapping, _Valu
         status = native_bt.value_map_insert_entry(self._ptr, key, ptr)
         bt2_utils._handle_func_status(status)
 
+
+_ConvertibleToBoolValue = typing.Union[bool, _BoolValueConst]
+_ConvertibleToSignedIntegerValue = typing.Union[int, _SignedIntegerValueConst]
+_ConvertibleToUnsignedIntegerValue = _UnsignedIntegerValueConst
+_ConvertibleToRealValue = typing.Union[float, _RealValueConst]
+_ConvertibleToStringValue = typing.Union[str, _StringValueConst]
+_ConvertibleToArrayValue = typing.Union[
+    typing.Sequence["_ConvertibleToValue"], _ArrayValueConst
+]
+_ConvertibleToMapValue = typing.Union[
+    typing.Mapping[str, "_ConvertibleToValue"], _MapValueConst
+]
+_ConvertibleToValue = typing.Union[
+    None,
+    _ConvertibleToBoolValue,
+    _ConvertibleToSignedIntegerValue,
+    _ConvertibleToUnsignedIntegerValue,
+    _ConvertibleToRealValue,
+    _ConvertibleToStringValue,
+    _ConvertibleToArrayValue,
+    _ConvertibleToMapValue,
+]
 
 _TYPE_TO_OBJ = {
     native_bt.VALUE_TYPE_BOOL: BoolValue,

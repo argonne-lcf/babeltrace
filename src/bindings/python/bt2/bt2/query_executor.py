@@ -55,7 +55,7 @@ class QueryExecutor(bt2_object._SharedObject, _QueryExecutorCommon):
         self,
         component_class: "bt2_component._ComponentClassConst",
         object_name: str,
-        params=None,
+        params: bt2_value._ConvertibleToValue = None,
         method_obj: object = None,
     ):
         if not isinstance(component_class, _bt2_component()._ComponentClassConst):
