@@ -62,16 +62,24 @@ class _EventMessageConst(_MessageConst, _MessageWithDefaultClockSnapshot):
         return self._get_default_clock_snapshot(self._borrow_default_clock_snapshot)
 
     @property
-    def event(self) -> bt2_event._EventConst:
+    def _event(self):
         return self._event_pycls._create_from_ptr_and_get_ref(
             self._borrow_event(self._ptr), self._ptr, self._get_ref, self._put_ref
         )
+
+    @property
+    def event(self) -> bt2_event._EventConst:
+        return self._event
 
 
 class _EventMessage(_EventMessageConst, _Message):
     _borrow_event = staticmethod(native_bt.message_event_borrow_event)
     _stream_pycls = property(lambda _: bt2_stream._Stream)
     _event_pycls = property(lambda _: bt2_event._Event)
+
+    @property
+    def event(self) -> bt2_event._Event:
+        return self._event
 
 
 class _PacketMessageConst(_MessageConst, _MessageWithDefaultClockSnapshot):
