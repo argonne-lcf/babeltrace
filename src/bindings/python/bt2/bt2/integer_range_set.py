@@ -75,10 +75,9 @@ class UnsignedIntegerRange(_UnsignedIntegerRangeConst, _IntegerRange):
 
 class _IntegerRangeSetConst(bt2_object._SharedObject, collections.abc.Set):
     def __len__(self) -> int:
-        range_set_ptr = self._as_range_set_ptr(self._ptr)
-        count = native_bt.integer_range_set_get_range_count(range_set_ptr)
-        assert count >= 0
-        return count
+        return native_bt.integer_range_set_get_range_count(
+            self._as_range_set_ptr(self._ptr)
+        )
 
     def __contains__(self, other_range: object) -> bool:
         for rg in self:
@@ -90,10 +89,9 @@ class _IntegerRangeSetConst(bt2_object._SharedObject, collections.abc.Set):
     def __iter__(self) -> typing.Iterator[_IntegerRangeConst]:
         for idx in range(len(self)):
             rg_ptr = self._borrow_range_ptr_by_index(self._ptr, idx)
-            assert rg_ptr is not None
-            lower = self._range_get_lower(rg_ptr)
-            upper = self._range_get_upper(rg_ptr)
-            yield self._range_pycls(lower, upper)
+            yield self._range_pycls(
+                self._range_get_lower(rg_ptr), self._range_get_upper(rg_ptr)
+            )
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, _IntegerRangeSetConst):
@@ -140,8 +138,10 @@ class _IntegerRangeSet(_IntegerRangeSetConst, collections.abc.MutableSet):
                 # assume it's a simple pair (will raise if it's not)
                 rg = self._range_pycls(rg[0], rg[1])
 
-        status = self._add_range(self._ptr, rg.lower, rg.upper)
-        bt2_utils._handle_func_status(status, "cannot add range to range set object")
+        bt2_utils._handle_func_status(
+            self._add_range(self._ptr, rg.lower, rg.upper),
+            "cannot add range to range set object",
+        )
 
     def discard(self, rg: _IntegerRange):
         raise NotImplementedError

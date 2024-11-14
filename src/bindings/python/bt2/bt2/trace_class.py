@@ -26,8 +26,7 @@ typing = bt2_utils._typing_mod
 def _trace_class_destruction_listener_from_native(
     user_listener, handle, trace_class_ptr
 ):
-    trace_class = _TraceClassConst._create_from_ptr_and_get_ref(trace_class_ptr)
-    user_listener(trace_class)
+    user_listener(_TraceClassConst._create_from_ptr_and_get_ref(trace_class_ptr))
     handle._invalidate()
 
 
@@ -60,9 +59,7 @@ class _TraceClassConst(
     # Number of stream classes in this trace class.
 
     def __len__(self):
-        count = native_bt.trace_class_get_stream_class_count(self._ptr)
-        assert count >= 0
-        return count
+        return native_bt.trace_class_get_stream_class_count(self._ptr)
 
     # Get a stream class by stream id.
 
@@ -77,13 +74,9 @@ class _TraceClassConst(
 
     def __iter__(self):
         for idx in range(len(self)):
-            sc_ptr = self._borrow_stream_class_ptr_by_index(self._ptr, idx)
-            assert sc_ptr is not None
-
-            id = native_bt.stream_class_get_id(sc_ptr)
-            assert id >= 0
-
-            yield id
+            yield native_bt.stream_class_get_id(
+                self._borrow_stream_class_ptr_by_index(self._ptr, idx)
+            )
 
     @property
     def assigns_automatic_stream_class_id(self):
@@ -97,12 +90,12 @@ class _TraceClassConst(
 
         handle = bt2_utils._ListenerHandle(self.addr)
 
-        listener_from_native = functools.partial(
-            _trace_class_destruction_listener_from_native, listener, handle
+        status, listener_id = native_bt.bt2_trace_class_add_destruction_listener(
+            self._ptr,
+            functools.partial(
+                _trace_class_destruction_listener_from_native, listener, handle
+            ),
         )
-
-        fn = native_bt.bt2_trace_class_add_destruction_listener
-        status, listener_id = fn(self._ptr, listener_from_native)
         bt2_utils._handle_func_status(
             status, "cannot add destruction listener to trace class object"
         )
@@ -124,10 +117,11 @@ class _TraceClassConst(
                 "This trace class destruction listener was already removed."
             )
 
-        status = native_bt.trace_class_remove_destruction_listener(
-            self._ptr, listener_handle._listener_id
+        bt2_utils._handle_func_status(
+            native_bt.trace_class_remove_destruction_listener(
+                self._ptr, listener_handle._listener_id
+            )
         )
-        bt2_utils._handle_func_status(status)
         listener_handle._invalidate()
 
 

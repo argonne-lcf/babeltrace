@@ -22,11 +22,12 @@ typing = bt2_utils._typing_mod
 def _graph_port_added_listener_from_native(
     user_listener, component_ptr, component_type, port_ptr, port_type
 ):
-    component = bt2_component._create_component_from_const_ptr_and_get_ref(
-        component_ptr, component_type
+    user_listener(
+        bt2_component._create_component_from_const_ptr_and_get_ref(
+            component_ptr, component_type
+        ),
+        bt2_port._create_from_const_ptr_and_get_ref(port_ptr, port_type),
     )
-    port = bt2_port._create_from_const_ptr_and_get_ref(port_ptr, port_type)
-    user_listener(component, port)
 
 
 class Graph(bt2_object._SharedObject):
@@ -99,23 +100,25 @@ class Graph(bt2_object._SharedObject):
 
         bt2_utils._check_str(name)
         bt2_utils._check_log_level(logging_level)
-        base_cc_ptr = component_class._bt_component_class_ptr()
 
-        if obj is not None and not native_bt.bt2_is_python_component_class(base_cc_ptr):
+        if obj is not None and not native_bt.bt2_is_python_component_class(
+            component_class._bt_component_class_ptr()
+        ):
             raise ValueError("cannot pass a Python object to a non-Python component")
 
         if params is not None and not isinstance(params, (dict, bt2_value.MapValue)):
             raise TypeError("'params' parameter is not a 'dict' or a 'bt2.MapValue'.")
 
         params = bt2_value.create_value(params)
-
-        params_ptr = params._ptr if params is not None else None
-
         status, comp_ptr = add_fn(
-            self._ptr, cc_ptr, name, params_ptr, obj, logging_level
+            self._ptr,
+            cc_ptr,
+            name,
+            params._ptr if params is not None else None,
+            obj,
+            logging_level,
         )
         bt2_utils._handle_func_status(status, "cannot add component to graph")
-        assert comp_ptr
         return bt2_component._create_component_from_const_ptr_and_get_ref(
             comp_ptr, cc_type
         )
@@ -133,7 +136,6 @@ class Graph(bt2_object._SharedObject):
         bt2_utils._handle_func_status(
             status, "cannot connect component ports within graph"
         )
-        assert conn_ptr
         return bt2_connection._ConnectionConst._create_from_ptr_and_get_ref(conn_ptr)
 
     def add_port_added_listener(
@@ -145,25 +147,28 @@ class Graph(bt2_object._SharedObject):
         if not callable(listener):
             raise TypeError("'listener' parameter is not callable")
 
-        fn = native_bt.bt2_graph_add_port_added_listener
         listener_from_native = functools.partial(
             _graph_port_added_listener_from_native, listener
         )
 
-        listener_ids = fn(self._ptr, listener_from_native)
-        if listener_ids is None:
+        if (
+            native_bt.bt2_graph_add_port_added_listener(self._ptr, listener_from_native)
+            is None
+        ):
             raise bt2_error._Error("cannot add listener to graph object")
 
         # keep the partial's reference
         self._listener_partials.append(listener_from_native)
 
     def run_once(self):
-        status = native_bt.graph_run_once(self._ptr)
-        bt2_utils._handle_func_status(status, "graph object could not run once")
+        bt2_utils._handle_func_status(
+            native_bt.graph_run_once(self._ptr), "graph object could not run once"
+        )
 
     def run(self):
-        status = native_bt.graph_run(self._ptr)
-        bt2_utils._handle_func_status(status, "graph object stopped running")
+        bt2_utils._handle_func_status(
+            native_bt.graph_run(self._ptr), "graph object stopped running"
+        )
 
     def add_interrupter(self, interrupter: bt2_interrupter.Interrupter):
         bt2_utils._check_type(interrupter, bt2_interrupter.Interrupter)
@@ -171,5 +176,6 @@ class Graph(bt2_object._SharedObject):
 
     @property
     def default_interrupter(self) -> bt2_interrupter.Interrupter:
-        ptr = native_bt.graph_borrow_default_interrupter(self._ptr)
-        return bt2_interrupter.Interrupter._create_from_ptr_and_get_ref(ptr)
+        return bt2_interrupter.Interrupter._create_from_ptr_and_get_ref(
+            native_bt.graph_borrow_default_interrupter(self._ptr)
+        )

@@ -62,8 +62,7 @@ class _ClockClassConst(bt2_object._SharedObject, bt2_user_attrs._WithUserAttrsCo
 
     @property
     def precision(self) -> int:
-        precision = native_bt.clock_class_get_precision(self._ptr)
-        return precision
+        return native_bt.clock_class_get_precision(self._ptr)
 
     @property
     def offset(self) -> ClockClassOffset:
@@ -86,8 +85,10 @@ class _ClockClassConst(bt2_object._SharedObject, bt2_user_attrs._WithUserAttrsCo
     def cycles_to_ns_from_origin(self, cycles: int) -> int:
         bt2_utils._check_uint64(cycles)
         status, ns = native_bt.clock_class_cycles_to_ns_from_origin(self._ptr, cycles)
-        error_msg = "cannot convert clock value to nanoseconds from origin for given clock class"
-        bt2_utils._handle_func_status(status, error_msg)
+        bt2_utils._handle_func_status(
+            status,
+            "cannot convert clock value to nanoseconds from origin for given clock class",
+        )
         return ns
 
 
@@ -102,14 +103,16 @@ class _ClockClass(bt2_user_attrs._WithUserAttrs, _ClockClassConst):
 
     def _set_name(self, name):
         bt2_utils._check_str(name)
-        status = native_bt.clock_class_set_name(self._ptr, name)
-        bt2_utils._handle_func_status(status, "cannot set clock class object's name")
+        bt2_utils._handle_func_status(
+            native_bt.clock_class_set_name(self._ptr, name),
+            "cannot set clock class object's name",
+        )
 
     def _set_description(self, description):
         bt2_utils._check_str(description)
-        status = native_bt.clock_class_set_description(self._ptr, description)
         bt2_utils._handle_func_status(
-            status, "cannot set clock class object's description"
+            native_bt.clock_class_set_description(self._ptr, description),
+            "cannot set clock class object's description",
         )
 
     def _set_frequency(self, frequency):

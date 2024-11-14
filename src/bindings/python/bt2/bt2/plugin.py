@@ -37,12 +37,12 @@ class _PluginVersion:
         return self._extra
 
     def __str__(self) -> str:
-        extra = ""
-
-        if self._extra is not None:
-            extra = self._extra
-
-        return "{}.{}.{}{}".format(self._major, self._minor, self._patch, extra)
+        return "{}.{}.{}{}".format(
+            self._major,
+            self._minor,
+            self._patch,
+            self._extra if self._extra is not None else "",
+        )
 
 
 class _PluginComponentClassesIterator(collections.abc.Iterator):
@@ -52,25 +52,20 @@ class _PluginComponentClassesIterator(collections.abc.Iterator):
 
     def __next__(self) -> str:
         plugin_ptr = self._plugin_comp_cls._plugin._ptr
-        total = self._plugin_comp_cls._component_class_count(plugin_ptr)
 
-        if self._at == total:
+        if self._at == self._plugin_comp_cls._component_class_count(plugin_ptr):
             raise StopIteration
 
         comp_cls_ptr = self._plugin_comp_cls._borrow_component_class_by_index(
             plugin_ptr, self._at
         )
-        assert comp_cls_ptr is not None
         self._at += 1
 
-        comp_cls_type = self._plugin_comp_cls._comp_cls_type
-        comp_cls_pycls = bt2_component._COMP_CLS_TYPE_TO_GENERIC_COMP_CLS_PYCLS[
-            comp_cls_type
-        ]
-        comp_cls_ptr = comp_cls_pycls._bt_as_component_class_ptr(comp_cls_ptr)
-        name = native_bt.component_class_get_name(comp_cls_ptr)
-        assert name is not None
-        return name
+        return native_bt.component_class_get_name(
+            bt2_component._COMP_CLS_TYPE_TO_GENERIC_COMP_CLS_PYCLS[
+                self._plugin_comp_cls._comp_cls_type
+            ]._bt_as_component_class_ptr(comp_cls_ptr)
+        )
 
 
 class _PluginComponentClasses(collections.abc.Mapping):
@@ -145,9 +140,7 @@ class _Plugin(bt2_object._SharedObject):
 
     @property
     def name(self) -> str:
-        name = native_bt.plugin_get_name(self._ptr)
-        assert name is not None
-        return name
+        return native_bt.plugin_get_name(self._ptr)
 
     @property
     def author(self) -> typing.Optional[str]:
@@ -197,9 +190,7 @@ class _PluginSet(bt2_object._SharedObject, collections.abc.Sequence):
         native_bt.plugin_set_get_ref(ptr)
 
     def __len__(self) -> int:
-        count = native_bt.plugin_set_get_plugin_count(self._ptr)
-        assert count >= 0
-        return count
+        return native_bt.plugin_set_get_plugin_count(self._ptr)
 
     def __getitem__(self, index: int) -> _Plugin:
         bt2_utils._check_uint64(index)
@@ -207,9 +198,9 @@ class _PluginSet(bt2_object._SharedObject, collections.abc.Sequence):
         if index >= len(self):
             raise IndexError
 
-        plugin_ptr = native_bt.plugin_set_borrow_plugin_by_index_const(self._ptr, index)
-        assert plugin_ptr is not None
-        return _Plugin._create_from_ptr_and_get_ref(plugin_ptr)
+        return _Plugin._create_from_ptr_and_get_ref(
+            native_bt.plugin_set_borrow_plugin_by_index_const(self._ptr, index)
+        )
 
 
 def find_plugins_in_path(
@@ -235,7 +226,6 @@ def find_plugins_in_path(
         return
 
     bt2_utils._handle_func_status(status, "failed to find plugins")
-    assert plugin_set_ptr is not None
     return _PluginSet._create_from_ptr(plugin_set_ptr)
 
 
@@ -265,7 +255,6 @@ def find_plugins(
         return
 
     bt2_utils._handle_func_status(status, "failed to find plugins")
-    assert plugin_set_ptr is not None
     return _PluginSet._create_from_ptr(plugin_set_ptr)
 
 
@@ -292,5 +281,4 @@ def find_plugin(
         return
 
     bt2_utils._handle_func_status(status, "failed to find plugin")
-    assert ptr is not None
     return _Plugin._create_from_ptr(ptr)

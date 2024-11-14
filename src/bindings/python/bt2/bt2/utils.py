@@ -127,7 +127,7 @@ def _check_alignment(a):
 def _check_log_level(log_level):
     _check_int(log_level)
 
-    log_levels = (
+    if log_level not in (
         bt2_logging.LoggingLevel.TRACE,
         bt2_logging.LoggingLevel.DEBUG,
         bt2_logging.LoggingLevel.INFO,
@@ -135,9 +135,7 @@ def _check_log_level(log_level):
         bt2_logging.LoggingLevel.ERROR,
         bt2_logging.LoggingLevel.FATAL,
         bt2_logging.LoggingLevel.NONE,
-    )
-
-    if log_level not in log_levels:
+    ):
         raise ValueError("'{}' is not a valid logging level".format(log_level))
 
 

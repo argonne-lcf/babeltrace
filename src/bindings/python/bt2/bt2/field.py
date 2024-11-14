@@ -18,12 +18,9 @@ typing = bt2_utils._typing_mod
 def _create_field_from_ptr_template(
     object_map, ptr, owner_ptr, owner_get_ref, owner_put_ref
 ):
-    field_class_ptr = native_bt.field_borrow_class_const(ptr)
-    typeid = native_bt.field_class_get_type(field_class_ptr)
-    field = object_map[typeid]._create_from_ptr_and_get_ref(
-        ptr, owner_ptr, owner_get_ref, owner_put_ref
-    )
-    return field
+    return object_map[
+        native_bt.field_class_get_type(native_bt.field_borrow_class_const(ptr))
+    ]._create_from_ptr_and_get_ref(ptr, owner_ptr, owner_get_ref, owner_put_ref)
 
 
 def _create_field_from_ptr(ptr, owner_ptr, owner_get_ref, owner_put_ref):
@@ -62,14 +59,13 @@ class _FieldConst(bt2_object._UniqueObject):
     _borrow_class_ptr = staticmethod(native_bt.field_borrow_class_const)
 
     def __eq__(self, other: object) -> bool:
-        other = _get_leaf_field(other)
-        return self._spec_eq(other)
+        return self._spec_eq(_get_leaf_field(other))
 
     @property
     def cls(self) -> bt2_field_class._FieldClassConst:
-        field_class_ptr = self._borrow_class_ptr(self._ptr)
-        assert field_class_ptr is not None
-        return self._create_field_class_from_ptr_and_get_ref(field_class_ptr)
+        return self._create_field_class_from_ptr_and_get_ref(
+            self._borrow_class_ptr(self._ptr)
+        )
 
     def _repr(self):
         raise NotImplementedError
@@ -305,8 +301,7 @@ class _BoolField(_BoolFieldConst, _IntegralField, _Field):
     _NAME = "Boolean"
 
     def _set_value(self, value):
-        value = self._value_to_bool(value)
-        native_bt.field_bool_set_value(self._ptr, value)
+        native_bt.field_bool_set_value(self._ptr, self._value_to_bool(value))
 
     value = property(fset=_set_value)
 
@@ -345,9 +340,7 @@ class _UnsignedIntegerField(_UnsignedIntegerFieldConst, _IntegerField, _Field):
 
     def _set_value(self, value):
         value = self._value_to_int(value)
-
         self._check_range(value)
-
         native_bt.field_integer_unsigned_set_value(self._ptr, value)
 
     value = property(fset=_set_value)
@@ -381,9 +374,7 @@ class _SignedIntegerField(_SignedIntegerFieldConst, _IntegerField, _Field):
 
     def _set_value(self, value):
         value = self._value_to_int(value)
-
         self._check_range(value)
-
         native_bt.field_integer_signed_set_value(self._ptr, value)
 
     value = property(fset=_set_value)
@@ -432,8 +423,9 @@ class _SinglePrecisionRealField(_SinglePrecisionRealFieldConst, _RealField):
     _NAME = "Single-precision real"
 
     def _set_value(self, value):
-        value = self._value_to_float(value)
-        native_bt.field_real_single_precision_set_value(self._ptr, value)
+        native_bt.field_real_single_precision_set_value(
+            self._ptr, self._value_to_float(value)
+        )
 
     value = property(fset=_set_value)
 
@@ -442,8 +434,9 @@ class _DoublePrecisionRealField(_DoublePrecisionRealFieldConst, _RealField):
     _NAME = "Double-precision real"
 
     def _set_value(self, value):
-        value = self._value_to_float(value)
-        native_bt.field_real_double_precision_set_value(self._ptr, value)
+        native_bt.field_real_double_precision_set_value(
+            self._ptr, self._value_to_float(value)
+        )
 
     value = property(fset=_set_value)
 
@@ -456,8 +449,6 @@ class _EnumerationFieldConst(_IntegerFieldConst):
     def labels(self) -> typing.List[str]:
         status, labels = self._get_mapping_labels(self._ptr)
         bt2_utils._handle_func_status(status, "cannot get label for enumeration field")
-
-        assert labels is not None
         return labels
 
 
@@ -543,16 +534,14 @@ class _StringField(_StringFieldConst, _Field):
     _NAME = "String"
 
     def _set_value(self, value):
-        value = self._value_to_str(value)
-        native_bt.field_string_set_value(self._ptr, value)
+        native_bt.field_string_set_value(self._ptr, self._value_to_str(value))
 
     value = property(fset=_set_value)
 
     def __iadd__(self, value) -> "_StringField":
-        value = self._value_to_str(value)
-        status = native_bt.field_string_append(self._ptr, value)
         bt2_utils._handle_func_status(
-            status, "cannot append to string field object's value"
+            native_bt.field_string_append(self._ptr, self._value_to_str(value)),
+            "cannot append to string field object's value",
         )
         return self
 
@@ -570,9 +559,7 @@ class _ContainerFieldConst(_FieldConst):
         return len(self.cls)
 
     def __len__(self) -> int:
-        count = self._count()
-        assert count >= 0
-        return count
+        return self._count()
 
     def __delitem__(self, index):
         raise NotImplementedError
@@ -621,8 +608,9 @@ class _StructureFieldConst(_ContainerFieldConst, collections.abc.Mapping):
         return True
 
     def _repr(self):
-        items = ["{}: {}".format(repr(k), repr(v)) for k, v in self.items()]
-        return "{{{}}}".format(", ".join(items))
+        return "{{{}}}".format(
+            ", ".join(["{}: {}".format(repr(k), repr(v)) for k, v in self.items()])
+        )
 
     def __getitem__(self, key) -> _FieldConst:
         bt2_utils._check_str(key)
@@ -640,10 +628,12 @@ class _StructureFieldConst(_ContainerFieldConst, collections.abc.Mapping):
 
         if index >= len(self):
             raise IndexError
-        field_ptr = self._borrow_member_field_ptr_by_index(self._ptr, index)
-        assert field_ptr is not None
+
         return self._create_field_from_ptr(
-            field_ptr, self._owner_ptr, self._owner_get_ref, self._owner_put_ref
+            self._borrow_member_field_ptr_by_index(self._ptr, index),
+            self._owner_ptr,
+            self._owner_get_ref,
+            self._owner_put_ref,
         )
 
 
@@ -720,9 +710,7 @@ class _OptionField(_OptionFieldConst, _Field):
 
     def _set_value(self, value):
         self.has_field = True
-        field = self.field
-        assert field is not None
-        field.value = value
+        self.field.value = value
 
     value = property(fset=_set_value)
 
@@ -745,10 +733,11 @@ class _VariantFieldConst(_ContainerFieldConst, _FieldConst):
         # TODO: Is there a way to check if the variant field has a selected_option,
         # so we can raise an exception instead of hitting a pre-condition check?
         # If there is something, that check should be added to selected_option_index too.
-        field_ptr = self._borrow_selected_option_field_ptr(self._ptr)
-
         return self._create_field_from_ptr(
-            field_ptr, self._owner_ptr, self._owner_get_ref, self._owner_put_ref
+            self._borrow_selected_option_field_ptr(self._ptr),
+            self._owner_ptr,
+            self._owner_get_ref,
+            self._owner_put_ref,
         )
 
     def _spec_eq(self, other):
@@ -809,10 +798,11 @@ class _ArrayFieldConst(_ContainerFieldConst, _FieldConst, collections.abc.Sequen
         if index < 0 or index >= len(self):
             raise IndexError("{} field object index is out of range".format(self._NAME))
 
-        field_ptr = self._borrow_element_field_ptr_by_index(self._ptr, index)
-        assert field_ptr
         return self._create_field_from_ptr(
-            field_ptr, self._owner_ptr, self._owner_get_ref, self._owner_put_ref
+            self._borrow_element_field_ptr_by_index(self._ptr, index),
+            self._owner_ptr,
+            self._owner_get_ref,
+            self._owner_put_ref,
         )
 
     def insert(self, index: int, value):
@@ -892,8 +882,10 @@ class _DynamicArrayField(_DynamicArrayFieldConst, _ArrayField, _Field):
 
     def _set_length(self, length):
         bt2_utils._check_uint64(length)
-        status = native_bt.field_array_dynamic_set_length(self._ptr, length)
-        bt2_utils._handle_func_status(status, "cannot set dynamic array length")
+        bt2_utils._handle_func_status(
+            native_bt.field_array_dynamic_set_length(self._ptr, length),
+            "cannot set dynamic array length",
+        )
 
     length = property(fget=_ArrayField._get_length, fset=_set_length)
 

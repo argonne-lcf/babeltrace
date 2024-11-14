@@ -75,19 +75,13 @@ class _StreamClassConst(
         return self._event_class_cls._create_from_ptr_and_get_ref(ec_ptr)
 
     def __len__(self) -> int:
-        count = native_bt.stream_class_get_event_class_count(self._ptr)
-        assert count >= 0
-        return count
+        return native_bt.stream_class_get_event_class_count(self._ptr)
 
     def __iter__(self) -> typing.Iterator[int]:
         for idx in range(len(self)):
-            ec_ptr = self._borrow_event_class_ptr_by_index(self._ptr, idx)
-            assert ec_ptr is not None
-
-            id = native_bt.event_class_get_id(ec_ptr)
-            assert id >= 0
-
-            yield id
+            yield native_bt.event_class_get_id(
+                self._borrow_event_class_ptr_by_index(self._ptr, idx)
+            )
 
     @property
     def trace_class(self) -> "bt2_trace_class._TraceClassConst":
@@ -277,8 +271,10 @@ class _StreamClass(bt2_user_attrs._WithUserAttrs, _StreamClassConst):
         native_bt.stream_class_set_user_attributes(obj_ptr, value_ptr)
 
     def _set_name(self, name):
-        status = native_bt.stream_class_set_name(self._ptr, name)
-        bt2_utils._handle_func_status(status, "cannot set stream class object's name")
+        bt2_utils._handle_func_status(
+            native_bt.stream_class_set_name(self._ptr, name),
+            "cannot set stream class object's name",
+        )
 
     def _set_assigns_automatic_event_class_id(self, auto_id):
         native_bt.stream_class_set_assigns_automatic_event_class_id(self._ptr, auto_id)
@@ -302,18 +298,19 @@ class _StreamClass(bt2_user_attrs._WithUserAttrs, _StreamClassConst):
         )
 
     def _set_packet_context_field_class(self, packet_context_field_class):
-        status = native_bt.stream_class_set_packet_context_field_class(
-            self._ptr, packet_context_field_class._ptr
-        )
         bt2_utils._handle_func_status(
-            status, "cannot set stream class' packet context field class"
+            native_bt.stream_class_set_packet_context_field_class(
+                self._ptr, packet_context_field_class._ptr
+            ),
+            "cannot set stream class' packet context field class",
         )
 
     def _set_event_common_context_field_class(self, event_common_context_field_class):
-        set_context_fn = native_bt.stream_class_set_event_common_context_field_class
-        status = set_context_fn(self._ptr, event_common_context_field_class._ptr)
         bt2_utils._handle_func_status(
-            status, "cannot set stream class' event context field type"
+            native_bt.stream_class_set_event_common_context_field_class(
+                self._ptr, event_common_context_field_class._ptr
+            ),
+            "cannot set stream class' event context field type",
         )
 
     def _set_default_clock_class(self, clock_class):
@@ -343,8 +340,9 @@ class _StreamClass(bt2_user_attrs._WithUserAttrs, _StreamClassConst):
 
         # User attributes
         if user_attributes is not None:
-            value = bt2_value.create_value(user_attributes)
-            bt2_utils._check_type(value, bt2_value.MapValue)
+            bt2_utils._check_type(
+                bt2_value.create_value(user_attributes), bt2_value.MapValue
+            )
 
         # Packet context field class
         if packet_context_field_class is not None:

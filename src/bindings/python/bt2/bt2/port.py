@@ -39,25 +39,19 @@ def _create_self_from_ptr_and_get_ref(ptr, port_type):
 class _PortConst(bt2_object._SharedObject):
     @classmethod
     def _get_ref(cls, ptr):
-        ptr = cls._as_port_ptr(ptr)
-        return native_bt.port_get_ref(ptr)
+        return native_bt.port_get_ref(cls._as_port_ptr(ptr))
 
     @classmethod
     def _put_ref(cls, ptr):
-        ptr = cls._as_port_ptr(ptr)
-        return native_bt.port_put_ref(ptr)
+        return native_bt.port_put_ref(cls._as_port_ptr(ptr))
 
     @property
     def name(self) -> str:
-        ptr = self._as_port_ptr(self._ptr)
-        name = native_bt.port_get_name(ptr)
-        assert name is not None
-        return name
+        return native_bt.port_get_name(self._as_port_ptr(self._ptr))
 
     @property
     def connection(self) -> typing.Optional["bt2_connection._ConnectionConst"]:
-        ptr = self._as_port_ptr(self._ptr)
-        conn_ptr = native_bt.port_borrow_connection_const(ptr)
+        conn_ptr = native_bt.port_borrow_connection_const(self._as_port_ptr(self._ptr))
 
         if conn_ptr is None:
             return
@@ -80,13 +74,11 @@ class _OutputPortConst(_PortConst):
 class _UserComponentPort(_PortConst):
     @classmethod
     def _as_port_ptr(cls, ptr):
-        ptr = cls._as_self_port_ptr(ptr)
-        return native_bt.self_component_port_as_port(ptr)
+        return native_bt.self_component_port_as_port(cls._as_self_port_ptr(ptr))
 
     @property
     def connection(self) -> typing.Optional["bt2_connection._ConnectionConst"]:
-        ptr = self._as_port_ptr(self._ptr)
-        conn_ptr = native_bt.port_borrow_connection_const(ptr)
+        conn_ptr = native_bt.port_borrow_connection_const(self._as_port_ptr(self._ptr))
 
         if conn_ptr is None:
             return
@@ -95,8 +87,7 @@ class _UserComponentPort(_PortConst):
 
     @property
     def user_data(self) -> object:
-        ptr = self._as_self_port_ptr(self._ptr)
-        return native_bt.self_component_port_get_data(ptr)
+        return native_bt.self_component_port_get_data(self._as_self_port_ptr(self._ptr))
 
 
 class _UserComponentInputPort(_UserComponentPort, _InputPortConst):

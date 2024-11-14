@@ -34,9 +34,9 @@ class _EventConst(bt2_object._UniqueObject, collections.abc.Mapping):
 
     @property
     def cls(self) -> bt2_event_class._EventClassConst:
-        event_class_ptr = self._borrow_class_ptr(self._ptr)
-        assert event_class_ptr is not None
-        return self._event_class_pycls._create_from_ptr_and_get_ref(event_class_ptr)
+        return self._event_class_pycls._create_from_ptr_and_get_ref(
+            self._borrow_class_ptr(self._ptr)
+        )
 
     @property
     def name(self) -> typing.Optional[str]:
@@ -57,9 +57,9 @@ class _EventConst(bt2_object._UniqueObject, collections.abc.Mapping):
 
     @property
     def stream(self) -> typing.Optional[bt2_stream._StreamConst]:
-        stream_ptr = self._borrow_stream_ptr(self._ptr)
-        assert stream_ptr is not None
-        return self._stream_pycls._create_from_ptr_and_get_ref(stream_ptr)
+        return self._stream_pycls._create_from_ptr_and_get_ref(
+            self._borrow_stream_ptr(self._ptr)
+        )
 
     @property
     def common_context_field(self) -> typing.Optional[bt2_field._StructureFieldConst]:

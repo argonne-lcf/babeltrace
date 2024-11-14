@@ -41,10 +41,11 @@ class _Message(_MessageConst):
 
 class _MessageWithDefaultClockSnapshot:
     def _get_default_clock_snapshot(self, borrow_clock_snapshot_ptr):
-        snapshot_ptr = borrow_clock_snapshot_ptr(self._ptr)
-
         return bt2_clock_snapshot._ClockSnapshotConst._create_from_ptr_and_get_ref(
-            snapshot_ptr, self._ptr, self._get_ref, self._put_ref
+            borrow_clock_snapshot_ptr(self._ptr),
+            self._ptr,
+            self._get_ref,
+            self._put_ref,
         )
 
 
@@ -62,10 +63,8 @@ class _EventMessageConst(_MessageConst, _MessageWithDefaultClockSnapshot):
 
     @property
     def event(self) -> bt2_event._EventConst:
-        event_ptr = self._borrow_event(self._ptr)
-        assert event_ptr is not None
         return self._event_pycls._create_from_ptr_and_get_ref(
-            event_ptr, self._ptr, self._get_ref, self._put_ref
+            self._borrow_event(self._ptr), self._ptr, self._get_ref, self._put_ref
         )
 
 
@@ -85,9 +84,9 @@ class _PacketMessageConst(_MessageConst, _MessageWithDefaultClockSnapshot):
 
     @property
     def packet(self) -> bt2_packet._PacketConst:
-        packet_ptr = self._borrow_packet(self._ptr)
-        assert packet_ptr is not None
-        return self._packet_pycls._create_from_ptr_and_get_ref(packet_ptr)
+        return self._packet_pycls._create_from_ptr_and_get_ref(
+            self._borrow_packet(self._ptr)
+        )
 
 
 class _PacketMessage(_PacketMessageConst, _Message):
@@ -123,9 +122,9 @@ class _StreamMessageConst(_MessageConst, _MessageWithDefaultClockSnapshot):
 
     @property
     def stream(self) -> bt2_stream._StreamConst:
-        stream_ptr = self._borrow_stream_ptr(self._ptr)
-        assert stream_ptr
-        return self._stream_pycls._create_from_ptr_and_get_ref(stream_ptr)
+        return self._stream_pycls._create_from_ptr_and_get_ref(
+            self._borrow_stream_ptr(self._ptr)
+        )
 
     @property
     def default_clock_snapshot(self) -> bt2_clock_snapshot._ClockSnapshotConst:
@@ -208,9 +207,9 @@ class _DiscardedMessageConst(_MessageConst, _MessageWithDefaultClockSnapshot):
 
     @property
     def stream(self) -> bt2_stream._StreamConst:
-        stream_ptr = self._borrow_stream_ptr(self._ptr)
-        assert stream_ptr
-        return self._stream_pycls._create_from_ptr_and_get_ref(stream_ptr)
+        return self._stream_pycls._create_from_ptr_and_get_ref(
+            self._borrow_stream_ptr(self._ptr)
+        )
 
     @property
     def count(self) -> typing.Optional[int]:

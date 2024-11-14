@@ -24,7 +24,7 @@ def get_global_logging_level() -> int:
 
 
 def set_global_logging_level(level: int):
-    levels = (
+    if level not in (
         LoggingLevel.TRACE,
         LoggingLevel.DEBUG,
         LoggingLevel.INFO,
@@ -32,9 +32,7 @@ def set_global_logging_level(level: int):
         LoggingLevel.ERROR,
         LoggingLevel.FATAL,
         LoggingLevel.NONE,
-    )
-
-    if level not in levels:
+    ):
         raise TypeError("'{}' is not a valid logging level".format(level))
 
     return native_bt.logging_set_global_level(level)

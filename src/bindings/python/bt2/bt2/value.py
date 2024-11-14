@@ -27,8 +27,7 @@ def _create_from_ptr_template(ptr, object_map):
         _Value._put_ref(ptr)
         return
 
-    typeid = native_bt.value_get_type(ptr)
-    return object_map[typeid]._create_from_ptr(ptr)
+    return object_map[native_bt.value_get_type(ptr)]._create_from_ptr(ptr)
 
 
 def _create_from_ptr(ptr):
@@ -268,8 +267,7 @@ class _BoolValueConst(_IntegralValueConst):
 
     @property
     def _value(self):
-        value = native_bt.value_bool_get(self._ptr)
-        return value != 0
+        return native_bt.value_bool_get(self._ptr) != 0
 
 
 class BoolValue(_BoolValueConst, _IntegralValue):
@@ -452,8 +450,9 @@ class StringValue(_StringValueConst, _Value):
         super().__init__(ptr)
 
     def _set_value(self, value):
-        status = native_bt.value_string_set(self._ptr, self._value_to_str(value))
-        bt2_utils._handle_func_status(status)
+        bt2_utils._handle_func_status(
+            native_bt.value_string_set(self._ptr, self._value_to_str(value))
+        )
 
     value = property(fset=_set_value)
 
@@ -496,9 +495,7 @@ class _ArrayValueConst(_ContainerConst, collections.abc.Sequence, _ValueConst):
         return True
 
     def __len__(self) -> int:
-        size = native_bt.value_array_get_length(self._ptr)
-        assert size >= 0
-        return size
+        return native_bt.value_array_get_length(self._ptr)
 
     def _check_index(self, index):
         # TODO: support slices also
@@ -516,9 +513,9 @@ class _ArrayValueConst(_ContainerConst, collections.abc.Sequence, _ValueConst):
 
     def __getitem__(self, index: int) -> typing.Optional[_ValueConst]:
         self._check_index(index)
-        ptr = self._borrow_element_by_index(self._ptr, index)
-        assert ptr
-        return self._create_value_from_ptr_and_get_ref(ptr)
+        return self._create_value_from_ptr_and_get_ref(
+            self._borrow_element_by_index(self._ptr, index)
+        )
 
     def __repr__(self) -> str:
         return "[{}]".format(", ".join([repr(v) for v in self]))
@@ -550,8 +547,9 @@ class ArrayValue(_ArrayValueConst, _Container, collections.abc.MutableSequence, 
         else:
             ptr = value._ptr
 
-        status = native_bt.value_array_set_element_by_index(self._ptr, index, ptr)
-        bt2_utils._handle_func_status(status)
+        bt2_utils._handle_func_status(
+            native_bt.value_array_set_element_by_index(self._ptr, index, ptr)
+        )
 
     def append(self, value):
         value = create_value(value)
@@ -561,8 +559,9 @@ class ArrayValue(_ArrayValueConst, _Container, collections.abc.MutableSequence, 
         else:
             ptr = value._ptr
 
-        status = native_bt.value_array_append_element(self._ptr, ptr)
-        bt2_utils._handle_func_status(status)
+        bt2_utils._handle_func_status(
+            native_bt.value_array_append_element(self._ptr, ptr)
+        )
 
     def __iadd__(self, iterable: typing.Iterable):
         # Python will raise a TypeError if there's anything wrong with
@@ -621,9 +620,7 @@ class _MapValueConst(_ContainerConst, collections.abc.Mapping, _ValueConst):
         return True
 
     def __len__(self) -> int:
-        size = native_bt.value_map_get_size(self._ptr)
-        assert size >= 0
-        return size
+        return native_bt.value_map_get_size(self._ptr)
 
     def __contains__(self, key: str) -> bool:
         self._check_key_type(key)
@@ -638,16 +635,17 @@ class _MapValueConst(_ContainerConst, collections.abc.Mapping, _ValueConst):
 
     def __getitem__(self, key: str) -> typing.Optional[_ValueConst]:
         self._check_key(key)
-        ptr = self._borrow_entry_value_ptr(self._ptr, key)
-        assert ptr
-        return self._create_value_from_ptr_and_get_ref(ptr)
+        return self._create_value_from_ptr_and_get_ref(
+            self._borrow_entry_value_ptr(self._ptr, key)
+        )
 
     def __iter__(self) -> typing.Iterator[str]:
         return _MapValueKeyIterator(self)
 
     def __repr__(self) -> str:
-        items = ["{}: {}".format(repr(k), repr(v)) for k, v in self.items()]
-        return "{{{}}}".format(", ".join(items))
+        return "{{{}}}".format(
+            ", ".join(["{}: {}".format(repr(k), repr(v)) for k, v in self.items()])
+        )
 
 
 class MapValue(_MapValueConst, _Container, collections.abc.MutableMapping, _Value):

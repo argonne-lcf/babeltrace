@@ -43,9 +43,9 @@ class _StreamConst(bt2_object._SharedObject, bt2_user_attrs._WithUserAttrsConst)
 
     @property
     def cls(self) -> bt2_stream_class._StreamClassConst:
-        stream_class_ptr = self._borrow_class_ptr(self._ptr)
-        assert stream_class_ptr is not None
-        return self._stream_class_pycls._create_from_ptr_and_get_ref(stream_class_ptr)
+        return self._stream_class_pycls._create_from_ptr_and_get_ref(
+            self._borrow_class_ptr(self._ptr)
+        )
 
     @property
     def name(self) -> typing.Optional[str]:
@@ -57,9 +57,9 @@ class _StreamConst(bt2_object._SharedObject, bt2_user_attrs._WithUserAttrsConst)
 
     @property
     def trace(self) -> "bt2_trace._TraceConst":
-        trace_ptr = self._borrow_trace_ptr(self._ptr)
-        assert trace_ptr is not None
-        return self._trace_pycls._create_from_ptr_and_get_ref(trace_ptr)
+        return self._trace_pycls._create_from_ptr_and_get_ref(
+            self._borrow_trace_ptr(self._ptr)
+        )
 
 
 class _Stream(bt2_user_attrs._WithUserAttrs, _StreamConst):

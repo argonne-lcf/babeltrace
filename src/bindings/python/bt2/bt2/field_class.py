@@ -16,8 +16,7 @@ typing = bt2_utils._typing_mod
 
 
 def _obj_type_from_field_class_ptr_template(type_map, ptr):
-    typeid = native_bt.field_class_get_type(ptr)
-    return type_map[typeid]
+    return type_map[native_bt.field_class_get_type(ptr)]
 
 
 def _obj_type_from_field_class_ptr(ptr) -> "_FieldClass":
@@ -90,9 +89,7 @@ class _BitArrayFieldClassConst(_FieldClassConst):
 
     @property
     def length(self):
-        length = native_bt.field_class_bit_array_get_length(self._ptr)
-        assert length >= 1
-        return length
+        return native_bt.field_class_bit_array_get_length(self._ptr)
 
 
 class _BitArrayFieldClass(_BitArrayFieldClassConst, _FieldClass):
@@ -102,21 +99,18 @@ class _BitArrayFieldClass(_BitArrayFieldClassConst, _FieldClass):
 class _IntegerFieldClassConst(_FieldClassConst):
     @property
     def field_value_range(self) -> int:
-        size = native_bt.field_class_integer_get_field_value_range(self._ptr)
-        assert size >= 1
-        return size
+        return native_bt.field_class_integer_get_field_value_range(self._ptr)
 
     @property
     def preferred_display_base(self) -> IntegerDisplayBase:
-        base = native_bt.field_class_integer_get_preferred_display_base(self._ptr)
-        assert base >= 0
-        return base
+        return native_bt.field_class_integer_get_preferred_display_base(self._ptr)
 
 
 class _IntegerFieldClass(_FieldClass, _IntegerFieldClassConst):
     def _set_field_value_range(self, size):
         if size < 1 or size > 64:
             raise ValueError("Value is outside valid range [1, 64] ({})".format(size))
+
         native_bt.field_class_integer_set_field_value_range(self._ptr, size)
 
     def _set_preferred_display_base(self, base):
@@ -181,14 +175,12 @@ class _DoublePrecisionRealFieldClass(_RealFieldClass):
 # we copy the properties here to avoid eventual memory access errors.
 class _EnumerationFieldClassMapping:
     def __init__(self, mapping_ptr):
-        base_mapping_ptr = self._as_enumeration_field_class_mapping_ptr(mapping_ptr)
         self._label = native_bt.field_class_enumeration_mapping_get_label(
-            base_mapping_ptr
+            self._as_enumeration_field_class_mapping_ptr(mapping_ptr)
         )
-        assert self._label is not None
-        ranges_ptr = self._mapping_borrow_ranges_ptr(mapping_ptr)
-        assert ranges_ptr is not None
-        self._ranges = self._range_set_pycls._create_from_ptr_and_get_ref(ranges_ptr)
+        self._ranges = self._range_set_pycls._create_from_ptr_and_get_ref(
+            self._mapping_borrow_ranges_ptr(mapping_ptr)
+        )
 
     @property
     def label(self) -> str:
@@ -221,9 +213,7 @@ class _SignedEnumerationFieldClassMappingConst(_EnumerationFieldClassMapping):
 
 class _EnumerationFieldClassConst(_IntegerFieldClassConst, collections.abc.Mapping):
     def __len__(self) -> int:
-        count = native_bt.field_class_enumeration_get_mapping_count(self._ptr)
-        assert count >= 0
-        return count
+        return native_bt.field_class_enumeration_get_mapping_count(self._ptr)
 
     def mappings_for_value(self, value: int) -> "list[str]":
         self._check_int_type(value)
@@ -236,8 +226,9 @@ class _EnumerationFieldClassConst(_IntegerFieldClassConst, collections.abc.Mappi
 
     def __iter__(self) -> typing.Iterator[_EnumerationFieldClassMapping]:
         for idx in range(len(self)):
-            mapping_ptr = self._borrow_mapping_ptr_by_index(self._ptr, idx)
-            yield self._mapping_pycls(mapping_ptr).label
+            yield self._mapping_pycls(
+                self._borrow_mapping_ptr_by_index(self._ptr, idx)
+            ).label
 
     def __getitem__(self, label: str) -> _EnumerationFieldClassMapping:
         bt2_utils._check_str(label)
@@ -259,9 +250,9 @@ class _EnumerationFieldClass(_EnumerationFieldClassConst, _IntegerFieldClass):
         if label in self:
             raise ValueError("duplicate mapping label '{}'".format(label))
 
-        status = self._add_mapping(self._ptr, label, ranges._ptr)
         bt2_utils._handle_func_status(
-            status, "cannot add mapping to enumeration field class object"
+            self._add_mapping(self._ptr, label, ranges._ptr),
+            "cannot add mapping to enumeration field class object",
         )
 
     def __iadd__(
@@ -360,15 +351,13 @@ class _StructureFieldClassMemberConst(bt2_user_attrs._WithUserAttrsConst):
 
     @property
     def name(self) -> str:
-        name = native_bt.field_class_structure_member_get_name(self._member_ptr)
-        assert name is not None
-        return name
+        return native_bt.field_class_structure_member_get_name(self._member_ptr)
 
     @property
     def field_class(self) -> _FieldClassConst:
-        fc_ptr = self._borrow_field_class_ptr(self._member_ptr)
-        assert fc_ptr is not None
-        return self._create_field_class_from_ptr_and_get_ref(fc_ptr)
+        return self._create_field_class_from_ptr_and_get_ref(
+            self._borrow_field_class_ptr(self._member_ptr)
+        )
 
 
 class _StructureFieldClassMember(
@@ -404,9 +393,7 @@ class _StructureFieldClassConst(_FieldClassConst, collections.abc.Mapping):
     )
 
     def __len__(self) -> int:
-        count = native_bt.field_class_structure_get_member_count(self._ptr)
-        assert count >= 0
-        return count
+        return native_bt.field_class_structure_get_member_count(self._ptr)
 
     def __getitem__(self, key: str) -> _StructureFieldClassMemberConst:
         if not isinstance(key, str):
@@ -423,9 +410,9 @@ class _StructureFieldClassConst(_FieldClassConst, collections.abc.Mapping):
 
     def __iter__(self) -> typing.Iterator[str]:
         for idx in range(len(self)):
-            member_ptr = self._borrow_member_ptr_by_index(self._ptr, idx)
-            assert member_ptr is not None
-            yield native_bt.field_class_structure_member_get_name(member_ptr)
+            yield native_bt.field_class_structure_member_get_name(
+                self._borrow_member_ptr_by_index(self._ptr, idx)
+            )
 
     def member_at_index(self, index: int) -> _StructureFieldClassMemberConst:
         bt2_utils._check_uint64(index)
@@ -433,9 +420,9 @@ class _StructureFieldClassConst(_FieldClassConst, collections.abc.Mapping):
         if index >= len(self):
             raise IndexError
 
-        member_ptr = self._borrow_member_ptr_by_index(self._ptr, index)
-        assert member_ptr is not None
-        return self._structure_member_field_class_pycls(self, member_ptr)
+        return self._structure_member_field_class_pycls(
+            self, self._borrow_member_ptr_by_index(self._ptr, index)
+        )
 
 
 class _StructureFieldClass(_StructureFieldClassConst, _FieldClass):
@@ -463,11 +450,11 @@ class _StructureFieldClass(_StructureFieldClassConst, _FieldClass):
         # check now that user attributes are valid
         user_attributes_value = bt2_value.create_value(user_attributes)
 
-        status = native_bt.field_class_structure_append_member(
-            self._ptr, name, field_class._ptr
-        )
         bt2_utils._handle_func_status(
-            status, "cannot append member to structure field class object"
+            native_bt.field_class_structure_append_member(
+                self._ptr, name, field_class._ptr
+            ),
+            "cannot append member to structure field class object",
         )
 
         if user_attributes is not None:
@@ -528,9 +515,9 @@ class _OptionWithIntegerSelectorFieldClassConst(_OptionWithSelectorFieldClassCon
 
     @property
     def ranges(self) -> bt2_integer_range_set._IntegerRangeSetConst:
-        range_set_ptr = self._borrow_selector_ranges_ptr(self._ptr)
-        assert range_set_ptr is not None
-        return self._range_set_pycls._create_from_ptr_and_get_ref(range_set_ptr)
+        return self._range_set_pycls._create_from_ptr_and_get_ref(
+            self._borrow_selector_ranges_ptr(self._ptr)
+        )
 
 
 class _OptionWithUnsignedIntegerSelectorFieldClassConst(
@@ -625,15 +612,13 @@ class _VariantFieldClassOptionConst(bt2_user_attrs._WithUserAttrsConst):
 
     @property
     def name(self) -> str:
-        name = native_bt.field_class_variant_option_get_name(self._opt_ptr)
-        assert name is not None
-        return name
+        return native_bt.field_class_variant_option_get_name(self._opt_ptr)
 
     @property
     def field_class(self) -> _FieldClassConst:
-        fc_ptr = self._borrow_field_class_ptr(self._opt_ptr)
-        assert fc_ptr is not None
-        return self._create_field_class_from_ptr_and_get_ref(fc_ptr)
+        return self._create_field_class_from_ptr_and_get_ref(
+            self._borrow_field_class_ptr(self._opt_ptr)
+        )
 
 
 class _VariantFieldClassOption(
@@ -662,9 +647,9 @@ class _VariantFieldClassWithIntegerSelectorOptionConst(_VariantFieldClassOptionC
 
     @property
     def ranges(self) -> bt2_integer_range_set._IntegerRangeSetConst:
-        range_set_ptr = self._borrow_ranges_ptr(self._spec_ptr)
-        assert range_set_ptr is not None
-        return self._range_set_pycls._create_from_ptr_and_get_ref(range_set_ptr)
+        return self._range_set_pycls._create_from_ptr_and_get_ref(
+            self._borrow_ranges_ptr(self._spec_ptr)
+        )
 
 
 class _VariantFieldClassWithIntegerSelectorOption(
@@ -729,9 +714,7 @@ class _VariantFieldClassConst(_FieldClassConst, collections.abc.Mapping):
         return self._variant_option_pycls(self, opt_ptr)
 
     def __len__(self) -> int:
-        count = native_bt.field_class_variant_get_option_count(self._ptr)
-        assert count >= 0
-        return count
+        return native_bt.field_class_variant_get_option_count(self._ptr)
 
     def __getitem__(self, key: str) -> _VariantFieldClassOptionConst:
         if not isinstance(key, str):
@@ -748,10 +731,9 @@ class _VariantFieldClassConst(_FieldClassConst, collections.abc.Mapping):
 
     def __iter__(self) -> typing.Iterator[str]:
         for idx in range(len(self)):
-            opt_ptr = self._borrow_option_ptr_by_index(self._ptr, idx)
-            assert opt_ptr is not None
-            base_opt_ptr = self._as_option_ptr(opt_ptr)
-            yield native_bt.field_class_variant_option_get_name(base_opt_ptr)
+            yield native_bt.field_class_variant_option_get_name(
+                self._as_option_ptr(self._borrow_option_ptr_by_index(self._ptr, idx))
+            )
 
     def option_at_index(self, index: int) -> _VariantFieldClassOptionConst:
         bt2_utils._check_uint64(index)
@@ -759,9 +741,9 @@ class _VariantFieldClassConst(_FieldClassConst, collections.abc.Mapping):
         if index >= len(self):
             raise IndexError
 
-        opt_ptr = self._borrow_option_ptr_by_index(self._ptr, index)
-        assert opt_ptr is not None
-        return self._create_option_from_ptr(opt_ptr)
+        return self._create_option_from_ptr(
+            self._borrow_option_ptr_by_index(self._ptr, index)
+        )
 
 
 class _VariantFieldClass(_VariantFieldClassConst, _FieldClass, collections.abc.Mapping):
@@ -799,11 +781,11 @@ class _VariantFieldClassWithoutSelector(
         # check now that user attributes are valid
         user_attributes_value = bt2_value.create_value(user_attributes)
 
-        status = native_bt.field_class_variant_without_selector_append_option(
-            self._ptr, name, field_class._ptr
-        )
         bt2_utils._handle_func_status(
-            status, "cannot append option to variant field class object"
+            native_bt.field_class_variant_without_selector_append_option(
+                self._ptr, name, field_class._ptr
+            ),
+            "cannot append option to variant field class object",
         )
 
         if user_attributes is not None:
@@ -860,9 +842,9 @@ class _VariantFieldClassWithIntegerSelector(
 
         # TODO: check overlaps (precondition of self._append_option())
 
-        status = self._append_option(self._ptr, name, field_class._ptr, ranges._ptr)
         bt2_utils._handle_func_status(
-            status, "cannot append option to variant field class object"
+            self._append_option(self._ptr, name, field_class._ptr, ranges._ptr),
+            "cannot append option to variant field class object",
         )
 
         if user_attributes is not None:

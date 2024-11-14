@@ -143,8 +143,7 @@ class _UserMessageIterator(_MessageIterator):
         self_output_port = bt2_port._create_self_from_ptr_and_get_ref(
             self_output_port_ptr, native_bt.PORT_TYPE_OUTPUT
         )
-        config = _MessageIteratorConfiguration(config_ptr)
-        self.__init__(config, self_output_port)
+        self.__init__(_MessageIteratorConfiguration(config_ptr), self_output_port)
 
     def __init__(self, config, self_output_port):
         pass
@@ -155,10 +154,9 @@ class _UserMessageIterator(_MessageIterator):
 
     @property
     def _port(self) -> bt2_port._UserComponentOutputPort:
-        port_ptr = native_bt.self_message_iterator_borrow_port(self._bt_ptr)
-        assert port_ptr is not None
         return bt2_port._create_self_from_ptr_and_get_ref(
-            port_ptr, native_bt.PORT_TYPE_OUTPUT
+            native_bt.self_message_iterator_borrow_port(self._bt_ptr),
+            native_bt.PORT_TYPE_OUTPUT,
         )
 
     @property
@@ -244,8 +242,6 @@ class _UserMessageIterator(_MessageIterator):
             self._bt_ptr, input_port._ptr
         )
         bt2_utils._handle_func_status(status, "cannot create message iterator object")
-        assert msg_iter_ptr is not None
-
         return _UserComponentInputPortMessageIterator(msg_iter_ptr)
 
     def _create_event_message(

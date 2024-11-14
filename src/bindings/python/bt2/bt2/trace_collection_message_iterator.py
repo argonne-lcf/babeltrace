@@ -562,8 +562,9 @@ class TraceCollectionMessageIterator(bt2_message_iterator._MessageIterator):
 
         # create extra filter components (chained)
         for comp_spec in self._flt_comp_specs:
-            comp = self._create_comp(comp_spec)
-            self._flt_comps_and_specs.append(_ComponentAndSpec(comp, comp_spec))
+            self._flt_comps_and_specs.append(
+                _ComponentAndSpec(self._create_comp(comp_spec), comp_spec)
+            )
 
         # connect the extra filter chain
         for comp_and_spec in self._flt_comps_and_specs:
@@ -580,8 +581,9 @@ class TraceCollectionMessageIterator(bt2_message_iterator._MessageIterator):
         # it does not exist yet (it needs the created component to
         # exist).
         for comp_spec in self._src_comp_specs:
-            comp = self._create_comp(comp_spec)
-            self._src_comps_and_specs.append(_ComponentAndSpec(comp, comp_spec))
+            self._src_comps_and_specs.append(
+                _ComponentAndSpec(self._create_comp(comp_spec), comp_spec)
+            )
 
         if self._stream_intersection_mode:
             self._compute_stream_intersections()

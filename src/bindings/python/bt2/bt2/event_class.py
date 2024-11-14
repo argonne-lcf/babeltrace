@@ -142,23 +142,25 @@ class _EventClass(bt2_user_attrs._WithUserAttrs, _EventClassConst):
         native_bt.event_class_set_log_level(self._ptr, log_level)
 
     def _set_emf_uri(self, emf_uri):
-        status = native_bt.event_class_set_emf_uri(self._ptr, emf_uri)
-        bt2_utils._handle_func_status(status, "cannot set event class object's EMF URI")
+        bt2_utils._handle_func_status(
+            native_bt.event_class_set_emf_uri(self._ptr, emf_uri),
+            "cannot set event class object's EMF URI",
+        )
 
     def _set_specific_context_field_class(self, context_field_class):
-        status = native_bt.event_class_set_specific_context_field_class(
-            self._ptr, context_field_class._ptr
-        )
         bt2_utils._handle_func_status(
-            status, "cannot set event class object's context field class"
+            native_bt.event_class_set_specific_context_field_class(
+                self._ptr, context_field_class._ptr
+            ),
+            "cannot set event class object's context field class",
         )
 
     def _set_payload_field_class(self, payload_field_class):
-        status = native_bt.event_class_set_payload_field_class(
-            self._ptr, payload_field_class._ptr
-        )
         bt2_utils._handle_func_status(
-            status, "cannot set event class object's payload field class"
+            native_bt.event_class_set_payload_field_class(
+                self._ptr, payload_field_class._ptr
+            ),
+            "cannot set event class object's payload field class",
         )
 
     @staticmethod

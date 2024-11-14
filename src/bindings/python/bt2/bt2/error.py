@@ -28,8 +28,7 @@ _COMPONENT_CLASS_TYPE_TO_STR = {
 
 
 def _create_error_cause_from_ptr(ptr):
-    actor_type = native_bt.error_cause_get_actor_type(ptr)
-    return _ACTOR_TYPE_TO_CLS[actor_type](ptr)
+    return _ACTOR_TYPE_TO_CLS[native_bt.error_cause_get_actor_type(ptr)](ptr)
 
 
 class _ErrorCause:
@@ -206,10 +205,11 @@ class _Error(Exception, abc.Sequence):
         self._causes = []
 
         for i in range(cause_count):
-            cause_ptr = native_bt.error_borrow_cause_by_index(self._ptr, i)
-            assert cause_ptr is not None
-            cause = _create_error_cause_from_ptr(cause_ptr)
-            self._causes.append(cause)
+            self._causes.append(
+                _create_error_cause_from_ptr(
+                    native_bt.error_borrow_cause_by_index(self._ptr, i)
+                )
+            )
 
     def __del__(self):
         # If this exception escapes all the way out of the Python code, the

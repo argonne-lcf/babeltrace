@@ -29,8 +29,7 @@ class _QueryExecutorCommon:
 
     @property
     def is_interrupted(self) -> bool:
-        is_interrupted = native_bt.query_executor_is_interrupted(self._common_ptr)
-        return bool(is_interrupted)
+        return bool(native_bt.query_executor_is_interrupted(self._common_ptr))
 
     @property
     def logging_level(self) -> int:
@@ -78,7 +77,6 @@ class QueryExecutor(bt2_object._SharedObject, _QueryExecutorCommon):
             params_ptr = params._ptr
 
         cc_ptr = component_class._bt_component_class_ptr()
-        assert cc_ptr is not None
 
         if method_obj is not None and not native_bt.bt2_is_python_component_class(
             cc_ptr
@@ -107,14 +105,15 @@ class QueryExecutor(bt2_object._SharedObject, _QueryExecutorCommon):
 
     @property
     def default_interrupter(self) -> bt2_interrupter.Interrupter:
-        ptr = native_bt.query_executor_borrow_default_interrupter(self._ptr)
-        return bt2_interrupter.Interrupter._create_from_ptr_and_get_ref(ptr)
+        return bt2_interrupter.Interrupter._create_from_ptr_and_get_ref(
+            native_bt.query_executor_borrow_default_interrupter(self._ptr)
+        )
 
     def _set_logging_level(self, log_level):
         bt2_utils._check_log_level(log_level)
-        status = native_bt.query_executor_set_logging_level(self._ptr, log_level)
         bt2_utils._handle_func_status(
-            status, "cannot set query executor's logging level"
+            native_bt.query_executor_set_logging_level(self._ptr, log_level),
+            "cannot set query executor's logging level",
         )
 
     logging_level = property(
@@ -124,7 +123,6 @@ class QueryExecutor(bt2_object._SharedObject, _QueryExecutorCommon):
     def query(self) -> typing.Optional[bt2_value._ValueConst]:
         status, result_ptr = native_bt.query_executor_query(self._ptr)
         bt2_utils._handle_func_status(status, "cannot query component class")
-        assert result_ptr is not None
         return bt2_value._create_from_const_ptr(result_ptr)
 
 

@@ -50,8 +50,7 @@ class _FieldPathConst(bt2_object._SharedObject, collections.abc.Iterable):
 
     @property
     def root_scope(self) -> FieldPathScope:
-        scope = native_bt.field_path_get_root_scope(self._ptr)
-        return _SCOPE_TO_OBJ[scope]
+        return _SCOPE_TO_OBJ[native_bt.field_path_get_root_scope(self._ptr)]
 
     def __len__(self) -> int:
         return native_bt.field_path_get_item_count(self._ptr)
@@ -67,11 +66,11 @@ class _FieldPathConst(bt2_object._SharedObject, collections.abc.Iterable):
     ]:
         for idx in range(len(self)):
             item_ptr = native_bt.field_path_borrow_item_by_index_const(self._ptr, idx)
-            assert item_ptr is not None
             item_type = native_bt.field_path_item_get_type(item_ptr)
             if item_type == native_bt.FIELD_PATH_ITEM_TYPE_INDEX:
-                idx = native_bt.field_path_item_index_get_index(item_ptr)
-                yield _IndexFieldPathItem(idx)
+                yield _IndexFieldPathItem(
+                    native_bt.field_path_item_index_get_index(item_ptr)
+                )
             elif item_type == native_bt.FIELD_PATH_ITEM_TYPE_CURRENT_ARRAY_ELEMENT:
                 yield _CurrentArrayElementFieldPathItem()
             elif item_type == native_bt.FIELD_PATH_ITEM_TYPE_CURRENT_OPTION_CONTENT:

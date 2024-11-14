@@ -18,14 +18,14 @@ class _ConnectionConst(bt2_object._SharedObject):
 
     @property
     def downstream_port(self) -> bt2_port._InputPortConst:
-        port_ptr = native_bt.connection_borrow_downstream_port_const(self._ptr)
         return bt2_port._create_from_const_ptr_and_get_ref(
-            port_ptr, native_bt.PORT_TYPE_INPUT
+            native_bt.connection_borrow_downstream_port_const(self._ptr),
+            native_bt.PORT_TYPE_INPUT,
         )
 
     @property
     def upstream_port(self) -> bt2_port._OutputPortConst:
-        port_ptr = native_bt.connection_borrow_upstream_port_const(self._ptr)
         return bt2_port._create_from_const_ptr_and_get_ref(
-            port_ptr, native_bt.PORT_TYPE_OUTPUT
+            native_bt.connection_borrow_upstream_port_const(self._ptr),
+            native_bt.PORT_TYPE_OUTPUT,
         )
