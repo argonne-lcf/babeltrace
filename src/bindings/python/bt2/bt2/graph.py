@@ -56,7 +56,49 @@ class Graph(bt2_object._SharedObject):
         # this graph exists
         self._listener_partials = []
 
+    @typing.overload
     def add_component(
+        self,
+        component_class: typing.Union[
+            typing.Type[bt2_component._UserSourceComponent],
+            bt2_component._SourceComponentClassConst,
+        ],
+        name: str,
+        params=None,
+        obj: object = None,
+        logging_level: int = bt2_logging.LoggingLevel.NONE,
+    ) -> bt2_component._GenericSourceComponentConst:
+        ...
+
+    @typing.overload
+    def add_component(  # noqa: F811
+        self,
+        component_class: typing.Union[
+            typing.Type[bt2_component._UserFilterComponent],
+            bt2_component._FilterComponentClassConst,
+        ],
+        name: str,
+        params=None,
+        obj: object = None,
+        logging_level: int = bt2_logging.LoggingLevel.NONE,
+    ) -> bt2_component._GenericFilterComponentConst:
+        ...
+
+    @typing.overload
+    def add_component(  # noqa: F811
+        self,
+        component_class: typing.Union[
+            typing.Type[bt2_component._UserSinkComponent],
+            bt2_component._SinkComponentClassConst,
+        ],
+        name: str,
+        params=None,
+        obj: object = None,
+        logging_level: int = bt2_logging.LoggingLevel.NONE,
+    ) -> bt2_component._GenericSinkComponentConst:
+        ...
+
+    def add_component(  # noqa: F811
         self,
         component_class: typing.Union[
             bt2_component._ComponentClassConst,
