@@ -121,11 +121,6 @@ class QueryExecutor(bt2_object._SharedObject, _QueryExecutorCommon):
         fget=_QueryExecutorCommon.logging_level, fset=_set_logging_level
     )
 
-    @property
-    def is_interrupted(self) -> bool:
-        is_interrupted = native_bt.query_executor_is_interrupted(self._ptr)
-        return bool(is_interrupted)
-
     def query(self) -> typing.Optional[bt2_value._ValueConst]:
         status, result_ptr = native_bt.query_executor_query(self._ptr)
         bt2_utils._handle_func_status(status, "cannot query component class")
