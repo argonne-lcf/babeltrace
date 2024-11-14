@@ -1022,12 +1022,12 @@ component_class_message_iterator_init(bt_self_message_iterator *self_message_ite
     }
 
     /*
-     * Create object with borrowed native message iterator
-     * reference:
+     * Create an instance of the user-defined iterator class, equivalent
+     * to:
      *
-     *     py_iter = py_iter_cls.__new__(py_iter_cls, py_iter_ptr)
+     *     py_iter = py_iter_cls.__new__(py_iter_cls)
      */
-    py_iter = PyObject_CallMethod(py_iter_cls, "__new__", "(OO)", py_iter_cls, py_iter_ptr);
+    py_iter = PyObject_CallMethod(py_iter_cls, "__new__", "(O)", py_iter_cls);
     if (!py_iter) {
         BT_COMP_LOG_CUR_LVL(BT_LOG_ERROR, log_level, self_component,
                             "Failed to call Python class's __new__() method: "
@@ -1037,16 +1037,12 @@ component_class_message_iterator_init(bt_self_message_iterator *self_message_ite
     }
 
     /*
-     * Initialize object:
+     * Initialize the instance, equivalent to::
      *
-     *     py_iter.__init__(config, self_output_port)
+     *     py_iter.__init__(self_message_iterator_ptr, config_ptr,
+     *                      self_output_port_ptr)
      *
-     * through the _init_from_native helper static method.
-     *
-     * At this point, py_iter._ptr is set, so this initialization
-     * function has access to self._component (which gives it the
-     * user Python component object from which the iterator was
-     * created).
+     * through the `_init_from_native()` helper static method.
      */
     py_config_ptr = SWIG_NewPointerObj(SWIG_as_voidptr(config),
                                        SWIGTYPE_p_bt_self_message_iterator_configuration, 0);
@@ -1067,7 +1063,7 @@ component_class_message_iterator_init(bt_self_message_iterator *self_message_ite
         goto error;
     }
 
-    py_init_method_result = PyObject_CallMethod(py_iter, "_bt_init_from_native", "OO",
+    py_init_method_result = PyObject_CallMethod(py_iter, "_bt_init_from_native", "OOO", py_iter_ptr,
                                                 py_config_ptr, py_component_port_output_ptr);
     if (!py_init_method_result) {
         BT_COMP_LOG_CUR_LVL(BT_LOG_ERROR, log_level, self_component,

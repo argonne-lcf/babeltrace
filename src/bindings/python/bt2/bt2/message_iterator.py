@@ -124,22 +124,8 @@ class _MessageIteratorConfiguration:
 # Its purpose is to feed the messages that should go out through this output
 # port.
 class _UserMessageIterator(_MessageIterator):
-    def __new__(cls, ptr):
-        # User iterator objects are always created by the native side,
-        # that is, never instantiated directly by Python code.
-        #
-        # The native code calls this, then manually calls
-        # self.__init__() without the `ptr` argument. The user has
-        # access to self.component during this call, thanks to this
-        # self._bt_ptr argument being set.
-        #
-        # self._bt_ptr is NOT owned by this object here, so there's nothing
-        # to do in __del__().
-        self = super().__new__(cls)
-        self._bt_ptr = ptr
-        return self
-
-    def _bt_init_from_native(self, config_ptr, self_output_port_ptr):
+    def _bt_init_from_native(self, bt_ptr, config_ptr, self_output_port_ptr):
+        self._bt_ptr = bt_ptr
         self_output_port = bt2_port._create_self_from_ptr_and_get_ref(
             self_output_port_ptr, native_bt.PORT_TYPE_OUTPUT
         )
