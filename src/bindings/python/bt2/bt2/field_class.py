@@ -215,7 +215,7 @@ class _EnumerationFieldClassConst(_IntegerFieldClassConst, collections.abc.Mappi
     def __len__(self) -> int:
         return native_bt.field_class_enumeration_get_mapping_count(self._ptr)
 
-    def mappings_for_value(self, value: int) -> "list[str]":
+    def mappings_for_value(self, value: int) -> typing.List[str]:
         self._check_int_type(value)
 
         status, labels = self._get_mapping_labels_for_value(self._ptr, value)
