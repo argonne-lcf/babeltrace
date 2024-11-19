@@ -90,7 +90,7 @@ copy_clock_class_content(const bt_clock_class *in_clock_class, bt_clock_class *o
         if (set_name_status != BT_CLOCK_CLASS_SET_NAME_STATUS_OK) {
             BT_COMP_LOGE_APPEND_CAUSE(self_comp,
                                       "Error setting clock class' name: "
-                                      "cc-addr=%p, name=%s",
+                                      "cc-addr=%p, name=\"%s\"",
                                       out_clock_class, clock_class_name);
             status = static_cast<debug_info_trace_ir_mapping_status>(set_name_status);
             goto end;
@@ -112,7 +112,7 @@ copy_clock_class_content(const bt_clock_class *in_clock_class, bt_clock_class *o
         if (set_desc_status != BT_CLOCK_CLASS_SET_DESCRIPTION_STATUS_OK) {
             BT_COMP_LOGE_APPEND_CAUSE(self_comp,
                                       "Error setting clock class' description: "
-                                      "cc-addr=%p, cc-desc=%s",
+                                      "cc-addr=%p, cc-desc=\"%s\"",
                                       out_clock_class, clock_class_description);
             status = static_cast<debug_info_trace_ir_mapping_status>(set_desc_status);
             goto end;
@@ -251,7 +251,7 @@ copy_stream_class_content(struct trace_ir_maps *ir_maps, const bt_stream_class *
         if (set_name_status != BT_STREAM_CLASS_SET_NAME_STATUS_OK) {
             BT_COMP_LOGE_APPEND_CAUSE(self_comp,
                                       "Error set stream class name: "
-                                      "out-sc-addr=%p, name=%s",
+                                      "out-sc-addr=%p, name=\"%s\"",
                                       out_stream_class, in_name);
             status = static_cast<debug_info_trace_ir_mapping_status>(set_name_status);
             goto end;
@@ -386,7 +386,7 @@ copy_event_class_content(struct trace_ir_maps *ir_maps, const bt_event_class *in
         if (set_name_status != BT_EVENT_CLASS_SET_NAME_STATUS_OK) {
             BT_COMP_LOGE_APPEND_CAUSE(self_comp,
                                       "Error setting event class' name: ec-addr=%p, "
-                                      "name=%s",
+                                      "name=\"%s\"",
                                       out_event_class, in_event_class_name);
             status = static_cast<debug_info_trace_ir_mapping_status>(set_name_status);
             goto end;
