@@ -147,7 +147,7 @@ _bt_tests_plugins_path=$BT_TESTS_BUILDDIR/../src/plugins
 
 # Colon-separated list of project plugin paths, if not set
 _bt_tests_set_var_def BT_TESTS_BABELTRACE_PLUGIN_PATH \
-	"$_bt_tests_plugins_path/ctf:$_bt_tests_plugins_path/utils:$_bt_tests_plugins_path/text:$_bt_tests_plugins_path/lttng-utils"
+	"$BT_TESTS_SRCDIR/utils/python:$_bt_tests_plugins_path/ctf:$_bt_tests_plugins_path/utils:$_bt_tests_plugins_path/text:$_bt_tests_plugins_path/lttng-utils"
 
 # Directory containing the Python plugin provider library, if not set
 _bt_tests_set_var_def BT_TESTS_PROVIDER_DIR "$BT_TESTS_BUILDDIR/../src/python-plugin-provider/.libs"
