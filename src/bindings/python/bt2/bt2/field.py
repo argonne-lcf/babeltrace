@@ -62,10 +62,14 @@ class _FieldConst(bt2_object._UniqueObject):
         return self._spec_eq(_get_leaf_field(other))
 
     @property
-    def cls(self) -> bt2_field_class._FieldClassConst:
+    def _cls(self):
         return self._create_field_class_from_ptr_and_get_ref(
             self._borrow_class_ptr(self._ptr)
         )
+
+    @property
+    def cls(self) -> bt2_field_class._FieldClassConst:
+        return self._cls
 
     def _repr(self):
         raise NotImplementedError
@@ -81,9 +85,17 @@ class _Field(_FieldConst):
     )
     _borrow_class_ptr = staticmethod(native_bt.field_borrow_class)
 
+    @property
+    def cls(self) -> bt2_field_class._FieldClass:
+        return self._cls
+
 
 class _BitArrayFieldConst(_FieldConst):
     _NAME = "Const bit array"
+
+    @property
+    def cls(self) -> bt2_field_class._BitArrayFieldClassConst:
+        return self._cls
 
     @property
     def value_as_integer(self) -> int:
@@ -107,6 +119,10 @@ class _BitArrayFieldConst(_FieldConst):
 
 class _BitArrayField(_BitArrayFieldConst, _Field):
     _NAME = "Bit array"
+
+    @property
+    def cls(self) -> bt2_field_class._BitArrayFieldClass:
+        return self._cls
 
     @_BitArrayFieldConst.value_as_integer.setter
     def value_as_integer(self, value):
@@ -272,6 +288,10 @@ class _IntegralField(_IntegralFieldConst, _NumericField):
 class _BoolFieldConst(_IntegralFieldConst, _FieldConst):
     _NAME = "Const boolean"
 
+    @property
+    def cls(self) -> bt2_field_class._BoolFieldClassConst:
+        return self._cls
+
     def __bool__(self) -> bool:
         return self._value
 
@@ -297,6 +317,10 @@ class _BoolFieldConst(_IntegralFieldConst, _FieldConst):
 class _BoolField(_BoolFieldConst, _IntegralField, _Field):
     _NAME = "Boolean"
 
+    @property
+    def cls(self) -> bt2_field_class._BoolFieldClass:
+        return self._cls
+
     def _set_value(self, value):
         native_bt.field_bool_set_value(self._ptr, self._value_to_bool(value))
 
@@ -304,10 +328,16 @@ class _BoolField(_BoolFieldConst, _IntegralField, _Field):
 
 
 class _IntegerFieldConst(_IntegralFieldConst, _FieldConst):
-    pass
+    @property
+    def cls(self) -> bt2_field_class._IntegerFieldClassConst:
+        return self._cls
 
 
 class _IntegerField(_IntegerFieldConst, _IntegralField, _Field):
+    @property
+    def cls(self) -> bt2_field_class._IntegerFieldClass:
+        return self._cls
+
     def _check_range(self, value):
         if not (value >= self._lower_bound and value <= self._upper_bound):
             raise ValueError(
@@ -319,6 +349,10 @@ class _IntegerField(_IntegerFieldConst, _IntegralField, _Field):
 
 class _UnsignedIntegerFieldConst(_IntegerFieldConst, _FieldConst):
     _NAME = "Const unsigned integer"
+
+    @property
+    def cls(self) -> bt2_field_class._UnsignedIntegerFieldClassConst:
+        return self._cls
 
     @classmethod
     def _value_to_int(cls, value):
@@ -334,6 +368,10 @@ class _UnsignedIntegerFieldConst(_IntegerFieldConst, _FieldConst):
 
 class _UnsignedIntegerField(_UnsignedIntegerFieldConst, _IntegerField, _Field):
     _NAME = "Unsigned integer"
+
+    @property
+    def cls(self) -> bt2_field_class._UnsignedIntegerFieldClass:
+        return self._cls
 
     def _set_value(self, value):
         value = self._value_to_int(value)
@@ -354,6 +392,10 @@ class _UnsignedIntegerField(_UnsignedIntegerFieldConst, _IntegerField, _Field):
 class _SignedIntegerFieldConst(_IntegerFieldConst, _FieldConst):
     _NAME = "Const signed integer"
 
+    @property
+    def cls(self) -> bt2_field_class._SignedIntegerFieldClassConst:
+        return self._cls
+
     @classmethod
     def _value_to_int(cls, value):
         if not isinstance(value, numbers.Integral):
@@ -368,6 +410,10 @@ class _SignedIntegerFieldConst(_IntegerFieldConst, _FieldConst):
 
 class _SignedIntegerField(_SignedIntegerFieldConst, _IntegerField, _Field):
     _NAME = "Signed integer"
+
+    @property
+    def cls(self) -> bt2_field_class._SignedIntegerFieldClass:
+        return self._cls
 
     def _set_value(self, value):
         value = self._value_to_int(value)
@@ -388,6 +434,10 @@ class _SignedIntegerField(_SignedIntegerFieldConst, _IntegerField, _Field):
 class _RealFieldConst(_NumericFieldConst, numbers.Real):
     _NAME = "Const real"
 
+    @property
+    def cls(self) -> bt2_field_class._RealFieldClassConst:
+        return self._cls
+
     @classmethod
     def _value_to_float(cls, value):
         if not isinstance(value, numbers.Real):
@@ -400,12 +450,20 @@ class _SinglePrecisionRealFieldConst(_RealFieldConst):
     _NAME = "Const single-precision real"
 
     @property
+    def cls(self) -> bt2_field_class._SinglePrecisionRealFieldClassConst:
+        return self._cls
+
+    @property
     def _value(self):
         return native_bt.field_real_single_precision_get_value(self._ptr)
 
 
 class _DoublePrecisionRealFieldConst(_RealFieldConst):
     _NAME = "Const double-precision real"
+
+    @property
+    def cls(self) -> bt2_field_class._DoublePrecisionRealFieldClassConst:
+        return self._cls
 
     @property
     def _value(self):
@@ -415,9 +473,17 @@ class _DoublePrecisionRealFieldConst(_RealFieldConst):
 class _RealField(_RealFieldConst, _NumericField):
     _NAME = "Real"
 
+    @property
+    def cls(self) -> bt2_field_class._RealFieldClass:
+        return self._cls
+
 
 class _SinglePrecisionRealField(_SinglePrecisionRealFieldConst, _RealField):
     _NAME = "Single-precision real"
+
+    @property
+    def cls(self) -> bt2_field_class._SinglePrecisionRealFieldClass:
+        return self._cls
 
     def _set_value(self, value):
         native_bt.field_real_single_precision_set_value(
@@ -430,6 +496,10 @@ class _SinglePrecisionRealField(_SinglePrecisionRealFieldConst, _RealField):
 class _DoublePrecisionRealField(_DoublePrecisionRealFieldConst, _RealField):
     _NAME = "Double-precision real"
 
+    @property
+    def cls(self) -> bt2_field_class._DoublePrecisionRealFieldClass:
+        return self._cls
+
     def _set_value(self, value):
         native_bt.field_real_double_precision_set_value(
             self._ptr, self._value_to_float(value)
@@ -439,6 +509,10 @@ class _DoublePrecisionRealField(_DoublePrecisionRealFieldConst, _RealField):
 
 
 class _EnumerationFieldConst(_IntegerFieldConst):
+    @property
+    def cls(self) -> bt2_field_class._EnumerationFieldClassConst:
+        return self._cls
+
     def _repr(self):
         return "{} ({})".format(self._value, ", ".join(self.labels))
 
@@ -450,7 +524,9 @@ class _EnumerationFieldConst(_IntegerFieldConst):
 
 
 class _EnumerationField(_EnumerationFieldConst, _IntegerField):
-    pass
+    @property
+    def cls(self) -> bt2_field_class._EnumerationFieldClass:
+        return self._cls
 
 
 class _UnsignedEnumerationFieldConst(
@@ -461,11 +537,19 @@ class _UnsignedEnumerationFieldConst(
         native_bt.field_enumeration_unsigned_get_mapping_labels
     )
 
+    @property
+    def cls(self) -> bt2_field_class._UnsignedEnumerationFieldClassConst:
+        return self._cls
+
 
 class _UnsignedEnumerationField(
     _UnsignedEnumerationFieldConst, _EnumerationField, _UnsignedIntegerField
 ):
     _NAME = "Unsigned enumeration"
+
+    @property
+    def cls(self) -> bt2_field_class._UnsignedEnumerationFieldClass:
+        return self._cls
 
 
 class _SignedEnumerationFieldConst(_EnumerationFieldConst, _SignedIntegerFieldConst):
@@ -474,16 +558,28 @@ class _SignedEnumerationFieldConst(_EnumerationFieldConst, _SignedIntegerFieldCo
         native_bt.field_enumeration_signed_get_mapping_labels
     )
 
+    @property
+    def cls(self) -> bt2_field_class._SignedEnumerationFieldClassConst:
+        return self._cls
+
 
 class _SignedEnumerationField(
     _SignedEnumerationFieldConst, _EnumerationField, _SignedIntegerField
 ):
     _NAME = "Signed enumeration"
 
+    @property
+    def cls(self) -> bt2_field_class._SignedEnumerationFieldClass:
+        return self._cls
+
 
 @functools.total_ordering
 class _StringFieldConst(_FieldConst):
     _NAME = "Const string"
+
+    @property
+    def cls(self) -> bt2_field_class._StringFieldClassConst:
+        return self._cls
 
     @classmethod
     def _value_to_str(cls, value):
@@ -529,6 +625,10 @@ class _StringFieldConst(_FieldConst):
 
 class _StringField(_StringFieldConst, _Field):
     _NAME = "String"
+
+    @property
+    def cls(self) -> bt2_field_class._StringFieldClass:
+        return self._cls
 
     def _set_value(self, value):
         native_bt.field_string_set_value(self._ptr, self._value_to_str(value))
@@ -579,6 +679,10 @@ class _StructureFieldConst(_ContainerFieldConst, collections.abc.Mapping):
     _borrow_member_field_ptr_by_name = staticmethod(
         native_bt.field_structure_borrow_member_field_by_name_const
     )
+
+    @property
+    def cls(self) -> bt2_field_class._StructureFieldClassConst:
+        return self._cls
 
     def _count(self):
         return len(self.cls)
@@ -645,6 +749,10 @@ class _StructureField(
         native_bt.field_structure_borrow_member_field_by_name
     )
 
+    @property
+    def cls(self) -> bt2_field_class._StructureFieldClass:
+        return self._cls
+
     def __setitem__(self, key: str, value):
         # raises if key is somehow invalid
         field = self[key]
@@ -666,6 +774,10 @@ class _StructureField(
 class _OptionFieldConst(_FieldConst):
     _NAME = "Const option"
     _borrow_field_ptr = staticmethod(native_bt.field_option_borrow_field_const)
+
+    @property
+    def cls(self) -> bt2_field_class._OptionFieldClassConst:
+        return self._cls
 
     @property
     def field(self) -> typing.Optional[_FieldConst]:
@@ -699,6 +811,10 @@ class _OptionField(_OptionFieldConst, _Field):
     _NAME = "Option"
     _borrow_field_ptr = staticmethod(native_bt.field_option_borrow_field)
 
+    @property
+    def cls(self) -> bt2_field_class._OptionFieldClass:
+        return self._cls
+
     @_OptionFieldConst.has_field.setter
     def has_field(self, value):
         bt2_utils._check_bool(value)
@@ -716,6 +832,10 @@ class _VariantFieldConst(_ContainerFieldConst, _FieldConst):
     _borrow_selected_option_field_ptr = staticmethod(
         native_bt.field_variant_borrow_selected_option_field_const
     )
+
+    @property
+    def cls(self) -> bt2_field_class._VariantFieldClassConst:
+        return self._cls
 
     def _count(self):
         return len(self.cls)
@@ -755,6 +875,10 @@ class _VariantField(_VariantFieldConst, _ContainerField, _Field):
         native_bt.field_variant_borrow_selected_option_field
     )
 
+    @property
+    def cls(self) -> bt2_field_class._VariantFieldClass:
+        return self._cls
+
     @_VariantFieldConst.selected_option_index.setter
     def selected_option_index(self, index: int):
         if index < 0 or index >= len(self):
@@ -772,6 +896,10 @@ class _ArrayFieldConst(_ContainerFieldConst, _FieldConst, collections.abc.Sequen
     _borrow_element_field_ptr_by_index = staticmethod(
         native_bt.field_array_borrow_element_field_by_index_const
     )
+
+    @property
+    def cls(self) -> bt2_field_class._ArrayFieldClassConst:
+        return self._cls
 
     @property
     def length(self):
@@ -825,6 +953,10 @@ class _ArrayField(
         native_bt.field_array_borrow_element_field_by_index
     )
 
+    @property
+    def cls(self) -> bt2_field_class._ArrayFieldClass:
+        return self._cls
+
     def __setitem__(self, index: int, value):
         # raises if index is somehow invalid
         field = self[index]
@@ -840,12 +972,20 @@ class _ArrayField(
 class _StaticArrayFieldConst(_ArrayFieldConst, _FieldConst):
     _NAME = "Const static array"
 
+    @property
+    def cls(self) -> bt2_field_class._StaticArrayFieldClassConst:
+        return self._cls
+
     def _count(self):
         return native_bt.field_array_get_length(self._ptr)
 
 
 class _StaticArrayField(_StaticArrayFieldConst, _ArrayField, _Field):
     _NAME = "Static array"
+
+    @property
+    def cls(self) -> bt2_field_class._StaticArrayFieldClass:
+        return self._cls
 
     def _set_value(self, values):
         if len(self) != len(values):
@@ -865,12 +1005,20 @@ class _StaticArrayField(_StaticArrayFieldConst, _ArrayField, _Field):
 class _DynamicArrayFieldConst(_ArrayFieldConst, _FieldConst):
     _NAME = "Const dynamic array"
 
+    @property
+    def cls(self) -> bt2_field_class._DynamicArrayFieldClassConst:
+        return self._cls
+
     def _count(self):
         return self.length
 
 
 class _DynamicArrayField(_DynamicArrayFieldConst, _ArrayField, _Field):
     _NAME = "Dynamic array"
+
+    @property
+    def cls(self) -> bt2_field_class._DynamicArrayFieldClass:
+        return self._cls
 
     @_ArrayFieldConst.length.setter
     def length(self, length):
