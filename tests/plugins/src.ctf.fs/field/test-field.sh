@@ -26,6 +26,7 @@ test_pass() {
         "$mp_path" "$output_dir"
     )
 
+    diag "Running: \`${py_cmd[*]}\`"
     if ! bt_run_in_py_env "${py_cmd[@]}"; then
         fail "Failed to run \`${py_cmd[*]}\`"
         return 1
