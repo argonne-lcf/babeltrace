@@ -141,14 +141,10 @@ class _StreamMessageConst(_MessageConst, _MessageWithDefaultClockSnapshot):
 
 
 class _StreamMessage(_StreamMessageConst, _Message):
-    def _default_clock_snapshot(self, raw_value):
+    def _set_default_clock_snapshot(self, raw_value):
         bt2_utils._check_uint64(raw_value)
-        self._set_default_clock_snapshot(self._ptr, raw_value)
+        self._bt_set_default_clock_snapshot(self._ptr, raw_value)
 
-    _default_clock_snapshot = property(
-        fget=_StreamMessageConst.default_clock_snapshot.fget,
-        fset=_default_clock_snapshot,
-    )
     _stream_pycls = property(lambda _: bt2_stream._Stream)
 
 
@@ -163,7 +159,7 @@ class _StreamBeginningMessageConst(_StreamMessageConst):
 
 class _StreamBeginningMessage(_StreamMessage):
     _borrow_stream_ptr = staticmethod(native_bt.message_stream_beginning_borrow_stream)
-    _set_default_clock_snapshot = staticmethod(
+    _bt_set_default_clock_snapshot = staticmethod(
         native_bt.message_stream_beginning_set_default_clock_snapshot
     )
 
@@ -177,7 +173,7 @@ class _StreamEndMessageConst(_StreamMessageConst):
 
 class _StreamEndMessage(_StreamMessage):
     _borrow_stream_ptr = staticmethod(native_bt.message_stream_end_borrow_stream)
-    _set_default_clock_snapshot = staticmethod(
+    _bt_set_default_clock_snapshot = staticmethod(
         native_bt.message_stream_end_set_default_clock_snapshot
     )
 
@@ -247,9 +243,7 @@ class _DiscardedMessage(_DiscardedMessageConst, _Message):
         if count == 0:
             raise ValueError("discarded {} count is 0".format(self._item_name))
 
-        self._set_count(self._ptr, count)
-
-    _count = property(fget=_DiscardedMessageConst.count.fget, fset=_set_count)
+        self._bt_set_count(self._ptr, count)
 
 
 class _DiscardedEventsMessageConst(_DiscardedMessageConst):
@@ -271,7 +265,7 @@ class _DiscardedEventsMessageConst(_DiscardedMessageConst):
 
 class _DiscardedEventsMessage(_DiscardedEventsMessageConst, _DiscardedMessage):
     _borrow_stream_ptr = staticmethod(native_bt.message_discarded_events_borrow_stream)
-    _set_count = staticmethod(native_bt.message_discarded_events_set_count)
+    _bt_set_count = staticmethod(native_bt.message_discarded_events_set_count)
     _item_name = "event"
 
 
@@ -294,7 +288,7 @@ class _DiscardedPacketsMessageConst(_DiscardedMessageConst):
 
 class _DiscardedPacketsMessage(_DiscardedPacketsMessageConst, _DiscardedMessage):
     _borrow_stream_ptr = staticmethod(native_bt.message_discarded_packets_borrow_stream)
-    _set_count = staticmethod(native_bt.message_discarded_packets_set_count)
+    _bt_set_count = staticmethod(native_bt.message_discarded_packets_set_count)
     _item_name = "packet"
 
 

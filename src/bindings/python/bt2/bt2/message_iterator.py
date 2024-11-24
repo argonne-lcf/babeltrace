@@ -309,7 +309,7 @@ class _UserMessageIterator(_MessageIterator):
         msg = bt2_message._StreamBeginningMessage(ptr)
 
         if default_clock_snapshot is not None:
-            msg._default_clock_snapshot = default_clock_snapshot
+            msg._set_default_clock_snapshot(default_clock_snapshot)
 
         return msg
 
@@ -327,7 +327,7 @@ class _UserMessageIterator(_MessageIterator):
         msg = bt2_message._StreamEndMessage(ptr)
 
         if default_clock_snapshot is not None:
-            msg._default_clock_snapshot = default_clock_snapshot
+            msg._set_default_clock_snapshot(default_clock_snapshot)
 
         return msg
 
@@ -440,7 +440,7 @@ class _UserMessageIterator(_MessageIterator):
         msg = bt2_message._DiscardedEventsMessage(ptr)
 
         if count is not None:
-            msg._count = count
+            msg._set_count(count)
 
         return msg
 
@@ -491,6 +491,6 @@ class _UserMessageIterator(_MessageIterator):
         msg = bt2_message._DiscardedPacketsMessage(ptr)
 
         if count is not None:
-            msg._count = count
+            msg._set_count(count)
 
         return msg
