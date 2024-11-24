@@ -108,13 +108,10 @@ class _BitArrayFieldConst(_FieldConst):
 class _BitArrayField(_BitArrayFieldConst, _Field):
     _NAME = "Bit array"
 
-    def _value_as_integer(self, value):
+    @_BitArrayFieldConst.value_as_integer.setter
+    def value_as_integer(self, value):
         bt2_utils._check_uint64(value)
         native_bt.field_bit_array_set_value_as_integer(self._ptr, value)
-
-    value_as_integer = property(
-        fget=_BitArrayFieldConst.value_as_integer.fget, fset=_value_as_integer
-    )
 
 
 @functools.total_ordering
@@ -702,11 +699,10 @@ class _OptionField(_OptionFieldConst, _Field):
     _NAME = "Option"
     _borrow_field_ptr = staticmethod(native_bt.field_option_borrow_field)
 
-    def _has_field(self, value):
+    @_OptionFieldConst.has_field.setter
+    def has_field(self, value):
         bt2_utils._check_bool(value)
         native_bt.field_option_set_has_field(self._ptr, value)
-
-    has_field = property(fget=_OptionFieldConst.has_field.fget, fset=_has_field)
 
     def _set_value(self, value):
         self.has_field = True
@@ -759,15 +755,12 @@ class _VariantField(_VariantFieldConst, _ContainerField, _Field):
         native_bt.field_variant_borrow_selected_option_field
     )
 
-    def _selected_option_index(self, index):
+    @_VariantFieldConst.selected_option_index.setter
+    def selected_option_index(self, index: int):
         if index < 0 or index >= len(self):
             raise IndexError("{} field object index is out of range".format(self._NAME))
 
         native_bt.field_variant_select_option_by_index(self._ptr, index)
-
-    selected_option_index = property(
-        fget=_VariantFieldConst.selected_option_index.fget, fset=_selected_option_index
-    )
 
     def _set_value(self, value):
         self.selected_option.value = value
@@ -780,10 +773,9 @@ class _ArrayFieldConst(_ContainerFieldConst, _FieldConst, collections.abc.Sequen
         native_bt.field_array_borrow_element_field_by_index_const
     )
 
-    def _get_length(self):
+    @property
+    def length(self):
         return native_bt.field_array_get_length(self._ptr)
-
-    length = property(fget=_get_length)
 
     def __getitem__(self, index: int) -> _FieldConst:
         if not isinstance(index, numbers.Integral):
@@ -880,14 +872,13 @@ class _DynamicArrayFieldConst(_ArrayFieldConst, _FieldConst):
 class _DynamicArrayField(_DynamicArrayFieldConst, _ArrayField, _Field):
     _NAME = "Dynamic array"
 
-    def _set_length(self, length):
+    @_ArrayFieldConst.length.setter
+    def length(self, length):
         bt2_utils._check_uint64(length)
         bt2_utils._handle_func_status(
             native_bt.field_array_dynamic_set_length(self._ptr, length),
             "cannot set dynamic array length",
         )
-
-    length = property(fget=_ArrayField._get_length, fset=_set_length)
 
     def _set_value(self, values):
         if len(values) != self.length:

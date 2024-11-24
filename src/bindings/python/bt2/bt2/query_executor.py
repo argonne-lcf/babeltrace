@@ -112,16 +112,13 @@ class QueryExecutor(bt2_object._SharedObject, _QueryExecutorCommon):
             native_bt.query_executor_borrow_default_interrupter(self._ptr)
         )
 
-    def _set_logging_level(self, log_level):
+    @_QueryExecutorCommon.logging_level.setter
+    def logging_level(self, log_level):
         bt2_utils._check_type(log_level, bt2_logging.LoggingLevel)
         bt2_utils._handle_func_status(
             native_bt.query_executor_set_logging_level(self._ptr, log_level.value),
             "cannot set query executor's logging level",
         )
-
-    logging_level = property(
-        fget=_QueryExecutorCommon.logging_level, fset=_set_logging_level
-    )
 
     def query(self) -> typing.Optional[bt2_value._ValueConst]:
         status, result_ptr = native_bt.query_executor_query(self._ptr)
