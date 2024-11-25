@@ -3,16 +3,21 @@
 # Copyright (C) 2019 EfficiOS Inc.
 #
 
+import typing
 import collections.abc
 
 import bt2
+
+_RetT = typing.TypeVar("_RetT")
 
 
 # Run callable `func` in the context of a component's __init__ method.  The
 # callable is passed the Component being instantiated.
 #
 # The value returned by the callable is returned by run_in_component_init.
-def run_in_component_init(func):
+def run_in_component_init(
+    func: typing.Callable[[bt2._UserSinkComponent], _RetT]
+) -> _RetT:
     class MySink(bt2._UserSinkComponent):
         def __init__(self, config, params, obj):
             nonlocal res_bound
@@ -41,7 +46,7 @@ def run_in_component_init(func):
 
 # Create an empty trace class with default values.
 def get_default_trace_class():
-    def f(comp_self):
+    def f(comp_self: bt2._UserSinkComponent):
         return comp_self._create_trace_class()
 
     return run_in_component_init(f)
