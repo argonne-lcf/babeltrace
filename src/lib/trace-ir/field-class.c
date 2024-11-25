@@ -2611,11 +2611,14 @@ static
 int init_array_field_class(struct bt_field_class_array *fc,
 		enum bt_field_class_type type, bt_object_release_func release_func,
 		struct bt_field_class *element_fc,
-		const struct bt_trace_class *trace_class)
+		const struct bt_trace_class *trace_class,
+		const char *api_func)
 {
 	int ret;
 
-	BT_ASSERT(element_fc);
+	BT_ASSERT_PRE_NON_NULL_FROM_FUNC(api_func, "element-field-class",
+		element_fc, "Element field class");
+
 	ret = init_field_class((void *) fc, type, release_func,
 		trace_class);
 	if (ret) {
@@ -2657,8 +2660,6 @@ bt_field_class_array_static_create(bt_trace_class *trace_class,
 
 	BT_ASSERT_PRE_NO_ERROR();
 	BT_ASSERT_PRE_TC_NON_NULL(trace_class);
-	BT_ASSERT_PRE_NON_NULL("element-field-class", element_fc,
-		"Element field class");
 	BT_LOGD_STR("Creating default static array field class object.");
 	array_fc = g_new0(struct bt_field_class_array_static, 1);
 	if (!array_fc) {
@@ -2670,7 +2671,7 @@ bt_field_class_array_static_create(bt_trace_class *trace_class,
 	if (init_array_field_class((void *) array_fc,
 			BT_FIELD_CLASS_TYPE_STATIC_ARRAY,
 			destroy_static_array_field_class, element_fc,
-			trace_class)) {
+			trace_class, __func__)) {
 		goto error;
 	}
 
@@ -2760,8 +2761,6 @@ struct bt_field_class_array_dynamic *create_dynamic_array_field_class(
 {
 	struct bt_field_class_array_dynamic *array_fc = NULL;
 
-	BT_ASSERT_PRE_NON_NULL_FROM_FUNC(api_func, "element-field-class", element_fc,
-		"Element field class");
 	BT_LOGD_STR("Creating default dynamic array field class object.");
 	array_fc = g_new0(struct bt_field_class_array_dynamic, 1);
 	if (!array_fc) {
@@ -2772,7 +2771,7 @@ struct bt_field_class_array_dynamic *create_dynamic_array_field_class(
 
 	if (init_array_field_class((void *) array_fc, fc_type,
 			destroy_dynamic_array_field_class, element_fc,
-			trace_class)) {
+			trace_class, api_func)) {
 		goto error;
 	}
 
