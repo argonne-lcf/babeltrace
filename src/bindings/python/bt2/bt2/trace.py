@@ -106,7 +106,6 @@ class _TraceConst(
 
     _stream_pycls = property(lambda _: bt2_stream._StreamConst)
     _trace_class_pycls = property(lambda _: _bt2_trace_class()._TraceClassConst)
-    _trace_env_pycls = property(lambda _: _TraceEnvironmentConst)
 
     def __len__(self) -> int:
         return native_bt.trace_get_stream_count(self._ptr)
@@ -147,7 +146,7 @@ class _TraceConst(
 
     @property
     def environment(self) -> _TraceEnvironmentConst:
-        return self._trace_env_pycls(self)
+        return _TraceEnvironmentConst(self)
 
     def add_destruction_listener(
         self, listener: typing.Callable[["_TraceConst"], None]
@@ -201,7 +200,6 @@ class _Trace(bt2_user_attrs._WithUserAttrs, _TraceConst):
 
     _stream_pycls = property(lambda _: bt2_stream._Stream)
     _trace_class_pycls = property(lambda _: _bt2_trace_class()._TraceClass)
-    _trace_env_pycls = property(lambda _: _TraceEnvironment)
 
     def _set_name(self, name):
         bt2_utils._check_str(name)
@@ -216,6 +214,10 @@ class _Trace(bt2_user_attrs._WithUserAttrs, _TraceConst):
     def _set_uuid(self, uuid):
         bt2_utils._check_type(uuid, uuidp.UUID)
         native_bt.trace_set_uuid(self._ptr, uuid.bytes)
+
+    @property
+    def environment(self) -> _TraceEnvironment:
+        return _TraceEnvironment(self)
 
     def create_stream(
         self,
