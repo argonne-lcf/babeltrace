@@ -4,7 +4,9 @@
 
 
 from bt2 import error as bt2_error
-from bt2 import native_bt
+from bt2 import native_bt, typing_mod
+
+typing = typing_mod._typing_mod
 
 
 class UnknownObject(Exception):
@@ -48,11 +50,16 @@ def _check_str(o):
         raise TypeError("'{}' is not a 'str' object".format(o.__class__.__name__))
 
 
-def _check_type(o, expected_type):
+_Type = typing.TypeVar("_Type")
+
+
+def _check_type(o: typing.Any, expected_type: typing.Type[_Type]) -> _Type:
     if not isinstance(o, expected_type):
         raise TypeError(
             "'{}' is not a '{}' object".format(o.__class__.__name__, expected_type)
         )
+
+    return o
 
 
 def _is_in_int64_range(v):
