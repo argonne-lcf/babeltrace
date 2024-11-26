@@ -17,12 +17,12 @@ from bt2 import plugin as bt2_plugin
 from bt2 import logging as bt2_logging
 from bt2 import message as bt2_message
 from bt2 import component as bt2_component
-from bt2 import native_bt
+from bt2 import native_bt, typing_mod
 from bt2 import query_executor as bt2_query_executor
 from bt2 import message_iterator as bt2_message_iterator
 from bt2 import component_descriptor as bt2_component_descriptor
 
-typing = bt2_utils._typing_mod
+typing = typing_mod._typing_mod
 
 # a pair of component and ComponentSpec
 _ComponentAndSpec = namedtuple("_ComponentAndSpec", ["comp", "spec"])

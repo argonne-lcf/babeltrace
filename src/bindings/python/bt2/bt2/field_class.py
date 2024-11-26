@@ -10,10 +10,11 @@ from bt2 import value as bt2_value
 from bt2 import object as bt2_object
 from bt2 import native_bt
 from bt2 import field_path as bt2_field_path
+from bt2 import typing_mod
 from bt2 import user_attributes as bt2_user_attrs
 from bt2 import integer_range_set as bt2_integer_range_set
 
-typing = bt2_utils._typing_mod
+typing = typing_mod._typing_mod
 
 
 def _obj_type_from_field_class_ptr_template(type_map, ptr):

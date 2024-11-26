@@ -2,12 +2,11 @@
 #
 # Copyright (c) 2017 Philippe Proulx <pproulx@efficios.com>
 
-from bt2 import utils as bt2_utils
 from bt2 import value as bt2_value
 from bt2 import component as bt2_component
-from bt2 import native_bt
+from bt2 import native_bt, typing_mod
 
-typing = bt2_utils._typing_mod
+typing = typing_mod._typing_mod
 
 
 def _is_source_comp_cls(comp_cls):

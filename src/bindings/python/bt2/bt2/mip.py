@@ -5,10 +5,10 @@
 from bt2 import error as bt2_error
 from bt2 import utils as bt2_utils
 from bt2 import logging as bt2_logging
-from bt2 import native_bt
+from bt2 import native_bt, typing_mod
 from bt2 import component_descriptor as bt2_component_descriptor
 
-typing = bt2_utils._typing_mod
+typing = typing_mod._typing_mod
 
 
 def get_greatest_operative_mip_version(

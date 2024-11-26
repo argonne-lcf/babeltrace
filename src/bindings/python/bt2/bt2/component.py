@@ -11,14 +11,14 @@ from bt2 import utils as bt2_utils
 from bt2 import value as bt2_value
 from bt2 import object as bt2_object
 from bt2 import logging as bt2_logging
-from bt2 import native_bt
+from bt2 import native_bt, typing_mod
 from bt2 import clock_class as bt2_clock_class
 from bt2 import trace_class as bt2_trace_class
 from bt2 import query_executor as bt2_query_executor
 from bt2 import message_iterator as bt2_message_iterator
 from bt2 import integer_range_set as bt2_integer_range_set
 
-typing = bt2_utils._typing_mod
+typing = typing_mod._typing_mod
 
 # The types a user can pass as `params` when creating a component.
 _ComponentParams = typing.Optional[bt2_value._ConvertibleToMapValue]

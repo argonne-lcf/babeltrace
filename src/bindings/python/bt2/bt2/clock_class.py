@@ -6,10 +6,10 @@ import uuid as uuidp
 
 from bt2 import utils as bt2_utils
 from bt2 import object as bt2_object
-from bt2 import native_bt
+from bt2 import native_bt, typing_mod
 from bt2 import user_attributes as bt2_user_attrs
 
-typing = bt2_utils._typing_mod
+typing = typing_mod._typing_mod
 
 
 class ClockClassOffset:

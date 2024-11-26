@@ -11,9 +11,9 @@ import collections.abc
 from bt2 import error as bt2_error
 from bt2 import utils as bt2_utils
 from bt2 import object as bt2_object
-from bt2 import native_bt
+from bt2 import native_bt, typing_mod
 
-typing = bt2_utils._typing_mod
+typing = typing_mod._typing_mod
 
 
 def _create_from_ptr_template(ptr, object_map):

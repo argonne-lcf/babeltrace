@@ -11,11 +11,11 @@ from bt2 import object as bt2_object
 from bt2 import packet as bt2_packet
 from bt2 import stream as bt2_stream
 from bt2 import message as bt2_message
-from bt2 import native_bt
+from bt2 import native_bt, typing_mod
 from bt2 import clock_class as bt2_clock_class
 from bt2 import event_class as bt2_event_class
 
-typing = bt2_utils._typing_mod
+typing = typing_mod._typing_mod
 
 if typing.TYPE_CHECKING:
     from bt2 import component as bt2_component
