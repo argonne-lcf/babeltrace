@@ -54,16 +54,6 @@ def _create_const_event_class(tc, stream_class):
 class EventClassTestCase(unittest.TestCase):
     def setUp(self):
         self._tc = get_default_trace_class()
-
-        self._context_fc = self._tc.create_structure_field_class()
-        self._context_fc.append_member("allo", self._tc.create_string_field_class())
-        self._context_fc.append_member(
-            "zola", self._tc.create_signed_integer_field_class(18)
-        )
-
-        self._payload_fc = self._tc.create_structure_field_class()
-        self._payload_fc.append_member("zoom", self._tc.create_string_field_class())
-
         self._stream_class = self._tc.create_stream_class(
             assigns_automatic_event_class_id=True
         )

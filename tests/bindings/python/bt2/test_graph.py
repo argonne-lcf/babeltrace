@@ -18,18 +18,8 @@ class _MyIter(bt2._UserMessageIterator):
         self._t = self._tc()
         self._sc = self._tc.create_stream_class(supports_packets=True)
         self._ec = self._sc.create_event_class(name="salut")
-        self._my_int_ft = self._tc.create_signed_integer_field_class(32)
-        payload_ft = self._tc.create_structure_field_class()
-        payload_ft += [("my_int", self._my_int_ft)]
-        self._ec.payload_field_type = payload_ft
         self._stream = self._t.create_stream(self._sc)
         self._packet = self._stream.create_packet()
-
-    def _create_event(self, value):
-        ev = self._ec()
-        ev.payload_field["my_int"] = value
-        ev.packet = self._packet
-        return ev
 
 
 class GraphTestCase(unittest.TestCase):

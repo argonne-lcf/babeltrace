@@ -47,25 +47,6 @@ class PacketTestCase(unittest.TestCase):
             supports_packets=True,
         )
 
-        # event context
-        ec = tc.create_structure_field_class()
-        ec += [
-            ("ant", tc.create_signed_integer_field_class(16)),
-            ("msg", tc.create_string_field_class()),
-        ]
-
-        # event payload
-        ep = tc.create_structure_field_class()
-        ep += [
-            ("giraffe", tc.create_signed_integer_field_class(32)),
-            ("gnu", tc.create_signed_integer_field_class(8)),
-            ("mosquito", tc.create_signed_integer_field_class(8)),
-        ]
-
-        # event class
-        event_class = sc.create_event_class(name="ec", payload_field_class=ep)
-        event_class.common_context_field_class = ec
-
         # trace
         trace = tc()
 
