@@ -21,37 +21,34 @@ class PacketTestCase(unittest.TestCase):
 
         clock_class, tc = run_in_component_init(create_tc_cc)
 
-        # stream event context
-        sec = tc.create_structure_field_class()
-        sec += [
-            ("cpu_id", tc.create_signed_integer_field_class(8)),
-            ("stuff", tc.create_double_precision_real_field_class()),
-        ]
-
         # packet context
-        pc = None
-        if with_pc:
-            pc = tc.create_structure_field_class()
-            pc += [
-                ("something", tc.create_signed_integer_field_class(8)),
-                ("something_else", tc.create_double_precision_real_field_class()),
-                ("events_discarded", tc.create_unsigned_integer_field_class(64)),
-                ("packet_seq_num", tc.create_unsigned_integer_field_class(64)),
-            ]
-
-        # stream class
-        sc = tc.create_stream_class(
-            default_clock_class=clock_class,
-            event_common_context_field_class=sec,
-            packet_context_field_class=pc,
-            supports_packets=True,
+        pc = (
+            tc.create_structure_field_class(
+                members=(
+                    ("something", tc.create_signed_integer_field_class(8)),
+                    ("something_else", tc.create_double_precision_real_field_class()),
+                    ("events_discarded", tc.create_unsigned_integer_field_class(64)),
+                    ("packet_seq_num", tc.create_unsigned_integer_field_class(64)),
+                )
+            )
+            if with_pc
+            else None
         )
 
-        # trace
-        trace = tc()
-
         # stream
-        stream = trace.create_stream(sc)
+        stream = tc().create_stream(
+            tc.create_stream_class(
+                default_clock_class=clock_class,
+                event_common_context_field_class=tc.create_structure_field_class(
+                    members=(
+                        ("cpu_id", tc.create_signed_integer_field_class(8)),
+                        ("stuff", tc.create_double_precision_real_field_class()),
+                    )
+                ),
+                packet_context_field_class=pc,
+                supports_packets=True,
+            )
+        )
 
         # packet
         return stream.create_packet(), stream, pc

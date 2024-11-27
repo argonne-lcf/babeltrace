@@ -121,42 +121,24 @@ def _get_all_message_types(with_packet=True):
             tc = self._create_trace_class(
                 user_attributes={"a-trace-class-attribute": 1}
             )
-            clock_class = self._create_clock_class(
-                frequency=1000, user_attributes={"a-clock-class-attribute": 1}
-            )
-
-            # event common context (stream-class-defined)
-            cc = tc.create_structure_field_class()
-            cc += [("cpu_id", tc.create_signed_integer_field_class(8))]
-
-            # packet context (stream-class-defined)
-            pc = None
-
-            if with_packet:
-                pc = tc.create_structure_field_class()
-                pc += [("something", tc.create_unsigned_integer_field_class(8))]
-
             stream_class = tc.create_stream_class(
-                default_clock_class=clock_class,
-                event_common_context_field_class=cc,
-                packet_context_field_class=pc,
+                default_clock_class=self._create_clock_class(
+                    frequency=1000, user_attributes={"a-clock-class-attribute": 1}
+                ),
+                event_common_context_field_class=tc.create_structure_field_class(
+                    members=(("cpu_id", tc.create_signed_integer_field_class(8)),)
+                ),
+                packet_context_field_class=(
+                    tc.create_structure_field_class(
+                        members=(
+                            ("something", tc.create_unsigned_integer_field_class(8)),
+                        )
+                    )
+                    if with_packet
+                    else None
+                ),
                 supports_packets=with_packet,
                 user_attributes={"a-stream-class-attribute": 1},
-            )
-
-            # specific context (event-class-defined)
-            sc = tc.create_structure_field_class()
-            sc += [("ant", tc.create_signed_integer_field_class(16))]
-
-            # event payload
-            ep = tc.create_structure_field_class()
-            ep += [("giraffe", tc.create_signed_integer_field_class(32))]
-
-            event_class = stream_class.create_event_class(
-                name="garou",
-                specific_context_field_class=sc,
-                payload_field_class=ep,
-                user_attributes={"an-event-class-attribute": 1},
             )
 
             trace = tc(
@@ -177,7 +159,18 @@ def _get_all_message_types(with_packet=True):
                 {
                     "tc": tc,
                     "stream": stream,
-                    "event_class": event_class,
+                    "event_class": stream_class.create_event_class(
+                        name="garou",
+                        specific_context_field_class=tc.create_structure_field_class(
+                            members=(("ant", tc.create_signed_integer_field_class(16)),)
+                        ),
+                        payload_field_class=tc.create_structure_field_class(
+                            members=(
+                                ("giraffe", tc.create_signed_integer_field_class(32)),
+                            )
+                        ),
+                        user_attributes={"an-event-class-attribute": 1},
+                    ),
                     "trace": trace,
                     "packet": packet,
                 },
@@ -306,10 +299,11 @@ def create_const_field(tc, field_class, field_value_setter_fn):
             nonlocal field_class
             nonlocal field_value_setter_fn
             trace = tc()
-            packet_context_fc = tc.create_structure_field_class()
-            packet_context_fc.append_member(field_name, field_class)
             sc = tc.create_stream_class(
-                packet_context_field_class=packet_context_fc, supports_packets=True
+                packet_context_field_class=tc.create_structure_field_class(
+                    members=((field_name, field_class),)
+                ),
+                supports_packets=True,
             )
             stream = trace.create_stream(sc)
             packet = stream.create_packet()

@@ -24,17 +24,14 @@ _COMP_BINOPS = (operator.eq, operator.ne)
 
 
 def _create_stream(tc, ctx_field_classes):
-    packet_context_fc = tc.create_structure_field_class()
-    for name, fc in ctx_field_classes:
-        packet_context_fc.append_member(name, fc)
-
-    trace = tc()
-    stream_class = tc.create_stream_class(
-        packet_context_field_class=packet_context_fc, supports_packets=True
+    return tc().create_stream(
+        tc.create_stream_class(
+            packet_context_field_class=tc.create_structure_field_class(
+                members=ctx_field_classes
+            ),
+            supports_packets=True,
+        )
     )
-
-    stream = trace.create_stream(stream_class)
-    return stream
 
 
 # Create a field of the given field class.
@@ -1774,22 +1771,39 @@ class _TestArrayFieldCommon:
             self._def.value = values
 
     def test_value_complex_type(self):
-        struct_fc = self._tc.create_structure_field_class()
-        int_fc = self._tc.create_signed_integer_field_class(32)
-        another_int_fc = self._tc.create_signed_integer_field_class(32)
-        str_fc = self._tc.create_string_field_class()
-        struct_fc.append_member(field_class=int_fc, name="an_int")
-        struct_fc.append_member(field_class=str_fc, name="a_string")
-        struct_fc.append_member(field_class=another_int_fc, name="another_int")
-        array_fc = self._tc.create_static_array_field_class(struct_fc, 3)
-        stream = _create_stream(self._tc, [("array_field", array_fc)])
         values = [
             {"an_int": 42, "a_string": "hello", "another_int": 66},
             {"an_int": 1, "a_string": "goodbye", "another_int": 488},
             {"an_int": 156, "a_string": "or not", "another_int": 4648},
         ]
-
-        array = stream.create_packet().context_field["array_field"]
+        array = (
+            _create_stream(
+                self._tc,
+                [
+                    (
+                        "array_field",
+                        self._tc.create_static_array_field_class(
+                            self._tc.create_structure_field_class(
+                                members=(
+                                    (
+                                        "an_int",
+                                        self._tc.create_signed_integer_field_class(32),
+                                    ),
+                                    ("a_string", self._tc.create_string_field_class()),
+                                    (
+                                        "another_int",
+                                        self._tc.create_signed_integer_field_class(32),
+                                    ),
+                                )
+                            ),
+                            3,
+                        ),
+                    )
+                ],
+            )
+            .create_packet()
+            .context_field["array_field"]
+        )
         array.value = values
         self.assertEqual(values, array)
         values[0]["an_int"] = "a string"
@@ -1881,16 +1895,21 @@ class StructureFieldTestCase(unittest.TestCase):
         }
 
     def _create_fc(self, tc):
-        fc = tc.create_structure_field_class()
-        fc.append_member("A", self._fc0_fn())
-        fc.append_member("B", self._fc1_fn())
-        fc.append_member("C", self._fc2_fn())
-        fc.append_member("D", self._fc3_fn())
-        fc.append_member("E", self._fc4_fn())
-        fc5 = self._fc5_fn()
-        fc5.append_member("F_1", self._fc5_inner_fn())
-        fc.append_member("F", fc5)
-        return fc
+        return tc.create_structure_field_class(
+            members=(
+                ("A", self._fc0_fn()),
+                ("B", self._fc1_fn()),
+                ("C", self._fc2_fn()),
+                ("D", self._fc3_fn()),
+                ("E", self._fc4_fn()),
+                (
+                    "F",
+                    self._fc5_fn(
+                        members=(("F_1", self._fc5_inner_fn()),),
+                    ),
+                ),
+            )
+        )
 
     def setUp(self):
         self._tc = get_default_trace_class()
@@ -2016,26 +2035,35 @@ class StructureFieldTestCase(unittest.TestCase):
         self.assertNotEqual(self._def, 23)
 
     def test_eq_diff_len(self):
-        fc = self._tc.create_structure_field_class()
-        fc.append_member("A", self._fc0_fn())
-        fc.append_member("B", self._fc1_fn())
-        fc.append_member("C", self._fc2_fn())
-
-        field = _create_field(self._tc, fc)
+        field = _create_field(
+            self._tc,
+            self._tc.create_structure_field_class(
+                members=(
+                    ("A", self._fc0_fn()),
+                    ("B", self._fc1_fn()),
+                    ("C", self._fc2_fn()),
+                )
+            ),
+        )
         field["A"] = -1872
         field["B"] = "salut"
         field["C"] = 17.5
         self.assertNotEqual(self._def, field)
 
     def test_eq_diff_keys(self):
-        fc = self._tc.create_structure_field_class()
-        fc.append_member("U", self._fc0_fn())
-        fc.append_member("V", self._fc1_fn())
-        fc.append_member("W", self._fc2_fn())
-        fc.append_member("X", self._fc3_fn())
-        fc.append_member("Y", self._fc4_fn())
-        fc.append_member("Z", self._fc5_fn())
-        field = _create_field(self._tc, fc)
+        field = _create_field(
+            self._tc,
+            self._tc.create_structure_field_class(
+                members=(
+                    ("U", self._fc0_fn()),
+                    ("V", self._fc1_fn()),
+                    ("W", self._fc2_fn()),
+                    ("X", self._fc3_fn()),
+                    ("Y", self._fc4_fn()),
+                    ("Z", self._fc5_fn()),
+                )
+            ),
+        )
         field["U"] = -1871
         field["V"] = "gerry"
         field["W"] = 18.19
@@ -2055,14 +2083,19 @@ class StructureFieldTestCase(unittest.TestCase):
         self.assertNotEqual(self._def, field)
 
     def test_eq_same_content_diff_keys(self):
-        fc = self._tc.create_structure_field_class()
-        fc.append_member("A", self._fc0_fn())
-        fc.append_member("B", self._fc1_fn())
-        fc.append_member("E", self._fc2_fn())
-        fc.append_member("D", self._fc3_fn())
-        fc.append_member("C", self._fc4_fn())
-        fc.append_member("F", self._fc5_fn())
-        field = _create_field(self._tc, fc)
+        field = _create_field(
+            self._tc,
+            self._tc.create_structure_field_class(
+                members=(
+                    ("A", self._fc0_fn()),
+                    ("B", self._fc1_fn()),
+                    ("E", self._fc2_fn()),
+                    ("D", self._fc3_fn()),
+                    ("C", self._fc4_fn()),
+                    ("F", self._fc5_fn()),
+                )
+            ),
+        )
         field["A"] = -1872
         field["B"] = "salut"
         field["E"] = 17.5
@@ -2087,10 +2120,12 @@ class StructureFieldTestCase(unittest.TestCase):
         self.assertEqual(self._def["D"], 19487)
 
     def test_setitem_non_basic_field(self):
-        elem_fc = self._tc.create_structure_field_class()
-        struct_fc = self._tc.create_structure_field_class()
-        struct_fc.append_member("A", elem_fc)
-        struct_field = _create_field(self._tc, struct_fc)
+        struct_field = _create_field(
+            self._tc,
+            self._tc.create_structure_field_class(
+                members=(("A", self._tc.create_structure_field_class()),)
+            ),
+        )
 
         # Will fail on access to .items() of the value
         with self.assertRaises(AttributeError):
@@ -2140,16 +2175,17 @@ class StructureFieldTestCase(unittest.TestCase):
         self.assertEqual(self._def, orig_values)
 
     def test_set_value(self):
-        int_fc = self._tc.create_signed_integer_field_class(32)
-        another_int_fc = self._tc.create_signed_integer_field_class(32)
-        str_fc = self._tc.create_string_field_class()
-        struct_fc = self._tc.create_structure_field_class()
-        struct_fc.append_member(field_class=int_fc, name="an_int")
-        struct_fc.append_member(field_class=str_fc, name="a_string")
-        struct_fc.append_member(field_class=another_int_fc, name="another_int")
         values = {"an_int": 42, "a_string": "hello", "another_int": 66}
-
-        struct = _create_field(self._tc, struct_fc)
+        struct = _create_field(
+            self._tc,
+            self._tc.create_structure_field_class(
+                members=(
+                    ("an_int", self._tc.create_signed_integer_field_class(32)),
+                    ("a_string", self._tc.create_string_field_class()),
+                    ("another_int", self._tc.create_signed_integer_field_class(32)),
+                )
+            ),
+        )
         struct.value = values
         self.assertEqual(values, struct)
 
@@ -2185,12 +2221,16 @@ class OptionFieldTestCase(unittest.TestCase):
         field.value = {"opt_field": "hiboux"}
 
     def _create_fc(self, tc):
-        fc = tc.create_option_without_selector_field_class(
-            tc.create_string_field_class()
+        return tc.create_structure_field_class(
+            members=(
+                (
+                    "opt_field",
+                    tc.create_option_without_selector_field_class(
+                        tc.create_string_field_class()
+                    ),
+                ),
+            )
         )
-        top_fc = tc.create_structure_field_class()
-        top_fc.append_member("opt_field", fc)
-        return top_fc
 
     def setUp(self):
         self._tc = get_default_trace_class()
@@ -2298,9 +2338,7 @@ class VariantFieldTestCase(unittest.TestCase):
         fc.append_option("zoom", ft1)
         fc.append_option("mellotron", ft2)
         fc.append_option("giorgio", ft3)
-        top_fc = tc.create_structure_field_class()
-        top_fc.append_member("variant_field", fc)
-        return top_fc
+        return tc.create_structure_field_class(members=(("variant_field", fc),))
 
     def setUp(self):
         self._tc = get_default_trace_class()

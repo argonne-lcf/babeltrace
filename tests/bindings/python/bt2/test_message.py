@@ -112,6 +112,7 @@ class AllMessagesTestCase(unittest.TestCase):
 
                 with_cc = bool(params["with_cc"])
                 tc = self._create_trace_class()
+
                 if with_cc:
                     cc = self._create_clock_class()
                 else:
@@ -128,30 +129,21 @@ class AllMessagesTestCase(unittest.TestCase):
                     discarded_packets_have_default_clock_snapshots=with_cc,
                 )
 
-                # Create payload field class
-                my_int_fc = tc.create_signed_integer_field_class(32)
-                payload_fc = tc.create_structure_field_class()
-                payload_fc += [("my_int", my_int_fc)]
-
-                # Create specific context field class
-                my_int_fc = tc.create_signed_integer_field_class(32)
-                specific_fc = tc.create_structure_field_class()
-                specific_fc += [("my_int", my_int_fc)]
-
-                ec = sc.create_event_class(
-                    name="salut",
-                    payload_field_class=payload_fc,
-                    specific_context_field_class=specific_fc,
-                )
-
                 trace = tc()
                 stream = trace.create_stream(sc)
-                packet = stream.create_packet()
 
                 test_obj._trace = trace
                 test_obj._stream = stream
-                test_obj._packet = packet
-                test_obj._event_class = ec
+                test_obj._packet = stream.create_packet()
+                test_obj._event_class = sc.create_event_class(
+                    name="salut",
+                    payload_field_class=tc.create_structure_field_class(
+                        members=(("my_int", tc.create_signed_integer_field_class(32)),)
+                    ),
+                    specific_context_field_class=tc.create_structure_field_class(
+                        members=(("my_int", tc.create_signed_integer_field_class(32)),)
+                    ),
+                )
                 test_obj._clock_class = cc
 
         test_obj = self

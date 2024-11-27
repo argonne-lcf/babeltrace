@@ -12,10 +12,7 @@ from utils import TestOutputPortMessageIterator, get_default_trace_class
 
 
 def _create_stream(tc, ctx_field_classes):
-    packet_context_fc = tc.create_structure_field_class()
-    for name, fc in ctx_field_classes:
-        packet_context_fc.append_member(name, fc)
-
+    packet_context_fc = tc.create_structure_field_class(members=ctx_field_classes)
     trace = tc()
     stream_class = tc.create_stream_class(
         packet_context_field_class=packet_context_fc, supports_packets=True
@@ -702,10 +699,13 @@ class StructureFieldClassTestCase(
             field.value = {"real": 0}
 
         tc = get_default_trace_class()
-        fc = tc.create_structure_field_class()
-        member_fc = self._tc.create_single_precision_real_field_class()
-        fc.append_member("real", member_fc)
-        const_fc = _create_const_field_class(tc, fc, _real_value_setter)
+        const_fc = _create_const_field_class(
+            tc,
+            tc.create_structure_field_class(
+                members=(("real", self._tc.create_single_precision_real_field_class()),)
+            ),
+            _real_value_setter,
+        )
 
         self.assertIs(
             type(const_fc["real"].field_class),
@@ -714,10 +714,9 @@ class StructureFieldClassTestCase(
 
     def test_member_field_class(self):
         tc = get_default_trace_class()
-        fc = tc.create_structure_field_class()
-        member_fc = self._tc.create_single_precision_real_field_class()
-        fc.append_member("real", member_fc)
-
+        fc = tc.create_structure_field_class(
+            members=(("real", self._tc.create_single_precision_real_field_class()),)
+        )
         self.assertIs(
             type(fc["real"].field_class), bt2_field_class._SinglePrecisionRealFieldClass
         )
@@ -773,14 +772,16 @@ class _OptionWithSelectorFieldClassTestCase(_TestFieldClass):
     def _create_default_const_field_class(self, *args, **kwargs):
         # Create a struct to contain the option and its selector else we can't
         # create the non-const field necessary to get the the const field_class
-        struct_fc = self._tc.create_structure_field_class()
-        struct_fc.append_member("selecteux", self._tag_fc)
-        opt_fc = self._create_default_field_class(*args, **kwargs)
-        struct_fc.append_member("opt", opt_fc)
-
-        return _create_const_field_class(self._tc, struct_fc, self._const_value_setter)[
-            "opt"
-        ].field_class
+        return _create_const_field_class(
+            self._tc,
+            self._tc.create_structure_field_class(
+                members=(
+                    ("selecteux", self._tag_fc),
+                    ("opt", self._create_default_field_class(*args, **kwargs)),
+                )
+            ),
+            self._const_value_setter,
+        )["opt"].field_class
 
     def setUp(self):
         self._tc = get_default_trace_class()
@@ -790,29 +791,29 @@ class _OptionWithSelectorFieldClassTestCase(_TestFieldClass):
     def _create_field_class_for_field_path_test(self):
         fc = self._create_default_field_class()
 
-        foo_fc = self._tc.create_single_precision_real_field_class()
-        bar_fc = self._tc.create_string_field_class()
-        baz_fc = self._tc.create_string_field_class()
-
-        inner_struct_fc = self._tc.create_structure_field_class()
-        inner_struct_fc.append_member("bar", bar_fc)
-        inner_struct_fc.append_member("baz", baz_fc)
-        inner_struct_fc.append_member("tag", self._tag_fc)
-        inner_struct_fc.append_member("opt", fc)
-
-        opt_struct_array_fc = self._tc.create_option_without_selector_field_class(
-            inner_struct_fc
-        )
-
-        outer_struct_fc = self._tc.create_structure_field_class()
-        outer_struct_fc.append_member("foo", foo_fc)
-        outer_struct_fc.append_member("inner_opt", opt_struct_array_fc)
-
         # The path to the selector field class is resolved when the
         # option field class is actually used, for example in a packet
         # context.
         self._tc.create_stream_class(
-            packet_context_field_class=outer_struct_fc, supports_packets=True
+            packet_context_field_class=self._tc.create_structure_field_class(
+                members=(
+                    ("foo", self._tc.create_single_precision_real_field_class()),
+                    (
+                        "inner_opt",
+                        self._tc.create_option_without_selector_field_class(
+                            self._tc.create_structure_field_class(
+                                members=(
+                                    ("bar", self._tc.create_string_field_class()),
+                                    ("baz", self._tc.create_string_field_class()),
+                                    ("tag", self._tag_fc),
+                                    ("opt", fc),
+                                )
+                            )
+                        ),
+                    ),
+                )
+            ),
+            supports_packets=True,
         )
 
         return fc
@@ -970,13 +971,14 @@ class _VariantFieldClassWithIntegerSelectorTestCase:
     def _create_default_const_field_class(self, *args, **kwargs):
         # Create a struct to contain the variant and its selector else we can't
         # create the non-const field necessary to get the the const field_class
-        struct_fc = self._tc.create_structure_field_class()
-        struct_fc.append_member("selecteux", self._selector_fc)
         variant_fc = self._tc.create_variant_field_class(
             *args, selector_fc=self._selector_fc
         )
         variant_fc.append_option(
             "a", self._tc.create_signed_integer_field_class(32), self._ranges1
+        )
+        struct_fc = self._tc.create_structure_field_class(
+            members=(("selecteux", self._selector_fc),)
         )
         struct_fc.append_member("variant", variant_fc, **kwargs)
 
@@ -1227,28 +1229,29 @@ class _VariantFieldClassWithIntegerSelectorTestCase:
             "c", self._tc.create_unsigned_integer_field_class(34), self._ranges3
         )
 
-        foo_fc = self._tc.create_single_precision_real_field_class()
-        bar_fc = self._tc.create_string_field_class()
-        baz_fc = self._tc.create_string_field_class()
-
-        inner_struct_fc = self._tc.create_structure_field_class()
-        inner_struct_fc.append_member("selector", self._selector_fc)
-        inner_struct_fc.append_member("bar", bar_fc)
-        inner_struct_fc.append_member("baz", baz_fc)
-        inner_struct_fc.append_member("variant", self._fc)
-
-        inner_struct_array_fc = self._tc.create_static_array_field_class(
-            inner_struct_fc, 2
-        )
-
-        outer_struct_fc = self._tc.create_structure_field_class()
-        outer_struct_fc.append_member("foo", foo_fc)
-        outer_struct_fc.append_member("inner_struct", inner_struct_array_fc)
-
         # The path to the selector field is resolved when the sequence is
         # actually used, for example in a packet context.
         self._tc.create_stream_class(
-            supports_packets=True, packet_context_field_class=outer_struct_fc
+            supports_packets=True,
+            packet_context_field_class=self._tc.create_structure_field_class(
+                members=(
+                    ("foo", self._tc.create_single_precision_real_field_class()),
+                    (
+                        "inner_struct",
+                        self._tc.create_static_array_field_class(
+                            self._tc.create_structure_field_class(
+                                members=(
+                                    ("selector", self._selector_fc),
+                                    ("bar", self._tc.create_string_field_class()),
+                                    ("baz", self._tc.create_string_field_class()),
+                                    ("variant", self._fc),
+                                )
+                            ),
+                            2,
+                        ),
+                    ),
+                )
+            ),
         )
 
     def test_selector_field_path_length(self):
@@ -1419,28 +1422,29 @@ class DynamicArrayWithLengthFieldFieldClassTestCase(
 
         fc = self._create_array()
 
-        foo_fc = self._tc.create_single_precision_real_field_class()
-        bar_fc = self._tc.create_string_field_class()
-        baz_fc = self._tc.create_string_field_class()
-
-        inner_struct_fc = self._tc.create_structure_field_class()
-        inner_struct_fc.append_member("bar", bar_fc)
-        inner_struct_fc.append_member("baz", baz_fc)
-        inner_struct_fc.append_member("len", self._len_fc)
-        inner_struct_fc.append_member("dyn_array", fc)
-
-        inner_struct_array_fc = self._tc.create_static_array_field_class(
-            inner_struct_fc, 2
-        )
-
-        outer_struct_fc = self._tc.create_structure_field_class()
-        outer_struct_fc.append_member("foo", foo_fc)
-        outer_struct_fc.append_member("inner_struct", inner_struct_array_fc)
-
         # The path to the length field is resolved when the sequence is
         # actually used, for example in a packet context.
         self._tc.create_stream_class(
-            packet_context_field_class=outer_struct_fc, supports_packets=True
+            packet_context_field_class=self._tc.create_structure_field_class(
+                members=(
+                    ("foo", self._tc.create_single_precision_real_field_class()),
+                    (
+                        "inner_struct",
+                        self._tc.create_static_array_field_class(
+                            self._tc.create_structure_field_class(
+                                members=(
+                                    ("bar", self._tc.create_string_field_class()),
+                                    ("baz", self._tc.create_string_field_class()),
+                                    ("len", self._len_fc),
+                                    ("dyn_array", fc),
+                                )
+                            ),
+                            2,
+                        ),
+                    ),
+                )
+            ),
+            supports_packets=True,
         )
 
         return fc

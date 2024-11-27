@@ -71,13 +71,20 @@ class TheSourceOfProblems(
         for x, y in mappings.items():
             enumfc.add_mapping(x, y)
 
-        # Create the struct field to contain the enum field class
-        struct_fc = tc.create_structure_field_class()
-        struct_fc.append_member("enum_field", enumfc)
-
-        # Create an event class on this stream with the struct field
-        ec1 = sc.create_event_class(name="with_enum", payload_field_class=struct_fc)
-        self._add_output_port("out", (tc, sc, ec1, params))
+        self._add_output_port(
+            "out",
+            (
+                tc,
+                sc,
+                sc.create_event_class(
+                    name="with_enum",
+                    payload_field_class=tc.create_structure_field_class(
+                        members=(("enum_field", enumfc),)
+                    ),
+                ),
+                params,
+            ),
+        )
 
 
 bt2.register_plugin(__name__, "test-pretty")

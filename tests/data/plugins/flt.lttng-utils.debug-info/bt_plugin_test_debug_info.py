@@ -66,92 +66,112 @@ class CompleteSrc(bt2._UserSourceComponent, message_iterator_class=CompleteIter)
         cc = self._create_clock_class()
         sc = tc.create_stream_class(default_clock_class=cc)
 
-        dyn_array_elem_fc = tc.create_double_precision_real_field_class()
-        dyn_array_with_len_elem_fc = tc.create_double_precision_real_field_class()
         dyn_array_with_len_fc = tc.create_unsigned_integer_field_class(19)
-        sta_array_elem_fc = tc.create_string_field_class()
-        option_some_fc = tc.create_string_field_class()
         variant_fc = tc.create_variant_field_class()
         variant_fc.append_option(
             name="var_str", field_class=tc.create_string_field_class()
         )
-        option_none_fc = tc.create_double_precision_real_field_class()
-        struct_fc = tc.create_structure_field_class()
-        struct_option_fc = tc.create_double_precision_real_field_class()
-        struct_fc.append_member("str", tc.create_string_field_class())
-        struct_fc.append_member(
-            "option_real",
-            tc.create_option_without_selector_field_class(struct_option_fc),
-        )
         option_bool_selector_fc = tc.create_bool_field_class()
         option_int_selector_fc = tc.create_unsigned_integer_field_class(8)
 
-        payload = tc.create_structure_field_class()
-        payload += [
-            ("bool", tc.create_bool_field_class()),
-            ("real_single", tc.create_single_precision_real_field_class()),
-            ("real_double", tc.create_double_precision_real_field_class()),
-            ("int32", tc.create_signed_integer_field_class(32)),
-            ("int3", tc.create_signed_integer_field_class(3)),
-            (
-                "int9_hex",
-                tc.create_signed_integer_field_class(
-                    9, preferred_display_base=bt2.IntegerDisplayBase.HEXADECIMAL
-                ),
+        ec = sc.create_event_class(
+            name="my-event",
+            payload_field_class=tc.create_structure_field_class(
+                members=(
+                    ("bool", tc.create_bool_field_class()),
+                    ("real_single", tc.create_single_precision_real_field_class()),
+                    ("real_double", tc.create_double_precision_real_field_class()),
+                    ("int32", tc.create_signed_integer_field_class(32)),
+                    ("int3", tc.create_signed_integer_field_class(3)),
+                    (
+                        "int9_hex",
+                        tc.create_signed_integer_field_class(
+                            9,
+                            preferred_display_base=bt2.IntegerDisplayBase.HEXADECIMAL,
+                        ),
+                    ),
+                    ("uint32", tc.create_unsigned_integer_field_class(32)),
+                    ("uint61", tc.create_unsigned_integer_field_class(61)),
+                    (
+                        "uint5_oct",
+                        tc.create_unsigned_integer_field_class(
+                            5, preferred_display_base=bt2.IntegerDisplayBase.OCTAL
+                        ),
+                    ),
+                    (
+                        "struct",
+                        tc.create_structure_field_class(
+                            members=(
+                                ("str", tc.create_string_field_class()),
+                                (
+                                    "option_real",
+                                    tc.create_option_without_selector_field_class(
+                                        tc.create_double_precision_real_field_class()
+                                    ),
+                                ),
+                            )
+                        ),
+                    ),
+                    ("string", tc.create_string_field_class()),
+                    (
+                        "dyn_array",
+                        tc.create_dynamic_array_field_class(
+                            tc.create_double_precision_real_field_class()
+                        ),
+                    ),
+                    ("dyn_array_len", dyn_array_with_len_fc),
+                    (
+                        "dyn_array_with_len",
+                        tc.create_dynamic_array_field_class(
+                            tc.create_double_precision_real_field_class(),
+                            length_fc=dyn_array_with_len_fc,
+                        ),
+                    ),
+                    (
+                        "sta_array",
+                        tc.create_static_array_field_class(
+                            tc.create_string_field_class(), 3
+                        ),
+                    ),
+                    (
+                        "option_none",
+                        tc.create_option_without_selector_field_class(
+                            tc.create_double_precision_real_field_class()
+                        ),
+                    ),
+                    (
+                        "option_some",
+                        tc.create_option_without_selector_field_class(
+                            tc.create_string_field_class()
+                        ),
+                    ),
+                    ("option_bool_selector", option_bool_selector_fc),
+                    (
+                        "option_bool",
+                        tc.create_option_with_bool_selector_field_class(
+                            tc.create_string_field_class(), option_bool_selector_fc
+                        ),
+                    ),
+                    (
+                        "option_bool_reversed",
+                        tc.create_option_with_bool_selector_field_class(
+                            tc.create_string_field_class(),
+                            option_bool_selector_fc,
+                            selector_is_reversed=True,
+                        ),
+                    ),
+                    ("option_int_selector", option_int_selector_fc),
+                    (
+                        "option_int",
+                        tc.create_option_with_integer_selector_field_class(
+                            tc.create_string_field_class(),
+                            option_int_selector_fc,
+                            bt2.UnsignedIntegerRangeSet([(1, 3), (18, 44)]),
+                        ),
+                    ),
+                    ("variant", variant_fc),
+                )
             ),
-            ("uint32", tc.create_unsigned_integer_field_class(32)),
-            ("uint61", tc.create_unsigned_integer_field_class(61)),
-            (
-                "uint5_oct",
-                tc.create_unsigned_integer_field_class(
-                    5, preferred_display_base=bt2.IntegerDisplayBase.OCTAL
-                ),
-            ),
-            ("struct", struct_fc),
-            ("string", tc.create_string_field_class()),
-            ("dyn_array", tc.create_dynamic_array_field_class(dyn_array_elem_fc)),
-            ("dyn_array_len", dyn_array_with_len_fc),
-            (
-                "dyn_array_with_len",
-                tc.create_dynamic_array_field_class(
-                    dyn_array_with_len_elem_fc, length_fc=dyn_array_with_len_fc
-                ),
-            ),
-            ("sta_array", tc.create_static_array_field_class(sta_array_elem_fc, 3)),
-            (
-                "option_none",
-                tc.create_option_without_selector_field_class(option_none_fc),
-            ),
-            (
-                "option_some",
-                tc.create_option_without_selector_field_class(option_some_fc),
-            ),
-            ("option_bool_selector", option_bool_selector_fc),
-            (
-                "option_bool",
-                tc.create_option_with_bool_selector_field_class(
-                    tc.create_string_field_class(), option_bool_selector_fc
-                ),
-            ),
-            (
-                "option_bool_reversed",
-                tc.create_option_with_bool_selector_field_class(
-                    tc.create_string_field_class(),
-                    option_bool_selector_fc,
-                    selector_is_reversed=True,
-                ),
-            ),
-            ("option_int_selector", option_int_selector_fc),
-            (
-                "option_int",
-                tc.create_option_with_integer_selector_field_class(
-                    tc.create_string_field_class(),
-                    option_int_selector_fc,
-                    bt2.UnsignedIntegerRangeSet([(1, 3), (18, 44)]),
-                ),
-            ),
-            ("variant", variant_fc),
-        ]
-        ec = sc.create_event_class(name="my-event", payload_field_class=payload)
+        )
 
         self._add_output_port("some-name", ec)

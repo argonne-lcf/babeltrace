@@ -71,68 +71,45 @@ class EventTestCase(unittest.TestCase):
             def __init__(self, config, params, obj):
                 self._add_output_port("out")
                 tc = self._create_trace_class()
-
-                clock_class = None
-                if with_clockclass:
-                    clock_class = self._create_clock_class(frequency=1000)
-
-                # event common context (stream-class-defined)
-                cc = None
-                if with_cc:
-                    cc = tc.create_structure_field_class()
-                    cc += [
-                        ("cpu_id", tc.create_signed_integer_field_class(8)),
-                        ("stuff", tc.create_double_precision_real_field_class()),
-                        ("gnu", tc.create_string_field_class()),
-                    ]
-
-                # packet context (stream-class-defined)
-                pc = None
-
-                if with_packet:
-                    pc = tc.create_structure_field_class()
-                    pc += [
-                        ("something", tc.create_unsigned_integer_field_class(8)),
-                        (
-                            "something_else",
-                            tc.create_double_precision_real_field_class(),
-                        ),
-                    ]
-
                 stream_class = tc.create_stream_class(
-                    default_clock_class=clock_class,
-                    event_common_context_field_class=cc,
-                    packet_context_field_class=pc,
+                    default_clock_class=(
+                        self._create_clock_class(frequency=1000)
+                        if with_clockclass
+                        else None
+                    ),
+                    event_common_context_field_class=(
+                        tc.create_structure_field_class(
+                            members=(
+                                ("cpu_id", tc.create_signed_integer_field_class(8)),
+                                (
+                                    "stuff",
+                                    tc.create_double_precision_real_field_class(),
+                                ),
+                                ("gnu", tc.create_string_field_class()),
+                            )
+                        )
+                        if with_cc
+                        else None
+                    ),
+                    packet_context_field_class=(
+                        tc.create_structure_field_class(
+                            members=(
+                                (
+                                    "something",
+                                    tc.create_unsigned_integer_field_class(8),
+                                ),
+                                (
+                                    "something_else",
+                                    tc.create_double_precision_real_field_class(),
+                                ),
+                            )
+                        )
+                        if with_packet
+                        else None
+                    ),
                     supports_packets=with_packet,
                 )
-
-                # specific context (event-class-defined)
-                sc = None
-                if with_sc:
-                    sc = tc.create_structure_field_class()
-                    sc += [
-                        ("ant", tc.create_signed_integer_field_class(16)),
-                        ("msg", tc.create_string_field_class()),
-                    ]
-
-                # event payload
-                ep = None
-                if with_ep:
-                    ep = tc.create_structure_field_class()
-                    ep += [
-                        ("giraffe", tc.create_signed_integer_field_class(32)),
-                        ("gnu", tc.create_signed_integer_field_class(8)),
-                        ("mosquito", tc.create_signed_integer_field_class(8)),
-                    ]
-
-                event_class = stream_class.create_event_class(
-                    name="garou",
-                    specific_context_field_class=sc,
-                    payload_field_class=ep,
-                )
-
-                trace = tc()
-                stream = trace.create_stream(stream_class)
+                stream = tc().create_stream(stream_class)
 
                 if with_packet:
                     packet = stream.create_packet()
@@ -145,7 +122,30 @@ class EventTestCase(unittest.TestCase):
                     test_obj.packet = packet
 
                 test_obj.stream = stream
-                test_obj.event_class = event_class
+                test_obj.event_class = stream_class.create_event_class(
+                    name="garou",
+                    specific_context_field_class=(
+                        tc.create_structure_field_class(
+                            members=(
+                                ("ant", tc.create_signed_integer_field_class(16)),
+                                ("msg", tc.create_string_field_class()),
+                            )
+                        )
+                        if with_sc
+                        else None
+                    ),
+                    payload_field_class=(
+                        tc.create_structure_field_class(
+                            members=(
+                                ("giraffe", tc.create_signed_integer_field_class(32)),
+                                ("gnu", tc.create_signed_integer_field_class(8)),
+                                ("mosquito", tc.create_signed_integer_field_class(8)),
+                            )
+                        )
+                        if with_ep
+                        else None
+                    ),
+                )
 
         test_obj = self
         self._graph = bt2.Graph()
