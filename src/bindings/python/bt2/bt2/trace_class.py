@@ -448,14 +448,32 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         )
 
     def create_structure_field_class(
-        self, user_attributes: typing.Optional[bt2_value._MapValueConst] = None
+        self,
+        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        members: typing.Optional[
+            typing.Iterable[
+                typing.Union[
+                    typing.Tuple[str, bt2_field_class._FieldClass],
+                    typing.Tuple[
+                        str,
+                        bt2_field_class._FieldClass,
+                        typing.Optional[bt2_value._MapValueConst],
+                    ],
+                ]
+            ]
+        ] = None,
     ) -> bt2_field_class._StructureFieldClass:
-        return self._check_and_wrap_field_class(
+        fc = self._check_and_wrap_field_class(
             native_bt.field_class_structure_create(self._ptr),
             "structure",
             user_attributes,
             bt2_field_class._StructureFieldClass,
         )
+
+        if members is not None:
+            fc += members
+
+        return fc
 
     def create_string_field_class(
         self, user_attributes: typing.Optional[bt2_value._MapValueConst] = None

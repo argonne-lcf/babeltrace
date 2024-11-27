@@ -458,10 +458,28 @@ class _StructureFieldClass(_StructureFieldClassConst, _FieldClass):
             self[name]._set_user_attributes(user_attributes_value)
 
     def __iadd__(
-        self, members: typing.Iterable[typing.Tuple[str, _FieldClass]]
+        self,
+        members: typing.Iterable[
+            typing.Union[
+                typing.Tuple[str, _FieldClass],
+                typing.Tuple[
+                    str,
+                    _FieldClass,
+                    typing.Optional[bt2_value._MapValueConst],
+                ],
+            ]
+        ],
     ) -> "_StructureFieldClass":
-        for name, field_class in members:
-            self.append_member(name, field_class)
+        for member in members:
+            if len(member) == 2:
+                name, field_class = member
+                user_attributes = None
+            elif len(member) == 3:
+                name, field_class, user_attributes = member
+            else:
+                raise ValueError("invalid member tuple length: {}".format(len(member)))
+
+            self.append_member(name, field_class, user_attributes)
 
         return self
 
