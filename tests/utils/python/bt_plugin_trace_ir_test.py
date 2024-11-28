@@ -3,48 +3,67 @@
 # Copyright (C) 2019 EfficiOS Inc.
 #
 
+# pyright: strict, reportPrivateUsage=false
+
 import math
+import typing
 
 import bt2
 
-bt2.register_plugin(__name__, "test-debug-info")
+bt2.register_plugin(__name__, "trace-ir-test")
+
+_FieldType = typing.TypeVar("_FieldType", bound=bt2._Field)
 
 
-class CompleteIter(bt2._UserMessageIterator):
-    def __init__(self, config, output_port):
-        ec = output_port.user_data
+def c(field: bt2._Field, expected_type: typing.Type[_FieldType]) -> _FieldType:
+    assert type(field) is expected_type
+    return field
+
+
+class AllFieldsIter(bt2._UserMessageIterator):
+    def __init__(
+        self,
+        config: bt2._MessageIteratorConfiguration,
+        output_port: bt2._UserComponentOutputPort,
+    ):
+        ec = typing.cast(bt2._EventClass, output_port.user_data)
         sc = ec.stream_class
         tc = sc.trace_class
+        stream = tc().create_stream(sc)
+        ev = self._create_event_message(ec, stream)
 
-        trace = tc()
-        stream = trace.create_stream(sc)
+        payload = ev.event.payload_field
+        assert payload
 
-        ev = self._create_event_message(ec, stream, default_clock_snapshot=123)
+        payload["bool"] = False
+        payload["real_single"] = 2.0
+        payload["real_double"] = math.pi
+        payload["int32"] = 121
+        payload["int3"] = -1
+        payload["int9_hex"] = -92
+        payload["uint32"] = 121
+        payload["uint61"] = 299792458
+        payload["uint5_oct"] = 29
 
-        ev.event.payload_field["bool"] = False
-        ev.event.payload_field["real_single"] = 2.0
-        ev.event.payload_field["real_double"] = math.pi
-        ev.event.payload_field["int32"] = 121
-        ev.event.payload_field["int3"] = -1
-        ev.event.payload_field["int9_hex"] = -92
-        ev.event.payload_field["uint32"] = 121
-        ev.event.payload_field["uint61"] = 299792458
-        ev.event.payload_field["uint5_oct"] = 29
-        ev.event.payload_field["struct"]["str"] = "Rotisserie St-Hubert"
-        ev.event.payload_field["struct"]["option_real"] = math.pi
-        ev.event.payload_field["string"] = "🎉"
-        ev.event.payload_field["dyn_array"] = [1.2, 2 / 3, 42.3, math.pi]
-        ev.event.payload_field["dyn_array_len"] = 4
-        ev.event.payload_field["dyn_array_with_len"] = [5.2, 5 / 3, 42.5, math.pi * 12]
-        ev.event.payload_field["sta_array"] = ["🕰", "🦴", " 🎍"]
-        ev.event.payload_field["option_none"]
-        ev.event.payload_field["option_some"] = "NORMANDIN"
-        ev.event.payload_field["option_bool_selector"] = True
-        ev.event.payload_field["option_bool"] = "Mike's"
-        ev.event.payload_field["option_int_selector"] = 1
-        ev.event.payload_field["option_int"] = "Barbies resto bar grill"
-        ev.event.payload_field["variant"].selected_option_index = 0
-        ev.event.payload_field["variant"] = "Couche-Tard"
+        struct = c(payload["struct"], bt2._StructureField)
+        struct["str"] = "Rotisserie St-Hubert"
+        struct["option_real"] = math.pi
+
+        payload["string"] = "🎉"
+        payload["dyn_array"] = [1.2, 2 / 3, 42.3, math.pi]
+        payload["dyn_array_len"] = 4
+        payload["dyn_array_with_len"] = [5.2, 5 / 3, 42.5, math.pi * 12]
+        payload["sta_array"] = ["🕰", "🦴", " 🎍"]
+        payload["option_none"]
+        payload["option_some"] = "NORMANDIN"
+        payload["option_bool_selector"] = True
+        payload["option_bool"] = "Mike's"
+        payload["option_int_selector"] = 1
+        payload["option_int"] = "Barbies resto bar grill"
+
+        variant = c(payload["variant"], bt2._VariantField)
+        variant.selected_option_index = 0
+        variant.value = "Couche-Tard"
 
         self._msgs = [
             self._create_stream_beginning_message(stream),
@@ -60,17 +79,20 @@ class CompleteIter(bt2._UserMessageIterator):
 
 
 @bt2.plugin_component_class
-class CompleteSrc(bt2._UserSourceComponent, message_iterator_class=CompleteIter):
-    def __init__(self, config, params, obj):
+class AllFields(bt2._UserSourceComponent, message_iterator_class=AllFieldsIter):
+    def __init__(
+        self,
+        config: bt2._UserSourceComponentConfiguration,
+        params: bt2._MapValueConst,
+        obj: object,
+    ):
         tc = self._create_trace_class()
-        cc = self._create_clock_class()
-        sc = tc.create_stream_class(default_clock_class=cc)
 
         dyn_array_with_len_fc = tc.create_unsigned_integer_field_class(19)
         option_bool_selector_fc = tc.create_bool_field_class()
         option_int_selector_fc = tc.create_unsigned_integer_field_class(8)
 
-        ec = sc.create_event_class(
+        ec = tc.create_stream_class().create_event_class(
             name="my-event",
             payload_field_class=tc.create_structure_field_class(
                 members=(
@@ -101,7 +123,7 @@ class CompleteSrc(bt2._UserSourceComponent, message_iterator_class=CompleteIter)
                                 ("str", tc.create_string_field_class()),
                                 (
                                     "option_real",
-                                    tc.create_option_without_selector_field_class(
+                                    tc.create_option_field_class_without_selector_field(
                                         tc.create_double_precision_real_field_class()
                                     ),
                                 ),
@@ -131,26 +153,26 @@ class CompleteSrc(bt2._UserSourceComponent, message_iterator_class=CompleteIter)
                     ),
                     (
                         "option_none",
-                        tc.create_option_without_selector_field_class(
+                        tc.create_option_field_class_without_selector_field(
                             tc.create_double_precision_real_field_class()
                         ),
                     ),
                     (
                         "option_some",
-                        tc.create_option_without_selector_field_class(
+                        tc.create_option_field_class_without_selector_field(
                             tc.create_string_field_class()
                         ),
                     ),
                     ("option_bool_selector", option_bool_selector_fc),
                     (
                         "option_bool",
-                        tc.create_option_with_bool_selector_field_class(
+                        tc.create_option_field_class_with_bool_selector_field(
                             tc.create_string_field_class(), option_bool_selector_fc
                         ),
                     ),
                     (
                         "option_bool_reversed",
-                        tc.create_option_with_bool_selector_field_class(
+                        tc.create_option_field_class_with_bool_selector_field(
                             tc.create_string_field_class(),
                             option_bool_selector_fc,
                             selector_is_reversed=True,
@@ -159,7 +181,7 @@ class CompleteSrc(bt2._UserSourceComponent, message_iterator_class=CompleteIter)
                     ("option_int_selector", option_int_selector_fc),
                     (
                         "option_int",
-                        tc.create_option_with_integer_selector_field_class(
+                        tc.create_option_field_class_with_integer_selector_field(
                             tc.create_string_field_class(),
                             option_int_selector_fc,
                             bt2.UnsignedIntegerRangeSet([(1, 3), (18, 44)]),
@@ -175,4 +197,4 @@ class CompleteSrc(bt2._UserSourceComponent, message_iterator_class=CompleteIter)
             ),
         )
 
-        self._add_output_port("some-name", ec)
+        self._add_output_port("out", ec)
