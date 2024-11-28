@@ -303,6 +303,23 @@ The available component class methods to implement are:
     Not having this method means that any instance of this class only
     supports MIP version&nbsp;0 (also known as the OG&nbsp;MIP).
 
+    The bt_graph_add_source_component_with_initialize_method_data(),
+    bt_graph_add_filter_component_with_initialize_method_data(), and
+    bt_graph_add_sink_component_with_initialize_method_data() functions
+    have the following precondition:
+
+    @pre
+        The
+        \link api-comp-cls-dev-meth-mip "get supported MIP versions"\endlink
+        method of \bt_p{component_class}, given the same \bt_p{params},
+        \bt_p{initialize_method_data}, and \bt_p{logging_level}
+        parameters, makes one of its supported \bt_mip (MIP) version
+        ranges contain the effective MIP version of \bt_p{graph} (see
+        bt_graph_create()).
+
+    In other words, for your component to support MIP version&nbsp;1,
+    you must implement this method.
+
     Set this optional method with
     bt_component_class_source_set_get_supported_mip_versions_method(),
     bt_component_class_filter_set_get_supported_mip_versions_method(),

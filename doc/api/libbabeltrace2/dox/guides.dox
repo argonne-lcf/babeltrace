@@ -175,19 +175,21 @@ because without it, the default supported MIP version is&nbsp;0, which
 was the only available one anyway.
 
 Starting from Babeltrace&nbsp;2.1, your component may support
-MIP&nbsp;0, MIP&nbsp;1, or both.
+MIP&nbsp;0, MIP&nbsp;1, or both. It's now mandatory to implement the
+"get supported MIP versions" method to support MIP&nbsp;1 as the
+bt_graph_add_source_component_with_initialize_method_data(),
+bt_graph_add_filter_component_with_initialize_method_data(), and
+bt_graph_add_sink_component_with_initialize_method_data() functions
+have the following precondition:
 
-Your component may still support MIP&nbsp;1 without implementing the
-"get supported MIP versions" method. In other words, an application
-may create it with one of the
-\link api-graph-lc-add <code>bt_graph_add_*_component*()</code> functions\endlink,
-passing a trace processing \bt_graph object configured to work
-under MIP&nbsp;1. That
-being said, a general-purpose trace processing application, for example
-the \bt_cli CLI, typically uses bt_get_greatest_operative_mip_version()
-to determine the most recent MIP version to use to create a graph containing
-specific components. bt_get_greatest_operative_mip_version() in turn
-calls your "get supported MIP versions" method.
+@pre
+    The
+    \link api-comp-cls-dev-meth-mip "get supported MIP versions"\endlink
+    method of \bt_p{component_class}, given the same \bt_p{params},
+    \bt_p{initialize_method_data}, and \bt_p{logging_level}
+    parameters, makes one of its supported \bt_mip (MIP) version
+    ranges contain the effective MIP version of \bt_p{graph} (see
+    bt_graph_create()).
 
 To make your component indicate MIP&nbsp;1 support:
 
@@ -228,7 +230,8 @@ To make your component indicate MIP&nbsp;1 support:
    @endcode
 
    You may rely on \bt_p{params} and \bt_p{initialize_method_data} to
-   determine the exact MIP versions your component expect to support.
+   determine the exact MIP versions your component class instances
+   expect to support.
 
 @section guide-mip-0-to-mip-1-get-effective-mip-version Get the effective MIP version
 

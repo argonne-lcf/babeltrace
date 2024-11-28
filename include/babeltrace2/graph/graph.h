@@ -676,6 +676,13 @@ The created source component can get its logging level
 @pre
     \bt_p{params} is a \bt_map_val (bt_value_is_map() returns #BT_TRUE)
     or is \c NULL.
+@pre
+    The
+    \link api-comp-cls-dev-meth-mip "get supported MIP versions"\endlink
+    method of \bt_p{component_class}, given the same \bt_p{params},
+    \bt_p{initialize_method_data}, and \bt_p{logging_level} parameters,
+    makes one of its supported \bt_mip (MIP) version ranges contain the
+    effective MIP version of \bt_p{graph} (see bt_graph_create()).
 
 @bt_post_success_frozen{component_class}
 @bt_post_success_frozen{params}
@@ -769,6 +776,13 @@ The created filter component can get its logging level
 @pre
     \bt_p{params} is a \bt_map_val (bt_value_is_map() returns #BT_TRUE)
     or is \c NULL.
+@pre
+    The
+    \link api-comp-cls-dev-meth-mip "get supported MIP versions"\endlink
+    method of \bt_p{component_class}, given the same \bt_p{params},
+    \bt_p{initialize_method_data}, and \bt_p{logging_level} parameters,
+    makes one of its supported \bt_mip (MIP) version ranges contain the
+    effective MIP version of \bt_p{graph} (see bt_graph_create()).
 
 @bt_post_success_frozen{component_class}
 @bt_post_success_frozen{params}
@@ -862,6 +876,13 @@ The created sink component can get its logging level
 @pre
     \bt_p{params} is a \bt_map_val (bt_value_is_map() returns #BT_TRUE)
     or is \c NULL.
+@pre
+    The
+    \link api-comp-cls-dev-meth-mip "get supported MIP versions"\endlink
+    method of \bt_p{component_class}, given the same \bt_p{params},
+    \bt_p{initialize_method_data}, and \bt_p{logging_level} parameters,
+    makes one of its supported \bt_mip (MIP) version ranges contain the
+    effective MIP version of \bt_p{graph} (see bt_graph_create()).
 
 @bt_post_success_frozen{component_class}
 @bt_post_success_frozen{params}

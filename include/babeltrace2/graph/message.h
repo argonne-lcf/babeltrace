@@ -830,19 +830,18 @@ must pass the effective MIP version to use. Then, the components you
 \ref api-graph-lc-add "add" to this graph can access this configured MIP
 version with bt_self_component_get_graph_mip_version() and behave
 accordingly. In other words, if the configured MIP version is&nbsp;0,
-then a component cannot use features introduced by MIP version&nbsp;1.
-For example, should the project introduce a new type of \bt_fc, the MIP
-version would be bumped.
+then a component cannot use features introduced by MIP version&nbsp;1
+(for example, create a \bt_blob_fc).
 
-A component which cannot honor a given MIP can fail at
-initialization time, making the corresponding
-<code>bt_graph_add_*_component*()</code> call fail too. To avoid any
-surprise, you can create a \bt_comp_descr_set with descriptors of the
-components you intend to add to a trace processing graph and call
+The <code>bt_graph_add_*_component*()</code> functions have a
+precondition that the component to add supports the effective MIP
+version of the trace processing graph. To satisfy said precondition,
+create a \bt_comp_descr_set with descriptors of the components you
+intend to add to a trace processing graph and call
 bt_get_greatest_operative_mip_version() or
 bt_get_greatest_operative_mip_version_with_restriction()
-(\bt_avail_since{1}) to get the
-greatest (most recent) MIP version you can use.
+(\bt_avail_since{1}) to get the greatest (most recent) MIP version you
+can use.
 
 To get the latest MIP version of the library, use
 bt_get_maximal_mip_version().
