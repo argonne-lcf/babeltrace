@@ -67,10 +67,6 @@ class CompleteSrc(bt2._UserSourceComponent, message_iterator_class=CompleteIter)
         sc = tc.create_stream_class(default_clock_class=cc)
 
         dyn_array_with_len_fc = tc.create_unsigned_integer_field_class(19)
-        variant_fc = tc.create_variant_field_class()
-        variant_fc.append_option(
-            name="var_str", field_class=tc.create_string_field_class()
-        )
         option_bool_selector_fc = tc.create_bool_field_class()
         option_int_selector_fc = tc.create_unsigned_integer_field_class(8)
 
@@ -169,7 +165,12 @@ class CompleteSrc(bt2._UserSourceComponent, message_iterator_class=CompleteIter)
                             bt2.UnsignedIntegerRangeSet([(1, 3), (18, 44)]),
                         ),
                     ),
-                    ("variant", variant_fc),
+                    (
+                        "variant",
+                        tc.create_variant_field_class(
+                            options=(("var_str", tc.create_string_field_class()),)
+                        ),
+                    ),
                 )
             ),
         )

@@ -2329,16 +2329,24 @@ class VariantFieldTestCase(unittest.TestCase):
         field.value = 1334
 
     def _create_fc(self, tc: bt2._TraceClass):
-        ft0 = tc.create_signed_integer_field_class(32)
-        ft1 = tc.create_string_field_class()
-        ft2 = tc.create_double_precision_real_field_class()
-        ft3 = tc.create_signed_integer_field_class(17)
-        fc = tc.create_variant_field_class()
-        fc.append_option("corner", ft0)
-        fc.append_option("zoom", ft1)
-        fc.append_option("mellotron", ft2)
-        fc.append_option("giorgio", ft3)
-        return tc.create_structure_field_class(members=(("variant_field", fc),))
+        return tc.create_structure_field_class(
+            members=(
+                (
+                    "variant_field",
+                    tc.create_variant_field_class(
+                        options=(
+                            ("corner", tc.create_signed_integer_field_class(32)),
+                            ("zoom", tc.create_string_field_class()),
+                            (
+                                "mellotron",
+                                tc.create_double_precision_real_field_class(),
+                            ),
+                            ("giorgio", tc.create_signed_integer_field_class(17)),
+                        )
+                    ),
+                ),
+            )
+        )
 
     def setUp(self):
         self._tc = get_default_trace_class()
