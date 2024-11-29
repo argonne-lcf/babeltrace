@@ -5,6 +5,7 @@
 # Copyright (c) 2019 Simon Marchi <simon.marchi@efficios.com>
 
 import uuid as uuidp
+import warnings
 import functools
 import collections.abc
 
@@ -478,7 +479,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
             user_attributes,
         )
 
-    def create_option_without_selector_field_class(
+    def create_option_field_class_without_selector_field(
         self,
         content_fc: bt2_field_class._FieldClass,
         user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
@@ -493,7 +494,15 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
             user_attributes,
         )
 
-    def create_option_with_bool_selector_field_class(
+    def create_option_without_selector_field_class(self, *args, **kwargs):
+        warnings.warn(
+            "`create_option_without_selector_field_class()` is deprecated; "
+            "use `create_option_field_class_without_selector_field()` instead",
+            DeprecationWarning,
+        )
+        return self.create_option_field_class_without_selector_field(*args, **kwargs)
+
+    def create_option_field_class_with_bool_selector_field(
         self,
         content_fc: bt2_field_class._FieldClass,
         selector_fc: bt2_field_class._FieldClass,
@@ -513,7 +522,15 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         fc._set_selector_is_reversed(selector_is_reversed)
         return fc
 
-    def create_option_with_integer_selector_field_class(
+    def create_option_with_bool_selector_field_class(self, *args, **kwargs):
+        warnings.warn(
+            "`create_option_with_bool_selector_field_class()` is deprecated; "
+            "use `create_option_field_class_with_bool_selector_field()` instead",
+            DeprecationWarning,
+        )
+        return self.create_option_field_class_with_bool_selector_field(*args, **kwargs)
+
+    def create_option_field_class_with_integer_selector_field(
         self,
         content_fc: bt2_field_class._FieldClass,
         selector_fc: bt2_field_class._FieldClass,
@@ -540,6 +557,16 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
             )
 
         return self._check_and_wrap_field_class(ptr, "option", user_attributes)
+
+    def create_option_with_integer_selector_field_class(self, *args, **kwargs):
+        warnings.warn(
+            "`create_option_with_integer_selector_field_class()` is deprecated; "
+            "use `create_option_field_class_with_integer_selector_field()` instead",
+            DeprecationWarning,
+        )
+        return self.create_option_field_class_with_integer_selector_field(
+            *args, **kwargs
+        )
 
     def create_variant_field_class(
         self,
