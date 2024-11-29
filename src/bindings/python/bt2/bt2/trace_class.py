@@ -620,9 +620,33 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
             *args, **kwargs
         )
 
+    @typing.overload
     def create_variant_field_class(
         self,
-        selector_fc: typing.Optional[bt2_field_class._FieldClass] = None,
+        selector_fc: None = None,
+        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+    ) -> bt2_field_class._VariantFieldClassWithoutSelector:
+        ...
+
+    @typing.overload
+    def create_variant_field_class(  # noqa: F811
+        self,
+        selector_fc: bt2_field_class._UnsignedIntegerFieldClass,
+        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+    ) -> bt2_field_class._VariantFieldClassWithUnsignedIntegerSelector:
+        ...
+
+    @typing.overload
+    def create_variant_field_class(  # noqa: F811
+        self,
+        selector_fc: bt2_field_class._SignedIntegerFieldClass,
+        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+    ) -> bt2_field_class._VariantFieldClassWithSignedIntegerSelector:
+        ...
+
+    def create_variant_field_class(  # noqa: F811
+        self,
+        selector_fc: typing.Optional[bt2_field_class._IntegerFieldClass] = None,
         user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
     ) -> bt2_field_class._VariantFieldClass:
         if selector_fc is not None:
