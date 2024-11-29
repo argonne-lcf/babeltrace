@@ -598,10 +598,30 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         )
         return self.create_option_field_class_with_bool_selector_field(*args, **kwargs)
 
-    def create_option_field_class_with_integer_selector_field(
+    @typing.overload
+    def create_option_field_class_with_integer_selector_field(  # noqa: F811
         self,
         content_fc: bt2_field_class._FieldClass,
-        selector_fc: bt2_field_class._FieldClass,
+        selector_fc: bt2_field_class._UnsignedIntegerFieldClass,
+        ranges: bt2_integer_range_set._UnsignedIntegerRangeSetConst,
+        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+    ) -> bt2_field_class._OptionWithUnsignedIntegerSelectorFieldClass:
+        ...
+
+    @typing.overload
+    def create_option_field_class_with_integer_selector_field(  # noqa: F811
+        self,
+        content_fc: bt2_field_class._FieldClass,
+        selector_fc: bt2_field_class._SignedIntegerFieldClass,
+        ranges: bt2_integer_range_set._SignedIntegerRangeSetConst,
+        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+    ) -> bt2_field_class._OptionWithSignedIntegerSelectorFieldClass:
+        ...
+
+    def create_option_field_class_with_integer_selector_field(  # noqa: F811
+        self,
+        content_fc: bt2_field_class._FieldClass,
+        selector_fc: bt2_field_class._IntegerFieldClass,
         ranges: bt2_integer_range_set._IntegerRangeSetConst,
         user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
     ) -> bt2_field_class._OptionWithIntegerSelectorFieldClass:
