@@ -520,10 +520,28 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
             bt2_field_class._StaticArrayFieldClass,
         )
 
-    def create_dynamic_array_field_class(
+    @typing.overload
+    def create_dynamic_array_field_class(  # noqa: F811
         self,
         elem_fc: bt2_field_class._FieldClass,
-        length_fc: typing.Optional[bt2_field_class._FieldClass] = None,
+        length_fc: None = None,
+        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+    ) -> bt2_field_class._DynamicArrayFieldClass:
+        ...
+
+    @typing.overload
+    def create_dynamic_array_field_class(  # noqa: F811
+        self,
+        elem_fc: bt2_field_class._FieldClass,
+        length_fc: bt2_field_class._UnsignedIntegerFieldClass,
+        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+    ) -> bt2_field_class._DynamicArrayWithLengthFieldFieldClass:
+        ...
+
+    def create_dynamic_array_field_class(  # noqa: F811
+        self,
+        elem_fc: bt2_field_class._FieldClass,
+        length_fc: typing.Optional[bt2_field_class._UnsignedIntegerFieldClass] = None,
         user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
     ) -> bt2_field_class._DynamicArrayFieldClass:
         bt2_utils._check_type(elem_fc, bt2_field_class._FieldClass)
