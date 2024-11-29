@@ -21,6 +21,12 @@ del os
 
 
 from bt2.mip import get_maximal_mip_version, get_greatest_operative_mip_version
+from bt2.port import (
+    _InputPortConst,
+    _OutputPortConst,
+    _UserComponentInputPort,
+    _UserComponentOutputPort,
+)
 from bt2.error import (
     ComponentClassType,
     _Error,
@@ -31,9 +37,11 @@ from bt2.error import (
     _MessageIteratorErrorCause,
 )
 from bt2.field import (
+    _Field,
     _BoolField,
     _RealField,
     _ArrayField,
+    _FieldConst,
     _OptionField,
     _StringField,
     _IntegerField,
@@ -67,9 +75,22 @@ from bt2.field import (
     _DoublePrecisionRealFieldConst,
     _SinglePrecisionRealFieldConst,
     _UnsignedEnumerationFieldConst,
+    _DynamicArrayFieldWithLengthField,
+    _OptionFieldWithBoolSelectorField,
+    _DynamicArrayFieldWithLengthFieldConst,
+    _OptionFieldWithBoolSelectorFieldConst,
+    _OptionFieldWithSignedIntegerSelectorField,
+    _VariantFieldWithSignedIntegerSelectorField,
+    _OptionFieldWithUnsignedIntegerSelectorField,
+    _VariantFieldWithUnsignedIntegerSelectorField,
+    _OptionFieldWithSignedIntegerSelectorFieldConst,
+    _VariantFieldWithSignedIntegerSelectorFieldConst,
+    _OptionFieldWithUnsignedIntegerSelectorFieldConst,
+    _VariantFieldWithUnsignedIntegerSelectorFieldConst,
 )
 from bt2.graph import Graph
-from bt2.utils import Stop, TryAgain, UnknownObject, _OverflowError
+from bt2.trace import _Trace, _TraceConst
+from bt2.utils import Stop, TryAgain, UnknownObject, _OverflowError, _ListenerHandle
 from bt2.value import (
     MapValue,
     BoolValue,
@@ -78,6 +99,8 @@ from bt2.value import (
     StringValue,
     SignedIntegerValue,
     UnsignedIntegerValue,
+    _Value,
+    _ValueConst,
     create_value,
     _IntegerValue,
     _MapValueConst,
@@ -89,7 +112,8 @@ from bt2.value import (
     _SignedIntegerValueConst,
     _UnsignedIntegerValueConst,
 )
-from bt2.plugin import find_plugin, find_plugins, find_plugins_in_path
+from bt2.plugin import _PluginSet, find_plugin, find_plugins, find_plugins_in_path
+from bt2.stream import _Stream, _StreamConst
 from bt2.logging import (
     LoggingLevel,
     get_global_logging_level,
@@ -98,6 +122,7 @@ from bt2.logging import (
 )
 from bt2.message import (
     _EventMessage,
+    _MessageConst,
     _PacketEndMessage,
     _StreamEndMessage,
     _EventMessageConst,
@@ -126,23 +151,30 @@ from bt2.component import (
     _SinkComponentClassConst,
     _FilterComponentClassConst,
     _SourceComponentClassConst,
+    _UserSinkComponentConfiguration,
+    _UserFilterComponentConfiguration,
+    _UserSourceComponentConfiguration,
 )
 from bt2.py_plugin import register_plugin, plugin_component_class
 from bt2.field_path import (
     FieldPathScope,
+    _FieldPathItem,
+    _FieldPathConst,
     _IndexFieldPathItem,
     _CurrentArrayElementFieldPathItem,
     _CurrentOptionContentFieldPathItem,
 )
 
 # import all public names
-from bt2.clock_class import ClockClassOffset
-from bt2.event_class import EventClassLogLevel
+from bt2.clock_class import ClockClassOffset, _ClockClass, _ClockClassConst
+from bt2.event_class import EventClassLogLevel, _EventClass, _EventClassConst
 from bt2.field_class import (
     IntegerDisplayBase,
+    _FieldClass,
     _BoolFieldClass,
     _RealFieldClass,
     _ArrayFieldClass,
+    _FieldClassConst,
     _OptionFieldClass,
     _StringFieldClass,
     _IntegerFieldClass,
@@ -161,7 +193,9 @@ from bt2.field_class import (
     _VariantFieldClassConst,
     _BitArrayFieldClassConst,
     _SignedIntegerFieldClass,
+    _VariantFieldClassOption,
     _StructureFieldClassConst,
+    _StructureFieldClassMember,
     _UnsignedIntegerFieldClass,
     _EnumerationFieldClassConst,
     _StaticArrayFieldClassConst,
@@ -169,13 +203,19 @@ from bt2.field_class import (
     _SignedEnumerationFieldClass,
     _OptionWithSelectorFieldClass,
     _SignedIntegerFieldClassConst,
+    _VariantFieldClassOptionConst,
+    _DoublePrecisionRealFieldClass,
+    _SinglePrecisionRealFieldClass,
     _UnsignedEnumerationFieldClass,
+    _StructureFieldClassMemberConst,
     _UnsignedIntegerFieldClassConst,
     _OptionWithBoolSelectorFieldClass,
     _SignedEnumerationFieldClassConst,
     _VariantFieldClassWithoutSelector,
     _OptionFieldClassWithSelectorField,
     _OptionWithSelectorFieldClassConst,
+    _DoublePrecisionRealFieldClassConst,
+    _SinglePrecisionRealFieldClassConst,
     _UnsignedEnumerationFieldClassConst,
     _OptionWithIntegerSelectorFieldClass,
     _VariantFieldClassWithIntegerSelector,
@@ -186,9 +226,11 @@ from bt2.field_class import (
     _VariantFieldClassWithoutSelectorConst,
     _VariantFieldClassWithoutSelectorField,
     _OptionFieldClassWithSelectorFieldConst,
+    _SignedEnumerationFieldClassMappingConst,
     _OptionFieldClassWithIntegerSelectorField,
     _OptionWithIntegerSelectorFieldClassConst,
     _OptionWithSignedIntegerSelectorFieldClass,
+    _UnsignedEnumerationFieldClassMappingConst,
     _VariantFieldClassWithIntegerSelectorConst,
     _VariantFieldClassWithIntegerSelectorField,
     _DynamicArrayFieldClassWithLengthFieldConst,
@@ -202,6 +244,7 @@ from bt2.field_class import (
     _OptionFieldClassWithSignedIntegerSelectorField,
     _OptionWithSignedIntegerSelectorFieldClassConst,
     _VariantFieldClassWithIntegerSelectorFieldConst,
+    _VariantFieldClassWithIntegerSelectorFieldOption,
     _VariantFieldClassWithSignedIntegerSelectorConst,
     _VariantFieldClassWithSignedIntegerSelectorField,
     _OptionFieldClassWithUnsignedIntegerSelectorField,
@@ -209,14 +252,25 @@ from bt2.field_class import (
     _VariantFieldClassWithUnsignedIntegerSelectorConst,
     _VariantFieldClassWithUnsignedIntegerSelectorField,
     _OptionFieldClassWithSignedIntegerSelectorFieldConst,
+    _VariantFieldClassWithIntegerSelectorFieldOptionConst,
     _VariantFieldClassWithSignedIntegerSelectorFieldConst,
     _OptionFieldClassWithUnsignedIntegerSelectorFieldConst,
+    _VariantFieldClassWithSignedIntegerSelectorFieldOption,
     _VariantFieldClassWithUnsignedIntegerSelectorFieldConst,
+    _VariantFieldClassWithUnsignedIntegerSelectorFieldOption,
+    _VariantFieldClassWithSignedIntegerSelectorFieldOptionConst,
+    _VariantFieldClassWithUnsignedIntegerSelectorFieldOptionConst,
 )
 from bt2.interrupter import Interrupter
+from bt2.trace_class import _TraceClass, _TraceClassConst
+from bt2.stream_class import _StreamClass, _StreamClassConst
 from bt2.clock_snapshot import _ClockSnapshotConst, _UnknownClockSnapshot
-from bt2.query_executor import QueryExecutor
-from bt2.message_iterator import _UserMessageIterator
+from bt2.query_executor import QueryExecutor, _PrivateQueryExecutor
+from bt2.message_iterator import (
+    _UserMessageIterator,
+    _MessageIteratorConfiguration,
+    _UserComponentInputPortMessageIterator,
+)
 from bt2.integer_range_set import (
     SignedIntegerRange,
     UnsignedIntegerRange,
