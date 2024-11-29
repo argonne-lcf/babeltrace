@@ -625,6 +625,18 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         self,
         selector_fc: None = None,
         user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        options: typing.Optional[
+            typing.Iterable[
+                typing.Union[
+                    typing.Tuple[str, bt2_field_class._FieldClass],
+                    typing.Tuple[
+                        str,
+                        bt2_field_class._FieldClass,
+                        typing.Optional[bt2_value._MapValueConst],
+                    ],
+                ]
+            ]
+        ] = None,
     ) -> bt2_field_class._VariantFieldClassWithoutSelector:
         ...
 
@@ -633,6 +645,23 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         self,
         selector_fc: bt2_field_class._UnsignedIntegerFieldClass,
         user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        options: typing.Optional[
+            typing.Iterable[
+                typing.Union[
+                    typing.Tuple[
+                        str,
+                        bt2_field_class._FieldClass,
+                        bt2_integer_range_set._UnsignedIntegerRangeSetConst,
+                    ],
+                    typing.Tuple[
+                        str,
+                        bt2_field_class._FieldClass,
+                        bt2_integer_range_set._UnsignedIntegerRangeSetConst,
+                        typing.Optional[bt2_value._MapValueConst],
+                    ],
+                ]
+            ]
+        ] = None,
     ) -> bt2_field_class._VariantFieldClassWithUnsignedIntegerSelector:
         ...
 
@@ -641,6 +670,23 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         self,
         selector_fc: bt2_field_class._SignedIntegerFieldClass,
         user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        options: typing.Optional[
+            typing.Iterable[
+                typing.Union[
+                    typing.Tuple[
+                        str,
+                        bt2_field_class._FieldClass,
+                        bt2_integer_range_set._SignedIntegerRangeSetConst,
+                    ],
+                    typing.Tuple[
+                        str,
+                        bt2_field_class._FieldClass,
+                        bt2_integer_range_set._SignedIntegerRangeSetConst,
+                        typing.Optional[bt2_value._MapValueConst],
+                    ],
+                ]
+            ]
+        ] = None,
     ) -> bt2_field_class._VariantFieldClassWithSignedIntegerSelector:
         ...
 
@@ -648,6 +694,29 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         self,
         selector_fc: typing.Optional[bt2_field_class._IntegerFieldClass] = None,
         user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        options: typing.Optional[
+            typing.Iterable[
+                typing.Union[
+                    typing.Tuple[str, bt2_field_class._FieldClass],
+                    typing.Tuple[
+                        str,
+                        bt2_field_class._FieldClass,
+                        typing.Optional[bt2_value._MapValueConst],
+                    ],
+                    typing.Tuple[
+                        str,
+                        bt2_field_class._FieldClass,
+                        bt2_integer_range_set._IntegerRangeSetConst,
+                    ],
+                    typing.Tuple[
+                        str,
+                        bt2_field_class._FieldClass,
+                        bt2_integer_range_set._IntegerRangeSetConst,
+                        typing.Optional[bt2_value._MapValueConst],
+                    ],
+                ]
+            ]
+        ] = None,
     ) -> bt2_field_class._VariantFieldClass:
         if selector_fc is not None:
             bt2_utils._check_type(selector_fc, bt2_field_class._IntegerFieldClass)
@@ -661,9 +730,15 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
             selector_fc_ptr = None
             expected_type = bt2_field_class._VariantFieldClassWithoutSelector
 
-        return self._check_and_wrap_field_class(
+        fc = self._check_and_wrap_field_class(
             native_bt.field_class_variant_create(self._ptr, selector_fc_ptr),
             "variant",
             user_attributes,
             expected_type,
         )
+
+        if options:
+            # Rely on the type checks inside `__iadd__()`
+            fc += options  # type: ignore
+
+        return fc

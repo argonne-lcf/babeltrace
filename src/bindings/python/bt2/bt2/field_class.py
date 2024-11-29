@@ -865,10 +865,26 @@ class _VariantFieldClassWithoutSelectorField(
             self[name]._set_user_attributes(user_attributes_value)
 
     def __iadd__(
-        self, options: typing.Iterable[typing.Tuple[str, _FieldClass]]
+        self,
+        options: typing.Iterable[
+            typing.Union[
+                typing.Tuple[str, _FieldClass],
+                typing.Tuple[
+                    str, _FieldClass, typing.Optional[bt2_value._MapValueConst]
+                ],
+            ]
+        ],
     ) -> "_VariantFieldClassWithoutSelectorField":
-        for name, field_class in options:
-            self.append_option(name, field_class)
+        for option in options:
+            if len(option) == 2:
+                name, field_class = option
+                user_attributes = None
+            elif len(option) == 3:
+                name, field_class, user_attributes = option
+            else:
+                raise ValueError("invalid option tuple length: {}".format(len(option)))
+
+            self.append_option(name, field_class, user_attributes)
 
         return self
 
@@ -927,7 +943,7 @@ class _VariantFieldClassWithIntegerSelectorField(
             self, self._option_at_index(index)
         )
 
-    def append_option(
+    def _append_option(
         self,
         name: str,
         field_class: _FieldClass,
@@ -950,21 +966,41 @@ class _VariantFieldClassWithIntegerSelectorField(
         # TODO: check overlaps (precondition of self._append_option())
 
         bt2_utils._handle_func_status(
-            self._append_option(self._ptr, name, field_class._ptr, ranges._ptr),
+            self._append_option_ptr(self._ptr, name, field_class._ptr, ranges._ptr),
             "cannot append option to variant field class object",
         )
 
         if user_attributes is not None:
             self[name]._set_user_attributes(user_attributes_value)
 
-    def __iadd__(
+    def _iadd(
         self,
         options: typing.Iterable[
-            typing.Tuple[str, _FieldClass, bt2_integer_range_set._IntegerRangeSetConst]
+            typing.Union[
+                typing.Tuple[
+                    str,
+                    _FieldClass,
+                    bt2_integer_range_set._IntegerRangeSetConst,
+                ],
+                typing.Tuple[
+                    str,
+                    _FieldClass,
+                    bt2_integer_range_set._IntegerRangeSetConst,
+                    typing.Optional[bt2_value._MapValueConst],
+                ],
+            ],
         ],
     ):
-        for name, field_class, ranges in options:
-            self.append_option(name, field_class, ranges)
+        for option in options:
+            if len(option) == 3:
+                name, field_class, ranges = option
+                user_attributes = None
+            elif len(option) == 4:
+                name, field_class, ranges, user_attributes = option
+            else:
+                raise ValueError("invalid option tuple length: {}".format(len(option)))
+
+            self.append_option(name, field_class, ranges, user_attributes)
 
         return self
 
@@ -1013,7 +1049,7 @@ class _VariantFieldClassWithUnsignedIntegerSelectorField(
     _NAME = "Variant (with unsigned integer selector)"
     _variant_option_pycls = _VariantFieldClassWithUnsignedIntegerSelectorFieldOption
     _as_option_ptr = staticmethod(_variant_option_pycls._as_option_ptr)
-    _append_option = staticmethod(
+    _append_option_ptr = staticmethod(
         native_bt.field_class_variant_with_selector_field_integer_unsigned_append_option
     )
 
@@ -1030,6 +1066,35 @@ class _VariantFieldClassWithUnsignedIntegerSelectorField(
         return _VariantFieldClassWithUnsignedIntegerSelectorFieldOption(
             self, self._option_at_index(index)
         )
+
+    def append_option(
+        self,
+        name: typing.Optional[str],
+        field_class: _FieldClass,
+        ranges: bt2_integer_range_set._UnsignedIntegerRangeSetConst,
+        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+    ):
+        return self._append_option(name, field_class, ranges, user_attributes)
+
+    def __iadd__(
+        self,
+        options: typing.Iterable[
+            typing.Union[
+                typing.Tuple[
+                    str,
+                    _FieldClass,
+                    bt2_integer_range_set._UnsignedIntegerRangeSetConst,
+                ],
+                typing.Tuple[
+                    str,
+                    _FieldClass,
+                    bt2_integer_range_set._UnsignedIntegerRangeSetConst,
+                    typing.Optional[bt2_value._MapValueConst],
+                ],
+            ],
+        ],
+    ):
+        return self._iadd(options)
 
 
 _VariantFieldClassWithUnsignedIntegerSelector = (
@@ -1078,7 +1143,7 @@ class _VariantFieldClassWithSignedIntegerSelectorField(
     _NAME = "Variant (with signed integer selector)"
     _variant_option_pycls = _VariantFieldClassWithSignedIntegerSelectorFieldOption
     _as_option_ptr = staticmethod(_variant_option_pycls._as_option_ptr)
-    _append_option = staticmethod(
+    _append_option_ptr = staticmethod(
         native_bt.field_class_variant_with_selector_field_integer_signed_append_option
     )
 
@@ -1095,6 +1160,35 @@ class _VariantFieldClassWithSignedIntegerSelectorField(
         return _VariantFieldClassWithSignedIntegerSelectorFieldOption(
             self, self._option_at_index(index)
         )
+
+    def append_option(
+        self,
+        name: typing.Optional[str],
+        field_class: _FieldClass,
+        ranges: bt2_integer_range_set._SignedIntegerRangeSetConst,
+        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+    ):
+        return self._append_option(name, field_class, ranges, user_attributes)
+
+    def __iadd__(
+        self,
+        options: typing.Iterable[
+            typing.Union[
+                typing.Tuple[
+                    str,
+                    _FieldClass,
+                    bt2_integer_range_set._SignedIntegerRangeSetConst,
+                ],
+                typing.Tuple[
+                    str,
+                    _FieldClass,
+                    bt2_integer_range_set._SignedIntegerRangeSetConst,
+                    typing.Optional[bt2_value._MapValueConst],
+                ],
+            ],
+        ],
+    ):
+        return self._iadd(options)
 
 
 _VariantFieldClassWithSignedIntegerSelector = (
