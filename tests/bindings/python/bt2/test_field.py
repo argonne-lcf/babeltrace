@@ -1296,15 +1296,19 @@ class SignedEnumerationFieldTestCase(_TestIntegerFieldCommon, unittest.TestCase)
         field.value = 17
 
     def _create_fc(self, tc):
-        fc = tc.create_signed_enumeration_field_class(32)
-        fc.add_mapping("something", bt2.SignedIntegerRangeSet([(17, 17)]))
-        fc.add_mapping("speaker", bt2.SignedIntegerRangeSet([(12, 16)]))
-        fc.add_mapping("can", bt2.SignedIntegerRangeSet([(18, 2540)]))
-        fc.add_mapping(
-            "whole range", bt2.SignedIntegerRangeSet([(-(2**31), (2**31) - 1)])
+        return tc.create_signed_enumeration_field_class(
+            32,
+            mappings=(
+                ("something", bt2.SignedIntegerRangeSet([(17, 17)])),
+                ("speaker", bt2.SignedIntegerRangeSet([(12, 16)])),
+                ("can", bt2.SignedIntegerRangeSet([(18, 2540)])),
+                (
+                    "whole range",
+                    bt2.SignedIntegerRangeSet([(-(2**31), (2**31) - 1)]),
+                ),
+                ("zip", bt2.SignedIntegerRangeSet([(-45, 1001)])),
+            ),
         )
-        fc.add_mapping("zip", bt2.SignedIntegerRangeSet([(-45, 1001)]))
-        return fc
 
     def setUp(self):
         self._tc = get_default_trace_class()

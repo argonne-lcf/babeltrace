@@ -14,10 +14,19 @@ def get_const_signed_integer_range(int_ranges):
         field.value = 12
 
     tc = get_default_trace_class()
-    fc = tc.create_signed_enumeration_field_class(32)
-    fc.add_mapping("something", bt2.SignedIntegerRangeSet(int_ranges))
 
-    return create_const_field(tc, fc, range_setter).cls["something"].ranges
+    return (
+        create_const_field(
+            tc,
+            tc.create_signed_enumeration_field_class(
+                32,
+                mappings=(("something", bt2.SignedIntegerRangeSet(int_ranges)),),
+            ),
+            range_setter,
+        )
+        .cls["something"]
+        .ranges
+    )
 
 
 def get_const_unsigned_integer_range(int_ranges):
@@ -25,10 +34,19 @@ def get_const_unsigned_integer_range(int_ranges):
         field.value = 12
 
     tc = get_default_trace_class()
-    fc = tc.create_unsigned_enumeration_field_class(32)
-    fc.add_mapping("something", bt2.UnsignedIntegerRangeSet(int_ranges))
 
-    return create_const_field(tc, fc, range_setter).cls["something"].ranges
+    return (
+        create_const_field(
+            tc,
+            tc.create_unsigned_enumeration_field_class(
+                32,
+                mappings=(("something", bt2.UnsignedIntegerRangeSet(int_ranges)),),
+            ),
+            range_setter,
+        )
+        .cls["something"]
+        .ranges
+    )
 
 
 class _IntegerRangeTestCase:
