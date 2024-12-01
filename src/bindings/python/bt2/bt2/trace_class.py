@@ -400,8 +400,13 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
             bt2_field_class.IntegerDisplayBase
         ] = None,
         user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        mappings: typing.Optional[
+            typing.Iterable[
+                typing.Tuple[str, bt2_integer_range_set._SignedIntegerRangeSetConst]
+            ]
+        ] = None,
     ) -> bt2_field_class._SignedEnumerationFieldClass:
-        return self._create_integer_field_class(
+        fc = self._create_integer_field_class(
             native_bt.field_class_enumeration_signed_create,
             "signed enumeration",
             field_value_range,
@@ -410,6 +415,11 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
             bt2_field_class._SignedEnumerationFieldClass,
         )
 
+        if mappings is not None:
+            fc += mappings
+
+        return fc
+
     def create_unsigned_enumeration_field_class(
         self,
         field_value_range: typing.Optional[int] = None,
@@ -417,8 +427,13 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
             bt2_field_class.IntegerDisplayBase
         ] = None,
         user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        mappings: typing.Optional[
+            typing.Iterable[
+                typing.Tuple[str, bt2_integer_range_set._UnsignedIntegerRangeSetConst]
+            ]
+        ] = None,
     ) -> bt2_field_class._UnsignedEnumerationFieldClass:
-        return self._create_integer_field_class(
+        fc = self._create_integer_field_class(
             native_bt.field_class_enumeration_unsigned_create,
             "unsigned enumeration",
             field_value_range,
@@ -426,6 +441,11 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
             user_attributes,
             bt2_field_class._UnsignedEnumerationFieldClass,
         )
+
+        if mappings:
+            fc += mappings
+
+        return fc
 
     def create_single_precision_real_field_class(
         self, user_attributes: typing.Optional[bt2_value._MapValueConst] = None
