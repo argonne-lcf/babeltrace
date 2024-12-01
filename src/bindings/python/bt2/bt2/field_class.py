@@ -239,7 +239,7 @@ class _EnumerationFieldClassConst(_IntegerFieldClassConst, collections.abc.Mappi
 
 
 class _EnumerationFieldClass(_EnumerationFieldClassConst, _IntegerFieldClass):
-    def add_mapping(
+    def _add_mapping(
         self, label: str, ranges: bt2_integer_range_set._IntegerRangeSetConst
     ):
         bt2_utils._check_str(label)
@@ -249,11 +249,11 @@ class _EnumerationFieldClass(_EnumerationFieldClassConst, _IntegerFieldClass):
             raise ValueError("duplicate mapping label '{}'".format(label))
 
         bt2_utils._handle_func_status(
-            self._add_mapping(self._ptr, label, ranges._ptr),
+            self._add_mapping_ptr(self._ptr, label, ranges._ptr),
             "cannot add mapping to enumeration field class object",
         )
 
-    def __iadd__(
+    def _iadd(
         self,
         mappings: typing.Iterable[
             typing.Tuple[str, bt2_integer_range_set._IntegerRangeSetConst]
@@ -289,7 +289,25 @@ class _UnsignedEnumerationFieldClass(
 ):
     _NAME = "Unsigned enumeration"
     _range_set_pycls = bt2_integer_range_set.UnsignedIntegerRangeSet
-    _add_mapping = staticmethod(native_bt.field_class_enumeration_unsigned_add_mapping)
+    _add_mapping_ptr = staticmethod(
+        native_bt.field_class_enumeration_unsigned_add_mapping
+    )
+
+    def add_mapping(
+        self, label: str, ranges: bt2_integer_range_set._UnsignedIntegerRangeSetConst
+    ):
+        self._add_mapping(label, ranges)
+
+    def __iadd__(
+        self,
+        mappings: typing.Iterable[
+            typing.Tuple[str, bt2_integer_range_set._UnsignedIntegerRangeSetConst]
+        ],
+    ) -> "_UnsignedEnumerationFieldClass":
+        for label, ranges in mappings:
+            self.add_mapping(label, ranges)
+
+        return self
 
 
 class _SignedEnumerationFieldClassConst(
@@ -314,7 +332,25 @@ class _SignedEnumerationFieldClass(
 ):
     _NAME = "Signed enumeration"
     _range_set_pycls = bt2_integer_range_set.SignedIntegerRangeSet
-    _add_mapping = staticmethod(native_bt.field_class_enumeration_signed_add_mapping)
+    _add_mapping_ptr = staticmethod(
+        native_bt.field_class_enumeration_signed_add_mapping
+    )
+
+    def add_mapping(
+        self, label: str, ranges: bt2_integer_range_set._SignedIntegerRangeSetConst
+    ):
+        self._add_mapping(label, ranges)
+
+    def __iadd__(
+        self,
+        mappings: typing.Iterable[
+            typing.Tuple[str, bt2_integer_range_set._SignedIntegerRangeSetConst]
+        ],
+    ) -> "_SignedEnumerationFieldClass":
+        for label, ranges in mappings:
+            self.add_mapping(label, ranges)
+
+        return self
 
 
 class _StringFieldClassConst(_FieldClassConst):
