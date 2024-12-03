@@ -68,11 +68,16 @@ class _PluginComponentClassesIterator(collections.abc.Iterator):
         )
 
 
-class _PluginComponentClasses(collections.abc.Mapping):
+_ComponentClassT = typing.TypeVar(
+    "_ComponentClassT", bound=bt2_component._ComponentClassConst
+)
+
+
+class _PluginComponentClasses(typing.Mapping[str, _ComponentClassT]):
     def __init__(self, plugin):
         self._plugin = plugin
 
-    def __getitem__(self, key: str) -> bt2_component._ComponentClassConst:
+    def __getitem__(self, key: str) -> _ComponentClassT:
         bt2_utils._check_str(key)
         cc_ptr = self._borrow_component_class_by_name(self._plugin._ptr, key)
 
@@ -86,11 +91,13 @@ class _PluginComponentClasses(collections.abc.Mapping):
     def __len__(self) -> int:
         return self._component_class_count(self._plugin._ptr)
 
-    def __iter__(self) -> typing.Iterator[bt2_component._ComponentClassConst]:
+    def __iter__(self) -> typing.Iterator[str]:
         return _PluginComponentClassesIterator(self)
 
 
-class _PluginSourceComponentClasses(_PluginComponentClasses):
+class _PluginSourceComponentClasses(
+    _PluginComponentClasses[bt2_component._SourceComponentClassConst]
+):
     _component_class_count = staticmethod(
         native_bt.plugin_get_source_component_class_count
     )
@@ -103,7 +110,9 @@ class _PluginSourceComponentClasses(_PluginComponentClasses):
     _comp_cls_type = native_bt.COMPONENT_CLASS_TYPE_SOURCE
 
 
-class _PluginFilterComponentClasses(_PluginComponentClasses):
+class _PluginFilterComponentClasses(
+    _PluginComponentClasses[bt2_component._FilterComponentClassConst]
+):
     _component_class_count = staticmethod(
         native_bt.plugin_get_filter_component_class_count
     )
@@ -116,7 +125,9 @@ class _PluginFilterComponentClasses(_PluginComponentClasses):
     _comp_cls_type = native_bt.COMPONENT_CLASS_TYPE_FILTER
 
 
-class _PluginSinkComponentClasses(_PluginComponentClasses):
+class _PluginSinkComponentClasses(
+    _PluginComponentClasses[bt2_component._SinkComponentClassConst]
+):
     _component_class_count = staticmethod(
         native_bt.plugin_get_sink_component_class_count
     )
