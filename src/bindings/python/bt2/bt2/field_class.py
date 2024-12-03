@@ -209,11 +209,15 @@ class _SignedEnumerationFieldClassMappingConst(_EnumerationFieldClassMapping):
     )
 
 
-class _EnumerationFieldClassConst(_IntegerFieldClassConst, collections.abc.Mapping):
+class _EnumerationFieldClassConst(
+    _IntegerFieldClassConst, typing.Mapping[str, _EnumerationFieldClassMapping]
+):
     def __len__(self) -> int:
         return native_bt.field_class_enumeration_get_mapping_count(self._ptr)
 
-    def mappings_for_value(self, value: int) -> typing.List[str]:
+    def mappings_for_value(
+        self, value: int
+    ) -> typing.List[_EnumerationFieldClassMapping]:
         self._check_int_type(value)
 
         status, labels = self._get_mapping_labels_for_value(self._ptr, value)
@@ -222,7 +226,7 @@ class _EnumerationFieldClassConst(_IntegerFieldClassConst, collections.abc.Mappi
         )
         return [self[label] for label in labels]
 
-    def __iter__(self) -> typing.Iterator[_EnumerationFieldClassMapping]:
+    def __iter__(self) -> typing.Iterator[str]:
         for idx in range(len(self)):
             yield self._mapping_pycls(
                 self._borrow_mapping_ptr_by_index(self._ptr, idx)
