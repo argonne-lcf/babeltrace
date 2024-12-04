@@ -961,7 +961,7 @@ enum bt_cmd_status cmd_print_lttng_live_sessions(struct bt_config *cfg)
 
 	array_size = bt_value_array_get_length(results);
 	for (i = 0; i < array_size; i++) {
-		const char *url_text;
+		const char *text;
 		int64_t timer_us, streams, clients;
 
 		map = bt_value_array_borrow_element_by_index_const(results, i);
@@ -975,8 +975,8 @@ enum bt_cmd_status cmd_print_lttng_live_sessions(struct bt_config *cfg)
 			BT_CLI_LOGE_APPEND_CAUSE("Missing `url` entry.");
 			goto error;
 		}
-		url_text = bt_value_string_get(v);
-		fprintf(out_stream, "%s", url_text);
+		text = bt_value_string_get(v);
+		fprintf(out_stream, "%s", text);
 		v = bt_value_map_borrow_entry_value_const(map, "timer-us");
 		if (!v) {
 			BT_CLI_LOGE_APPEND_CAUSE("Missing `timer-us` entry.");
@@ -999,7 +999,25 @@ enum bt_cmd_status cmd_print_lttng_live_sessions(struct bt_config *cfg)
 			goto error;
 		}
 		clients = bt_value_integer_unsigned_get(v);
-		fprintf(out_stream, "%" PRIu64 " client(s) connected)\n", clients);
+		fprintf(out_stream, "%" PRIu64 " client(s) connected, ", clients);
+		v = bt_value_map_borrow_entry_value_const(map, "trace-format");
+		if (!v) {
+			BT_CLI_LOGE_APPEND_CAUSE("Missing `trace-format` entry.");
+			goto error;
+		}
+		text = bt_value_string_get(v);
+
+		const char *trace_fmt;
+
+		if (strcmp(text, "ctf-1.8") == 0) {
+			fprintf(out_stream, "CTF v1.8)");
+		} else if (strcmp(text, "ctf-2.0") == 0) {
+			fprintf(out_stream, "CTF v2.0)");
+		} else {
+			fprintf(out_stream, "unknown trace format [`%s`])", trace_fmt);
+		}
+
+		fprintf(out_stream, "\n");
 	}
 
 	cmd_status = BT_CMD_STATUS_OK;
