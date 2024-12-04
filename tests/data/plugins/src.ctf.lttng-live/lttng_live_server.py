@@ -7,6 +7,7 @@
 
 import os
 import re
+import enum
 import time
 import socket
 import struct
@@ -158,12 +159,19 @@ class _LttngLiveViewerGetTracingSessionInfosCommand(_LttngLiveViewerCommand):
     pass
 
 
+# Trace format of a tracing session.
+class _LttngLiveTraceFormat(enum.Enum):
+    CTF_V1_8 = "ctf-1.8"
+    CTF_V2_0 = "ctf-2.0"
+
+
 class _LttngLiveViewerTracingSessionInfo:
     def __init__(
         self,
         tracing_session_id: int,
         live_timer_freq: int,
         client_count: int,
+        trace_format: _LttngLiveTraceFormat,
         stream_count: int,
         hostname: str,
         name: str,
@@ -171,6 +179,7 @@ class _LttngLiveViewerTracingSessionInfo:
         self._tracing_session_id = tracing_session_id
         self._live_timer_freq = live_timer_freq
         self._client_count = client_count
+        self._trace_format = trace_format
         self._stream_count = stream_count
         self._hostname = hostname
         self._name = name
@@ -186,6 +195,10 @@ class _LttngLiveViewerTracingSessionInfo:
     @property
     def client_count(self):
         return self._client_count
+
+    @property
+    def trace_format(self):
+        return self._trace_format
 
     @property
     def stream_count(self):
@@ -501,7 +514,7 @@ class _LttngLiveViewerProtocolCodec:
     _COMMAND_HEADER_SIZE_BYTES = struct.calcsize(_COMMAND_HEADER_STRUCT_FMT)
 
     def __init__(self):
-        pass
+        self._server_minor_version = None  # type: Optional[int]
 
     def _unpack(self, fmt: str, data: bytes, offset: int = 0):
         fmt = "!" + fmt
@@ -511,6 +524,14 @@ class _LttngLiveViewerProtocolCodec:
         return self._unpack(
             fmt, data, _LttngLiveViewerProtocolCodec._COMMAND_HEADER_SIZE_BYTES
         )
+
+    @property
+    def server_minor_version(self):
+        return self._server_minor_version
+
+    @server_minor_version.setter
+    def server_minor_version(self, server_minor_version: int):
+        self._server_minor_version = server_minor_version
 
     def decode(self, data: bytes):
         if len(data) < self._COMMAND_HEADER_SIZE_BYTES:
@@ -607,6 +628,7 @@ class _LttngLiveViewerProtocolCodec:
             data = self._pack("I", len(reply.tracing_session_infos))
 
             for info in reply.tracing_session_infos:
+                # Common part
                 data += self._pack(
                     "QIII",
                     info.tracing_session_id,
@@ -614,8 +636,24 @@ class _LttngLiveViewerProtocolCodec:
                     info.client_count,
                     info.stream_count,
                 )
-                data += self._encode_zero_padded_str(info.hostname, 64)
-                data += self._encode_zero_padded_str(info.name, 255)
+
+                # Version-specific part
+                assert self._server_minor_version is not None
+
+                if self._server_minor_version < 15:
+                    # v2.4 protocol: fixed-length strings
+                    data += self._encode_zero_padded_str(info.hostname, 64)
+                    data += self._encode_zero_padded_str(info.name, 255)
+                else:
+                    # v2.15 protocol: variable-length strings + trace format
+                    data += self._pack(
+                        "III",
+                        len(info.hostname),
+                        len(info.name),
+                        0 if info.trace_format == _LttngLiveTraceFormat.CTF_V1_8 else 1,
+                    )
+                    data += info.hostname.encode()
+                    data += info.name.encode()
         elif type(reply) is _LttngLiveViewerAttachToTracingSessionReply:
             data = self._pack("II", reply.status, len(reply.stream_infos))
 
@@ -787,9 +825,9 @@ class _LttngDataStreamIndex(Sequence[_LttngIndexEntryT]):
     def __getitem__(self, index: slice) -> Sequence[_LttngIndexEntryT]:  # noqa: F811
         ...
 
-    def __getitem__(  # noqa: F811
+    def __getitem__(
         self, index: Union[int, slice]
-    ) -> Union[_LttngIndexEntryT, Sequence[_LttngIndexEntryT],]:
+    ) -> Union[_LttngIndexEntryT, Sequence[_LttngIndexEntryT],]:  # noqa: F811
         return self._entries[index]
 
     def __len__(self):
@@ -900,6 +938,15 @@ class _LttngMetadataStream(_LttngStream):
     @property
     def sections(self):
         return self._sections
+
+    @property
+    def trace_format(self):
+        with open(self._path, "rb") as f:
+            return (
+                _LttngLiveTraceFormat.CTF_V2_0
+                if f.read(1)[0] == 30
+                else _LttngLiveTraceFormat.CTF_V1_8
+            )
 
 
 class LttngMetadataConfigSection:
@@ -1283,6 +1330,7 @@ class LttngTracingSessionDescriptor:
         hostname: str,
         live_timer_freq: int,
         client_count: int,
+        trace_format: _LttngLiveTraceFormat,
         traces: Iterable[LttngTrace],
     ):
         for trace in traces:
@@ -1296,6 +1344,7 @@ class LttngTracingSessionDescriptor:
             tracing_session_id,
             live_timer_freq,
             client_count,
+            trace_format,
             stream_count,
             hostname,
             name,
@@ -1767,10 +1816,14 @@ class LttngLiveServer:
         port_filename: Optional[str],
         tracing_session_descriptors: Iterable[LttngTracingSessionDescriptor],
         max_query_data_response_size: Optional[int],
+        max_minor_version: int,
     ):
         logging.info("Server configuration:")
 
-        logging.info("  Port file name: `{}`".format(port_filename))
+        logging.info("  Maximum minor version: {}".format(max_minor_version))
+
+        if port_filename is not None:
+            logging.info("  Port file name: `{}`".format(port_filename))
 
         if max_query_data_response_size is not None:
             logging.info(
@@ -1781,7 +1834,7 @@ class LttngLiveServer:
 
         for ts_descr in tracing_session_descriptors:
             info = ts_descr.info
-            fmt = '  TS descriptor: name="{}", id={}, hostname="{}", live-timer-freq={}, client-count={}, stream-count={}:'
+            fmt = '  TS descriptor: name="{}", id={}, hostname="{}", live-timer-freq={}, client-count={}, stream-count={}, trace-format={}:'
             logging.info(
                 fmt.format(
                     info.name,
@@ -1790,12 +1843,14 @@ class LttngLiveServer:
                     info.live_timer_freq,
                     info.client_count,
                     info.stream_count,
+                    info.trace_format.name,
                 )
             )
 
             for trace in ts_descr.traces:
                 logging.info('    Trace: path="{}"'.format(trace.path))
 
+        self._max_minor_version = max_minor_version
         self._ts_descriptors = tracing_session_descriptors
         self._max_query_data_response_size = max_query_data_response_size
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -1892,9 +1947,20 @@ class LttngLiveServer:
             23, self._ts_descriptors, self._max_query_data_response_size
         )
 
+        # Set our effective minor version
+        self._minor_version = min([self._max_minor_version, cmd.minor])
+        logging.info(
+            "Effective server version is available: version={}.{}".format(
+                2, self._minor_version
+            )
+        )
+        self._codec.server_minor_version = self._minor_version
+
         # Send "connect" reply
         self._send_reply(
-            _LttngLiveViewerConnectReply(viewer_session.viewer_session_id, 2, 10)
+            _LttngLiveViewerConnectReply(
+                viewer_session.viewer_session_id, 2, self._minor_version
+            )
         )
 
         # Make the viewer session handle the remaining commands
@@ -2039,6 +2105,8 @@ def _session_descriptors_from_path(
                 LttngTrace(path, metadata_sections, beacons, creation_timestamp)
             )
 
+        assert len(traces) > 0
+
         sessions.append(
             LttngTracingSessionDescriptor(
                 name,
@@ -2046,6 +2114,7 @@ def _session_descriptors_from_path(
                 hostname,
                 live_timer_freq,
                 client_count,
+                traces[0].metadata_stream.trace_format,
                 traces,
             )
         )
@@ -2078,7 +2147,7 @@ if __name__ == "__main__":
 
     parser.add_argument(
         "--port",
-        help="The port to bind to. If missing, use an OS-assigned port..",
+        help="The port to bind to. If missing, use an OS-assigned port.",
         type=int,
     )
     parser.add_argument(
@@ -2088,17 +2157,23 @@ if __name__ == "__main__":
     parser.add_argument(
         "--max-query-data-response-size",
         type=int,
-        help="The maximum size of control data response in bytes",
+        help="The maximum size of control data response in bytes.",
     )
     parser.add_argument(
         "--trace-path-prefix",
         type=str,
-        help="Prefix to prepend to the trace paths of session configurations",
+        help="Prefix to prepend to the trace paths of session configurations.",
+    )
+    parser.add_argument(
+        "--server-max-minor-version",
+        type=int,
+        default=10,
+        help="Maximum minor version of the server instead of 10.",
     )
     parser.add_argument(
         "sessions_filename",
         type=str,
-        help="Path to a session configuration file",
+        help="Path to a session configuration file.",
         metavar="sessions-filename",
     )
     parser.add_argument(
@@ -2120,4 +2195,11 @@ if __name__ == "__main__":
     port = args.port  # type: int | None
     port_filename = args.port_filename  # type: str | None
     max_query_data_response_size = args.max_query_data_response_size  # type: int | None
-    LttngLiveServer(port, port_filename, sessions, max_query_data_response_size)
+    server_max_minor_version = args.server_max_minor_version  # type: int
+    LttngLiveServer(
+        port,
+        port_filename,
+        sessions,
+        max_query_data_response_size,
+        server_max_minor_version,
+    )

@@ -105,8 +105,10 @@ get_cli_output_with_lttng_live_server() {
 	local cli_stderr_file="$3"
 	local port_file="$4"
 	local trace_path_prefix="$5"
-	local kill_server_on_cli_failure="$6"
-	shift 6
+	local allowed_mip_versions="$6"
+	local server_max_minor_version="$7"
+	local kill_server_on_cli_failure="$8"
+	shift 8
 	local server_args=("$@")
 
 	local i
@@ -116,7 +118,9 @@ get_cli_output_with_lttng_live_server() {
 	local server_pid_file
 	local server_retcode_file
 
-	server_args+=(--port-file "$port_file" --trace-path-prefix "$trace_path_prefix")
+	server_args+=(--port-file "$port_file"
+				  --trace-path-prefix "$trace_path_prefix"
+				  --server-max-minor-version "$server_max_minor_version")
 	server_pid_file="$(mktemp -t test-live-server-pid.XXXXXX)"
 	server_retcode_file="$(mktemp -t test-live-server-ret.XXXXX)"
 
@@ -157,7 +161,13 @@ get_cli_output_with_lttng_live_server() {
 	# Split argument string by spaces into an array.
 	IFS=' ' read -ra cli_args <<< "$cli_args"
 
-	if ! bt_cli "$cli_stdout_file" "$cli_stderr_file" --allowed-mip-versions=0 "${cli_args[@]}"; then
+	allowed_mip_versions_arg=()
+
+	if [[ $allowed_mip_versions != all ]]; then
+		allowed_mip_versions_arg=("--allowed-mip-versions=$allowed_mip_versions")
+	fi
+
+	if ! bt_cli "$cli_stdout_file" "$cli_stderr_file" "${allowed_mip_versions_arg[@]+"${allowed_mip_versions_arg[@]}"}" "${cli_args[@]}"; then
 		# CLI failed: cancel everything else
 		if [[ $kill_server_on_cli_failure == true ]]; then
 			kill_lttng_live_server "$server_pid_file"
@@ -202,7 +212,9 @@ run_test() {
 	local expected_stdout="$3"
 	local expected_stderr="$4"
 	local trace_path_prefix="$5"
-	shift 5
+	local allowed_mip_versions="$6"
+	local server_max_minor_version="$7"
+	shift 7
 	local server_args=("$@")
 
 	local cli_stderr
@@ -215,7 +227,9 @@ run_test() {
 	port_file="$(mktemp -t test-live-server-port.XXXXXX)"
 
 	get_cli_output_with_lttng_live_server "$cli_args_template" "$cli_stdout" \
-		"$cli_stderr" "$port_file" "$trace_path_prefix" true "${server_args[@]}"
+		"$cli_stderr" "$port_file" "$trace_path_prefix" \
+		"$allowed_mip_versions" "$server_max_minor_version" \
+		true "${server_args[@]}"
 
 	bt_diff "$expected_stdout" "$cli_stdout"
 	ok $? "$test_text - stdout"
@@ -233,7 +247,9 @@ run_test_fail() {
 	local expected_stdout="$3"
 	local expected_stderr_re="$4"
 	local trace_path_prefix="$5"
-	shift 5
+	local allowed_mip_versions="$6"
+	local server_max_minor_version="$7"
+	shift 7
 	local server_args=("$@")
 
 	local cli_stdout
@@ -248,7 +264,9 @@ run_test_fail() {
 	port_file="$(mktemp -t test-live-server-port.XXXXXX)"
 
 	get_cli_output_with_lttng_live_server "$cli_args_template" "$cli_stdout" \
-		"$cli_stderr" "$port_file" "$trace_path_prefix" false "${server_args[@]}"
+		"$cli_stderr" "$port_file" "$trace_path_prefix" \
+		"$allowed_mip_versions" "$server_max_minor_version" \
+		false "${server_args[@]}"
 
 	bt_diff "$expected_stdout" "$cli_stdout"
 	ok $? "$test_text - stdout"
@@ -284,7 +302,47 @@ test_list_sessions() {
 	tmp_stdout_expected="$(mktemp -t test-live-list-sessions-stdout-expected.XXXXXX)"
 
 	get_cli_output_with_lttng_live_server "$cli_args_template" "$cli_stdout" \
-		"$cli_stderr" "$port_file" "$trace_dir_native" true "${server_args[@]}"
+		"$cli_stderr" "$port_file" "$trace_dir_native" all 4 true "${server_args[@]}"
+	port=$(<"$port_file")
+
+	# Craft the expected output. This is necessary since the port number
+	# (random) of a "relayd" is present in the output.
+	template_expected=${template_expected//@PORT@/$port}
+
+	echo "$template_expected" > "$tmp_stdout_expected"
+
+	bt_diff "$tmp_stdout_expected" "$cli_stdout"
+	ok $? "$test_text - stdout"
+	bt_diff "/dev/null" "$cli_stderr"
+	ok $? "$test_text - stderr"
+
+	rm -f "$cli_stderr"
+	rm -f "$cli_stdout"
+	rm -f "$port_file"
+	rm -f "$tmp_stdout_expected"
+}
+
+test_list_sessions_2_15() {
+	# Like test_list_sessions(), but with the v2.15 protocol and
+	# CTF 2 sessions
+
+	local port
+	local port_file
+	local tmp_stdout_expected
+	local template_expected
+
+	local test_text="CLI prints the expected session list (v2.15 protocol)"
+	local cli_args_template="-i lttng-live net://localhost:@PORT@"
+	local server_args=("$test_data_dir/list-sessions-2.15.json" --server-max-minor-version=15)
+
+	template_expected=$(<"$test_data_dir/cli-list-sessions-2.15.expect")
+	cli_stderr="$(mktemp -t test-live-list-sessions-2.15-stderr.XXXXXX)"
+	cli_stdout="$(mktemp -t test-live-list-sessions-2.15-stdout.XXXXXX)"
+	port_file="$(mktemp -t test-live-list-sessions-2.15-server-port.XXXXXX)"
+	tmp_stdout_expected="$(mktemp -t test-live-list-sessions-2.15-stdout-expected.XXXXXX)"
+
+	get_cli_output_with_lttng_live_server "$cli_args_template" "$cli_stdout" \
+		"$cli_stderr" "$port_file" "$trace_dir_native" all 15 true "${server_args[@]}"
 	port=$(<"$port_file")
 
 	# Craft the expected output. This is necessary since the port number
@@ -314,7 +372,19 @@ test_base() {
 	local expected_stderr="/dev/null"
 
 	run_test "$test_text" "$cli_args_template" "$expected_stdout" \
-		"$expected_stderr" "$trace_dir_native" "${server_args[@]}"
+		"$expected_stderr" "$trace_dir_native" 0 4 "${server_args[@]}"
+}
+
+test_base_2_15() {
+	# Like test_base(), but with the v2.15 protocol
+	local test_text="CLI attach and fetch from single-domains session - no discarded events (v2.15 protocol)"
+	local cli_args_template="-i lttng-live net://localhost:@PORT@/host/hostname/trace-with-index -c sink.text.details"
+	local server_args=("$test_data_dir/base-2.15.json")
+	local expected_stdout="${test_data_dir}/cli-base-2.15.expect"
+	local expected_stderr="/dev/null"
+
+	run_test "$test_text" "$cli_args_template" "$expected_stdout" \
+		"$expected_stderr" "$trace_dir_native" all 15 "${server_args[@]}"
 }
 
 test_multi_domains() {
@@ -327,7 +397,19 @@ test_multi_domains() {
 	local expected_stderr="/dev/null"
 
 	run_test "$test_text" "$cli_args_template" "$expected_stdout" \
-		"$expected_stderr" "$trace_dir_native" "${server_args[@]}"
+		"$expected_stderr" "$trace_dir_native" 0 4 "${server_args[@]}"
+}
+
+test_multi_domains_2_15() {
+	# Like test_multi_domains(), but with the v2.15 protocol
+	local test_text="CLI attach and fetch from multi-domains session - discarded events (v2.15 protocol)"
+	local cli_args_template="-i lttng-live net://localhost:@PORT@/host/hostname/multi-domains -c sink.text.details"
+	local server_args=("${test_data_dir}/multi-domains-2.15.json")
+	local expected_stdout="$test_data_dir/cli-multi-domains-2.15.expect"
+	local expected_stderr="/dev/null"
+
+	run_test "$test_text" "$cli_args_template" "$expected_stdout" \
+		"$expected_stderr" "$trace_dir_native" all 15 "${server_args[@]}"
 }
 
 test_rate_limited() {
@@ -343,7 +425,7 @@ test_rate_limited() {
 	local expected_stderr="/dev/null"
 
 	run_test "$test_text" "$cli_args_template" "$expected_stdout" \
-		"$expected_stderr" "$trace_dir_native" "${server_args[@]}"
+		"$expected_stderr" "$trace_dir_native" 0 4 "${server_args[@]}"
 }
 
 test_compare_to_ctf_fs() {
@@ -372,11 +454,11 @@ test_compare_to_ctf_fs() {
 	bt_remove_cr "${expected_stderr}"
 
 	run_test "$test_text" "$cli_args_template" "$expected_stdout" \
-		"$expected_stderr" "$trace_dir_native" "${server_args[@]}"
+		"$expected_stderr" "$trace_dir_native" 0 4 "${server_args[@]}"
 
 	diag "Inverse session order from lttng-relayd"
 	run_test "$test_text" "$cli_args_template" "$expected_stdout" \
-		"$expected_stderr" "$trace_dir_native" "${server_args_inverse[@]}"
+		"$expected_stderr" "$trace_dir_native" 0 4 "${server_args_inverse[@]}"
 
 	rm -f "$expected_stdout"
 	rm -f "$expected_stderr"
@@ -414,7 +496,7 @@ test_inactivity_discarded_packet() {
 	local expected_stderr="/dev/null"
 
 	run_test "$test_text" "$cli_args_template" "$expected_stdout" \
-		"$expected_stderr" "$trace_dir_native" "${server_args[@]}"
+		"$expected_stderr" "$trace_dir_native" 0 4 "${server_args[@]}"
 }
 
 test_split_metadata() {
@@ -435,7 +517,7 @@ test_split_metadata() {
 	local expected_stderr="/dev/null"
 
 	run_test "$test_text" "$cli_args_template" "$expected_stdout" \
-		"$expected_stderr" "$trace_dir_native" "${server_args[@]}"
+		"$expected_stderr" "$trace_dir_native" 0 4 "${server_args[@]}"
 }
 
 test_stored_values() {
@@ -454,7 +536,7 @@ test_stored_values() {
 	bt_gen_mctf_trace "${trace_dir}/1/live/stored-values.mctf" "$tmp_dir/stored-values"
 
 	run_test "$test_text" "$cli_args_template" "$expected_stdout" \
-		"$expected_stderr" "$tmp_dir" "${server_args[@]}"
+		"$expected_stderr" "$tmp_dir" 0 4 "${server_args[@]}"
 
 	rm -rf "$tmp_dir"
 }
@@ -477,7 +559,7 @@ test_live_new_stream_during_inactivity() {
 	bt_gen_mctf_trace "${trace_dir}/1/live/new-streams/second-trace.mctf" "$tmp_dir/second-trace"
 
 	run_test "$test_text" "$cli_args_template" "$expected_stdout" \
-		"$expected_stderr" "$tmp_dir" "${server_args[@]}"
+		"$expected_stderr" "$tmp_dir" 0 4 "${server_args[@]}"
 
 	rm -rf "$tmp_dir"
 }
@@ -490,14 +572,17 @@ test_invalid_metadata() {
 
 	run_test_fail "$test_text" "$cli_args_template" "$expected_stdout" \
 		"At line 12 in metadata stream: syntax error, unexpected IDENTIFIER:  token=\"perchaude\"" \
-		"$trace_dir_native" "${server_args[@]}"
+		"$trace_dir_native" 0 4 "${server_args[@]}"
 }
 
-plan_tests 22
+plan_tests 28
 
 test_list_sessions
+test_list_sessions_2_15
 test_base
+test_base_2_15
 test_multi_domains
+test_multi_domains_2_15
 test_rate_limited
 test_compare_to_ctf_fs
 test_inactivity_discarded_packet
