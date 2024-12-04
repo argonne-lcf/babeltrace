@@ -3,7 +3,10 @@
 # Copyright (C) 2019 EfficiOS Inc.
 #
 
+# pyright: strict, reportPrivateUsage=false
+
 import uuid
+import typing
 import unittest
 
 import bt2
@@ -34,11 +37,11 @@ class ClockClassOffsetTestCase(unittest.TestCase):
 
     def test_create_invalid_seconds(self):
         with self.assertRaises(TypeError):
-            bt2.ClockClassOffset("hello", 4871232)
+            bt2.ClockClassOffset("hello", 4871232)  # type: ignore
 
     def test_create_invalid_cycles(self):
         with self.assertRaises(TypeError):
-            bt2.ClockClassOffset(23, "hello")
+            bt2.ClockClassOffset(23, "hello")  # type: ignore
 
     def test_eq(self):
         cco1 = bt2.ClockClassOffset(23, 42)
@@ -59,9 +62,16 @@ class ClockClassOffsetTestCase(unittest.TestCase):
         self.assertFalse(bt2.ClockClassOffset() == 23)
 
 
+RetT = typing.TypeVar("RetT")
+
+
 class ClockClassTestCase(unittest.TestCase):
-    def assertRaisesInComponentInit(self, expected_exc_type, user_code):
-        def f(comp_self):
+    def assertRaisesInComponentInit(
+        self,
+        expected_exc_type: typing.Type[Exception],
+        user_code: typing.Callable[[bt2._UserSinkComponent], RetT],
+    ):
+        def f(comp_self: bt2._UserSinkComponent):
             try:
                 user_code(comp_self)
             except Exception as exc:
@@ -84,85 +94,85 @@ class ClockClassTestCase(unittest.TestCase):
         self.assertEqual(len(cc.user_attributes), 0)
 
     def test_create_name(self):
-        def f(comp_self):
+        def f(comp_self: bt2._UserSinkComponent):
             return comp_self._create_clock_class(name="the_clock")
 
         cc = run_in_component_init(f)
         self.assertEqual(cc.name, "the_clock")
 
     def test_create_invalid_name(self):
-        def f(comp_self):
-            comp_self._create_clock_class(name=23)
+        def f(comp_self: bt2._UserSinkComponent):
+            comp_self._create_clock_class(name=23)  # type: ignore
 
         self.assertRaisesInComponentInit(TypeError, f)
 
     def test_create_description(self):
-        def f(comp_self):
+        def f(comp_self: bt2._UserSinkComponent):
             return comp_self._create_clock_class(description="hi people")
 
         cc = run_in_component_init(f)
         self.assertEqual(cc.description, "hi people")
 
     def test_create_invalid_description(self):
-        def f(comp_self):
-            return comp_self._create_clock_class(description=23)
+        def f(comp_self: bt2._UserSinkComponent):
+            return comp_self._create_clock_class(description=23)  # type: ignore
 
         self.assertRaisesInComponentInit(TypeError, f)
 
     def test_create_frequency(self):
-        def f(comp_self):
+        def f(comp_self: bt2._UserSinkComponent):
             return comp_self._create_clock_class(frequency=987654321)
 
         cc = run_in_component_init(f)
         self.assertEqual(cc.frequency, 987654321)
 
     def test_create_invalid_frequency(self):
-        def f(comp_self):
-            return comp_self._create_clock_class(frequency="lel")
+        def f(comp_self: bt2._UserSinkComponent):
+            return comp_self._create_clock_class(frequency="lel")  # type: ignore
 
         self.assertRaisesInComponentInit(TypeError, f)
 
     def test_create_precision(self):
-        def f(comp_self):
+        def f(comp_self: bt2._UserSinkComponent):
             return comp_self._create_clock_class(precision=12)
 
         cc = run_in_component_init(f)
         self.assertEqual(cc.precision, 12)
 
     def test_create_invalid_precision(self):
-        def f(comp_self):
-            return comp_self._create_clock_class(precision="lel")
+        def f(comp_self: bt2._UserSinkComponent):
+            return comp_self._create_clock_class(precision="lel")  # type: ignore
 
         self.assertRaisesInComponentInit(TypeError, f)
 
     def test_create_offset(self):
-        def f(comp_self):
+        def f(comp_self: bt2._UserSinkComponent):
             return comp_self._create_clock_class(offset=bt2.ClockClassOffset(12, 56))
 
         cc = run_in_component_init(f)
         self.assertEqual(cc.offset, bt2.ClockClassOffset(12, 56))
 
     def test_create_invalid_offset(self):
-        def f(comp_self):
-            return comp_self._create_clock_class(offset=object())
+        def f(comp_self: bt2._UserSinkComponent):
+            return comp_self._create_clock_class(offset=object())  # type: ignore
 
         self.assertRaisesInComponentInit(TypeError, f)
 
     def test_create_origin_is_unix_epoch(self):
-        def f(comp_self):
+        def f(comp_self: bt2._UserSinkComponent):
             return comp_self._create_clock_class(origin_is_unix_epoch=False)
 
         cc = run_in_component_init(f)
         self.assertEqual(cc.origin_is_unix_epoch, False)
 
     def test_create_invalid_origin_is_unix_epoch(self):
-        def f(comp_self):
-            return comp_self._create_clock_class(origin_is_unix_epoch=23)
+        def f(comp_self: bt2._UserSinkComponent):
+            return comp_self._create_clock_class(origin_is_unix_epoch=23)  # type: ignore
 
         self.assertRaisesInComponentInit(TypeError, f)
 
     def test_cycles_to_ns_from_origin(self):
-        def f(comp_self):
+        def f(comp_self: bt2._UserSinkComponent):
             return comp_self._create_clock_class(
                 frequency=10**8, origin_is_unix_epoch=True
             )
@@ -171,7 +181,7 @@ class ClockClassTestCase(unittest.TestCase):
         self.assertEqual(cc.cycles_to_ns_from_origin(112), 1120)
 
     def test_cycles_to_ns_from_origin_overflow(self):
-        def f(comp_self):
+        def f(comp_self: bt2._UserSinkComponent):
             return comp_self._create_clock_class(frequency=1000)
 
         cc = run_in_component_init(f)
@@ -179,7 +189,7 @@ class ClockClassTestCase(unittest.TestCase):
             cc.cycles_to_ns_from_origin(2**63)
 
     def test_create_uuid(self):
-        def f(comp_self):
+        def f(comp_self: bt2._UserSinkComponent):
             return comp_self._create_clock_class(
                 uuid=uuid.UUID("b43372c32ef0be28444dfc1c5cdafd33")
             )
@@ -188,13 +198,13 @@ class ClockClassTestCase(unittest.TestCase):
         self.assertEqual(cc.uuid, uuid.UUID("b43372c32ef0be28444dfc1c5cdafd33"))
 
     def test_create_invalid_uuid(self):
-        def f(comp_self):
-            return comp_self._create_clock_class(uuid=23)
+        def f(comp_self: bt2._UserSinkComponent):
+            return comp_self._create_clock_class(uuid=23)  # type: ignore
 
         self.assertRaisesInComponentInit(TypeError, f)
 
     def test_create_user_attributes(self):
-        def f(comp_self):
+        def f(comp_self: bt2._UserSinkComponent):
             return comp_self._create_clock_class(user_attributes={"salut": 23})
 
         cc = run_in_component_init(f)
@@ -207,21 +217,21 @@ class ClockClassTestCase(unittest.TestCase):
         self.assertIs(type(cc.user_attributes), bt2._MapValueConst)
 
     def test_create_invalid_user_attributes(self):
-        def f(comp_self):
-            return comp_self._create_clock_class(user_attributes=object())
+        def f(comp_self: bt2._UserSinkComponent):
+            return comp_self._create_clock_class(user_attributes=object())  # type: ignore
 
         self.assertRaisesInComponentInit(TypeError, f)
 
     def test_create_invalid_user_attributes_value_type(self):
-        def f(comp_self):
-            return comp_self._create_clock_class(user_attributes=23)
+        def f(comp_self: bt2._UserSinkComponent):
+            return comp_self._create_clock_class(user_attributes=23)  # type: ignore
 
         self.assertRaisesInComponentInit(TypeError, f)
 
 
 class ClockSnapshotTestCase(unittest.TestCase):
     def setUp(self):
-        def f(comp_self):
+        def f(comp_self: bt2._UserSinkComponent):
             cc = comp_self._create_clock_class(
                 1000, "my_cc", offset=bt2.ClockClassOffset(45, 354)
             )
@@ -239,7 +249,11 @@ class ClockSnapshotTestCase(unittest.TestCase):
         self._cc = _cc
 
         class MyIter(bt2._UserMessageIterator):
-            def __init__(self, config, self_port_output):
+            def __init__(
+                self,
+                config: bt2._MessageIteratorConfiguration,
+                self_port_output: bt2._UserComponentOutputPort,
+            ):
                 self._at = 0
 
             def __next__(self):
@@ -258,7 +272,12 @@ class ClockSnapshotTestCase(unittest.TestCase):
                 return notif
 
         class MySrc(bt2._UserSourceComponent, message_iterator_class=MyIter):
-            def __init__(self, config, params, obj):
+            def __init__(
+                self,
+                config: bt2._UserSourceComponentConfiguration,
+                params: bt2._MapValueConst,
+                obj: object,
+            ):
                 self._add_output_port("out")
 
         self._graph = bt2.Graph()
@@ -269,8 +288,10 @@ class ClockSnapshotTestCase(unittest.TestCase):
 
         for i, msg in enumerate(self._msg_iter):
             if i == 1:
+                assert type(msg) is bt2._EventMessageConst
                 self._msg = msg
             elif i == 2:
+                assert type(msg) is bt2._EventMessageConst
                 self._msg_clock_overflow = msg
                 break
 

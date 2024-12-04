@@ -4,7 +4,6 @@
 #
 
 import typing
-import collections.abc
 
 import bt2
 
@@ -240,6 +239,9 @@ def get_const_event_message():
         if type(m) is bt2._EventMessageConst:
             return m
 
+    # We should not get here
+    raise RuntimeError("No `bt2._EventMessageConst` found")
+
 
 # Proxy sink component class.
 #
@@ -271,7 +273,7 @@ class TestProxySink(bt2._UserSinkComponent):
 # the output port message iterator's user.
 #
 # This message iterator cannot seek.
-class TestOutputPortMessageIterator(collections.abc.Iterator):
+class TestOutputPortMessageIterator(typing.Iterator[bt2._MessageConst]):
     def __init__(self, graph, output_port):
         self._graph = graph
         self._msg_list = [None]
