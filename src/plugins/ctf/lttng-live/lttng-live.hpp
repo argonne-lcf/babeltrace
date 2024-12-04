@@ -22,7 +22,9 @@
 #include "plugins/common/muxing/muxing.hpp"
 
 #include "../common/src/metadata/metadata-stream-parser-utils.hpp"
+#include "../common/src/metadata/metadata-stream-parser.hpp"
 #include "../common/src/msg-iter.hpp"
+#include "lttng-viewer-abi.hpp"
 #include "viewer-connection.hpp"
 
 /*
@@ -184,9 +186,14 @@ struct lttng_live_metadata
         return _mMetadataStreamParser->metadataStreamUuid();
     }
 
-    void parseSection(const bt2c::ConstBytes data)
+    void parseSection(const bt2c::ConstBytes data, const int32_t minor)
     {
         if (!_mMetadataStreamParser) {
+            /* Some sanity check */
+            BT_ASSERT((ctf::src::getMetadataStreamMajorVersion(data) ==
+                           ctf::src::MetadataStreamMajorVersion::V1 ||
+                       minor >= LTTNG_LIVE_MINOR_15));
+
             _mMetadataStreamParser =
                 ctf::src::createMetadataStreamParser(data, _mSelfComp, {}, logger);
         }
@@ -282,6 +289,8 @@ struct lttng_live_session
     std::string hostname;
 
     std::string session_name;
+
+    lttng_live_trace_format traceFmt;
 
     uint64_t id = 0;
 
@@ -429,6 +438,11 @@ lttng_live_component_init(bt_self_component_source *self_comp,
                           bt_self_component_source_configuration *config, const bt_value *params,
                           void *init_method_data);
 
+bt_component_class_get_supported_mip_versions_method_status
+lttng_live_get_supported_mip_versions(bt_self_component_class_source *selfCompClsSrc,
+                                      const bt_value *params, void *data, bt_logging_level logLevel,
+                                      bt_integer_range_set_unsigned *supportedVersions);
+
 bt_component_class_query_method_status lttng_live_query(bt_self_component_class_source *comp_class,
                                                         bt_private_query_executor *priv_query_exec,
                                                         const char *object, const bt_value *params,
@@ -459,7 +473,8 @@ lttng_live_session_borrow_or_create_trace_by_id(struct lttng_live_session *sessi
                                                 uint64_t trace_id);
 
 int lttng_live_add_session(struct lttng_live_msg_iter *lttng_live_msg_iter, uint64_t session_id,
-                           const char *hostname, const char *session_name);
+                           std::string hostname, std::string session_name,
+                           lttng_live_trace_format traceFmt);
 
 /*
  * lttng_live_get_one_metadata_packet() asks the Relay Daemon for new metadata.

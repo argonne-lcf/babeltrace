@@ -157,7 +157,7 @@ get_cli_output_with_lttng_live_server() {
 	# Split argument string by spaces into an array.
 	IFS=' ' read -ra cli_args <<< "$cli_args"
 
-	if ! bt_cli "$cli_stdout_file" "$cli_stderr_file" "${cli_args[@]}"; then
+	if ! bt_cli "$cli_stdout_file" "$cli_stderr_file" --allowed-mip-versions=0 "${cli_args[@]}"; then
 		# CLI failed: cancel everything else
 		if [[ $kill_server_on_cli_failure == true ]]; then
 			kill_lttng_live_server "$server_pid_file"

@@ -57,6 +57,17 @@ compcls:source.ctf.lttng-live component. This is because the LTTng live
 protocol accepts at most one client per tracing session per LTTng relay
 daemon.
 
+As of this version, a compcls:source.ctf.lttng-live component can
+connect to an LTTng relay daemon using the LTTng{nbsp}2.4 or
+LTTng{nbsp}2.15 protocol. The latter is required for
+https://diamon.org/ctf/[CTF{nbsp}2] support.
+
+The "get supported MIP versions" method of compcls:source.ctf.lttng-live
+always reports to support MIP versions{nbsp}0 and{nbsp}1. If you attempt
+to make a compcls:source.ctf.lttng-live component read a CTF{nbsp}2
+recording session within a trace processing graph configured with
+MIP&nbsp;0, then the message iterator will fail at initialization or
+"next" method call time.
 
 == INITIALIZATION PARAMETERS
 
@@ -181,6 +192,14 @@ This is not necessarily the relay daemon's hostname.
 qres:timer-us vtype:[unsigned integer]::
     Tracing session's configured live timer's period (µs)
     (see man:lttng-create(1)).
+
+qres:trace-format vtype:[string]::
+    Format of the trace(s) of the tracing session amongst:
++
+--
+`ctf-1.8`:: https://diamon.org/ctf/v1.8.3/[CTF 1.8]
+`ctf-2.0`:: https://diamon.org/ctf/[CTF 2.0]
+--
 
 qres:url vtype:[string]::
     URL to use as the first element of the param:inputs parameter to

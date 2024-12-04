@@ -53,6 +53,8 @@ BT_PLUGIN_SOURCE_COMPONENT_CLASS_DESCRIPTION_WITH_ID(
     auto, lttng_live, "Connect to an LTTng relay daemon and receive CTF streams.");
 BT_PLUGIN_SOURCE_COMPONENT_CLASS_HELP_WITH_ID(
     auto, lttng_live, "See the babeltrace2-source.ctf.lttng-live(7) manual page.");
+BT_PLUGIN_SOURCE_COMPONENT_CLASS_GET_SUPPORTED_MIP_VERSIONS_METHOD_WITH_ID(
+    auto, lttng_live, lttng_live_get_supported_mip_versions);
 BT_PLUGIN_SOURCE_COMPONENT_CLASS_INITIALIZE_METHOD_WITH_ID(auto, lttng_live,
                                                            lttng_live_component_init);
 BT_PLUGIN_SOURCE_COMPONENT_CLASS_QUERY_METHOD_WITH_ID(auto, lttng_live, lttng_live_query);

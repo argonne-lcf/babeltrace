@@ -11,6 +11,7 @@
 
 #include <babeltrace2/babeltrace.h>
 
+#include "common/assert.h"
 #include "common/common.h"
 #include "compat/endian.h" /* IWYU pragma: keep  */
 #include "cpp-common/bt2s/make-unique.hpp"
@@ -267,7 +268,7 @@ lttng_live_handshake(struct live_viewer_connection *viewer_connection)
 
     BT_CPPLOGD_SPEC(viewer_connection->logger,
                     "Handshaking with the relay daemon: cmd={}, major-version={}, minor-version={}",
-                    LTTNG_VIEWER_CONNECT, LTTNG_LIVE_MAJOR, LTTNG_LIVE_MINOR);
+                    LTTNG_VIEWER_CONNECT, LTTNG_LIVE_MAJOR, LTTNG_LIVE_MINOR_15);
 
     cmd.cmd = htobe32(LTTNG_VIEWER_CONNECT);
     cmd.data_size = htobe64((uint64_t) sizeof(connect));
@@ -275,7 +276,7 @@ lttng_live_handshake(struct live_viewer_connection *viewer_connection)
 
     connect.viewer_session_id = -1ULL; /* will be set on recv */
     connect.major = htobe32(LTTNG_LIVE_MAJOR);
-    connect.minor = htobe32(LTTNG_LIVE_MINOR);
+    connect.minor = htobe32(LTTNG_LIVE_MINOR_15);
     connect.type = htobe32(LTTNG_VIEWER_CLIENT_COMMAND);
 
     /*
@@ -309,10 +310,10 @@ lttng_live_handshake(struct live_viewer_connection *viewer_connection)
         return LTTNG_LIVE_VIEWER_STATUS_ERROR;
     }
     /* Use the smallest protocol version implemented. */
-    if (LTTNG_LIVE_MINOR > be32toh(connect.minor)) {
+    if (LTTNG_LIVE_MINOR_15 > be32toh(connect.minor)) {
         viewer_connection->minor = be32toh(connect.minor);
     } else {
-        viewer_connection->minor = LTTNG_LIVE_MINOR;
+        viewer_connection->minor = LTTNG_LIVE_MINOR_15;
     }
     viewer_connection->major = LTTNG_LIVE_MAJOR;
 
@@ -383,9 +384,75 @@ lttng_live_connect_viewer(struct live_viewer_connection *viewer_connection)
     return LTTNG_LIVE_VIEWER_STATUS_OK;
 }
 
-static int list_update_session(const bt2::ArrayValue results,
-                               const struct lttng_viewer_session *session, bool *_found,
-                               struct live_viewer_connection *viewer_connection)
+union LttngViewerSession
+{
+    lttng_viewer_session_v2_4 v2_4;
+    lttng_viewer_session_v2_15 v2_15;
+
+    const lttng_viewer_session_common& common() const noexcept
+    {
+        return reinterpret_cast<const lttng_viewer_session_common&>(*this);
+    }
+
+    uint64_t id() const noexcept
+    {
+        return be64toh(this->common().id);
+    }
+
+    uint32_t liveTimer() const noexcept
+    {
+        return be32toh(this->common().live_timer);
+    }
+
+    uint32_t clients() const noexcept
+    {
+        return be32toh(this->common().clients);
+    }
+
+    uint32_t streams() const noexcept
+    {
+        return be32toh(this->common().streams);
+    }
+
+    std::string hostname(const live_viewer_connection& viewerConn) const noexcept
+    {
+        if (viewerConn.minor < LTTNG_LIVE_MINOR_15) {
+            /* Null-terminated */
+            return v2_4.hostname;
+        } else {
+            /*
+             * Hostname immediately follows the fixed-length part of the
+             * structure.
+             */
+            return {reinterpret_cast<const char *>(&v2_15) + sizeof(v2_15),
+                    be32toh(v2_15.hostname_len)};
+        }
+    }
+
+    std::string sessionName(const live_viewer_connection& viewerConn) const noexcept
+    {
+        if (viewerConn.minor < LTTNG_LIVE_MINOR_15) {
+            /* Null-terminated */
+            return v2_4.session_name;
+        } else {
+            /* Session name immediately follows the hostname */
+            return {reinterpret_cast<const char *>(&v2_15) + sizeof(v2_15) +
+                        be32toh(v2_15.hostname_len),
+                    be32toh(v2_15.session_name_len)};
+        }
+    }
+
+    lttng_live_trace_format traceFormat(const live_viewer_connection& viewerConn) const noexcept
+    {
+        /* Always CTF 1.8 before LTTng 2.15 */
+        return (viewerConn.minor < LTTNG_LIVE_MINOR_15) ?
+                   LTTNG_LIVE_TRACE_FORMAT_CTF_V1_8 :
+                   static_cast<lttng_live_trace_format>(be32toh(v2_15.trace_format));
+    }
+};
+
+static int list_update_session(const bt2::ArrayValue results, const LttngViewerSession& session,
+                               bool *_found, struct live_viewer_connection *viewer_connection)
 {
     bool found = false;
 
@@ -410,10 +477,10 @@ static int list_update_session(const bt2::ArrayValue results,
         const auto hostname_str = hostnameVal->asString().value();
         const auto session_name_str = sessionNameVal->asString().value();
 
-        if (strcmp(session->hostname, hostname_str) == 0 &&
-            strcmp(session->session_name, session_name_str) == 0) {
-            uint32_t streams = be32toh(session->streams);
-            uint32_t clients = be32toh(session->clients);
+        if (session.hostname(*viewer_connection) == hostname_str &&
+            session.sessionName(*viewer_connection) == session_name_str) {
+            uint32_t streams = session.streams();
+            uint32_t clients = session.clients();
 
             found = true;
 
@@ -456,7 +523,7 @@ static int list_update_session(const bt2::ArrayValue results,
 }
 
 static int list_append_session(const bt2::ArrayValue results, const std::string& base_url,
-                               const struct lttng_viewer_session *session,
+                               const LttngViewerSession& session,
                                struct live_viewer_connection *viewer_connection)
 {
     int ret = 0;
@@ -482,27 +549,27 @@ static int list_append_session(const bt2::ArrayValue results, const std::string&
      * key = "url",
      * value = <string>,
      */
-    map->insert("url",
-                fmt::format("{}/host/{}/{}", base_url, session->hostname, session->session_name));
+    map->insert("url", fmt::format("{}/host/{}/{}", base_url, session.hostname(*viewer_connection),
+                                   session.sessionName(*viewer_connection)));
 
     /*
      * key = "target-hostname",
      * value = <string>,
      */
-    map->insert("target-hostname", session->hostname);
+    map->insert("target-hostname", session.hostname(*viewer_connection));
 
     /*
      * key = "session-name",
      * value = <string>,
      */
-    map->insert("session-name", session->session_name);
+    map->insert("session-name", session.sessionName(*viewer_connection));
 
     /*
      * key = "timer-us",
      * value = <integer>,
      */
     {
-        uint32_t live_timer = be32toh(session->live_timer);
+        uint32_t live_timer = session.liveTimer();
 
         map->insert("timer-us", (uint64_t) live_timer);
     }
@@ -512,7 +579,7 @@ static int list_append_session(const bt2::ArrayValue results, const std::string&
      * value = <integer>,
      */
     {
-        uint32_t streams = be32toh(session->streams);
+        uint32_t streams = session.streams();
 
         map->insert("stream-count", (uint64_t) streams);
     }
@@ -522,11 +589,19 @@ static int list_append_session(const bt2::ArrayValue results, const std::string&
      * value = <integer>,
      */
     {
-        uint32_t clients = be32toh(session->clients);
+        uint32_t clients = session.clients();
 
         map->insert("client-count", (uint64_t) clients);
     }
 
+    /*
+     * key = "trace-format",
+     * value = <string>,
+     */
+    map->insert("trace-format",
+                session.traceFormat(*viewer_connection) == LTTNG_LIVE_TRACE_FORMAT_CTF_V1_8 ?
+                    "ctf-1.8" :
+                    "ctf-2.0");
     results.append(*map);
     return 0;
 }
@@ -561,6 +636,10 @@ static int list_append_session(const bt2::ArrayValue results, const std::string&
  *         {
  *           key = "client-count",
  *           value = <integer>,
+ *         },
+ *         {
+ *           key = "trace-format",
+ *           value = <string>,
  *         },
  *       },
  *     }
@@ -601,19 +680,95 @@ live_viewer_connection_list_sessions(struct live_viewer_connection *viewer_conne
 
     sessions_count = be32toh(list.sessions_count);
     for (i = 0; i < sessions_count; i++) {
-        struct lttng_viewer_session lsession;
+        std::vector<char> recvBuf;
 
-        viewer_status = lttng_live_recv(viewer_connection, &lsession, sizeof(lsession));
+        recvBuf.resize(sizeof(LttngViewerSession) + LTTNG_VIEWER_HOST_NAME_MAX +
+                       LTTNG_VIEWER_NAME_MAX + 1024);
+        auto& lSession = reinterpret_cast<LttngViewerSession&>(*recvBuf.data());
+
+        /* Receive common part */
+        viewer_status =
+            lttng_live_recv(viewer_connection, recvBuf.data(), sizeof(lttng_viewer_session_common));
+
         if (viewer_status == LTTNG_LIVE_VIEWER_STATUS_ERROR) {
             BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(viewer_connection->logger, bt2::Error,
-                                                   "Error receiving session:");
+                                                   "Error receiving session (common part):");
         } else if (viewer_status == LTTNG_LIVE_VIEWER_STATUS_INTERRUPTED) {
             throw bt2c::TryAgain {};
         }
 
-        lsession.hostname[LTTNG_VIEWER_HOST_NAME_MAX - 1] = '\0';
-        lsession.session_name[LTTNG_VIEWER_NAME_MAX - 1] = '\0';
-        if (list_append_session(*result, viewer_connection->url, &lsession, viewer_connection)) {
+        auto at = recvBuf.data() + sizeof(lttng_viewer_session_common);
+
+        /* Receive remaining parts */
+        if (viewer_connection->minor < LTTNG_LIVE_MINOR_15) {
+            viewer_status = lttng_live_recv(viewer_connection, at,
+                                            sizeof(lttng_viewer_session_v2_4) -
+                                                sizeof(lttng_viewer_session_common));
+
+            if (viewer_status == LTTNG_LIVE_VIEWER_STATUS_ERROR) {
+                BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(
+                    viewer_connection->logger, bt2::Error,
+                    "Error receiving session (remaining part, v2.4 protocol):");
+            } else if (viewer_status == LTTNG_LIVE_VIEWER_STATUS_INTERRUPTED) {
+                throw bt2c::TryAgain {};
+            }
+
+            /* Ensure null termination */
+            lSession.v2_4.hostname[LTTNG_VIEWER_HOST_NAME_MAX - 1] = '\0';
+            lSession.v2_4.session_name[LTTNG_VIEWER_NAME_MAX - 1] = '\0';
+        } else {
+            /* Receive fixed-length part */
+            viewer_status = lttng_live_recv(viewer_connection, at,
+                                            sizeof(lttng_viewer_session_v2_15) -
+                                                sizeof(lttng_viewer_session_common));
+
+            if (viewer_status == LTTNG_LIVE_VIEWER_STATUS_ERROR) {
+                BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(
+                    viewer_connection->logger, bt2::Error,
+                    "Error receiving session (fixed-length part, v2.15 protocol):");
+            } else if (viewer_status == LTTNG_LIVE_VIEWER_STATUS_INTERRUPTED) {
+                throw bt2c::TryAgain {};
+            }
+
+            const auto traceFmt = be32toh(lSession.v2_15.trace_format);
+
+            if (traceFmt != LTTNG_LIVE_TRACE_FORMAT_CTF_V1_8 &&
+                traceFmt != LTTNG_LIVE_TRACE_FORMAT_CTF_V2_0) {
+                BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(
+                    viewer_connection->logger, bt2::Error,
+                    "Unknown trace format in session (v2.15 protocol): trace-format={}", traceFmt);
+            }
+
+            at = recvBuf.data() + sizeof(lttng_viewer_session_v2_15);
+
+            /* Receive hostname */
+            viewer_status =
+                lttng_live_recv(viewer_connection, at, be32toh(lSession.v2_15.hostname_len));
+
+            if (viewer_status == LTTNG_LIVE_VIEWER_STATUS_ERROR) {
+                BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(
+                    viewer_connection->logger, bt2::Error,
+                    "Error receiving session (hostname, v2.15 protocol):");
+            } else if (viewer_status == LTTNG_LIVE_VIEWER_STATUS_INTERRUPTED) {
+                throw bt2c::TryAgain {};
+            }
+
+            at += be32toh(lSession.v2_15.hostname_len);
+
+            /* Receive session name */
+            viewer_status =
+                lttng_live_recv(viewer_connection, at, be32toh(lSession.v2_15.session_name_len));
+
+            if (viewer_status == LTTNG_LIVE_VIEWER_STATUS_ERROR) {
+                BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(
+                    viewer_connection->logger, bt2::Error,
+                    "Error receiving session (session name, v2.15 protocol):");
+            } else if (viewer_status == LTTNG_LIVE_VIEWER_STATUS_INTERRUPTED) {
+                throw bt2c::TryAgain {};
+            }
+        }
+
+        if (list_append_session(*result, viewer_connection->url, lSession, viewer_connection)) {
             BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(viewer_connection->logger, bt2::Error,
                                                    "Error appending session");
         }
@@ -627,7 +782,6 @@ lttng_live_query_session_ids(struct lttng_live_msg_iter *lttng_live_msg_iter)
 {
     struct lttng_viewer_cmd cmd;
     struct lttng_viewer_list_sessions list;
-    struct lttng_viewer_session lsession;
     uint32_t i, sessions_count;
     uint64_t session_id;
     enum lttng_live_viewer_status status;
@@ -655,26 +809,104 @@ lttng_live_query_session_ids(struct lttng_live_msg_iter *lttng_live_msg_iter)
 
     sessions_count = be32toh(list.sessions_count);
     for (i = 0; i < sessions_count; i++) {
-        status = lttng_live_recv(viewer_connection, &lsession, sizeof(lsession));
+        std::vector<char> recvBuf;
+
+        recvBuf.resize(sizeof(LttngViewerSession) + LTTNG_VIEWER_HOST_NAME_MAX +
+                       LTTNG_VIEWER_NAME_MAX + 1024);
+        auto& lSession = reinterpret_cast<LttngViewerSession&>(*recvBuf.data());
+
+        /* Receive common part */
+        status =
+            lttng_live_recv(viewer_connection, recvBuf.data(), sizeof(lttng_viewer_session_common));
+
         if (status != LTTNG_LIVE_VIEWER_STATUS_OK) {
-            viewer_handle_recv_status(status, "session reply");
+            viewer_handle_recv_status(status, "session reply (common part)");
             return status;
         }
-        lsession.hostname[LTTNG_VIEWER_HOST_NAME_MAX - 1] = '\0';
-        lsession.session_name[LTTNG_VIEWER_NAME_MAX - 1] = '\0';
-        session_id = be64toh(lsession.id);
+
+        auto at = recvBuf.data() + sizeof(lttng_viewer_session_common);
+
+        /* Receive remaining parts */
+        if (viewer_connection->minor < LTTNG_LIVE_MINOR_15) {
+            status = lttng_live_recv(viewer_connection, at,
+                                     sizeof(lttng_viewer_session_v2_4) -
+                                         sizeof(lttng_viewer_session_common));
+
+            if (status != LTTNG_LIVE_VIEWER_STATUS_OK) {
+                viewer_handle_recv_status(status, "session reply (remaining part, v2.4 protocol)");
+                return status;
+            }
+
+            lSession.v2_4.hostname[LTTNG_VIEWER_HOST_NAME_MAX - 1] = '\0';
+            lSession.v2_4.session_name[LTTNG_VIEWER_NAME_MAX - 1] = '\0';
+        } else {
+            /* Receive fixed-length part */
+            status = lttng_live_recv(viewer_connection, at,
+                                     sizeof(lttng_viewer_session_v2_15) -
+                                         sizeof(lttng_viewer_session_common));
+
+            if (status != LTTNG_LIVE_VIEWER_STATUS_OK) {
+                viewer_handle_recv_status(status,
+                                          "session reply (fixed-length part, v2.15 protocol)");
+                return status;
+            }
+
+            const auto traceFmt = be32toh(lSession.v2_15.trace_format);
+
+            if (traceFmt != LTTNG_LIVE_TRACE_FORMAT_CTF_V1_8 &&
+                traceFmt != LTTNG_LIVE_TRACE_FORMAT_CTF_V2_0) {
+                viewer_handle_recv_status(status,
+                                          "unknown trace format in session (v2.15 protocol)");
+                return status;
+            }
+
+            at = recvBuf.data() + sizeof(lttng_viewer_session_v2_15);
+
+            /* Receive hostname */
+            status = lttng_live_recv(viewer_connection, at, be32toh(lSession.v2_15.hostname_len));
+
+            if (status != LTTNG_LIVE_VIEWER_STATUS_OK) {
+                viewer_handle_recv_status(status, "session reply (hostname, v2.15 protocol)");
+                return status;
+            }
+
+            at += be32toh(lSession.v2_15.hostname_len);
+
+            /* Receive session name */
+            status =
+                lttng_live_recv(viewer_connection, at, be32toh(lSession.v2_15.session_name_len));
+
+            if (status != LTTNG_LIVE_VIEWER_STATUS_OK) {
+                viewer_handle_recv_status(status, "session reply (session name, v2.15 protocol)");
+                return status;
+            }
+        }
+
+        session_id = lSession.id();
 
         BT_CPPLOGI_SPEC(viewer_connection->logger,
                         "Adding session to internal list: "
                         "session-id={}, hostname=\"{}\", session-name=\"{}\"",
-                        session_id, lsession.hostname, lsession.session_name);
+                        session_id, lSession.hostname(*viewer_connection),
+                        lSession.sessionName(*viewer_connection));
 
-        if ((strncmp(lsession.session_name, viewer_connection->session_name->str,
-                     LTTNG_VIEWER_NAME_MAX) == 0) &&
-            (strncmp(lsession.hostname, viewer_connection->target_hostname->str,
-                     LTTNG_VIEWER_HOST_NAME_MAX) == 0)) {
-            if (lttng_live_add_session(lttng_live_msg_iter, session_id, lsession.hostname,
-                                       lsession.session_name)) {
+        if (lSession.sessionName(*viewer_connection) == viewer_connection->session_name->str &&
+            lSession.hostname(*viewer_connection) == viewer_connection->target_hostname->str) {
+            /* Check trace format compatibility */
+            if (lttng_live_msg_iter->selfComp.graphMipVersion() == 0 &&
+                lSession.traceFormat(*viewer_connection) == LTTNG_LIVE_TRACE_FORMAT_CTF_V2_0) {
+                BT_CPPLOGE_APPEND_CAUSE_SPEC(viewer_connection->logger,
+                                             "Cannot read a CTF 2 recording session under MIP 0: "
+                                             "session-id={}, hostname=\"{}\", session-name=\"{}\"",
+                                             session_id, lSession.hostname(*viewer_connection),
+                                             lSession.sessionName(*viewer_connection));
+                return LTTNG_LIVE_VIEWER_STATUS_ERROR;
+            }
+
+            if (lttng_live_add_session(lttng_live_msg_iter, session_id,
+                                       lSession.hostname(*viewer_connection),
+                                       lSession.sessionName(*viewer_connection),
+                                       lSession.traceFormat(*viewer_connection))) {
                 BT_CPPLOGE_APPEND_CAUSE_SPEC(viewer_connection->logger,
                                              "Failed to add live session");
                 return LTTNG_LIVE_VIEWER_STATUS_ERROR;

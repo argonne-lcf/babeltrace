@@ -151,7 +151,8 @@ enum lttng_live_iterator_status lttng_live_metadata_update(struct lttng_live_tra
      * new metadata to our current trace class.
      */
     BT_CPPLOGD_SPEC(metadata->logger, "Appending new metadata to the ctf_trace class");
-    metadata->parseSection(metadataBuf);
+    metadata->parseSection(metadataBuf,
+                           trace->session->lttng_live_msg_iter->viewer_connection->minor);
     if (!trace->trace) {
         const ctf::src::TraceCls *ctfTraceCls = metadata->traceCls();
         BT_ASSERT(ctfTraceCls);

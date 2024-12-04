@@ -202,15 +202,39 @@ enum lttng_viewer_create_session_return_code
     LTTNG_VIEWER_CREATE_SESSION_ERR = 2,
 };
 
-struct lttng_viewer_session
+struct lttng_viewer_session_common
 {
     uint64_t id;
     uint32_t live_timer;
     uint32_t clients;
     uint32_t streams;
+} __attribute__((__packed__));
+
+struct lttng_viewer_session_v2_4
+{
+    lttng_viewer_session_common common;
+
     char hostname[LTTNG_VIEWER_HOST_NAME_MAX];
     char session_name[LTTNG_VIEWER_NAME_MAX];
 } __attribute__((__packed__));
+
+struct lttng_viewer_session_v2_15
+{
+    lttng_viewer_session_common common;
+
+    uint32_t hostname_len;
+    uint32_t session_name_len;
+    uint32_t trace_format;
+
+    /* Hostname goes here (length: `hostname_len`) */
+    /* Session name goes here (length: `session_name_len`) */
+} __attribute__((__packed__));
+
+enum lttng_live_trace_format
+{
+    LTTNG_LIVE_TRACE_FORMAT_CTF_V1_8 = 0,
+    LTTNG_LIVE_TRACE_FORMAT_CTF_V2_0 = 1,
+};
 
 struct lttng_viewer_stream
 {

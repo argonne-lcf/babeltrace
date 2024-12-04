@@ -107,7 +107,8 @@ lttng_live_session_borrow_or_create_trace_by_id(struct lttng_live_session *sessi
 }
 
 int lttng_live_add_session(struct lttng_live_msg_iter *lttng_live_msg_iter, uint64_t session_id,
-                           const char *hostname, const char *session_name)
+                           std::string hostname, std::string session_name,
+                           lttng_live_trace_format traceFmt)
 {
     BT_CPPLOGD_SPEC(lttng_live_msg_iter->logger,
                     "Adding live session: "
@@ -120,8 +121,9 @@ int lttng_live_add_session(struct lttng_live_msg_iter *lttng_live_msg_iter, uint
     session->id = session_id;
     session->lttng_live_msg_iter = lttng_live_msg_iter;
     session->new_streams_needed = true;
-    session->hostname = hostname;
-    session->session_name = session_name;
+    session->hostname = std::move(hostname);
+    session->session_name = std::move(session_name);
+    session->traceFmt = traceFmt;
 
     lttng_live_msg_iter->sessions.emplace_back(std::move(session));
 
@@ -1813,4 +1815,13 @@ lttng_live_component_init(bt_self_component_source *self_comp_src,
     } catch (const bt2::Error&) {
         return BT_COMPONENT_CLASS_INITIALIZE_METHOD_STATUS_ERROR;
     }
+}
+
+bt_component_class_get_supported_mip_versions_method_status
+lttng_live_get_supported_mip_versions(bt_self_component_class_source *, const bt_value *, void *,
+                                      bt_logging_level,
+                                      bt_integer_range_set_unsigned *supportedVersionsRaw)
+{
+    bt2::wrap(supportedVersionsRaw).addRange(0, 1);
+    return BT_COMPONENT_CLASS_GET_SUPPORTED_MIP_VERSIONS_METHOD_STATUS_OK;
 }

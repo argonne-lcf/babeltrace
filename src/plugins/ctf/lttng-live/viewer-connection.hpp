@@ -22,8 +22,8 @@
 
 #define LTTNG_DEFAULT_NETWORK_VIEWER_PORT 5344
 
-#define LTTNG_LIVE_MAJOR 2
-#define LTTNG_LIVE_MINOR 4
+#define LTTNG_LIVE_MAJOR    2
+#define LTTNG_LIVE_MINOR_15 15
 
 enum lttng_live_viewer_status
 {
