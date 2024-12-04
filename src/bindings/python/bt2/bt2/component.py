@@ -819,7 +819,7 @@ class _UserComponent(metaclass=_UserComponentType):
         user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
         description: typing.Optional[str] = None,
         precision: typing.Optional[int] = None,
-        offset: typing.Optional[int] = None,
+        offset: typing.Optional[bt2_clock_class.ClockClassOffset] = None,
         origin_is_unix_epoch: bool = True,
         uuid: typing.Optional[uuidp.UUID] = None,
     ) -> bt2_clock_class._ClockClass:
