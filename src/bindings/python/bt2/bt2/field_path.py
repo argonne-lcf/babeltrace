@@ -58,13 +58,7 @@ class _FieldPathConst(bt2_object._SharedObject, collections.abc.Iterable):
 
     def __iter__(
         self,
-    ) -> typing.Iterator[
-        typing.Union[
-            _IndexFieldPathItem,
-            _CurrentArrayElementFieldPathItem,
-            _CurrentOptionContentFieldPathItem,
-        ]
-    ]:
+    ) -> typing.Iterator[_FieldPathItem]:
         for idx in range(len(self)):
             item_ptr = native_bt.field_path_borrow_item_by_index_const(self._ptr, idx)
             item_type = native_bt.field_path_item_get_type(item_ptr)
