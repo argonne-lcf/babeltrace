@@ -67,7 +67,7 @@ class Graph(bt2_object._SharedObject):
         name: str,
         params: bt2_component._ComponentParams = None,
         obj: object = None,
-        logging_level: int = bt2_logging.LoggingLevel.NONE,
+        logging_level: bt2_logging.LoggingLevel = bt2_logging.LoggingLevel.NONE,
     ) -> bt2_component._GenericSourceComponentConst:
         ...
 
@@ -81,7 +81,7 @@ class Graph(bt2_object._SharedObject):
         name: str,
         params: bt2_component._ComponentParams = None,
         obj: object = None,
-        logging_level: int = bt2_logging.LoggingLevel.NONE,
+        logging_level: bt2_logging.LoggingLevel = bt2_logging.LoggingLevel.NONE,
     ) -> bt2_component._GenericFilterComponentConst:
         ...
 
@@ -95,7 +95,7 @@ class Graph(bt2_object._SharedObject):
         name: str,
         params: bt2_component._ComponentParams = None,
         obj: object = None,
-        logging_level: int = bt2_logging.LoggingLevel.NONE,
+        logging_level: bt2_logging.LoggingLevel = bt2_logging.LoggingLevel.NONE,
     ) -> bt2_component._GenericSinkComponentConst:
         ...
 
