@@ -171,7 +171,7 @@ class _ComponentPorts(typing.Mapping[str, _PortPyCls]):
         assert count >= 0
         return count
 
-    def __iter__(self) -> _PortIterator:
+    def __iter__(self) -> typing.Iterator[str]:
         return _PortIterator(self)
 
 
@@ -258,7 +258,7 @@ class _GenericSourceComponentConst(bt2_object._SharedObject, _SourceComponentCon
         native_bt.component_source_put_ref(ptr)
 
     @property
-    def output_ports(self) -> _ComponentPorts[bt2_port._OutputPortConst]:
+    def output_ports(self) -> typing.Mapping[str, bt2_port._OutputPortConst]:
         return _ComponentPorts(
             self._ptr,
             native_bt.component_source_borrow_output_port_by_name_const,
@@ -280,7 +280,7 @@ class _GenericFilterComponentConst(bt2_object._SharedObject, _FilterComponentCon
         native_bt.component_filter_put_ref(ptr)
 
     @property
-    def output_ports(self) -> _ComponentPorts[bt2_port._OutputPortConst]:
+    def output_ports(self) -> typing.Mapping[str, bt2_port._OutputPortConst]:
         return _ComponentPorts(
             self._ptr,
             native_bt.component_filter_borrow_output_port_by_name_const,
@@ -290,7 +290,7 @@ class _GenericFilterComponentConst(bt2_object._SharedObject, _FilterComponentCon
         )
 
     @property
-    def input_ports(self) -> _ComponentPorts[bt2_port._InputPortConst]:
+    def input_ports(self) -> typing.Mapping[str, bt2_port._InputPortConst]:
         return _ComponentPorts(
             self._ptr,
             native_bt.component_filter_borrow_input_port_by_name_const,
@@ -312,7 +312,7 @@ class _GenericSinkComponentConst(bt2_object._SharedObject, _SinkComponentConst):
         native_bt.component_sink_put_ref(ptr)
 
     @property
-    def input_ports(self) -> _ComponentPorts[bt2_port._InputPortConst]:
+    def input_ports(self) -> typing.Mapping[str, bt2_port._InputPortConst]:
         return _ComponentPorts(
             self._ptr,
             native_bt.component_sink_borrow_input_port_by_name_const,
@@ -867,7 +867,7 @@ class _UserSourceComponent(_UserComponent, _SourceComponentConst):
     _config_pycls = _UserSourceComponentConfiguration
 
     @property
-    def _output_ports(self) -> _ComponentPorts[bt2_port._UserComponentOutputPort]:
+    def _output_ports(self) -> typing.Mapping[str, bt2_port._UserComponentOutputPort]:
         def get_output_port_count(self_ptr):
             return native_bt.component_source_get_output_port_count(
                 self._bt_as_not_self_specific_component_ptr(self_ptr)
@@ -914,7 +914,7 @@ class _UserFilterComponent(_UserComponent, _FilterComponentConst):
     _config_pycls = _UserFilterComponentConfiguration
 
     @property
-    def _output_ports(self) -> _ComponentPorts[bt2_port._UserComponentOutputPort]:
+    def _output_ports(self) -> typing.Mapping[str, bt2_port._UserComponentOutputPort]:
         def get_output_port_count(self_ptr):
             return native_bt.component_filter_get_output_port_count(
                 self._bt_as_not_self_specific_component_ptr(self_ptr)
@@ -929,7 +929,7 @@ class _UserFilterComponent(_UserComponent, _FilterComponentConst):
         )
 
     @property
-    def _input_ports(self) -> _ComponentPorts[bt2_port._UserComponentInputPort]:
+    def _input_ports(self) -> typing.Mapping[str, bt2_port._UserComponentInputPort]:
         def get_input_port_count(self_ptr):
             return native_bt.component_filter_get_input_port_count(
                 self._bt_as_not_self_specific_component_ptr(self_ptr)
@@ -1004,7 +1004,7 @@ class _UserSinkComponent(_UserComponent, _SinkComponentConst):
         pass
 
     @property
-    def _input_ports(self) -> _ComponentPorts[bt2_port._UserComponentInputPort]:
+    def _input_ports(self) -> typing.Mapping[str, bt2_port._UserComponentInputPort]:
         def get_input_port_count(self_ptr):
             return native_bt.component_sink_get_input_port_count(
                 self._bt_as_not_self_specific_component_ptr(self_ptr)

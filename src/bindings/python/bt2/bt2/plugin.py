@@ -168,15 +168,21 @@ class _Plugin(bt2_object._SharedObject):
         return _PluginVersion(major, minor, patch, extra)
 
     @property
-    def source_component_classes(self) -> _PluginSourceComponentClasses:
+    def source_component_classes(
+        self,
+    ) -> typing.Mapping[str, bt2_component._SourceComponentClassConst]:
         return _PluginSourceComponentClasses(self)
 
     @property
-    def filter_component_classes(self) -> _PluginFilterComponentClasses:
+    def filter_component_classes(
+        self,
+    ) -> typing.Mapping[str, bt2_component._FilterComponentClassConst]:
         return _PluginFilterComponentClasses(self)
 
     @property
-    def sink_component_classes(self) -> _PluginSinkComponentClasses:
+    def sink_component_classes(
+        self,
+    ) -> typing.Mapping[str, bt2_component._SinkComponentClassConst]:
         return _PluginSinkComponentClasses(self)
 
 
