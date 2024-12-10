@@ -208,7 +208,7 @@ class _StreamClass(bt2_user_attrs._WithUserAttrs, _StreamClassConst):
         self,
         id: typing.Optional[int] = None,
         name: typing.Optional[str] = None,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
         log_level: typing.Optional[bt2_event_class.EventClassLogLevel] = None,
         emf_uri: typing.Optional[str] = None,
         specific_context_field_class: typing.Optional[

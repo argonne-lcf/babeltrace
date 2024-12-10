@@ -151,7 +151,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
     def __call__(
         self,
         name: typing.Optional[str] = None,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
         uuid: typing.Optional[uuidp.UUID] = None,
         environment: typing.Optional[
             typing.Mapping[str, typing.Union[str, int]]
@@ -183,7 +183,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         self,
         id: typing.Optional[int] = None,
         name: typing.Optional[str] = None,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
         packet_context_field_class: typing.Optional[
             bt2_field_class._StructureFieldClass
         ] = None,
@@ -291,7 +291,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
     def _check_and_wrap_field_class(
         ptr,
         type_name: str,
-        user_attributes: typing.Optional[bt2_value._MapValueConst],
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue],
         expected_type: typing.Type[_FieldClassT],
     ) -> _FieldClassT:
         if ptr is None:
@@ -308,7 +308,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         return fc
 
     def create_bool_field_class(
-        self, user_attributes: typing.Optional[bt2_value._MapValueConst] = None
+        self, user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None
     ) -> bt2_field_class._BoolFieldClass:
         return self._check_and_wrap_field_class(
             native_bt.field_class_bool_create(self._ptr),
@@ -320,7 +320,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
     def create_bit_array_field_class(
         self,
         length: int,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ) -> bt2_field_class._BitArrayFieldClass:
         bt2_utils._check_uint64(length)
 
@@ -365,7 +365,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         preferred_display_base: typing.Optional[
             bt2_field_class.IntegerDisplayBase
         ] = None,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ) -> bt2_field_class._SignedIntegerFieldClass:
         return self._create_integer_field_class(
             native_bt.field_class_integer_signed_create,
@@ -382,7 +382,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         preferred_display_base: typing.Optional[
             bt2_field_class.IntegerDisplayBase
         ] = None,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ) -> bt2_field_class._UnsignedIntegerFieldClass:
         return self._create_integer_field_class(
             native_bt.field_class_integer_unsigned_create,
@@ -399,7 +399,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         preferred_display_base: typing.Optional[
             bt2_field_class.IntegerDisplayBase
         ] = None,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
         mappings: typing.Optional[
             typing.Iterable[
                 typing.Tuple[str, bt2_integer_range_set._SignedIntegerRangeSetConst]
@@ -426,7 +426,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         preferred_display_base: typing.Optional[
             bt2_field_class.IntegerDisplayBase
         ] = None,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
         mappings: typing.Optional[
             typing.Iterable[
                 typing.Tuple[str, bt2_integer_range_set._UnsignedIntegerRangeSetConst]
@@ -448,7 +448,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         return fc
 
     def create_single_precision_real_field_class(
-        self, user_attributes: typing.Optional[bt2_value._MapValueConst] = None
+        self, user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None
     ) -> bt2_field_class._SinglePrecisionRealFieldClass:
         return self._check_and_wrap_field_class(
             native_bt.field_class_real_single_precision_create(self._ptr),
@@ -458,7 +458,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         )
 
     def create_double_precision_real_field_class(
-        self, user_attributes: typing.Optional[bt2_value._MapValueConst] = None
+        self, user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None
     ) -> bt2_field_class._DoublePrecisionRealFieldClass:
         return self._check_and_wrap_field_class(
             native_bt.field_class_real_double_precision_create(self._ptr),
@@ -469,7 +469,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
 
     def create_structure_field_class(
         self,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
         members: typing.Optional[
             typing.Iterable[
                 typing.Union[
@@ -496,7 +496,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         return fc
 
     def create_string_field_class(
-        self, user_attributes: typing.Optional[bt2_value._MapValueConst] = None
+        self, user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None
     ) -> bt2_field_class._StringFieldClass:
         return self._check_and_wrap_field_class(
             native_bt.field_class_string_create(self._ptr),
@@ -509,7 +509,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         self,
         elem_fc: bt2_field_class._FieldClass,
         length: int,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ) -> bt2_field_class._StaticArrayFieldClass:
         bt2_utils._check_type(elem_fc, bt2_field_class._FieldClass)
         bt2_utils._check_uint64(length)
@@ -525,7 +525,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         self,
         elem_fc: bt2_field_class._FieldClass,
         length_fc: None = None,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ) -> bt2_field_class._DynamicArrayFieldClass:
         ...
 
@@ -534,7 +534,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         self,
         elem_fc: bt2_field_class._FieldClass,
         length_fc: bt2_field_class._UnsignedIntegerFieldClass,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ) -> bt2_field_class._DynamicArrayWithLengthFieldFieldClass:
         ...
 
@@ -542,7 +542,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         self,
         elem_fc: bt2_field_class._FieldClass,
         length_fc: typing.Optional[bt2_field_class._UnsignedIntegerFieldClass] = None,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ) -> bt2_field_class._DynamicArrayFieldClass:
         bt2_utils._check_type(elem_fc, bt2_field_class._FieldClass)
 
@@ -566,7 +566,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
     def create_option_field_class_without_selector_field(
         self,
         content_fc: bt2_field_class._FieldClass,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ) -> bt2_field_class._OptionFieldClass:
         bt2_utils._check_type(content_fc, bt2_field_class._FieldClass)
 
@@ -592,7 +592,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         content_fc: bt2_field_class._FieldClass,
         selector_fc: bt2_field_class._FieldClass,
         selector_is_reversed: bool = False,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ) -> bt2_field_class._OptionWithBoolSelectorFieldClass:
         bt2_utils._check_type(content_fc, bt2_field_class._FieldClass)
         bt2_utils._check_bool(selector_is_reversed)
@@ -622,7 +622,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         content_fc: bt2_field_class._FieldClass,
         selector_fc: bt2_field_class._UnsignedIntegerFieldClass,
         ranges: bt2_integer_range_set._UnsignedIntegerRangeSetConst,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ) -> bt2_field_class._OptionWithUnsignedIntegerSelectorFieldClass:
         ...
 
@@ -632,7 +632,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         content_fc: bt2_field_class._FieldClass,
         selector_fc: bt2_field_class._SignedIntegerFieldClass,
         ranges: bt2_integer_range_set._SignedIntegerRangeSetConst,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ) -> bt2_field_class._OptionWithSignedIntegerSelectorFieldClass:
         ...
 
@@ -641,7 +641,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         content_fc: bt2_field_class._FieldClass,
         selector_fc: bt2_field_class._IntegerFieldClass,
         ranges: bt2_integer_range_set._IntegerRangeSetConst,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ) -> bt2_field_class._OptionWithIntegerSelectorFieldClass:
         bt2_utils._check_type(content_fc, bt2_field_class._FieldClass)
         bt2_utils._check_type(selector_fc, bt2_field_class._IntegerFieldClass)
@@ -682,7 +682,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
     def create_variant_field_class(
         self,
         selector_fc: None = None,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
         options: typing.Optional[
             typing.Iterable[
                 typing.Union[
@@ -702,7 +702,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
     def create_variant_field_class(  # noqa: F811
         self,
         selector_fc: bt2_field_class._UnsignedIntegerFieldClass,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
         options: typing.Optional[
             typing.Iterable[
                 typing.Union[
@@ -727,7 +727,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
     def create_variant_field_class(  # noqa: F811
         self,
         selector_fc: bt2_field_class._SignedIntegerFieldClass,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
         options: typing.Optional[
             typing.Iterable[
                 typing.Union[
@@ -751,7 +751,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
     def create_variant_field_class(  # noqa: F811
         self,
         selector_fc: typing.Optional[bt2_field_class._IntegerFieldClass] = None,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
         options: typing.Optional[
             typing.Iterable[
                 typing.Union[

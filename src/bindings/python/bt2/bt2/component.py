@@ -794,7 +794,7 @@ class _UserComponent(metaclass=_UserComponentType):
 
     def _create_trace_class(
         self,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
         assigns_automatic_stream_class_id: bool = True,
     ) -> bt2_trace_class._TraceClass:
         tc_ptr = native_bt.trace_class_create(
@@ -816,7 +816,7 @@ class _UserComponent(metaclass=_UserComponentType):
         self,
         frequency: typing.Optional[int] = None,
         name: typing.Optional[str] = None,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
         description: typing.Optional[str] = None,
         precision: typing.Optional[int] = None,
         offset: typing.Optional[bt2_clock_class.ClockClassOffset] = None,

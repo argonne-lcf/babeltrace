@@ -477,7 +477,7 @@ class _StructureFieldClass(_StructureFieldClassConst, _FieldClass):
         self,
         name: str,
         field_class: _FieldClass,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ):
         bt2_utils._check_str(name)
         bt2_utils._check_type(field_class, _FieldClass)
@@ -883,7 +883,7 @@ class _VariantFieldClassWithoutSelectorField(
         self,
         name: str,
         field_class: _FieldClass,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ):
         bt2_utils._check_str(name)
         bt2_utils._check_type(field_class, _FieldClass)
@@ -988,7 +988,7 @@ class _VariantFieldClassWithIntegerSelectorField(
         name: str,
         field_class: _FieldClass,
         ranges: bt2_integer_range_set._IntegerRangeSetConst,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ):
         bt2_utils._check_str(name)
         bt2_utils._check_type(field_class, _FieldClass)
@@ -1112,7 +1112,7 @@ class _VariantFieldClassWithUnsignedIntegerSelectorField(
         name: typing.Optional[str],
         field_class: _FieldClass,
         ranges: bt2_integer_range_set._UnsignedIntegerRangeSetConst,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ):
         return self._append_option(name, field_class, ranges, user_attributes)
 
@@ -1206,7 +1206,7 @@ class _VariantFieldClassWithSignedIntegerSelectorField(
         name: typing.Optional[str],
         field_class: _FieldClass,
         ranges: bt2_integer_range_set._SignedIntegerRangeSetConst,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ):
         return self._append_option(name, field_class, ranges, user_attributes)
 

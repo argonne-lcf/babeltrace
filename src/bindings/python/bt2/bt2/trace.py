@@ -224,7 +224,7 @@ class _Trace(bt2_user_attrs._WithUserAttrs, _TraceConst):
         stream_class: bt2_stream_class._StreamClass,
         id: typing.Optional[int] = None,
         name: typing.Optional[str] = None,
-        user_attributes: typing.Optional[bt2_value._MapValueConst] = None,
+        user_attributes: typing.Optional[bt2_value._ConvertibleToMapValue] = None,
     ) -> bt2_stream._Stream:
         bt2_utils._check_type(stream_class, bt2_stream_class._StreamClass)
 
