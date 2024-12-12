@@ -3927,7 +3927,7 @@ returns \c NULL.
 
 @returns
     @parblock
-    Media type of \bt_p{field_class}, or \c NULL if none.
+    Media type of \bt_p{field_class}.
 
     The returned pointer remains valid as long as \bt_p{field_class}
     isn't modified.
