@@ -7,6 +7,7 @@
 #include <cstring>
 
 #include "common/assert.h"
+#include "cpp-common/bt2/field-class.hpp"
 #include "cpp-common/bt2c/call.hpp"
 
 #include "../../metadata/json-strings.hpp"
@@ -791,6 +792,9 @@ public:
         } else {
             this->_setLibSEnumFc(fc, len);
         }
+
+        _mLastTranslatedLibFc->asInteger().fieldValueHints(
+            bt2::IntegerFieldClass::SmallFieldValueHint);
     }
 
     void visit(VarLenUIntFc& fc) override
@@ -802,6 +806,9 @@ public:
         } else {
             this->_setLibUEnumFc(fc, len);
         }
+
+        _mLastTranslatedLibFc->asInteger().fieldValueHints(
+            bt2::IntegerFieldClass::SmallFieldValueHint);
     }
 
     void visit(NullTerminatedStrFc& fc) override
