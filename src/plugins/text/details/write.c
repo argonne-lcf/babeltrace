@@ -537,6 +537,12 @@ void write_int_field_class_props(struct details_write_ctx *ctx,
 		bt_common_abort();
 	}
 
+	if (ctx->details_comp->mip_version >= 1 &&
+			bt_field_class_integer_has_field_value_hint(fc,
+				BT_FIELD_CLASS_INTEGER_FIELD_VALUE_HINT_SMALL)) {
+		g_string_append(ctx->str, ", Expect small values");
+	}
+
 	if (close) {
 		g_string_append(ctx->str, ")");
 	}
