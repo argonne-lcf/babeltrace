@@ -382,7 +382,25 @@ nlqres:weight::
     0.75
 
 nlqres:group::
-    Trace's UUID if available, otherwise the entry does not exist.
+    If the namespace `NS`, name `NAME`, and UID `UID` of the trace are
+    available, then the exact string:
++
+----
+namespace: NS, name: NAME, uid: UID
+----
++
+If the namespace of the trace is not available, but the name `NAME` and
+UID `UID` are, then the exact string:
++
+----
+name: NAME, uid: UID
+----
++
+Otherwise, the entry does not exist.
++
+NOTE: The namespace of any LTTng trace is +{lttng_ns}+. If a CTF~1.8
+trace has a UUID, then its corresponding libbabeltrace2 trace always has
+a name and a UID (the textual representation of the UUID).
 
 You can leverage this query object's nlqres:group entry to assemble many
 physical CTF traces as a single logical CTF trace (see

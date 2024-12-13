@@ -12,6 +12,7 @@
 #include <string>
 
 #include "common/assert.h"
+#include "cpp-common/bt2s/optional.hpp"
 #include "cpp-common/bt2s/string-view.hpp"
 #include "cpp-common/vendor/fmt/format.h" /* IWYU pragma: keep */
 
@@ -50,6 +51,16 @@ public:
      * Intentionally not explicit.
      */
     CStringView(const std::string& str) noexcept : _mStr {str.c_str()}
+    {
+    }
+
+    /*
+     * Builds a view of `*str` if `str` has a value.
+     *
+     * Intentionally not explicit.
+     */
+    CStringView(const bt2s::optional<std::string>& str) noexcept :
+        _mStr {str ? str->c_str() : nullptr}
     {
     }
 

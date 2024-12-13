@@ -79,12 +79,30 @@ class QuerySupportInfoTestCase(unittest.TestCase):
             result = qe.query()
             self.assertEqual(result["group"], expected_group)
 
-        do_one_query(trace_10352_1, "21cdfa5e-9a64-490a-832c-53aca6c101ba")
-        do_one_query(trace_10352_2, "21cdfa5e-9a64-490a-832c-53aca6c101ba")
-        do_one_query(trace_10352_3, "21cdfa5e-9a64-490a-832c-53aca6c101ba")
-        do_one_query(trace_10353_1, "83656eb1-b131-40e7-9666-c04ae279b58c")
-        do_one_query(trace_10353_2, "83656eb1-b131-40e7-9666-c04ae279b58c")
-        do_one_query(trace_10353_3, "83656eb1-b131-40e7-9666-c04ae279b58c")
+        do_one_query(
+            trace_10352_1,
+            "namespace: lttng.org,2009, name: , uid: 21cdfa5e-9a64-490a-832c-53aca6c101ba",
+        )
+        do_one_query(
+            trace_10352_2,
+            "namespace: lttng.org,2009, name: , uid: 21cdfa5e-9a64-490a-832c-53aca6c101ba",
+        )
+        do_one_query(
+            trace_10352_3,
+            "namespace: lttng.org,2009, name: , uid: 21cdfa5e-9a64-490a-832c-53aca6c101ba",
+        )
+        do_one_query(
+            trace_10353_1,
+            "namespace: lttng.org,2009, name: , uid: 83656eb1-b131-40e7-9666-c04ae279b58c",
+        )
+        do_one_query(
+            trace_10353_2,
+            "namespace: lttng.org,2009, name: , uid: 83656eb1-b131-40e7-9666-c04ae279b58c",
+        )
+        do_one_query(
+            trace_10353_3,
+            "namespace: lttng.org,2009, name: , uid: 83656eb1-b131-40e7-9666-c04ae279b58c",
+        )
 
 
 if __name__ == "__main__":

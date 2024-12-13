@@ -1297,32 +1297,27 @@ int ctf_fs_component_create_ctf_fs_trace(
     }
 
     if (traces.size() > 1) {
-        ctf_fs_trace *first_trace = traces[0].get();
+        const auto firstTrace = traces[0].get();
+        const bt2::IdentityView firstTraceId {firstTrace->cls()->ns(), firstTrace->cls()->name(),
+                                              firstTrace->cls()->uid()};
 
         /*
          * We have more than one trace, they must all share the same
-         * UID, verify that.
+         * identity, verify that.
          */
-        /* ⚠️ TODO: also consider namespace and name */
-        for (const ctf_fs_trace::UP& this_trace : traces) {
-            if (!this_trace->cls()->uid()) {
+        for (const ctf_fs_trace::UP& thisTrace : traces) {
+            const bt2::IdentityView thisTraceId {thisTrace->cls()->ns(), thisTrace->cls()->name(),
+                                                 thisTrace->cls()->uid()};
+
+            if (firstTraceId != thisTraceId) {
                 BT_CPPLOGE_APPEND_CAUSE_SPEC(
                     ctf_fs->logger,
-                    "Multiple traces given, but a trace does not have a UID: path={}",
-                    this_trace->path);
-                return -1;
-            }
-
-            auto& first_trace_uid = *first_trace->cls()->uid();
-            auto& this_trace_uid = *this_trace->cls()->uid();
-
-            if (first_trace_uid != this_trace_uid) {
-                BT_CPPLOGE_APPEND_CAUSE_SPEC(ctf_fs->logger,
-                                             "Multiple traces given, but UIDs don't match: "
-                                             "first-trace-uid={}, first-trace-path={}, "
-                                             "trace-uid={}, trace-path={}",
-                                             first_trace_uid, first_trace->path, this_trace_uid,
-                                             this_trace->path);
+                    "Multiple traces given, but identities don't match: "
+                    "first-trace-ns={}, first-trace-name={}, first-trace-uid={}, "
+                    "trace-ns={}, trace-name={}, trace-uid={}, trace-path={}",
+                    firstTraceId.nameSpace(), firstTraceId.name(), firstTraceId.uid(),
+                    thisTraceId.nameSpace(), thisTraceId.name(), thisTraceId.uid(),
+                    thisTrace->path);
                 return -1;
             }
         }

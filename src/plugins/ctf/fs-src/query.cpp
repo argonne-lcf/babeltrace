@@ -206,10 +206,17 @@ bt2::Value::Shared support_info_query(const bt2::ConstMapValue params, const bt2
          * We were able to parse the metadata file, so we are confident it's a
          * CTF trace.
          */
-        /* ⚠️ TODO: also consider namespace and name */
         result->insert("weight", 0.75);
-        if (parseRet.traceCls->uid()) {
-            result->insert("group", *parseRet.traceCls->uid());
+
+        const auto& name = parseRet.traceCls->name();
+        const auto& uid = parseRet.traceCls->uid();
+
+        if (name && uid) {
+            const auto& ns = parseRet.traceCls->ns();
+
+            result->insert("group",
+                           ns ? fmt::format("namespace: {}, name: {}, uid: {}", *ns, *name, *uid) :
+                                fmt::format("name: {}, uid: {}", *name, *uid));
         }
     } catch (const bt2c::NoSuchFileOrDirectoryError&) {
         /*
