@@ -1,6 +1,6 @@
 = babeltrace2-convert(1)
 :manpagetype: command
-:revdate: 14 September 2019
+:revdate: 13 December 2024
 
 
 == NAME
@@ -409,6 +409,19 @@ Example:
 $ babeltrace2 /path/to/input/trace --output-format=ctf \
               --output=my-traces
 ----
++
+As of this version, a compcls:sink.ctf.fs component generates
+https://diamon.org/ctf/[CTF~2] traces by default. To write
+https://diamon.org/ctf/v1.8.3/[CTF~1.8] traces, create an
+explicit compcls:sink.ctf.fs component
+(see <<comp-create-expl,``Create explicit components''>>) and use
+the `ctf-version="1"` initialization parameter:
++
+[role="term"]
+----
+$ babeltrace2 /path/to/input/trace --component=sink.ctf.fs \
+              --params='path="my-traces",ctf-version="1"'
+----
 
 You can combine multiple methods to create multiple implicit components.
 For example, you can trim an LTTng (CTF) trace, add debugging
@@ -570,6 +583,13 @@ component class.
 `ctf`::
     Create an implicit compcls:sink.ctf.fs component. Specify the base
     output path with the opt:--output option.
++
+As of this version, a compcls:sink.ctf.fs component generates
+https://diamon.org/ctf/[CTF~2] traces by default. To write
+https://diamon.org/ctf/v1.8.3/[CTF~1.8] traces, create an
+explicit compcls:sink.ctf.fs component
+(see <<comp-create-expl,``Create explicit components''>>) and use
+the `ctf-version="1"` initialization parameter.
 +
 See man:babeltrace2-sink.ctf.fs(7) to learn more about this component
 class.

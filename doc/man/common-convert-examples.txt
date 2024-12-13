@@ -66,13 +66,14 @@ $ babeltrace2 net://localhost/host/myhostname/my-session-name
 ----
 ====
 
-.Record LTTng live traces to the file system (as CTF traces).
+.Record LTTng live traces to the file system (as CTF~1.8 traces).
 ====
 [role="term"]
 ----
 $ babeltrace2 net://localhost/host/myhostname/my-session-name \
               --params=session-not-found-action=end \
-              --output-format=ctf --output=out-ctf-traces
+              --component=sink.ctf.fs \
+              --params='path="out-ctf-traces",ctf-version="1"'
 ----
 ====
 
