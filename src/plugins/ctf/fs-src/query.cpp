@@ -19,6 +19,7 @@
 #include "plugins/common/param-validation/param-validation.h"
 
 #include "../common/src/metadata/metadata-stream-parser-utils.hpp"
+#include "../common/src/metadata/metadata-stream-parser.hpp"
 #include "../common/src/metadata/tsdl/metadata-stream-decoder.hpp"
 #include "data-stream-file.hpp"
 #include "fs.hpp"
@@ -65,7 +66,9 @@ bt2::Value::Shared metadata_info_query(const bt2::ConstMapValue params, const bt
          * If the metadata does not already start with the plaintext metadata
          * signature, prepend it.
          */
-        if (plainText.rfind(METADATA_TEXT_SIG, 0) != 0) {
+        if (ctf::src::getMetadataStreamMajorVersion(buffer) ==
+                ctf::src::MetadataStreamMajorVersion::V1 &&
+            plainText.rfind(METADATA_TEXT_SIG, 0) != 0) {
             plainText.insert(0, std::string {METADATA_TEXT_SIG} + " */\n\n");
         }
 
