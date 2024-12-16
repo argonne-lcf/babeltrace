@@ -916,7 +916,7 @@ public:
             libStructFc->appendMember(memberCls.name(), *_mLastTranslatedLibFc);
 
             /* Set user attributes of member class, if any */
-            if (_mMipVersion >= 1 && memberCls.attrs()) {
+            if (memberCls.attrs()) {
                 (*libStructFc)[libStructFc->length() - 1].userAttributes(*memberCls.attrs());
             }
         }
@@ -1528,7 +1528,7 @@ private:
                 }
 
                 /* Set user attributes of option, if any */
-                if (_mMipVersion >= 1 && opt.attrs()) {
+                if (opt.attrs()) {
                     libVariantFc[libVariantFc.length() - 1].userAttributes(*opt.attrs());
                 }
             }
