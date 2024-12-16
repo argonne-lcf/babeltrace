@@ -15,7 +15,7 @@ _RetT = typing.TypeVar("_RetT")
 #
 # The value returned by the callable is returned by run_in_component_init.
 def run_in_component_init(
-    func: typing.Callable[[bt2._UserSinkComponent], _RetT]
+    mip_version: int, func: typing.Callable[[bt2._UserSinkComponent], _RetT]
 ) -> _RetT:
     class MySink(bt2._UserSinkComponent):
         def __init__(self, config, params, obj):
@@ -25,7 +25,7 @@ def run_in_component_init(
         def _user_consume(self):
             pass
 
-    g = bt2.Graph()
+    g = bt2.Graph(mip_version)
     res_bound = None
     g.add_component(MySink, "comp")
 
@@ -48,7 +48,7 @@ def get_default_trace_class():
     def f(comp_self: bt2._UserSinkComponent):
         return comp_self._create_trace_class()
 
-    return run_in_component_init(f)
+    return run_in_component_init(0, f)
 
 
 # Create a pair of list, one containing non-const messages and the other

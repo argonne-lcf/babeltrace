@@ -3,10 +3,12 @@
 # Copyright (C) 2019 EfficiOS Inc.
 #
 
+import typing
 import unittest
 
 from bt2 import utils as bt2_utils
 from bt2 import value as bt2_value
+from bt2 import component as bt2_component
 from bt2 import trace_class as bt2_trace_class
 from bt2 import stream_class as bt2_stream_class
 from utils import (
@@ -15,8 +17,15 @@ from utils import (
     get_const_stream_beginning_message,
 )
 
+RetT = typing.TypeVar("RetT")
+
 
 class TraceClassTestCase(unittest.TestCase):
+    def run_in_component_init(
+        self, f: typing.Callable[[bt2_component._UserSinkComponent], RetT]
+    ):
+        return run_in_component_init(0, f)
+
     def assertRaisesInComponentInit(self, expected_exc_type, user_code):
         def f(comp_self):
             try:
@@ -24,7 +33,7 @@ class TraceClassTestCase(unittest.TestCase):
             except Exception as exc:
                 return type(exc)
 
-        exc_type = run_in_component_init(f)
+        exc_type = self.run_in_component_init(f)
         self.assertIsNotNone(exc_type)
         self.assertEqual(exc_type, expected_exc_type)
 
@@ -32,7 +41,7 @@ class TraceClassTestCase(unittest.TestCase):
         def f(comp_self):
             return comp_self._create_trace_class()
 
-        tc = run_in_component_init(f)
+        tc = self.run_in_component_init(f)
 
         self.assertEqual(len(tc), 0)
         self.assertIs(type(tc), bt2_trace_class._TraceClass)
@@ -43,7 +52,7 @@ class TraceClassTestCase(unittest.TestCase):
         def f(comp_self):
             return comp_self._create_trace_class(user_attributes={"salut": 23})
 
-        tc = run_in_component_init(f)
+        tc = self.run_in_component_init(f)
         self.assertEqual(tc.user_attributes, {"salut": 23})
         self.assertIs(type(tc.user_attributes), bt2_value.MapValue)
 
@@ -76,7 +85,7 @@ class TraceClassTestCase(unittest.TestCase):
         def f(comp_self):
             return comp_self._create_trace_class(assigns_automatic_stream_class_id=True)
 
-        tc = run_in_component_init(f)
+        tc = self.run_in_component_init(f)
         self.assertTrue(tc.assigns_automatic_stream_class_id)
 
         # This should not throw.
@@ -91,7 +100,7 @@ class TraceClassTestCase(unittest.TestCase):
         def f(comp_self):
             return comp_self._create_trace_class(assigns_automatic_stream_class_id=True)
 
-        tc = run_in_component_init(f)
+        tc = self.run_in_component_init(f)
         self.assertTrue(tc.assigns_automatic_stream_class_id)
 
         with self.assertRaises(ValueError):
@@ -103,7 +112,7 @@ class TraceClassTestCase(unittest.TestCase):
                 assigns_automatic_stream_class_id=False
             )
 
-        tc = run_in_component_init(f)
+        tc = self.run_in_component_init(f)
         self.assertFalse(tc.assigns_automatic_stream_class_id)
 
         sc = tc.create_stream_class(id=28)
@@ -115,21 +124,20 @@ class TraceClassTestCase(unittest.TestCase):
                 assigns_automatic_stream_class_id=False
             )
 
-        tc = run_in_component_init(f)
+        tc = self.run_in_component_init(f)
         self.assertFalse(tc.assigns_automatic_stream_class_id)
 
         # In this mode, it is required to pass an explicit id.
         with self.assertRaises(ValueError):
             tc.create_stream_class()
 
-    @staticmethod
-    def _create_trace_class_with_some_stream_classes():
+    def _create_trace_class_with_some_stream_classes(self):
         def f(comp_self):
             return comp_self._create_trace_class(
                 assigns_automatic_stream_class_id=False
             )
 
-        tc = run_in_component_init(f)
+        tc = self.run_in_component_init(f)
         sc1 = tc.create_stream_class(id=12)
         sc2 = tc.create_stream_class(id=54)
         sc3 = tc.create_stream_class(id=2018)

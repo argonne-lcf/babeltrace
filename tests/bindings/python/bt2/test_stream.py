@@ -18,7 +18,7 @@ class StreamTestCase(unittest.TestCase):
         def f(comp_self):
             return comp_self._create_trace_class()
 
-        self._tc = run_in_component_init(f)
+        self._tc = run_in_component_init(0, f)
         self._sc = self._tc.create_stream_class(assigns_automatic_stream_id=True)
         self._tr = self._tc()
 

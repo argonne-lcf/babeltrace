@@ -19,7 +19,7 @@ class PacketTestCase(unittest.TestCase):
             tc = comp_self._create_trace_class()
             return cc, tc
 
-        clock_class, tc = run_in_component_init(create_tc_cc)
+        clock_class, tc = run_in_component_init(0, create_tc_cc)
 
         # packet context
         pc = (

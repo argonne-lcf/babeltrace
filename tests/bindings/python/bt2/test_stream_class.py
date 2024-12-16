@@ -21,7 +21,7 @@ class StreamClassTestCase(unittest.TestCase):
             cc = comp_self._create_clock_class()
             return tc, cc
 
-        self._tc, self._cc = run_in_component_init(f)
+        self._tc, self._cc = run_in_component_init(0, f)
         self._trace = self._tc()
 
     def test_create_default(self):
