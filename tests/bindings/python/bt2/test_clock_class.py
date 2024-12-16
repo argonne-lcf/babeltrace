@@ -17,6 +17,7 @@ from utils import (
     run_in_component_init,
     get_const_event_message,
 )
+from test_all_mip_versions import test_all_mip_versions
 
 
 class ClockOffsetTestCase(unittest.TestCase):
@@ -65,38 +66,85 @@ class ClockOffsetTestCase(unittest.TestCase):
 RetT = typing.TypeVar("RetT")
 
 
+@test_all_mip_versions
 class ClockClassTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # Big hack to make `_mip_version` known to static type checkers in a
+        # Python 3.4 compatible way.
+        cls._mip_version = -1
+        del cls._mip_version
+
     def run_in_component_init(self, f: typing.Callable[[bt2._UserSinkComponent], RetT]):
-        return run_in_component_init(0, f)
+        return run_in_component_init(self._mip_version, f)
 
     def assertRaisesInComponentInit(
         self,
         expected_exc_type: typing.Type[Exception],
         user_code: typing.Callable[[bt2._UserSinkComponent], RetT],
+        expected_str: typing.Optional[str] = None,
     ):
         def f(comp_self: bt2._UserSinkComponent):
             try:
                 user_code(comp_self)
             except Exception as exc:
-                return type(exc)
+                return exc
 
-        exc_type = self.run_in_component_init(f)
-        self.assertIsNotNone(exc_type)
-        self.assertEqual(exc_type, expected_exc_type)
+        exc = self.run_in_component_init(f)
+        self.assertIsNotNone(exc)
+        self.assertEqual(type(exc), expected_exc_type)
+
+        if expected_str is not None:
+            self.assertIn(expected_str, str(exc))
 
     def test_create_default(self):
-        cc = self.run_in_component_init(
-            lambda comp_self: comp_self._create_clock_class()
+        cc = run_in_component_init(
+            self._mip_version, lambda comp_self: comp_self._create_clock_class()
         )
 
         self.assertIsNone(cc.name)
         self.assertEqual(cc.frequency, 1000000000)
         self.assertIsNone(cc.description)
-        self.assertEqual(cc.precision, 0)
+
+        if self._mip_version == 0:
+            self.assertEqual(cc.precision, 0)
+        else:
+            self.assertIsNone(cc.precision)
+            self.assertIsNone(cc.accuracy)
+
         self.assertEqual(cc.offset, bt2.ClockOffset())
-        self.assertTrue(cc.origin_is_unix_epoch)
-        self.assertIsNone(cc.uuid)
+        self.assertIs(cc.origin, bt2.unix_epoch_clock_origin)
+
+        if self._mip_version == 0:
+            self.assertIsNone(cc.uuid)
+        else:
+            self.assertIsNone(cc.namespace)
+            self.assertIsNone(cc.name)
+            self.assertIsNone(cc.uid)
+
         self.assertEqual(len(cc.user_attributes), 0)
+
+    def test_create_namespace(self):
+        def f(comp_self: bt2._UserSinkComponent):
+            return comp_self._create_clock_class(namespace="the_clock")
+
+        if self._mip_version == 0:
+            self.assertRaisesInComponentInit(
+                ValueError,
+                f,
+                "Clock class namespace is only available with MIP version ≥ 1 (currently 0)",
+            )
+        else:
+            self.assertEqual(self.run_in_component_init(f).namespace, "the_clock")
+
+    def test_create_invalid_namespace(self):
+        if self._mip_version < 1:
+            self.skipTest("requires MIP >= 1")
+
+        def f(comp_self: bt2._UserSinkComponent):
+            comp_self._create_clock_class(namespace=23)  # type: ignore
+
+        self.assertRaisesInComponentInit(TypeError, f, "'int' is not a 'str' object")
 
     def test_create_name(self):
         def f(comp_self: bt2._UserSinkComponent):
@@ -110,6 +158,28 @@ class ClockClassTestCase(unittest.TestCase):
             comp_self._create_clock_class(name=23)  # type: ignore
 
         self.assertRaisesInComponentInit(TypeError, f)
+
+    def test_create_uid(self):
+        def f(comp_self: bt2._UserSinkComponent):
+            return comp_self._create_clock_class(uid="the_clock")
+
+        if self._mip_version == 0:
+            self.assertRaisesInComponentInit(
+                ValueError,
+                f,
+                "Clock class UID is only available with MIP version ≥ 1 (currently 0)",
+            )
+        else:
+            self.assertEqual(self.run_in_component_init(f).uid, "the_clock")
+
+    def test_create_invalid_uid(self):
+        if self._mip_version < 1:
+            self.skipTest("requires MIP >= 1")
+
+        def f(comp_self: bt2._UserSinkComponent):
+            comp_self._create_clock_class(uid=23)  # type: ignore
+
+        self.assertRaisesInComponentInit(TypeError, f, "'int' is not a 'str' object")
 
     def test_create_description(self):
         def f(comp_self: bt2._UserSinkComponent):
@@ -141,8 +211,20 @@ class ClockClassTestCase(unittest.TestCase):
         def f(comp_self: bt2._UserSinkComponent):
             return comp_self._create_clock_class(precision=12)
 
-        cc = self.run_in_component_init(f)
-        self.assertEqual(cc.precision, 12)
+        self.assertEqual(self.run_in_component_init(f).precision, 12)
+
+    def test_create_accuracy(self):
+        def f(comp_self: bt2._UserSinkComponent):
+            return comp_self._create_clock_class(accuracy=12)
+
+        if self._mip_version == 0:
+            self.assertRaisesInComponentInit(
+                ValueError,
+                f,
+                "Clock class accuracy is only available with MIP version ≥ 1 (currently 0)",
+            )
+        else:
+            self.assertEqual(self.run_in_component_init(f).accuracy, 12)
 
     def test_create_invalid_precision(self):
         def f(comp_self: bt2._UserSinkComponent):
@@ -163,18 +245,101 @@ class ClockClassTestCase(unittest.TestCase):
 
         self.assertRaisesInComponentInit(TypeError, f)
 
-    def test_create_origin_is_unix_epoch(self):
+    def test_create_origin_is_unix_epoch_true(self):
+        def f(comp_self: bt2._UserSinkComponent):
+            return comp_self._create_clock_class(origin_is_unix_epoch=True)
+
+        cc = self.run_in_component_init(f)
+        self.assertIs(cc.origin, bt2.unix_epoch_clock_origin)
+
+    def test_create_origin_is_unix_epoch_false(self):
         def f(comp_self: bt2._UserSinkComponent):
             return comp_self._create_clock_class(origin_is_unix_epoch=False)
 
         cc = self.run_in_component_init(f)
-        self.assertEqual(cc.origin_is_unix_epoch, False)
+        self.assertIs(cc.origin, bt2.unknown_clock_origin)
 
     def test_create_invalid_origin_is_unix_epoch(self):
         def f(comp_self: bt2._UserSinkComponent):
             return comp_self._create_clock_class(origin_is_unix_epoch=23)  # type: ignore
 
         self.assertRaisesInComponentInit(TypeError, f)
+
+    def test_create_unix_epoch_origin(self):
+        def f(comp_self: bt2._UserSinkComponent):
+            return comp_self._create_clock_class(origin=bt2.unix_epoch_clock_origin)
+
+        cc = self.run_in_component_init(f)
+
+        self.assertIs(cc.origin, bt2.unix_epoch_clock_origin)
+
+    def test_create_custom_origin(self):
+        def f(comp_self: bt2._UserSinkComponent):
+            return comp_self._create_clock_class(
+                origin=bt2.ClockOrigin("ns", "name", "uid")
+            )
+
+        if self._mip_version == 0:
+            self.assertRaisesInComponentInit(
+                ValueError,
+                f,
+                "Custom clock class origin is only available with MIP version ≥ 1 (currently 0)",
+            )
+        else:
+            origin = self.run_in_component_init(f).origin
+
+            assert type(origin) is bt2.ClockOrigin
+            self.assertEqual(origin.namespace, "ns")
+            self.assertEqual(origin.name, "name")
+            self.assertEqual(origin.uid, "uid")
+
+    def test_create_unknown_origin(self):
+        def f(comp_self: bt2._UserSinkComponent):
+            return comp_self._create_clock_class(origin=bt2.unknown_clock_origin)
+
+        cc = self.run_in_component_init(f)
+
+        self.assertIs(cc.origin, bt2.unknown_clock_origin)
+
+    def test_create_invalid_origin(self):
+        def f(comp_self: bt2._UserSinkComponent):
+            return comp_self._create_clock_class(origin=23)  # type: ignore
+
+        self.assertRaisesInComponentInit(
+            TypeError,
+            f,
+            "'int' is not a '<class 'bt2.clock_class.ClockOrigin'>' object",
+        )
+
+    def test_create_multiple_origin(self):
+        cases = (
+            (True, bt2.ClockOrigin("ns", "name", "uid")),
+            (False, bt2.ClockOrigin("ns", "name", "uid")),
+        )
+
+        for case in cases:
+            origin_is_unix_epoch, origin = case
+
+            class Foo:
+                def __init__(
+                    self,
+                    origin_is_unix_epoch: typing.Optional[bool],
+                    origin: typing.Optional[bt2.ClockOrigin],
+                ):
+                    self.origin_is_unix_epoch = origin_is_unix_epoch
+                    self.origin = origin
+
+                def __call__(self, comp_self: bt2._UserSinkComponent):
+                    return comp_self._create_clock_class(
+                        origin_is_unix_epoch=self.origin_is_unix_epoch,
+                        origin=self.origin,
+                    )
+
+            self.assertRaisesInComponentInit(
+                ValueError,
+                Foo(origin_is_unix_epoch, origin),
+                "only one of `origin_is_unix_epoch` and `origin` can be set",
+            )
 
     def test_cycles_to_ns_from_origin(self):
         def f(comp_self: bt2._UserSinkComponent):
@@ -199,10 +364,22 @@ class ClockClassTestCase(unittest.TestCase):
                 uuid=uuid.UUID("b43372c32ef0be28444dfc1c5cdafd33")
             )
 
-        cc = self.run_in_component_init(f)
-        self.assertEqual(cc.uuid, uuid.UUID("b43372c32ef0be28444dfc1c5cdafd33"))
+        if self._mip_version == 0:
+            self.assertEqual(
+                self.run_in_component_init(f).uuid,
+                uuid.UUID("b43372c32ef0be28444dfc1c5cdafd33"),
+            )
+        else:
+            self.assertRaisesInComponentInit(
+                ValueError,
+                f,
+                "Clock class UUID is only available with MIP version 0 (currently 1)",
+            )
 
     def test_create_invalid_uuid(self):
+        if self._mip_version != 0:
+            self.skipTest("requires MIP == 0")
+
         def f(comp_self: bt2._UserSinkComponent):
             return comp_self._create_clock_class(uuid=23)  # type: ignore
 
