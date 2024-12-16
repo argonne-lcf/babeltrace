@@ -1,6 +1,6 @@
 = babeltrace2-source.ctf.fs(7)
 :manpagetype: component class
-:revdate: 1 September 2023
+:revdate: 16 December 2024
 
 
 == NAME
@@ -11,12 +11,13 @@ component class
 
 == DESCRIPTION
 
-A Babeltrace~2 compcls:source.ctf.fs message iterator reads one or
-more https://diamon.org/ctf/[CTF]~1.8 streams on the file system
-and emits corresponding messages.
+A Babeltrace~2 compcls:source.ctf.fs message iterator reads one or more
+https://diamon.org/ctf/v1.8.3/[CTF~1.8] or
+https://diamon.org/ctf/[CTF~2] data streams on the file system and emits
+corresponding messages.
 
 ----
-CTF streams on
+CTF data streams on
 the file system
   |
   |   +---------------------+
@@ -45,11 +46,18 @@ CTF trace on the file system is a directory which contains:
   `index`.
 
 If the logical CTF trace to handle contains more than one physical CTF
-trace, then all the physical CTF traces must have a trace UUID and all
-UUIDs must be the same. Opening more than one physical CTF trace to
-constitute a single logical CTF trace is needed to support LTTng's
-tracing session rotation feature, for example (see man:lttng-rotate(1)
-starting from LTTng~2.11).
+trace, then all the physical CTF traces, depending on the CTF version:
+
+CTF 1.8::
+    Must have a trace UUID and all UUIDs must be the same.
+
+CTF 2::
+    Must have a trace name and a trace unique ID (UID), and all trace
+    namespaces (if any), names, and UIDs must be the same.
+
+Opening more than one physical CTF trace to constitute a single logical
+CTF trace is needed to support LTTng's tracing session rotation feature,
+for example (see man:lttng-rotate(1) starting from LTTng~2.11).
 
 You specify which physical CTF traces to open and read with the
 param:inputs array parameter. Each entry in this array is the path to a
@@ -68,7 +76,7 @@ CTF data stream (LTTng's trace file rotation and tracing session
 rotation can cause this).
 
 If two or more data stream files contain the same packets, a
-compcls:source.ctf.fs message iterator reads each of  them only once so
+compcls:source.ctf.fs message iterator reads each of them only once so
 that it never emits duplicated messages. This feature makes it possible,
 for example, to open overlapping
 https://lttng.org/docs/#doc-taking-a-snapshot[LTTng snapshots] with a
@@ -82,7 +90,7 @@ Many tracers produce CTF traces. A compcls:source.ctf.fs component makes
 some effort to support as many CTF traces as possible, even those with
 malformed streams.
 
-Generally:
+In general, for a CTF~1.8 trace:
 
 * If the `timestamp_begin` or `timestamp_end` packet context field class
   exists, but it is not mapped to a clock class, and there's only one
@@ -96,8 +104,9 @@ depending on the tracer's version:
 All LTTng versions::
 +
 --
-* The component sets the `monotonic` clock class's origin to the Unix
-  epoch so that different LTTng traces are always correlatable.
+* For CTF~1.8 traces, the component sets the `monotonic` clock class's
+  origin to the Unix epoch so that different LTTng traces are always
+  correlatable.
 +
 This is the equivalent of setting the
 param:force-clock-class-origin-unix-epoch parameter to true.
@@ -128,27 +137,147 @@ barectf up to, but excluding, 2.3.1::
 --
 
 
+== Message Interchange Protocol (MIP) specifics
+
+A compcls:source.ctf.fs component can open and decode, depending on the
+effective MIP version:
+
+MIP~0::
+    CTF~1.8 traces.
+
+MIP~1::
+    CTF~1.8 and CTF~2 traces.
+
+While the CTF~1.8 metadata stream (TSDL) features naturally map to the
+MIP~0 API and the CTF~2 ones to the MIP~1 API, a compcls:source.ctf.fs
+component makes a best effort to represent CTF~1.8 features when working
+with MIP~1. In particular, a compcls:source.ctf.fs component:
+
+* For an LTTng trace:
+
+** Sets the namespace of any libbabeltrace2 trace to `lttng.org,2009`.
+** Sets the origin of any libbabeltrace2 clock class to the Unix epoch.
+
+* Sets the UID of a libbabeltrace2 trace to the textual representation
+  of the UUID of its corresponding CTF trace.
+
+* Sets the UID of a libbabeltrace2 clock class to the textual
+  representation of the UUID of its corresponding CTF clock class.
+
+* Makes the accuracy of any libbabeltrace2 clock class unknown.
+
+When reading a CTF~2 metadata stream (therefore working with MIP~1),
+a compcls:source.ctf.fs component:
+
+* Sets the log level of a libbabeltrace2 event class from the value of
+  the `log-level` attribute, under either the `lttng.org,2009` or
+  `babeltrace.org,2020` namespace, of its corresponding CTF event record
+  class as such:
++
+--
+`"emergency"`::
+    `BT_EVENT_CLASS_LOG_LEVEL_EMERGENCY`
+
+`"alert"`::
+    `BT_EVENT_CLASS_LOG_LEVEL_ALERT`
+
+`"critical"`::
+    `BT_EVENT_CLASS_LOG_LEVEL_CRITICAL`
+
+`"error"`::
+    `BT_EVENT_CLASS_LOG_LEVEL_ERROR`
+
+`"warning"`::
+    `BT_EVENT_CLASS_LOG_LEVEL_WARNING`
+
+`"notice"`::
+    `BT_EVENT_CLASS_LOG_LEVEL_NOTICE`
+
+`"info"`::
+    `BT_EVENT_CLASS_LOG_LEVEL_INFO`
+
+`"debug:system"`::
+    `BT_EVENT_CLASS_LOG_LEVEL_DEBUG_SYSTEM`
+
+`"debug:program"`::
+    `BT_EVENT_CLASS_LOG_LEVEL_DEBUG_PROGRAM`
+
+`"debug:process"`::
+    `BT_EVENT_CLASS_LOG_LEVEL_DEBUG_PROCESS`
+
+`"debug:module"`::
+    `BT_EVENT_CLASS_LOG_LEVEL_DEBUG_MODULE`
+
+`"debug:unit"`::
+    `BT_EVENT_CLASS_LOG_LEVEL_DEBUG_UNIT`
+
+`"debug:function"`::
+    `BT_EVENT_CLASS_LOG_LEVEL_DEBUG_FUNCTION`
+
+`"debug:line"`::
+    `BT_EVENT_CLASS_LOG_LEVEL_DEBUG_LINE`
+
+`"debug:debug"`::
+    `BT_EVENT_CLASS_LOG_LEVEL_DEBUG`
+--
+
+* Sets the EMF URI of a libbabeltrace2 event class from the value of
+  the `emf-uri` attribute, under either the `lttng.org,2009` or
+  `babeltrace.org,2020` namespace, of its corresponding CTF event record
+  class.
+
+
 === CTF compliance
 
 A compcls:source.ctf.fs component decodes traces as per
-https://diamon.org/ctf/v1.8.3/[CTF~1.8.3], except:
+https://diamon.org/ctf/v1.8.3/[CTF~1.8] or
+https://diamon.org/ctf/[CTF~2], except:
 
-* It only supports integer field classes (TSDL `integer` block) with
-  sizes from 1 to 64.
+* It only supports fixed-length bit array field classes with
+  sizes from 1~to~64~bits.
++
+This includes fixed-length integers and fixed-length floating point
+numbers:
++
+CTF~1.8 (TSDL)::
+    `integer`, `enum`, and `floating_point` blocks.
 
-* It only supports 32-bit and 64-bit floating point number classes (TSDL
-  `floating_point` block).
+CTF~2::
+    `fixed-length-bit-array`, `fixed-length-bit-map`,
+    `fixed-length-boolean`,
+    `fixed-length-unsigned-integer`, `fixed-length-signed-integer`, and
+    `fixed-length-floating-point-number` types.
 
-* It doesn't support §~4.1.6 (``GNU/C bitfields'').
+* It only supports the following CTF~2 variable-length integer field
+  values:
++
+`variable-length-unsigned-integer`::
+    0 to 18,446,744,073,709,551,615 (unsigned 64-bit integer range).
 
-* It doesn't support TSDL `callsite` blocks: the parser simply ignores
-  them.
+`variable-length-signed-integer`::
+    -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807
+    (signed 64-bit integer range).
 
-* It only supports a single clock class (TSDL `clock` block) reference
-  per stream class (TSDL `stream` block).
+* It only supports 32-bit and 64-bit fixed-length floating point number
+  classes:
++
+CTF~1.8 (TSDL)::
+    `floating_point` block.
+
+CTF~2::
+    `fixed-length-floating-point-number` type.
+
+* It doesn't support TSDL §~4.1.6 (``GNU/C bitfields'').
+
+* It doesn't support TSDL `callsite` blocks: the CTF~1.8 parser
+  simply ignores them.
+
+* It only supports a single clock class (TSDL `clock` block or CTF~2
+  `clock-class` fragment) reference per data stream class (TSDL `stream`
+  block or CTF~2 `data-stream-class` fragment).
 
 * It doesn't support the checksum, compression, and encryption features
-  of metadata stream packets.
+  of CTF~1.8 metadata stream packets.
 
 
 == INITIALIZATION PARAMETERS
@@ -217,8 +346,16 @@ The component uses the second form when the stream class ID is not
 available.
 
 __TRACE-ID__::
+    Depending on the CTF version:
++
+CTF~1.8:::
     Trace's UUID if available, otherwise trace's absolute directory
     path.
+
+CTF~2:::
+    If both the trace's name and UID are available, a `/`-delimited list
+    of the trace's namespace, the trace's name, and the trace's UID.
+    Otherwise, the trace's absolute directory path.
 
 __STREAM-CLASS-ID__::
     Stream class ID.
@@ -276,9 +413,15 @@ Result object (map):
 
 qres:is-packetized vtype:[boolean]::
     True if the metadata stream file is packetized.
++
+This is only relevant for a CTF~1.8 metadata stream. Always false with
+a CTF~2 metadata stream.
 
 qres:text vtype:[string]::
     Plain text metadata stream.
++
+The exact contents of the metadata stream file for a CTF~2
+metadata stream.
 
 
 include::common-footer.txt[]
