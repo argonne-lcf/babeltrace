@@ -204,7 +204,7 @@ nljson jsonFixedLenBitArrayFcFromFs(const fs_sink_ctf_field_class& fsFc)
                     jsonFlags[*flag.label()] = jsonIntRangeSetFromIr(flag.ranges());
                 }
 
-                return jsonFlags;
+                return nljson {{jsonstr::flags, jsonFlags}};
             }
 
             return nljson::object();
