@@ -33,10 +33,14 @@ class _EventConst(bt2_object._UniqueObject, collections.abc.Mapping):
     _stream_pycls = property(lambda _: bt2_stream._StreamConst)
 
     @property
-    def cls(self) -> bt2_event_class._EventClassConst:
+    def _cls(self):
         return self._event_class_pycls._create_from_ptr_and_get_ref(
             self._borrow_class_ptr(self._ptr)
         )
+
+    @property
+    def cls(self) -> bt2_event_class._EventClassConst:
+        return self._cls
 
     @property
     def name(self) -> typing.Optional[str]:
@@ -173,6 +177,10 @@ class _Event(_EventConst):
     _event_class_pycls = property(lambda _: bt2_event_class._EventClass)
     _packet_pycls = property(lambda _: bt2_packet._Packet)
     _stream_pycls = property(lambda _: bt2_stream._Stream)
+
+    @property
+    def cls(self) -> bt2_event_class._EventClass:
+        return self._cls
 
     @property
     def payload_field(self) -> typing.Optional[bt2_field._StructureField]:

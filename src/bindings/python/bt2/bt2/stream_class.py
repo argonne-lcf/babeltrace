@@ -84,10 +84,14 @@ class _StreamClassConst(
             )
 
     @property
-    def trace_class(self) -> "bt2_trace_class._TraceClassConst":
+    def _trace_class(self):
         return self._trace_class_cls._create_from_ptr_and_get_ref(
             self._borrow_trace_class_ptr(self._ptr)
         )
+
+    @property
+    def trace_class(self) -> "bt2_trace_class._TraceClassConst":
+        return self._trace_class
 
     @property
     def name(self) -> typing.Optional[str]:
@@ -203,6 +207,10 @@ class _StreamClass(bt2_user_attrs._WithUserAttrs, _StreamClassConst):
     _event_class_cls = property(lambda s: bt2_event_class._EventClass)
     _trace_class_cls = property(lambda s: _bt2_trace_class()._TraceClass)
     _clock_class_cls = property(lambda s: bt2_clock_class._ClockClass)
+
+    @property
+    def trace_class(self) -> "bt2_trace_class._TraceClass":
+        return self._trace_class
 
     def create_event_class(
         self,
