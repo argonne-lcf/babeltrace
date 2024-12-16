@@ -1013,6 +1013,83 @@ end:
 }
 
 static
+gint compare_strings(gconstpointer a, gconstpointer b)
+{
+    return strcmp(*(const char **) a, *(const char **) b);
+}
+
+static
+int print_bit_array(struct pretty_component *pretty, const bt_field *field)
+{
+	int ret = 0;
+	bt_field_class_bit_array_flag_label_array label_array;
+	uint64_t label_count;
+	uint64_t v = bt_field_bit_array_get_value_as_integer(field);
+	GArray *g_label_array = NULL;
+
+	if (pretty->use_colors) {
+		bt_common_g_string_append(pretty->string,
+			color_number_value);
+	}
+
+	bt_common_g_string_append_printf(pretty->string, "0x%" PRIX64, v);
+
+	if (pretty->use_colors) {
+		bt_common_g_string_append(pretty->string, color_rst);
+	}
+
+	ret = bt_field_bit_array_get_active_flag_labels(field, &label_array, &label_count);
+	if (ret) {
+		ret = -1;
+		goto end;
+	}
+
+	if (label_count > 0) {
+		uint64_t i;
+
+		g_label_array = g_array_new(FALSE, FALSE, sizeof(const char *));
+		if (!g_label_array) {
+			ret = -1;
+			goto end;
+		}
+
+		for (i = 0; i < label_count; i++) {
+			g_array_append_val(g_label_array, label_array[i]);
+		}
+
+		g_array_sort(g_label_array, compare_strings);
+		bt_common_g_string_append(pretty->string, " { ");
+
+		for (i = 0; i < g_label_array->len; i++) {
+			const char *flag_name = g_array_index(g_label_array, const char *, i);
+
+			if (i != 0) {
+				bt_common_g_string_append(pretty->string, ", ");
+			}
+
+			if (pretty->use_colors) {
+				bt_common_g_string_append(pretty->string, color_enum_mapping_name);
+			}
+
+			print_escape_string(pretty, flag_name);
+
+			if (pretty->use_colors) {
+				bt_common_g_string_append(pretty->string, color_rst);
+			}
+		}
+
+		bt_common_g_string_append(pretty->string, " }");
+	}
+
+end:
+	if (g_label_array) {
+		g_array_free(g_label_array, TRUE);
+	}
+
+	return ret;
+}
+
+static
 int print_struct_field(struct pretty_component *pretty,
 		const bt_field *_struct,
 		const bt_field_class *struct_class,
@@ -1265,18 +1342,7 @@ int print_field(struct pretty_component *pretty,
 		}
 		return 0;
 	} else if (class_id == BT_FIELD_CLASS_TYPE_BIT_ARRAY) {
-		uint64_t v = bt_field_bit_array_get_value_as_integer(field);
-
-		if (pretty->use_colors) {
-			bt_common_g_string_append(pretty->string,
-				color_number_value);
-		}
-		bt_common_g_string_append_printf(pretty->string, "0x%" PRIX64,
-			v);
-		if (pretty->use_colors) {
-			bt_common_g_string_append(pretty->string, color_rst);
-		}
-		return 0;
+		return print_bit_array(pretty, field);
 	} else if (bt_field_class_type_is(class_id,
 			BT_FIELD_CLASS_TYPE_ENUMERATION)) {
 		return print_enum(pretty, field);

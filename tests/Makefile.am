@@ -68,6 +68,7 @@ dist_check_SCRIPTS = \
 	plugins/sink.text.details/succeed/test-succeed.sh \
 	plugins/sink.text.pretty/test-enum.sh \
 	plugins/sink.text.pretty/test_pretty.py \
+	plugins/sink.text.pretty/test-pretty.sh \
 	plugins/sink.text.pretty/test-pretty-python.sh \
 	plugins/src.ctf.lttng-live/test-live.sh \
 	python-plugin-provider/bt_plugin_test_python_plugin_provider.py \
@@ -175,7 +176,8 @@ TESTS_PLUGINS = \
 	plugins/src.ctf.fs/test-deterministic-ordering.sh \
 	plugins/sink.ctf.fs/succeed/test-succeed.sh \
 	plugins/sink.text.details/succeed/test-succeed.sh \
-	plugins/flt.utils.muxer/test-clock-compatibility.sh
+	plugins/flt.utils.muxer/test-clock-compatibility.sh \
+	plugins/sink.text.pretty/test-pretty.sh
 
 if !ENABLE_BUILT_IN_PLUGINS
 if ENABLE_PYTHON_BINDINGS
