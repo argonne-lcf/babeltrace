@@ -38,6 +38,7 @@ dist_check_SCRIPTS = \
 	bindings/python/bt2/test_interrupter.py \
 	bindings/python/bt2/test_message_iterator.py \
 	bindings/python/bt2/test_message.py \
+	bindings/python/bt2/test_mip1.py \
 	bindings/python/bt2/test_package.py \
 	bindings/python/bt2/test_packet.py \
 	bindings/python/bt2/test_plugin.py \
