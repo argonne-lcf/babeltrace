@@ -25,6 +25,18 @@
 # An unbound variable is an error
 set -u
 
+# Prints a message using `diag` if `SH_TAP` is `1`, or using `echo`
+# otherwise.
+if [[ ${SH_TAP:-} == 1 ]]; then
+	_bt_print() {
+		diag "$@"
+	}
+else
+	_bt_print() {
+		echo "$@"
+	}
+fi
+
 # Sets the variable named `$1` to `$2` if it's not set, and exports it.
 _bt_tests_set_var_def() {
 	local -r varname=$1
@@ -227,7 +239,7 @@ bt_cli() {
 
 	local -a bt_cli_args=("$@")
 
-	echo "Running: \`$BT_TESTS_BT2_BIN ${bt_cli_args[*]}\`" >&2
+	_bt_print "Running: \`$BT_TESTS_BT2_BIN ${bt_cli_args[*]}\`" >&2
 	bt_run_in_py_env "$BT_TESTS_BT2_BIN" "${bt_cli_args[@]}" 1>"$stdout_file" 2>"$stderr_file"
 }
 
@@ -390,10 +402,10 @@ if [[ ${SH_TAP:-} == 1 ]]; then
 
 		if ! ok $ret "$test_name"; then
 			{
-				echo "Pattern \`$pattern\` doesn't match the contents of \`$file\`:"
-				echo '--- 8< ---'
+				diag "Pattern \`$pattern\` doesn't match the contents of \`$file\`:"
+				diag '--- 8< ---'
 				cat "$file"
-				echo '--- >8 ---'
+				diag '--- >8 ---'
 			} >&2
 		fi
 
@@ -517,12 +529,11 @@ bt_gen_mctf_trace() {
 		"$input_file"
 	)
 
-	echo "Running: \`${cmd[*]}\`" >&2
+	_bt_print "Running: \`${cmd[*]}\`" >&2
 	bt_run_in_py_utils_env "${cmd[@]}"
 }
 
-# Call `diag` with the contents of file `$1`.
-
+# Runs `diag` with the contents of file `$1`.
 diag_file() {
 	diag "$(cat "$1")"
 }
