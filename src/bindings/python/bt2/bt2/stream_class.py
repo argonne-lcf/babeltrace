@@ -57,6 +57,10 @@ class _StreamClassConst(
         native_bt.stream_class_borrow_default_clock_class_const
     )
 
+    @property
+    def graph_mip_version(self) -> int:
+        return self.trace_class.graph_mip_version
+
     @staticmethod
     def _borrow_user_attributes_ptr(ptr):
         return native_bt.stream_class_borrow_user_attributes_const(ptr)
@@ -94,8 +98,18 @@ class _StreamClassConst(
         return self._trace_class
 
     @property
+    def namespace(self) -> typing.Optional[str]:
+        bt2_utils._check_mip_ge(self, "Stream class namespace", 1)
+        return native_bt.stream_class_get_namespace(self._ptr)
+
+    @property
     def name(self) -> typing.Optional[str]:
         return native_bt.stream_class_get_name(self._ptr)
+
+    @property
+    def uid(self) -> typing.Optional[str]:
+        bt2_utils._check_mip_ge(self, "Stream class UID", 1)
+        return native_bt.stream_class_get_uid(self._ptr)
 
     @property
     def assigns_automatic_event_class_id(self) -> bool:
@@ -225,6 +239,8 @@ class _StreamClass(bt2_user_attrs._WithUserAttrs, _StreamClassConst):
         payload_field_class: typing.Optional[
             bt2_field_class._StructureFieldClass
         ] = None,
+        namespace: typing.Optional[str] = None,
+        uid: typing.Optional[str] = None,
     ) -> bt2_event_class._EventClass:
         # Validate parameters before we create the object.
         bt2_event_class._EventClass._validate_create_params(
@@ -254,8 +270,14 @@ class _StreamClass(bt2_user_attrs._WithUserAttrs, _StreamClassConst):
 
         event_class = bt2_event_class._EventClass._create_from_ptr(ec_ptr)
 
+        if namespace is not None:
+            event_class._set_namespace(namespace)
+
         if name is not None:
             event_class._set_name(name)
+
+        if uid is not None:
+            event_class._set_uid(uid)
 
         if user_attributes is not None:
             event_class._set_user_attributes(user_attributes)
@@ -278,10 +300,26 @@ class _StreamClass(bt2_user_attrs._WithUserAttrs, _StreamClassConst):
     def _set_user_attributes_ptr(obj_ptr, value_ptr):
         native_bt.stream_class_set_user_attributes(obj_ptr, value_ptr)
 
+    def _set_namespace(self, namespace: str):
+        bt2_utils._check_mip_ge(self, "Stream class namespace", 1)
+        bt2_utils._check_str(namespace)
+        bt2_utils._handle_func_status(
+            native_bt.stream_class_set_namespace(self._ptr, namespace),
+            "cannot set stream class object's namespace",
+        )
+
     def _set_name(self, name):
         bt2_utils._handle_func_status(
             native_bt.stream_class_set_name(self._ptr, name),
             "cannot set stream class object's name",
+        )
+
+    def _set_uid(self, uid: str):
+        bt2_utils._check_mip_ge(self, "Stream class UID", 1)
+        bt2_utils._check_str(uid)
+        bt2_utils._handle_func_status(
+            native_bt.stream_class_set_uid(self._ptr, uid),
+            "cannot set stream class object's UID",
         )
 
     def _set_assigns_automatic_event_class_id(self, auto_id):

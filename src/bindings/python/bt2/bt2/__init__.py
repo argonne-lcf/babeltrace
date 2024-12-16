@@ -38,6 +38,7 @@ from bt2.error import (
 )
 from bt2.field import (
     _Field,
+    _BlobField,
     _BoolField,
     _RealField,
     _ArrayField,
@@ -47,10 +48,13 @@ from bt2.field import (
     _IntegerField,
     _VariantField,
     _BitArrayField,
+    _BlobFieldConst,
     _BoolFieldConst,
     _RealFieldConst,
     _StructureField,
     _ArrayFieldConst,
+    _StaticBlobField,
+    _DynamicBlobField,
     _EnumerationField,
     _OptionFieldConst,
     _StaticArrayField,
@@ -61,7 +65,9 @@ from bt2.field import (
     _BitArrayFieldConst,
     _SignedIntegerField,
     _StructureFieldConst,
+    _StaticBlobFieldConst,
     _UnsignedIntegerField,
+    _DynamicBlobFieldConst,
     _EnumerationFieldConst,
     _StaticArrayFieldConst,
     _DynamicArrayFieldConst,
@@ -75,8 +81,10 @@ from bt2.field import (
     _DoublePrecisionRealFieldConst,
     _SinglePrecisionRealFieldConst,
     _UnsignedEnumerationFieldConst,
+    _DynamicBlobFieldWithLengthField,
     _DynamicArrayFieldWithLengthField,
     _OptionFieldWithBoolSelectorField,
+    _DynamicBlobFieldWithLengthFieldConst,
     _DynamicArrayFieldWithLengthFieldConst,
     _OptionFieldWithBoolSelectorFieldConst,
     _OptionFieldWithSignedIntegerSelectorField,
@@ -166,11 +174,22 @@ from bt2.field_path import (
 )
 
 # import all public names
-from bt2.clock_class import ClockOffset, _ClockClass, _ClockClassConst
+from bt2.clock_class import (
+    ClockOffset,
+    ClockOrigin,
+    ClockClassOffset,
+    _ClockClass,
+    _ClockClassConst,
+    _UnknownClockOrigin,
+    unknown_clock_origin,
+    _UnixEpochClockOrigin,
+    unix_epoch_clock_origin,
+)
 from bt2.event_class import EventClassLogLevel, _EventClass, _EventClassConst
 from bt2.field_class import (
     IntegerDisplayBase,
     _FieldClass,
+    _BlobFieldClass,
     _BoolFieldClass,
     _RealFieldClass,
     _ArrayFieldClass,
@@ -180,14 +199,18 @@ from bt2.field_class import (
     _IntegerFieldClass,
     _VariantFieldClass,
     _BitArrayFieldClass,
+    _BlobFieldClassConst,
     _BoolFieldClassConst,
     _RealFieldClassConst,
     _StructureFieldClass,
     _ArrayFieldClassConst,
+    _StaticBlobFieldClass,
+    _DynamicBlobFieldClass,
     _EnumerationFieldClass,
     _OptionFieldClassConst,
     _StaticArrayFieldClass,
     _StringFieldClassConst,
+    _BitArrayFieldClassFlag,
     _DynamicArrayFieldClass,
     _IntegerFieldClassConst,
     _VariantFieldClassConst,
@@ -195,8 +218,10 @@ from bt2.field_class import (
     _SignedIntegerFieldClass,
     _VariantFieldClassOption,
     _StructureFieldClassConst,
+    _StaticBlobFieldClassConst,
     _StructureFieldClassMember,
     _UnsignedIntegerFieldClass,
+    _DynamicBlobFieldClassConst,
     _EnumerationFieldClassConst,
     _StaticArrayFieldClassConst,
     _DynamicArrayFieldClassConst,
@@ -218,6 +243,7 @@ from bt2.field_class import (
     _SinglePrecisionRealFieldClassConst,
     _UnsignedEnumerationFieldClassConst,
     _OptionWithIntegerSelectorFieldClass,
+    _DynamicBlobFieldClassWithLengthField,
     _VariantFieldClassWithIntegerSelector,
     _DynamicArrayFieldClassWithLengthField,
     _DynamicArrayWithLengthFieldFieldClass,
@@ -229,6 +255,7 @@ from bt2.field_class import (
     _SignedEnumerationFieldClassMappingConst,
     _OptionFieldClassWithIntegerSelectorField,
     _OptionWithIntegerSelectorFieldClassConst,
+    _DynamicBlobFieldClassWithLengthFieldConst,
     _OptionWithSignedIntegerSelectorFieldClass,
     _UnsignedEnumerationFieldClassMappingConst,
     _VariantFieldClassWithIntegerSelectorConst,
@@ -265,6 +292,7 @@ from bt2.interrupter import Interrupter
 from bt2.trace_class import _TraceClass, _TraceClassConst
 from bt2.stream_class import _StreamClass, _StreamClassConst
 from bt2.clock_snapshot import _ClockSnapshotConst, _UnknownClockSnapshot
+from bt2.field_location import FieldLocationScope, _FieldLocationConst
 from bt2.query_executor import QueryExecutor, _PrivateQueryExecutor
 from bt2.message_iterator import (
     _UserMessageIterator,
@@ -305,6 +333,7 @@ if (sys.version_info.major, sys.version_info.minor) != (3, 4):
     _del_global_name("event_class")
     _del_global_name("field")
     _del_global_name("field_class")
+    _del_global_name("field_location")
     _del_global_name("field_path")
     _del_global_name("graph")
     _del_global_name("integer_range_set")

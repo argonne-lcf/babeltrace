@@ -369,7 +369,8 @@ noinst_LTLIBRARIES += py-common/libpy-common.la
 
 py_common_libpy_common_la_SOURCES = \
 	py-common/py-common.cpp \
-	py-common/py-common.h
+	py-common/py-common.h \
+	py-common/py-common.hpp
 
 py_common_libpy_common_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
@@ -607,6 +608,8 @@ pluginprovider_LTLIBRARIES = python-plugin-provider/babeltrace2-python-plugin-pr
 python_plugin_provider_babeltrace2_python_plugin_provider_la_SOURCES = \
 	python-plugin-provider/python-plugin-provider.c \
 	python-plugin-provider/python-plugin-provider.h
+
+nodist_EXTRA_python_plugin_provider_babeltrace2_python_plugin_provider_la_SOURCES = dummy.cpp
 
 python_plugin_provider_babeltrace2_python_plugin_provider_la_LDFLAGS = \
 	$(AM_LDFLAGS) \

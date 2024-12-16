@@ -16,6 +16,7 @@
 #include "common/assert.h"
 
 #include "py-common.h"
+#include "py-common.hpp"
 
 /*
  * Concatenate strings in list `py_str_list`, returning the result as a
@@ -224,4 +225,20 @@ GString *bt_py_common_format_current_exception(int log_level)
     PyErr_Restore(py_exc_type, py_exc_value, py_exc_tb);
 
     return result;
+}
+
+std::vector<const char *> btPyStrListToVector(PyObject *py_str_list)
+{
+    BT_ASSERT(PyList_Check(py_str_list));
+
+    std::vector<const char *> strings;
+
+    for (Py_ssize_t i = 0; i < PyList_Size(py_str_list); ++i) {
+        PyObject *py_str = PyList_GetItem(py_str_list, i);
+
+        BT_ASSERT(PyUnicode_Check(py_str));
+        strings.emplace_back(PyUnicode_AsUTF8(py_str));
+    }
+
+    return strings;
 }

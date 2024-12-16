@@ -67,6 +67,9 @@ class _EventClassConst(bt2_object._SharedObject, bt2_user_attrs._WithUserAttrsCo
     )
     _stream_class_pycls = property(lambda s: _bt2_stream_class()._StreamClassConst)
 
+    def graph_mip_version(self) -> int:
+        return self.stream_class.graph_mip_version
+
     @property
     def _stream_class(self):
         return self._stream_class_pycls._create_from_ptr_and_get_ref(
@@ -78,8 +81,18 @@ class _EventClassConst(bt2_object._SharedObject, bt2_user_attrs._WithUserAttrsCo
         return self._stream_class
 
     @property
+    def namespace(self) -> typing.Optional[str]:
+        bt2_utils._check_mip_ge(self, "Event class namespace", 1)
+        return native_bt.event_class_get_namespace(self._ptr)
+
+    @property
     def name(self) -> typing.Optional[str]:
         return native_bt.event_class_get_name(self._ptr)
+
+    @property
+    def uid(self) -> typing.Optional[str]:
+        bt2_utils._check_mip_ge(self, "Event class UID", 1)
+        return native_bt.event_class_get_uid(self._ptr)
 
     @property
     def id(self) -> int:
@@ -145,8 +158,27 @@ class _EventClass(bt2_user_attrs._WithUserAttrs, _EventClassConst):
     def stream_class(self) -> "bt2_stream_class._StreamClass":
         return self._stream_class
 
-    def _set_name(self, name):
-        return native_bt.event_class_set_name(self._ptr, name)
+    def _set_namespace(self, namespace: str):
+        bt2_utils._check_str(namespace)
+        bt2_utils._handle_func_status(
+            native_bt.event_class_set_namespace(self._ptr, namespace),
+            "cannot set event class object's namespace",
+        )
+
+    def _set_name(self, name: str):
+        bt2_utils._check_str(name)
+        bt2_utils._handle_func_status(
+            native_bt.event_class_set_name(self._ptr, name),
+            "cannot set event class object's name",
+        )
+
+    def _set_uid(self, uid: str):
+        bt2_utils._check_mip_ge(self, "Event class UID", 1)
+        bt2_utils._check_str(uid)
+        bt2_utils._handle_func_status(
+            native_bt.event_class_set_uid(self._ptr, uid),
+            "cannot set event class object's UID",
+        )
 
     def _set_log_level(self, log_level):
         bt2_utils._check_type(log_level, EventClassLogLevel)

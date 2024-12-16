@@ -58,6 +58,10 @@ class _FieldConst(bt2_object._UniqueObject):
     )
     _borrow_class_ptr = staticmethod(native_bt.field_borrow_class_const)
 
+    @property
+    def graph_mip_version(self):
+        return self.cls.graph_mip_version
+
     def __eq__(self, other: object) -> bool:
         return self._spec_eq(_get_leaf_field(other))
 
@@ -100,6 +104,13 @@ class _BitArrayFieldConst(_FieldConst):
     @property
     def value_as_integer(self) -> int:
         return native_bt.field_bit_array_get_value_as_integer(self._ptr)
+
+    @property
+    def active_flag_labels(self) -> typing.List[str]:
+        bt2_utils._check_mip_ge(self, "Bit array field class flags", 1)
+        status, labels = native_bt.field_bit_array_get_active_flag_labels(self._ptr)
+        bt2_utils._handle_func_status(status, "cannot get active flag labels")
+        return labels
 
     def _spec_eq(self, other):
         if type(other) is not type(self):
@@ -1137,6 +1148,84 @@ class _DynamicArrayFieldWithLengthField(
         return self._cls
 
 
+class _BlobFieldConst(_FieldConst):
+    @property
+    def cls(self) -> bt2_field_class._BlobFieldClassConst:
+        return self._cls
+
+    def _get_length(self):
+        return native_bt.field_blob_get_length(self._ptr)
+
+    length = property(fget=_get_length)
+
+    def __len__(self) -> int:
+        return self._get_length()
+
+    def _repr(self):
+        return str(self.data.tobytes())
+
+    @property
+    def data(self) -> memoryview:
+        return native_bt.field_blob_get_data_const(self._ptr)
+
+
+class _BlobField(_BlobFieldConst, _Field):
+    @property
+    def cls(self) -> bt2_field_class._BlobFieldClass:
+        return self._cls
+
+    @property
+    def data(self) -> memoryview:
+        return native_bt.field_blob_get_data(self._ptr)
+
+    @data.setter
+    def data(self, data: typing.Union[bytes, bytearray, memoryview]):
+        native_bt.field_blob_get_data(self._ptr)[:] = data
+
+
+class _StaticBlobFieldConst(_BlobFieldConst):
+    @property
+    def cls(self) -> bt2_field_class._StaticBlobFieldClassConst:
+        return self._cls
+
+
+class _StaticBlobField(_StaticBlobFieldConst, _BlobField):
+    @property
+    def cls(self) -> bt2_field_class._StaticBlobFieldClass:
+        return self._cls
+
+
+class _DynamicBlobFieldConst(_BlobFieldConst):
+    @property
+    def cls(self) -> bt2_field_class._DynamicBlobFieldClassConst:
+        return self._cls
+
+
+class _DynamicBlobField(_DynamicBlobFieldConst, _BlobField):
+    @property
+    def cls(self) -> bt2_field_class._DynamicBlobFieldClass:
+        return self._cls
+
+    def _set_length(self, length):
+        native_bt.field_blob_dynamic_set_length(self._ptr, length)
+
+    length = property(fget=_BlobFieldConst.length, fset=_set_length)
+
+
+class _DynamicBlobFieldWithLengthFieldConst(_DynamicBlobFieldConst):
+    @property
+    def cls(self) -> bt2_field_class._DynamicBlobFieldClassWithLengthFieldConst:
+        return self._cls
+
+
+class _DynamicBlobFieldWithLengthField(
+    _DynamicBlobFieldWithLengthFieldConst, _DynamicBlobField
+):
+    @property
+    def cls(self) -> bt2_field_class._DynamicBlobFieldClassWithLengthField:
+        return self._cls
+
+
 _TYPE_ID_TO_CONST_OBJ = {
     native_bt.FIELD_CLASS_TYPE_BOOL: _BoolFieldConst,
     native_bt.FIELD_CLASS_TYPE_BIT_ARRAY: _BitArrayFieldConst,
@@ -1158,6 +1247,9 @@ _TYPE_ID_TO_CONST_OBJ = {
     native_bt.FIELD_CLASS_TYPE_VARIANT_WITHOUT_SELECTOR_FIELD: _VariantFieldConst,
     native_bt.FIELD_CLASS_TYPE_VARIANT_WITH_UNSIGNED_INTEGER_SELECTOR_FIELD: _VariantFieldWithUnsignedIntegerSelectorFieldConst,
     native_bt.FIELD_CLASS_TYPE_VARIANT_WITH_SIGNED_INTEGER_SELECTOR_FIELD: _VariantFieldWithSignedIntegerSelectorFieldConst,
+    native_bt.FIELD_CLASS_TYPE_STATIC_BLOB: _StaticBlobFieldConst,
+    native_bt.FIELD_CLASS_TYPE_DYNAMIC_BLOB_WITHOUT_LENGTH_FIELD: _DynamicBlobFieldConst,
+    native_bt.FIELD_CLASS_TYPE_DYNAMIC_BLOB_WITH_LENGTH_FIELD: _DynamicBlobFieldWithLengthFieldConst,
 }
 
 _TYPE_ID_TO_OBJ = {
@@ -1181,4 +1273,7 @@ _TYPE_ID_TO_OBJ = {
     native_bt.FIELD_CLASS_TYPE_VARIANT_WITHOUT_SELECTOR_FIELD: _VariantField,
     native_bt.FIELD_CLASS_TYPE_VARIANT_WITH_UNSIGNED_INTEGER_SELECTOR_FIELD: _VariantFieldWithUnsignedIntegerSelectorField,
     native_bt.FIELD_CLASS_TYPE_VARIANT_WITH_SIGNED_INTEGER_SELECTOR_FIELD: _VariantFieldWithSignedIntegerSelectorField,
+    native_bt.FIELD_CLASS_TYPE_STATIC_BLOB: _StaticBlobField,
+    native_bt.FIELD_CLASS_TYPE_DYNAMIC_BLOB_WITHOUT_LENGTH_FIELD: _DynamicBlobField,
+    native_bt.FIELD_CLASS_TYPE_DYNAMIC_BLOB_WITH_LENGTH_FIELD: _DynamicBlobFieldWithLengthField,
 }

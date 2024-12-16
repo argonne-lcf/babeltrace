@@ -26,6 +26,7 @@ SWIG_INTERFACE_FILES =					\
 	bt2/native_bt_event_class.i			\
 	bt2/native_bt_field.i				\
 	bt2/native_bt_field_class.i			\
+	bt2/native_bt_field_location.i			\
 	bt2/native_bt_field_path.i			\
 	bt2/native_bt_graph.i				\
 	bt2/native_bt_graph.i.hpp			\
@@ -71,6 +72,7 @@ STATIC_BINDINGS_DEPS =					\
 	bt2/event_class.py				\
 	bt2/field.py					\
 	bt2/field_class.py				\
+	bt2/field_location.py				\
 	bt2/field_path.py				\
 	bt2/graph.py					\
 	bt2/integer_range_set.py			\

@@ -39,6 +39,8 @@ def _check_int(o):
     if not isinstance(o, int):
         raise TypeError("'{}' is not an 'int' object".format(o.__class__.__name__))
 
+    return o
+
 
 def _check_float(o):
     if not isinstance(o, float):
@@ -48,6 +50,8 @@ def _check_float(o):
 def _check_str(o):
     if not isinstance(o, str):
         raise TypeError("'{}' is not a 'str' object".format(o.__class__.__name__))
+
+    return o
 
 
 _Type = typing.TypeVar("_Type")
@@ -121,6 +125,35 @@ def _check_alignment(a):
 
     if not _is_pow2(a):
         raise ValueError("{} is not a power of two".format(a))
+
+
+def _mip_version_from_obj(obj) -> int:
+    if hasattr(obj, "graph_mip_version"):
+        return obj.graph_mip_version
+    elif hasattr(obj, "_graph_mip_version"):
+        return obj._graph_mip_version
+    else:
+        raise RuntimeError(
+            "object does not have a property to get the graph's MIP version"
+        )
+
+
+def _check_mip_ge(obj, what, mip):
+    if _mip_version_from_obj(obj) < mip:
+        raise ValueError(
+            "{} is only available with MIP version ≥ {} (currently {})".format(
+                what, mip, _mip_version_from_obj(obj)
+            )
+        )
+
+
+def _check_mip_eq(obj, what, mip):
+    if _mip_version_from_obj(obj) != mip:
+        raise ValueError(
+            "{} is only available with MIP version {} (currently {})".format(
+                what, mip, _mip_version_from_obj(obj)
+            )
+        )
 
 
 def _handle_func_status(status, msg=None):

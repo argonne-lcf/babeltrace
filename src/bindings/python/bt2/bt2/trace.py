@@ -127,17 +127,32 @@ class _TraceConst(
             )
 
     @property
+    def graph_mip_version(self) -> int:
+        return self.cls.graph_mip_version
+
+    @property
     def cls(self) -> "bt2_trace_class._TraceClassConst":
         return self._trace_class_pycls._create_from_ptr_and_get_ref(
             self._borrow_class_ptr(self._ptr)
         )
 
     @property
+    def namespace(self) -> typing.Optional[str]:
+        bt2_utils._check_mip_ge(self, "Trace namespace", 1)
+        return native_bt.trace_get_namespace(self._ptr)
+
+    @property
     def name(self) -> typing.Optional[str]:
         return native_bt.trace_get_name(self._ptr)
 
     @property
+    def uid(self) -> typing.Optional[str]:
+        bt2_utils._check_mip_ge(self, "Trace UID", 1)
+        return native_bt.trace_get_uid(self._ptr)
+
+    @property
     def uuid(self) -> typing.Optional[uuidp.UUID]:
+        bt2_utils._check_mip_eq(self, "Trace UUID", 0)
         uuid_bytes = native_bt.trace_get_uuid(self._ptr)
         if uuid_bytes is None:
             return
@@ -201,10 +216,25 @@ class _Trace(bt2_user_attrs._WithUserAttrs, _TraceConst):
     _stream_pycls = property(lambda _: bt2_stream._Stream)
     _trace_class_pycls = property(lambda _: _bt2_trace_class()._TraceClass)
 
+    def _set_namespace(self, name: str):
+        bt2_utils._check_mip_ge(self, "Trace namespace", 1)
+        bt2_utils._check_str(name)
+        bt2_utils._handle_func_status(
+            native_bt.trace_set_namespace(self._ptr, name),
+            "cannot set trace object's namespace",
+        )
+
     def _set_name(self, name):
         bt2_utils._check_str(name)
         bt2_utils._handle_func_status(
             native_bt.trace_set_name(self._ptr, name), "cannot set trace object's name"
+        )
+
+    def _set_uid(self, uid: str):
+        bt2_utils._check_mip_ge(self, "Trace UID", 1)
+        bt2_utils._check_str(uid)
+        bt2_utils._handle_func_status(
+            native_bt.trace_set_uid(self._ptr, uid), "cannot set trace object's UID"
         )
 
     @staticmethod
@@ -212,6 +242,7 @@ class _Trace(bt2_user_attrs._WithUserAttrs, _TraceConst):
         native_bt.trace_set_user_attributes(obj_ptr, value_ptr)
 
     def _set_uuid(self, uuid):
+        bt2_utils._check_mip_eq(self, "Trace UID", 0)
         bt2_utils._check_type(uuid, uuidp.UUID)
         native_bt.trace_set_uuid(self._ptr, uuid.bytes)
 

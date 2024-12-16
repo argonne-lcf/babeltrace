@@ -50,6 +50,14 @@ typedef uint64_t bt_listener_id;
 %rename("%(strip:[BT_])s", %$isenumitem) "";
 
 /*
+ * The default typemap for constants casts values to `int`. This
+ * doesn't work for us, as we have constants larger than `int`
+ * (`bt_field_class_type`). Override it to call `PyLong_FromLong`
+ * directly, without cast to `int`.
+ */
+%typemap(constcode) int %{ SWIG_Python_SetConstant(d, "$symname", PyLong_FromLongLong($1)); %}
+
+/*
  * Output argument typemap for string output (always appends)
  *
  * We initialize the output parameter `temp_value` to an invalid but non-zero
@@ -222,6 +230,7 @@ void bt_bt2_exit_handler(void);
 %include "native_bt_event_class.i"
 %include "native_bt_field.i"
 %include "native_bt_field_class.i"
+%include "native_bt_field_location.i"
 %include "native_bt_field_path.i"
 %include "native_bt_graph.i"
 %include "native_bt_integer_range_set.i"
