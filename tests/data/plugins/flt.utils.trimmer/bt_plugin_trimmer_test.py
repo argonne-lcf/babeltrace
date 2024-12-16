@@ -72,7 +72,7 @@ class TheSourceOfAllEvil(
         # Use a clock class with an offset, so we can test with --begin or --end
         # smaller than this offset (in other words, a time that it's not
         # possible to represent with this clock class).
-        cc = self._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(10000))
+        cc = self._create_clock_class(frequency=1, offset=bt2.ClockOffset(10000))
         sc = tc.create_stream_class(
             default_clock_class=cc,
             supports_packets=with_packets,

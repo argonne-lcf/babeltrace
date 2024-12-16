@@ -33,9 +33,9 @@ class TheSourceOfConfusion(
 class DiffTraceName:
     def source_setup(src, test_name):
         tc1 = src._create_trace_class()
-        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
         tc2 = src._create_trace_class()
-        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
 
         trace_name1 = "rouyn"
         trace_name2 = "noranda"
@@ -60,9 +60,9 @@ class DiffTraceName:
 class DiffStreamName:
     def source_setup(src, test_name):
         tc1 = src._create_trace_class()
-        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
         tc2 = src._create_trace_class()
-        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
 
         stream_name1 = "port-daniel"
         stream_name2 = "gascon"
@@ -87,9 +87,9 @@ class DiffStreamName:
 class DiffStreamId:
     def source_setup(src, test_name):
         tc1 = src._create_trace_class()
-        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
         tc2 = src._create_trace_class()
-        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
 
         stream_id1 = 18
         stream_id2 = 23
@@ -114,9 +114,9 @@ class DiffStreamId:
 class DiffStreamNoName:
     def source_setup(src, test_name):
         tc1 = src._create_trace_class()
-        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
         tc2 = src._create_trace_class()
-        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
 
         stream_name1 = "one"
         stream_name2 = None
@@ -141,9 +141,9 @@ class DiffStreamNoName:
 class DiffStreamClassId:
     def source_setup(src, test_name):
         tc1 = src._create_trace_class(assigns_automatic_stream_class_id=False)
-        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
         tc2 = src._create_trace_class(assigns_automatic_stream_class_id=False)
-        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
 
         stream_class_id1 = 18
         stream_class_id2 = 23
@@ -170,9 +170,9 @@ class DiffStreamClassId:
 class DiffStreamClassName:
     def source_setup(src, test_name):
         tc1 = src._create_trace_class(assigns_automatic_stream_class_id=False)
-        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
         tc2 = src._create_trace_class(assigns_automatic_stream_class_id=False)
-        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
 
         stream_class_name1 = "one"
         stream_class_name2 = "two"
@@ -200,9 +200,9 @@ class DiffStreamClassName:
 class DiffStreamClassNoName:
     def source_setup(src, test_name):
         tc1 = src._create_trace_class(assigns_automatic_stream_class_id=False)
-        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
         tc2 = src._create_trace_class(assigns_automatic_stream_class_id=False)
-        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
 
         stream_class_name1 = "one"
         stream_class_name2 = None
@@ -230,7 +230,7 @@ class DiffStreamClassNoName:
 class BasicTimestampOrdering:
     def source_setup(src, test_name):
         tc = src._create_trace_class()
-        cc = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
 
         timestamp1 = 0
         timestamp2 = 120
@@ -258,7 +258,7 @@ class MultiIterOrdering:
         tc2 = src._create_trace_class(assigns_automatic_stream_class_id=False)
         tc3 = src._create_trace_class(assigns_automatic_stream_class_id=False)
         tc4 = src._create_trace_class(assigns_automatic_stream_class_id=False)
-        cc = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
 
         src._add_output_port("out1", (test_name, 1, tc1, cc))
         src._add_output_port("out2", (test_name, 2, tc2, cc))
@@ -344,9 +344,9 @@ class MultiIterOrdering:
 class DiffEventClassName:
     def source_setup(src, test_name):
         tc1 = src._create_trace_class(assigns_automatic_stream_class_id=False)
-        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
         tc2 = src._create_trace_class(assigns_automatic_stream_class_id=False)
-        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
 
         event_class_name1 = "Hull"
         event_class_name2 = "Gatineau"
@@ -380,9 +380,9 @@ class DiffEventClassName:
 class DiffEventClassId:
     def source_setup(src, test_name):
         tc1 = src._create_trace_class(assigns_automatic_stream_class_id=False)
-        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc1 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
         tc2 = src._create_trace_class(assigns_automatic_stream_class_id=False)
-        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockClassOffset(0))
+        cc2 = src._create_clock_class(frequency=1, offset=bt2.ClockOffset(0))
 
         event_class_id1 = 1
         event_class_id2 = 2
@@ -416,10 +416,10 @@ class DiffEventClassId:
 class DiffInactivityMsgCs:
     def source_setup(src, test_name):
         cc1 = src._create_clock_class(
-            frequency=1, name="La Baie", offset=bt2.ClockClassOffset(0)
+            frequency=1, name="La Baie", offset=bt2.ClockOffset(0)
         )
         cc2 = src._create_clock_class(
-            frequency=1, name="Chicoutimi", offset=bt2.ClockClassOffset(0)
+            frequency=1, name="Chicoutimi", offset=bt2.ClockOffset(0)
         )
 
         src._add_output_port("out1", (test_name, cc1))

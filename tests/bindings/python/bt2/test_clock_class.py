@@ -19,47 +19,47 @@ from utils import (
 )
 
 
-class ClockClassOffsetTestCase(unittest.TestCase):
+class ClockOffsetTestCase(unittest.TestCase):
     def test_create_default(self):
-        cco = bt2.ClockClassOffset()
+        cco = bt2.ClockOffset()
         self.assertEqual(cco.seconds, 0)
         self.assertEqual(cco.cycles, 0)
 
     def test_create(self):
-        cco = bt2.ClockClassOffset(23, 4871232)
+        cco = bt2.ClockOffset(23, 4871232)
         self.assertEqual(cco.seconds, 23)
         self.assertEqual(cco.cycles, 4871232)
 
     def test_create_kwargs(self):
-        cco = bt2.ClockClassOffset(seconds=23, cycles=4871232)
+        cco = bt2.ClockOffset(seconds=23, cycles=4871232)
         self.assertEqual(cco.seconds, 23)
         self.assertEqual(cco.cycles, 4871232)
 
     def test_create_invalid_seconds(self):
         with self.assertRaises(TypeError):
-            bt2.ClockClassOffset("hello", 4871232)  # type: ignore
+            bt2.ClockOffset("hello", 4871232)  # type: ignore
 
     def test_create_invalid_cycles(self):
         with self.assertRaises(TypeError):
-            bt2.ClockClassOffset(23, "hello")  # type: ignore
+            bt2.ClockOffset(23, "hello")  # type: ignore
 
     def test_eq(self):
-        cco1 = bt2.ClockClassOffset(23, 42)
-        cco2 = bt2.ClockClassOffset(23, 42)
+        cco1 = bt2.ClockOffset(23, 42)
+        cco2 = bt2.ClockOffset(23, 42)
         self.assertEqual(cco1, cco2)
 
     def test_ne_seconds(self):
-        cco1 = bt2.ClockClassOffset(23, 42)
-        cco2 = bt2.ClockClassOffset(24, 42)
+        cco1 = bt2.ClockOffset(23, 42)
+        cco2 = bt2.ClockOffset(24, 42)
         self.assertNotEqual(cco1, cco2)
 
     def test_ne_cycles(self):
-        cco1 = bt2.ClockClassOffset(23, 42)
-        cco2 = bt2.ClockClassOffset(23, 43)
+        cco1 = bt2.ClockOffset(23, 42)
+        cco2 = bt2.ClockOffset(23, 43)
         self.assertNotEqual(cco1, cco2)
 
     def test_eq_invalid(self):
-        self.assertFalse(bt2.ClockClassOffset() == 23)
+        self.assertFalse(bt2.ClockOffset() == 23)
 
 
 RetT = typing.TypeVar("RetT")
@@ -88,7 +88,7 @@ class ClockClassTestCase(unittest.TestCase):
         self.assertEqual(cc.frequency, 1000000000)
         self.assertIsNone(cc.description)
         self.assertEqual(cc.precision, 0)
-        self.assertEqual(cc.offset, bt2.ClockClassOffset())
+        self.assertEqual(cc.offset, bt2.ClockOffset())
         self.assertTrue(cc.origin_is_unix_epoch)
         self.assertIsNone(cc.uuid)
         self.assertEqual(len(cc.user_attributes), 0)
@@ -147,10 +147,10 @@ class ClockClassTestCase(unittest.TestCase):
 
     def test_create_offset(self):
         def f(comp_self: bt2._UserSinkComponent):
-            return comp_self._create_clock_class(offset=bt2.ClockClassOffset(12, 56))
+            return comp_self._create_clock_class(offset=bt2.ClockOffset(12, 56))
 
         cc = run_in_component_init(f)
-        self.assertEqual(cc.offset, bt2.ClockClassOffset(12, 56))
+        self.assertEqual(cc.offset, bt2.ClockOffset(12, 56))
 
     def test_create_invalid_offset(self):
         def f(comp_self: bt2._UserSinkComponent):
@@ -233,7 +233,7 @@ class ClockSnapshotTestCase(unittest.TestCase):
     def setUp(self):
         def f(comp_self: bt2._UserSinkComponent):
             cc = comp_self._create_clock_class(
-                1000, "my_cc", offset=bt2.ClockClassOffset(45, 354)
+                1000, "my_cc", offset=bt2.ClockOffset(45, 354)
             )
             tc = comp_self._create_trace_class()
 

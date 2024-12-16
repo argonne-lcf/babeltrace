@@ -12,7 +12,7 @@ from bt2 import user_attributes as bt2_user_attrs
 typing = typing_mod._typing_mod
 
 
-class ClockClassOffset:
+class ClockOffset:
     def __init__(self, seconds: int = 0, cycles: int = 0):
         bt2_utils._check_int64(seconds)
         bt2_utils._check_int64(cycles)
@@ -33,6 +33,9 @@ class ClockClassOffset:
             return False
 
         return (self.seconds, self.cycles) == (other.seconds, other.cycles)
+
+
+ClockClassOffset = ClockOffset
 
 
 class _ClockClassConst(bt2_object._SharedObject, bt2_user_attrs._WithUserAttrsConst):
@@ -65,9 +68,9 @@ class _ClockClassConst(bt2_object._SharedObject, bt2_user_attrs._WithUserAttrsCo
         return native_bt.clock_class_get_precision(self._ptr)
 
     @property
-    def offset(self) -> ClockClassOffset:
+    def offset(self) -> ClockOffset:
         offset_s, offset_cycles = native_bt.clock_class_get_offset(self._ptr)
-        return ClockClassOffset(offset_s, offset_cycles)
+        return ClockOffset(offset_s, offset_cycles)
 
     @property
     def origin_is_unix_epoch(self) -> bool:
@@ -124,7 +127,7 @@ class _ClockClass(bt2_user_attrs._WithUserAttrs, _ClockClassConst):
         native_bt.clock_class_set_precision(self._ptr, precision)
 
     def _set_offset(self, offset):
-        bt2_utils._check_type(offset, ClockClassOffset)
+        bt2_utils._check_type(offset, ClockOffset)
         native_bt.clock_class_set_offset(self._ptr, offset.seconds, offset.cycles)
 
     def _set_origin_is_unix_epoch(self, origin_is_unix_epoch):

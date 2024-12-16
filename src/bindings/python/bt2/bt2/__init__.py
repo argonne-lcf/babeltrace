@@ -166,7 +166,7 @@ from bt2.field_path import (
 )
 
 # import all public names
-from bt2.clock_class import ClockClassOffset, _ClockClass, _ClockClassConst
+from bt2.clock_class import ClockOffset, _ClockClass, _ClockClassConst
 from bt2.event_class import EventClassLogLevel, _EventClass, _EventClassConst
 from bt2.field_class import (
     IntegerDisplayBase,
