@@ -2587,7 +2587,7 @@ enum bt_cmd_status cmd_run(struct bt_config *cfg)
 			}
 
 			BT_CLI_LOGE_APPEND_CAUSE(
-				"Graph failed to complete successfully");
+				"Graph failed to complete successfully.");
 			goto error;
 		}
 	}
