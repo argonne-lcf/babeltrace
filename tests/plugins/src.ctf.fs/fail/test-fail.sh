@@ -88,7 +88,7 @@ test_fail() {
 	done
 }
 
-plan_tests 64
+plan_tests 72
 
 test_fail \
 	"invalid-packet-size/trace" \
@@ -137,5 +137,11 @@ test_fail \
 	2 \
 	"/dev/null" \
 	"Missing data stream class fragment in metadata stream."
+
+test_fail \
+	"empty-event-record" \
+	2 \
+	"${data_dir}/empty-event-record.expect" \
+	"At 0 bits: Invalid empty event record."
 
 rm -f "${stdout_file}" "${stderr_file}"

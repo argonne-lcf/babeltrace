@@ -4192,6 +4192,15 @@ private:
     /* Last fixed-length bit array field byte order */
     bt2s::optional<ByteOrder> _mLastFixedLenBitArrayFieldByteOrder;
 
+    /*
+     * Head offset within current packet at the beginning of the current
+     * event record.
+     *
+     * This is used to detect an empty event record which is invalid
+     * because it inhibits decoding progress.
+     */
+    bt2c::DataLen _mCurEventRecordHeadOffsetInCurPkt = bt2c::DataLen::fromBits(0);
+
     /* Remaining padding bits to skip for alignment */
     bt2c::DataLen _mRemainingLenToSkip = bt2c::DataLen::fromBits(0);
 

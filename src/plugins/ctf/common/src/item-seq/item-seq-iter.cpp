@@ -655,6 +655,7 @@ ItemSeqIter::_StateHandlingReaction ItemSeqIter::_handleTryBeginReadEventRecordS
 
     /* Next: try reading the event record header field */
     BT_ASSERT_DBG(this->_remainingPktContentLen() > 0_bits);
+    _mCurEventRecordHeadOffsetInCurPkt = _mHeadOffsetInCurPkt;
     this->_prepareToTryReadScope(_State::TryBeginReadEventRecordHeaderScope,
                                  _State::EndReadEventRecordHeaderScope, Scope::EventRecordHeader,
                                  _mItems.dataStreamInfo._mCls->eventRecordHeaderFc());
@@ -663,6 +664,13 @@ ItemSeqIter::_StateHandlingReaction ItemSeqIter::_handleTryBeginReadEventRecordS
 
 ItemSeqIter::_StateHandlingReaction ItemSeqIter::_handleEndReadEventRecordState()
 {
+    /* Validate that current event record has data */
+    BT_ASSERT_DBG(_mHeadOffsetInCurPkt >= _mCurEventRecordHeadOffsetInCurPkt);
+
+    if (_mHeadOffsetInCurPkt == _mCurEventRecordHeadOffsetInCurPkt) {
+        CTF_SRC_ITEM_SEQ_ITER_CPPLOGE_APPEND_CAUSE_AND_THROW("Invalid empty event record.");
+    }
+
     /* Update for user */
     this->_updateForUser(_mItems.eventRecordEnd);
 
