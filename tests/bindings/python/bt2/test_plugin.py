@@ -97,7 +97,11 @@ class PluginTestCase(unittest.TestCase):
         self.assertEqual(self._plugin.description, "CTF input and output")
 
     def test_version(self):
-        self.assertIsNone(self._plugin.version)
+        self.assertIsNotNone(self._plugin.version)
+        self.assertEqual(self._plugin.version.major, 2)
+        self.assertEqual(self._plugin.version.minor, 0)
+        self.assertEqual(self._plugin.version.patch, 0)
+        self.assertIsNone(self._plugin.version.extra)
 
     def test_source_comp_classes_len(self):
         self.assertEqual(len(self._plugin.source_component_classes), 2)

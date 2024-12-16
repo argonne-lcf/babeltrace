@@ -19,6 +19,7 @@ BT_PLUGIN_WITH_ID(lttng_utils, "lttng-utils");
 BT_PLUGIN_DESCRIPTION_WITH_ID(lttng_utils, "LTTng-specific graph utilities");
 BT_PLUGIN_AUTHOR_WITH_ID(lttng_utils, "EfficiOS <https://www.efficios.com/>");
 BT_PLUGIN_LICENSE_WITH_ID(lttng_utils, "MIT");
+BT_PLUGIN_VERSION_WITH_ID(lttng_utils, 2, 0, 0, NULL);
 
 BT_PLUGIN_FILTER_COMPONENT_CLASS_WITH_ID(lttng_utils, debug_info, "debug-info",
                                          debug_info_msg_iter_next);

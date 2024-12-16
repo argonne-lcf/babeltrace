@@ -22,6 +22,7 @@ BT_PLUGIN(utils);
 BT_PLUGIN_DESCRIPTION("Common graph utilities");
 BT_PLUGIN_AUTHOR("EfficiOS <https://www.efficios.com/>");
 BT_PLUGIN_LICENSE("MIT");
+BT_PLUGIN_VERSION(2, 0, 0, NULL);
 
 /* sink.utils.dummy */
 BT_PLUGIN_SINK_COMPONENT_CLASS(dummy, dummy_consume);

@@ -17,6 +17,7 @@ BT_PLUGIN(text);
 BT_PLUGIN_DESCRIPTION("Plain text input and output");
 BT_PLUGIN_AUTHOR("EfficiOS <https://www.efficios.com/>");
 BT_PLUGIN_LICENSE("MIT");
+BT_PLUGIN_VERSION(2, 0, 0, NULL);
 
 /* pretty sink */
 BT_PLUGIN_SINK_COMPONENT_CLASS(pretty, pretty_consume);
