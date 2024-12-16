@@ -28,7 +28,7 @@ Trace class:
 [Unknown]
 {Trace 0, Stream class ID 0, Stream ID 2}
 Stream beginning:
-  Trace (UID `0f37a32b-1796-408d-b723-bd27b45921c6`):
+  Trace (Namespace `lttng.org,2009`, UID `0f37a32b-1796-408d-b723-bd27b45921c6`):
     Environment (5 entries):
       domain: ust
       hostname: joraj-alpa

@@ -531,6 +531,13 @@ Ctf1MetadataStreamParser::_translateTraceCls(ctf_trace_class& origTraceCls)
         pktHeaderFc = this->_fcFromOrigFc(*origTraceCls.packet_header_fc);
     }
 
+    /* LTTng namespace */
+    bt2s::optional<std::string> ns;
+
+    if (origTraceCls.is_lttng) {
+        ns = lttngUserAttrsNs;
+    }
+
     /* UID */
     bt2s::optional<std::string> uid;
 
@@ -545,7 +552,7 @@ Ctf1MetadataStreamParser::_translateTraceCls(ctf_trace_class& origTraceCls)
     }
 
     /* Create trace class */
-    auto traceCls = createTraceCls(bt2s::nullopt, bt2s::nullopt, std::move(uid),
+    auto traceCls = createTraceCls(std::move(ns), bt2s::nullopt, std::move(uid),
                                    envMapValFromOrigTraceCls(origTraceCls), std::move(pktHeaderFc));
 
     /* Mark original CTF IR trace class as translated */

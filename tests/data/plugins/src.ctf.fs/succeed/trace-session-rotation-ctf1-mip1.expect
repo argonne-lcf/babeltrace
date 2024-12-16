@@ -237,7 +237,7 @@ Trace class:
 [Unknown]
 {Trace 0, Stream class ID 0, Stream ID 0}
 Stream beginning:
-  Trace (UID `21cdfa5e-9a64-490a-832c-53aca6c101ba`):
+  Trace (Namespace `lttng.org,2009`, UID `21cdfa5e-9a64-490a-832c-53aca6c101ba`):
     Environment (8 entries):
       domain: ust
       hostname: smarchi-efficios
@@ -255,7 +255,7 @@ Stream beginning:
 [Unknown]
 {Trace 0, Stream class ID 0, Stream ID 1}
 Stream beginning:
-  Trace (UID `21cdfa5e-9a64-490a-832c-53aca6c101ba`):
+  Trace (Namespace `lttng.org,2009`, UID `21cdfa5e-9a64-490a-832c-53aca6c101ba`):
     Environment (8 entries):
       domain: ust
       hostname: smarchi-efficios
@@ -273,7 +273,7 @@ Stream beginning:
 [Unknown]
 {Trace 0, Stream class ID 0, Stream ID 2}
 Stream beginning:
-  Trace (UID `21cdfa5e-9a64-490a-832c-53aca6c101ba`):
+  Trace (Namespace `lttng.org,2009`, UID `21cdfa5e-9a64-490a-832c-53aca6c101ba`):
     Environment (8 entries):
       domain: ust
       hostname: smarchi-efficios
@@ -291,7 +291,7 @@ Stream beginning:
 [Unknown]
 {Trace 0, Stream class ID 0, Stream ID 3}
 Stream beginning:
-  Trace (UID `21cdfa5e-9a64-490a-832c-53aca6c101ba`):
+  Trace (Namespace `lttng.org,2009`, UID `21cdfa5e-9a64-490a-832c-53aca6c101ba`):
     Environment (8 entries):
       domain: ust
       hostname: smarchi-efficios
@@ -545,7 +545,7 @@ Trace class:
 [Unknown]
 {Trace 1, Stream class ID 0, Stream ID 0}
 Stream beginning:
-  Trace (UID `83656eb1-b131-40e7-9666-c04ae279b58c`):
+  Trace (Namespace `lttng.org,2009`, UID `83656eb1-b131-40e7-9666-c04ae279b58c`):
     Environment (8 entries):
       domain: ust
       hostname: smarchi-efficios
@@ -563,7 +563,7 @@ Stream beginning:
 [Unknown]
 {Trace 1, Stream class ID 0, Stream ID 1}
 Stream beginning:
-  Trace (UID `83656eb1-b131-40e7-9666-c04ae279b58c`):
+  Trace (Namespace `lttng.org,2009`, UID `83656eb1-b131-40e7-9666-c04ae279b58c`):
     Environment (8 entries):
       domain: ust
       hostname: smarchi-efficios
@@ -581,7 +581,7 @@ Stream beginning:
 [Unknown]
 {Trace 1, Stream class ID 0, Stream ID 2}
 Stream beginning:
-  Trace (UID `83656eb1-b131-40e7-9666-c04ae279b58c`):
+  Trace (Namespace `lttng.org,2009`, UID `83656eb1-b131-40e7-9666-c04ae279b58c`):
     Environment (8 entries):
       domain: ust
       hostname: smarchi-efficios
@@ -599,7 +599,7 @@ Stream beginning:
 [Unknown]
 {Trace 1, Stream class ID 0, Stream ID 3}
 Stream beginning:
-  Trace (UID `83656eb1-b131-40e7-9666-c04ae279b58c`):
+  Trace (Namespace `lttng.org,2009`, UID `83656eb1-b131-40e7-9666-c04ae279b58c`):
     Environment (8 entries):
       domain: ust
       hostname: smarchi-efficios

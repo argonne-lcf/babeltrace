@@ -388,6 +388,7 @@ struct ctf_trace_class
     /* Array of `struct ctf_trace_class_env_entry` */
     GArray *env_entries;
 
+    bool is_lttng;
     bool is_translated;
 };
 

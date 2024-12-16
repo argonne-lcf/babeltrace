@@ -1,7 +1,7 @@
 [Unknown]
 {Trace 0, Stream class ID 0, Stream ID 0}
 Stream beginning:
-  Trace `the-trace` (UID `624b19d9-19cd-4eae-bab8-8342e1b96a5d`):
+  Trace `the-trace` (Namespace `lttng.org,2009`, UID `624b19d9-19cd-4eae-bab8-8342e1b96a5d`):
     Environment (7 entries):
       domain: ust
       procname: wk-heartbeat
@@ -22,7 +22,7 @@ Stream beginning:
 [Unknown]
 {Trace 0, Stream class ID 0, Stream ID 1}
 Stream beginning:
-  Trace `the-trace` (UID `624b19d9-19cd-4eae-bab8-8342e1b96a5d`):
+  Trace `the-trace` (Namespace `lttng.org,2009`, UID `624b19d9-19cd-4eae-bab8-8342e1b96a5d`):
     Environment (7 entries):
       domain: ust
       procname: wk-heartbeat
@@ -43,7 +43,7 @@ Stream beginning:
 [Unknown]
 {Trace 0, Stream class ID 0, Stream ID 2}
 Stream beginning:
-  Trace `the-trace` (UID `624b19d9-19cd-4eae-bab8-8342e1b96a5d`):
+  Trace `the-trace` (Namespace `lttng.org,2009`, UID `624b19d9-19cd-4eae-bab8-8342e1b96a5d`):
     Environment (7 entries):
       domain: ust
       procname: wk-heartbeat
@@ -64,7 +64,7 @@ Stream beginning:
 [Unknown]
 {Trace 0, Stream class ID 0, Stream ID 3}
 Stream beginning:
-  Trace `the-trace` (UID `624b19d9-19cd-4eae-bab8-8342e1b96a5d`):
+  Trace `the-trace` (Namespace `lttng.org,2009`, UID `624b19d9-19cd-4eae-bab8-8342e1b96a5d`):
     Environment (7 entries):
       domain: ust
       procname: wk-heartbeat
@@ -85,7 +85,7 @@ Stream beginning:
 [Unknown]
 {Trace 0, Stream class ID 0, Stream ID 4}
 Stream beginning:
-  Trace `the-trace` (UID `624b19d9-19cd-4eae-bab8-8342e1b96a5d`):
+  Trace `the-trace` (Namespace `lttng.org,2009`, UID `624b19d9-19cd-4eae-bab8-8342e1b96a5d`):
     Environment (7 entries):
       domain: ust
       procname: wk-heartbeat
@@ -106,7 +106,7 @@ Stream beginning:
 [Unknown]
 {Trace 0, Stream class ID 0, Stream ID 5}
 Stream beginning:
-  Trace `the-trace` (UID `624b19d9-19cd-4eae-bab8-8342e1b96a5d`):
+  Trace `the-trace` (Namespace `lttng.org,2009`, UID `624b19d9-19cd-4eae-bab8-8342e1b96a5d`):
     Environment (7 entries):
       domain: ust
       procname: wk-heartbeat
@@ -127,7 +127,7 @@ Stream beginning:
 [Unknown]
 {Trace 0, Stream class ID 0, Stream ID 6}
 Stream beginning:
-  Trace `the-trace` (UID `624b19d9-19cd-4eae-bab8-8342e1b96a5d`):
+  Trace `the-trace` (Namespace `lttng.org,2009`, UID `624b19d9-19cd-4eae-bab8-8342e1b96a5d`):
     Environment (7 entries):
       domain: ust
       procname: wk-heartbeat
@@ -148,7 +148,7 @@ Stream beginning:
 [Unknown]
 {Trace 0, Stream class ID 0, Stream ID 7}
 Stream beginning:
-  Trace `the-trace` (UID `624b19d9-19cd-4eae-bab8-8342e1b96a5d`):
+  Trace `the-trace` (Namespace `lttng.org,2009`, UID `624b19d9-19cd-4eae-bab8-8342e1b96a5d`):
     Environment (7 entries):
       domain: ust
       procname: wk-heartbeat

@@ -65,7 +65,7 @@ Trace class:
 {Trace 0, Stream class ID 2, Stream ID 0}
 Stream beginning:
   Name: stream-6
-  Trace (UID `0051d20e-3389-4157-9693-e7d5d8565aa0`):
+  Trace (Namespace `lttng.org,2009`, UID `0051d20e-3389-4157-9693-e7d5d8565aa0`):
     Environment (5 entries):
       domain: ust
       hostname: joraj-alpa
@@ -81,7 +81,7 @@ Stream beginning:
 {Trace 0, Stream class ID 2, Stream ID 1}
 Stream beginning:
   Name: stream-7
-  Trace (UID `0051d20e-3389-4157-9693-e7d5d8565aa0`):
+  Trace (Namespace `lttng.org,2009`, UID `0051d20e-3389-4157-9693-e7d5d8565aa0`):
     Environment (5 entries):
       domain: ust
       hostname: joraj-alpa
@@ -97,7 +97,7 @@ Stream beginning:
 {Trace 0, Stream class ID 2, Stream ID 2}
 Stream beginning:
   Name: stream-8
-  Trace (UID `0051d20e-3389-4157-9693-e7d5d8565aa0`):
+  Trace (Namespace `lttng.org,2009`, UID `0051d20e-3389-4157-9693-e7d5d8565aa0`):
     Environment (5 entries):
       domain: ust
       hostname: joraj-alpa
@@ -113,7 +113,7 @@ Stream beginning:
 {Trace 0, Stream class ID 2, Stream ID 3}
 Stream beginning:
   Name: stream-9
-  Trace (UID `0051d20e-3389-4157-9693-e7d5d8565aa0`):
+  Trace (Namespace `lttng.org,2009`, UID `0051d20e-3389-4157-9693-e7d5d8565aa0`):
     Environment (5 entries):
       domain: ust
       hostname: joraj-alpa
@@ -223,7 +223,7 @@ Trace class:
 {Trace 1, Stream class ID 0, Stream ID 0}
 Stream beginning:
   Name: stream-1
-  Trace (UID `830f2129-77d5-cb4e-90cf-b0754d8ce889`):
+  Trace (Namespace `lttng.org,2009`, UID `830f2129-77d5-cb4e-90cf-b0754d8ce889`):
     Environment (12 entries):
       domain: kernel
       hostname: joraj-alpa
@@ -246,7 +246,7 @@ Stream beginning:
 {Trace 1, Stream class ID 0, Stream ID 1}
 Stream beginning:
   Name: stream-2
-  Trace (UID `830f2129-77d5-cb4e-90cf-b0754d8ce889`):
+  Trace (Namespace `lttng.org,2009`, UID `830f2129-77d5-cb4e-90cf-b0754d8ce889`):
     Environment (12 entries):
       domain: kernel
       hostname: joraj-alpa
@@ -269,7 +269,7 @@ Stream beginning:
 {Trace 1, Stream class ID 0, Stream ID 2}
 Stream beginning:
   Name: stream-3
-  Trace (UID `830f2129-77d5-cb4e-90cf-b0754d8ce889`):
+  Trace (Namespace `lttng.org,2009`, UID `830f2129-77d5-cb4e-90cf-b0754d8ce889`):
     Environment (12 entries):
       domain: kernel
       hostname: joraj-alpa
@@ -292,7 +292,7 @@ Stream beginning:
 {Trace 1, Stream class ID 0, Stream ID 3}
 Stream beginning:
   Name: stream-4
-  Trace (UID `830f2129-77d5-cb4e-90cf-b0754d8ce889`):
+  Trace (Namespace `lttng.org,2009`, UID `830f2129-77d5-cb4e-90cf-b0754d8ce889`):
     Environment (12 entries):
       domain: kernel
       hostname: joraj-alpa

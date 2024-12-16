@@ -80,7 +80,8 @@
     "type": "structure"
   },
   "type": "trace-class",
-  "uid": "0051d20e-3389-4157-9693-e7d5d8565aa0"
+  "uid": "0051d20e-3389-4157-9693-e7d5d8565aa0",
+  "namespace": "lttng.org,2009"
 }
 {
   "description": "Monotonic Clock",

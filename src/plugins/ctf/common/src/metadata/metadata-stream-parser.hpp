@@ -27,6 +27,8 @@ enum class MetadataStreamMajorVersion
     V2,
 };
 
+extern const char * const lttngUserAttrsNs;
+
 /*
  * Abstract base CTF metadata stream parser class.
  */

@@ -16,11 +16,12 @@
 
 namespace ctf {
 namespace src {
+
+const char * const lttngUserAttrsNs = "lttng.org,2009";
+
 namespace {
 
 using namespace bt2c::literals::datalen;
-
-constexpr const char *lttngUserAttrsNs = "lttng.org,2009";
 
 /*
  * Map of variant field class to the index of the currently

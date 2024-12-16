@@ -3836,7 +3836,7 @@ static int visit_env(struct ctf_visitor_generate_ir *ctx, struct ctf_node *node)
                                     "Detected LTTng trace from `{}` environment value: "
                                     "tracer-name=\"{}\"",
                                     left, right);
-                    ctx->is_lttng = true;
+                    ctx->ctf_tc->is_lttng = true;
                 }
             }
 
@@ -4185,7 +4185,7 @@ static int visit_clock_decl(struct ctf_visitor_generate_ir *ctx, struct ctf_node
 
     clock_class_name = clock->name->str;
     BT_ASSERT(clock_class_name);
-    if (ctx->is_lttng && strcmp(clock_class_name, "monotonic") == 0) {
+    if (ctx->ctf_tc->is_lttng && strcmp(clock_class_name, "monotonic") == 0) {
         /*
          * Old versions of LTTng forgot to set its clock class
          * as absolute, even if it is. This is important because

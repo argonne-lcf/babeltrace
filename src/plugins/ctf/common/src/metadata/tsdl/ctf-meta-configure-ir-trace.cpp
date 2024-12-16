@@ -47,6 +47,10 @@ void ctf_trace_class_configure_ir_trace(const ctf::src::TraceCls& tc, bt2::Trace
 {
     bt2c::Logger logger {parentLogger, "PLUGIN/CTF/META/CONFIG-IR-TRACE"};
 
+    if (tc.ns() && mipVersion >= 1) {
+        irTrace.nameSpace(*tc.ns());
+    }
+
     if (tc.uid()) {
         if (mipVersion == 0) {
             /*
