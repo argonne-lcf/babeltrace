@@ -1799,18 +1799,18 @@ private:
             clkCls.libCls()->name(*clkCls.name());
         }
 
-        /* Set UID (MIP 1+)*/
-        if (_mMipVersion >= 1 && clkCls.uid()) {
-            clkCls.libCls()->uid(*clkCls.uid());
-        }
-
-        /* Set UUID (MIP 0) */
-        if (_mMipVersion == 0 && clkCls.uid()) {
-            /*
-             * MIP 0 means only CTF 1.8; therefore the UID _is_ a
-             * UUID string.
-             */
-            clkCls.libCls()->uuid(bt2c::Uuid {*clkCls.uid()});
+        /* Set UID */
+        if (clkCls.uid()) {
+            if (_mMipVersion == 0) {
+                /*
+                 * MIP 0 means only CTF 1.8; therefore the UID _is_ a
+                 * UUID string.
+                 */
+                clkCls.libCls()->uuid(bt2c::Uuid {*clkCls.uid()});
+            } else {
+                /* MIP 1+ */
+                clkCls.libCls()->uid(*clkCls.uid());
+            }
         }
 
         /* Set offset from origin */
