@@ -31,24 +31,27 @@ binary_artefact_dir="$BT_TESTS_DATADIR/$this_dir_relative"
 test_debug_info() {
 	local name="$1"
 	local local_args=(
-		"--allowed-mip-versions=0"
 		"-c" "flt.lttng-utils.debug-info"
 		"-p" "target-prefix=\"$binary_artefact_dir/x86-64-linux-gnu/dwarf-full\""
 		"-c" "sink.text.details"
 		"-p" "with-trace-name=no,with-stream-name=no"
 	)
 
-	bt_diff_cli "$expect_dir/trace-$name.expect" "/dev/null" \
-		"$succeed_trace_dir/$name" "${local_args[@]}"
-	ok $? "Trace '$name' gives the expected output"
+	for mip_version in 0 1; do
+		bt_diff_cli "$expect_dir/trace-$name-mip$mip_version.expect" "/dev/null" \
+			"$succeed_trace_dir/$name" "${local_args[@]}" \
+			"--allowed-mip-versions=$mip_version"
+		ok $? "MIP '$mip_version': Trace '$name' gives the expected output"
+	done
 }
 
 test_compare_to_ctf_fs() {
 	# Compare the `sink.text.details` output of a graph with and without a
 	# `flt.lttng-utils.debug-info` component. Both should be identical for
 	# traces without LTTng debugging fields.
-	local test_name=$1
-	shift 1
+	local mip_version=$1
+	local test_name=$2
+	shift 2
 	local cli_args=("$@")
 	local debug_info_cli_args=("-c" "flt.lttng-utils.debug-info")
 	local details_cli_args=(
@@ -71,7 +74,7 @@ test_compare_to_ctf_fs() {
 		"$expected_stdout" \
 		"$expected_stderr" \
 		"${cli_args[@]}" \
-		--allowed-mip-versions=0 \
+		--allowed-mip-versions="$mip_version" \
 		"${details_cli_args[@]}"
 
 	# Read the same trace with a `debug-info` component in the graph.
@@ -79,15 +82,15 @@ test_compare_to_ctf_fs() {
 		"$actual_stdout" \
 		"$actual_stderr" \
 		"${cli_args[@]}" \
-		--allowed-mip-versions=0 \
+		--allowed-mip-versions="$mip_version" \
 		"${details_cli_args[@]}" \
 		"${debug_info_cli_args[@]}"
 
 	bt_diff "$expected_stdout" "$actual_stdout"
-	ok $? "Input '$test_name' gives the expected stdout"
+	ok $? "MIP '$mip_version': Input '$test_name' gives the expected stdout"
 
 	bt_diff "$expected_stderr" "$actual_stderr"
-	ok $? "Input '$test_name' gives the expected stderr"
+	ok $? "MIP '$mip_version': Input '$test_name' gives the expected stderr"
 
 	rm -f "$actual_stdout"
 	rm -f "$actual_stderr"
@@ -101,17 +104,24 @@ test_compare_ctf_src_trace() {
 	local cli_args=("$trace_path")
 
 	diag "Comparing output with and without 'flt.lttng-utils.debug-info' on '$trace_name'"
-	test_compare_to_ctf_fs "src.ctf.fs with $trace_name trace" "${cli_args[@]}"
+
+	for mip_version in 0 1; do
+		test_compare_to_ctf_fs "$mip_version" "src.ctf.fs with $trace_name trace" \
+			"${cli_args[@]}"
+	done
 }
 
 test_compare_complete_src_trace() {
 
 	local source_name="src.trace-ir-test.AllFields"
-	local cli_args=("-c" "$source_name")
-	test_compare_to_ctf_fs "$source_name" "${cli_args[@]}"
+
+	for mip_version in 0 1; do
+		local cli_args=("--component=$source_name" "--allowed-mip-versions=$mip_version")
+		test_compare_to_ctf_fs "$mip_version" "$source_name" "${cli_args[@]}"
+	done
 }
 
-plan_tests 9
+plan_tests 18
 
 test_debug_info debug-info
 
