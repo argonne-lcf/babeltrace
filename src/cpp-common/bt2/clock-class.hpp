@@ -442,14 +442,25 @@ ClockOriginView CommonClockClass<LibObjT>::origin() const noexcept
     return ClockOriginView {*this};
 }
 
-inline bool isSameClockOrigin(const bt2::ClockOriginView& a, const bt2::ClockOriginView& b,
-                              const std::uint64_t graphMipVersion)
+inline bool isSameClockOrigin(const bt2::ClockOriginView& a, const bt2::ClockOriginView& b)
 {
-    if (graphMipVersion == 0) {
-        return a.isUnixEpoch() == b.isUnixEpoch();
-    } else {
+    if (a.isUnixEpoch() && b.isUnixEpoch()) {
+        return true;
+    }
+
+    if (a.isUnixEpoch() && !b.isUnixEpoch()) {
+        return false;
+    }
+
+    if (!a.isUnixEpoch() && b.isUnixEpoch()) {
+        return false;
+    }
+
+    if (a.isKnown() && b.isKnown()) {
         return a.identity() == b.identity();
     }
+
+    return false;
 }
 
 } /* namespace bt2 */

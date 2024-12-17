@@ -106,20 +106,10 @@ void ClockCorrelationValidator::_validate(const bt2::ConstMessage msg,
                 *_mRefClockClass, streamCls};
         }
 
-        /*
-         * Under MIP 0, the only known clock origin is the Unix epoch.
-         *
-         * At this point, we know that both clock classes have known
-         * origins, therefore we also know they share the
-         * same origin.
-         */
-        if (graphMipVersion > 0) {
-            if (!bt2::isSameClockOrigin(clockCls->origin(), _mRefClockClass->origin(),
-                                        graphMipVersion)) {
-                throw ClockCorrelationError {
-                    ClockCorrelationError::Type::ExpectingOriginKnownGotOtherOrigin, *clockCls,
-                    *_mRefClockClass, streamCls};
-            }
+        if (!bt2::isSameClockOrigin(clockCls->origin(), _mRefClockClass->origin())) {
+            throw ClockCorrelationError {
+                ClockCorrelationError::Type::ExpectingOriginKnownGotOtherOrigin, *clockCls,
+                *_mRefClockClass, streamCls};
         }
 
         break;

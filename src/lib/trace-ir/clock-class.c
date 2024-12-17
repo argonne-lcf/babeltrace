@@ -29,36 +29,15 @@
 	BT_ASSERT_PRE_DEV_HOT("clock-class", (_cc), "Clock class",	\
 		": %!+K", (_cc))
 
-/* Constants for the UNIX epoch origin */
-static const char *const CC_ORIGIN_UNIX_EPOCH_NS = "babeltrace.org,2020";
-static const char *const CC_ORIGIN_UNIX_EPOCH_NAME = "unix-epoch";
-static const char *const CC_ORIGIN_UNIX_EPOCH_UID = "";
-
 static
-void free_clock_class_origin_data(struct bt_clock_class *clock_class)
+void free_clock_class_custom_origin(struct bt_clock_class *clock_class)
 {
-	/*
-	 * If the origin was set using set_origin_unix_epoch(), then the
-	 * pointers are equal to the `CC_ORIGIN_UNIX_EPOCH_*` constants,
-	 * therefore the strings aren't dynamically allocated.
-	 */
-	if (clock_class->origin.ns != CC_ORIGIN_UNIX_EPOCH_NS) {
-		g_free(clock_class->origin.ns);
-	}
-
-	clock_class->origin.ns = NULL;
-
-	if (clock_class->origin.name != CC_ORIGIN_UNIX_EPOCH_NAME) {
-		g_free(clock_class->origin.name);
-	}
-
-	clock_class->origin.name = NULL;
-
-	if (clock_class->origin.uid != CC_ORIGIN_UNIX_EPOCH_UID) {
-		g_free(clock_class->origin.uid);
-	}
-
-	clock_class->origin.uid = NULL;
+	g_free(clock_class->custom_origin.ns);
+	clock_class->custom_origin.ns = NULL;
+	g_free(clock_class->custom_origin.name);
+	clock_class->custom_origin.name = NULL;
+	g_free(clock_class->custom_origin.uid);
+	clock_class->custom_origin.uid = NULL;
 }
 
 static
@@ -73,7 +52,7 @@ void destroy_clock_class(struct bt_object *obj)
 	g_free(clock_class->name);
 	g_free(clock_class->uid);
 	g_free(clock_class->description);
-	free_clock_class_origin_data(clock_class);
+	free_clock_class_custom_origin(clock_class);
 	bt_object_pool_finalize(&clock_class->cs_pool);
 	g_free(clock_class);
 }
@@ -96,21 +75,19 @@ void set_base_offset(struct bt_clock_class *clock_class)
 static void
 set_origin_unix_epoch(struct bt_clock_class *clock_class)
 {
-	free_clock_class_origin_data(clock_class);
-
-	/*
-	 * For the Unix epoch origin, don't use g_strdup() to avoid
-	 * allocations.
-	 */
-	clock_class->origin.ns = (gchar *) CC_ORIGIN_UNIX_EPOCH_NS;
-	clock_class->origin.name = (gchar *) CC_ORIGIN_UNIX_EPOCH_NAME;
-	clock_class->origin.uid = (gchar *) CC_ORIGIN_UNIX_EPOCH_UID;
+	free_clock_class_custom_origin(clock_class);
+	clock_class->origin_kind = CLOCK_ORIGIN_KIND_UNIX_EPOCH;
+	BT_LIB_LOGD("Set clock class's origin to Unix epoch: %!+K",
+		clock_class);
 }
 
 static void
 set_origin_unknown(struct bt_clock_class *clock_class)
 {
-	free_clock_class_origin_data(clock_class);
+	free_clock_class_custom_origin(clock_class);
+	clock_class->origin_kind = CLOCK_ORIGIN_KIND_UNKNOWN;
+	BT_LIB_LOGD("Set clock class's origin to unknown: %!+K",
+		clock_class);
 }
 
 BT_EXPORT
@@ -385,6 +362,11 @@ void bt_clock_class_set_offset(struct bt_clock_class *clock_class,
 	BT_LIB_LOGD("Set clock class's offset: %!+K", clock_class);
 }
 
+#define BT_ASSERT_PRE_DEV_CC_ORIGIN_IS_CUSTOM(_cc)				\
+	BT_ASSERT_PRE_DEV("clock-class-origin-is-custom",			\
+		(_cc)->origin_kind == CLOCK_ORIGIN_KIND_CUSTOM,	\
+		"Clock class's origin is not custom: %!+K", (_cc))
+
 BT_EXPORT
 const char *bt_clock_class_get_origin_namespace(
 		const bt_clock_class *clock_class)
@@ -392,7 +374,8 @@ const char *bt_clock_class_get_origin_namespace(
 	BT_ASSERT_PRE_NO_ERROR();
 	BT_ASSERT_PRE_DEV_CLK_CLS_NON_NULL(clock_class);
 	BT_ASSERT_PRE_CC_MIP_VERSION_GE(clock_class, 1);
-	return clock_class->origin.ns;
+	BT_ASSERT_PRE_DEV_CC_ORIGIN_IS_CUSTOM(clock_class);
+	return clock_class->custom_origin.ns;
 }
 
 BT_EXPORT
@@ -402,7 +385,8 @@ const char *bt_clock_class_get_origin_name(
 	BT_ASSERT_PRE_NO_ERROR();
 	BT_ASSERT_PRE_DEV_CLK_CLS_NON_NULL(clock_class);
 	BT_ASSERT_PRE_CC_MIP_VERSION_GE(clock_class, 1);
-	return clock_class->origin.name;
+	BT_ASSERT_PRE_DEV_CC_ORIGIN_IS_CUSTOM(clock_class);
+	return clock_class->custom_origin.name;
 }
 
 BT_EXPORT
@@ -412,7 +396,8 @@ const char *bt_clock_class_get_origin_uid(
 	BT_ASSERT_PRE_NO_ERROR();
 	BT_ASSERT_PRE_DEV_CLK_CLS_NON_NULL(clock_class);
 	BT_ASSERT_PRE_CC_MIP_VERSION_GE(clock_class, 1);
-	return clock_class->origin.uid;
+	BT_ASSERT_PRE_DEV_CC_ORIGIN_IS_CUSTOM(clock_class);
+	return clock_class->custom_origin.uid;
 }
 
 BT_EXPORT
@@ -420,15 +405,7 @@ bt_bool bt_clock_class_origin_is_unix_epoch(const struct bt_clock_class *clock_c
 {
 	BT_ASSERT_PRE_NO_ERROR();
 	BT_ASSERT_PRE_DEV_CLK_CLS_NON_NULL(clock_class);
-
-	/*
-	 * We don't just compare the pointers to the constants, as the
-	 * user could set the same values using
-	 * bt_clock_class_set_origin().
-	 */
-	return g_strcmp0(clock_class->origin.ns, CC_ORIGIN_UNIX_EPOCH_NS) == 0 &&
-		g_strcmp0(clock_class->origin.name, CC_ORIGIN_UNIX_EPOCH_NAME) == 0 &&
-		g_strcmp0(clock_class->origin.uid, CC_ORIGIN_UNIX_EPOCH_UID) == 0;
+	return clock_class->origin_kind == CLOCK_ORIGIN_KIND_UNIX_EPOCH;
 }
 
 BT_EXPORT
@@ -436,7 +413,7 @@ bt_bool bt_clock_class_origin_is_known(const struct bt_clock_class *clock_class)
 {
 	BT_ASSERT_PRE_NO_ERROR();
 	BT_ASSERT_PRE_DEV_CLK_CLS_NON_NULL(clock_class);
-	return clock_class->origin.name && clock_class->origin.uid;
+	return clock_class->origin_kind != CLOCK_ORIGIN_KIND_UNKNOWN;
 }
 
 BT_EXPORT
@@ -452,9 +429,6 @@ void bt_clock_class_set_origin_is_unix_epoch(struct bt_clock_class *clock_class,
 	} else {
 		set_origin_unknown(clock_class);
 	}
-
-	BT_LIB_LOGD("Set clock class's origin is Unix epoch property: %!+K",
-		clock_class);
 }
 
 BT_EXPORT
@@ -477,10 +451,12 @@ enum bt_clock_class_set_origin_status bt_clock_class_set_origin(
 	BT_ASSERT_PRE_CC_MIP_VERSION_GE(clock_class, 1);
 	BT_ASSERT_PRE_NAME_NON_NULL(name);
 	BT_ASSERT_PRE_UID_NON_NULL(uid);
-	free_clock_class_origin_data(clock_class);
-	clock_class->origin.ns = g_strdup(ns);
-	clock_class->origin.name = g_strdup(name);
-	clock_class->origin.uid = g_strdup(uid);
+	free_clock_class_custom_origin(clock_class);
+	clock_class->origin_kind = CLOCK_ORIGIN_KIND_CUSTOM;
+	clock_class->custom_origin.ns = g_strdup(ns);
+	clock_class->custom_origin.name = g_strdup(name);
+	clock_class->custom_origin.uid = g_strdup(uid);
+	BT_LIB_LOGD("Set clock class's origin to custom: %!+K", clock_class);
 	return BT_FUNC_STATUS_OK;
 }
 

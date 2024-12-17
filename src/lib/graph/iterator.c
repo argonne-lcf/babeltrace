@@ -675,6 +675,28 @@ end:
 
 #ifdef BT_DEV_MODE
 
+static gchar *
+format_clock_class_origin(const struct bt_clock_class *clock_class,
+		const char *prefix)
+{
+	switch (clock_class->origin_kind) {
+	case CLOCK_ORIGIN_KIND_UNIX_EPOCH:
+		return g_strdup_printf("%s-cc-origin=unix-epoch", prefix);
+	case CLOCK_ORIGIN_KIND_UNKNOWN:
+		return g_strdup_printf("%s-cc-origin=unknown", prefix);
+	case CLOCK_ORIGIN_KIND_CUSTOM:
+		return g_strdup_printf("%s-cc-origin-ns=\"%s\", "
+			"%s-cc-origin-name=\"%s\", %s-cc-origin-uid=\"%s\"",
+			prefix,
+			clock_class->custom_origin.ns ?
+				clock_class->custom_origin.ns : "(null)",
+			prefix, clock_class->custom_origin.name,
+			prefix, clock_class->custom_origin.uid);
+	}
+
+	bt_common_abort();
+}
+
 /*
  * When a new stream begins, verify that the clock class tied to this
  * stream is compatible with what we've seen before.
@@ -739,8 +761,8 @@ void assert_post_dev_clock_classes_are_compatible_one(
 			} else {
 				BT_ASSERT_POST_DEV(NEXT_METHOD_NAME,
 					"stream-class-has-clock-class-with-known-origin", false,
-					"Expecting a clock class with a known origin, got none: " EXP_CC_ORIGIN_FMT,
-					EXP_CC_ORIGIN_VALUES);
+					"Expecting a clock class, got none. with a known origin, got none: %s",
+					format_clock_class_origin(ref_clock_cls, "expected"));
 			}
 
 			/*
@@ -759,8 +781,9 @@ void assert_post_dev_clock_classes_are_compatible_one(
 			} else {
 				BT_ASSERT_POST_DEV(NEXT_METHOD_NAME,
 					"clock-class-has-known-origin", false,
-					"Expecting a clock class with a known origin: %![cc-]+K, " EXP_CC_ORIGIN_FMT,
-					actual_clock_cls, EXP_CC_ORIGIN_VALUES);
+					"Expecting a clock class with a known origin: %![cc-]+K, %s",
+					actual_clock_cls,
+					format_clock_class_origin(ref_clock_cls, "expected"));
 			}
 
 			/*
@@ -774,7 +797,8 @@ void assert_post_dev_clock_classes_are_compatible_one(
 			BT_ASSERT_POST_DEV(NEXT_METHOD_NAME,
 				"clock-class-has-expected-origin", false,
 				"Expecting a clock class with a specific origin: %![cc-]+K, " EXP_CC_ORIGIN_FMT,
-				actual_clock_cls, EXP_CC_ORIGIN_VALUES);
+				actual_clock_cls,
+				format_clock_class_origin(ref_clock_cls, "expected"));
 
 			/*
 			 * GCC gives bogus `-Wimplicit-fallthrough`

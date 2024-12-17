@@ -234,18 +234,19 @@ void MsgIter::_seekBeginning()
 
 namespace {
 
-std::string formatClkClsOrigin(const bt2::ClockOriginView clkClsOrigin, const char * const prefix,
-                               const std::uint64_t graphMipVersion)
+std::string formatClkClsOrigin(const bt2::ClockOriginView clkClsOrigin, const char * const prefix)
 {
-    if (graphMipVersion == 0) {
-        return fmt::format("{}clock-class-origin-is-unix-epoch={}", prefix,
-                           clkClsOrigin.isUnixEpoch());
-    } else {
-        return fmt::format("{0}clock-class-origin-ns={1}, {0}clock-class-origin-name={2}, "
-                           "{0}clock-class-origin-uid={3}",
-                           prefix, clkClsOrigin.nameSpace(), clkClsOrigin.name(),
-                           clkClsOrigin.uid());
+    if (clkClsOrigin.isUnixEpoch()) {
+        return fmt::format("{}clock-class-origin=unix-epoch", prefix);
     }
+
+    if (!clkClsOrigin.isKnown()) {
+        return fmt::format("{}clock-class-origin=unknown", prefix);
+    }
+
+    return fmt::format("{0}clock-class-origin-ns={1}, {0}clock-class-origin-name={2}, "
+                       "{0}clock-class-origin-uid={3}",
+                       prefix, clkClsOrigin.nameSpace(), clkClsOrigin.name(), clkClsOrigin.uid());
 }
 
 std::string formatClkClsId(const bt2::ConstClockClass clkCls, const char * const prefix,
@@ -270,11 +271,11 @@ std::string formatClkCls(const bt2::ConstClockClass clkCls, const char * const p
         return fmt::format("{}clock-class-addr={}, {}clock-class-name={}, {}, {}", prefix,
                            fmt::ptr(clkCls.libObjPtr()), prefix, clkCls.name(),
                            formatClkClsId(clkCls, prefix, graphMipVersion),
-                           formatClkClsOrigin(clkCls.origin(), prefix, graphMipVersion));
+                           formatClkClsOrigin(clkCls.origin(), prefix));
     } else {
         return fmt::format("{}clock-class-addr={}, {}, {}", prefix, fmt::ptr(clkCls.libObjPtr()),
                            formatClkClsId(clkCls, prefix, graphMipVersion),
-                           formatClkClsOrigin(clkCls.origin(), prefix, graphMipVersion));
+                           formatClkClsOrigin(clkCls.origin(), prefix));
     }
 }
 
@@ -314,7 +315,7 @@ void MsgIter::_validateMsgClkCls(const bt2::ConstMessage msg)
         const auto refClkCls = error.refClockCls();
         const auto graphMipVersion = this->_component()._graphMipVersion();
         const auto formatExpClkClsOrigin = [&] {
-            return formatClkClsOrigin(refClkCls->origin(), "expected-", graphMipVersion);
+            return formatClkClsOrigin(refClkCls->origin(), "expected-");
         };
         const auto clkCls = [&] {
             return formatClkClsId(*refClkCls, "expected-", graphMipVersion);

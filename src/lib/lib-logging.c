@@ -939,16 +939,27 @@ static inline void format_clock_class(char **buf_ch, bool extended,
 
 	BUF_APPEND(", %soffset-s=%" PRId64 ", "
 		"%soffset-cycles=%" PRIu64 ", "
-		"%sorigin-namespace=%s, "
-		"%sorigin-name=%s, "
-		"%sorigin-uid=%s, "
 		"%sbase-offset-ns=%" PRId64,
 		PRFIELD(clock_class->offset_seconds),
 		PRFIELD(clock_class->offset_cycles),
-		PRFIELD(clock_class->origin.ns),
-		PRFIELD(clock_class->origin.name),
-		PRFIELD(clock_class->origin.uid),
 		PRFIELD(clock_class->base_offset.value_ns));
+
+	switch (clock_class->origin_kind) {
+	case CLOCK_ORIGIN_KIND_UNIX_EPOCH:
+		BUF_APPEND(", %sorigin=unix_epoch", prefix);
+		break;
+	case CLOCK_ORIGIN_KIND_UNKNOWN:
+		BUF_APPEND(", %sorigin=unknown", prefix);
+		break;
+	case CLOCK_ORIGIN_KIND_CUSTOM:
+		BUF_APPEND(", %sorigin-namespace=%s, %sorigin-name=%s, "
+			"%sorigin-uid=%s",
+			PRFIELD(clock_class->custom_origin.ns ?
+				clock_class->custom_origin.ns : "(null)"),
+			PRFIELD(clock_class->custom_origin.name),
+			PRFIELD(clock_class->custom_origin.uid));
+		break;
+	}
 
 	SET_TMP_PREFIX("cs-pool-");
 	format_object_pool(buf_ch, tmp_prefix, &clock_class->cs_pool);

@@ -49,11 +49,17 @@ struct bt_clock_class {
 		bt_uuid value;
 	} uuid;
 
+	enum {
+		CLOCK_ORIGIN_KIND_UNIX_EPOCH = 0,
+		CLOCK_ORIGIN_KIND_UNKNOWN,
+		CLOCK_ORIGIN_KIND_CUSTOM,
+	} origin_kind;
+
 	struct {
 		gchar *ns;
 		gchar *name;
 		gchar *uid;
-	} origin;
+	} custom_origin;
 
 	/*
 	 * This is computed every time you call
