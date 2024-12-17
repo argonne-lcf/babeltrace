@@ -956,6 +956,23 @@ class VariantFieldClassWithoutSelectorTestCase(
 
     _create_default_field_class = _create_field_class
 
+    def test_option_with_name(self):
+        a_fc = self._tc.create_signed_integer_field_class(32)
+        b_fc = self._tc.create_string_field_class()
+        c_fc = self._tc.create_single_precision_real_field_class()
+        self._fc.append_option("c", c_fc)
+        self._fc.append_option("a", a_fc)
+        self._fc.append_option("b", b_fc)
+
+        self.assertEqual(self._fc.option_with_name("a").field_class.addr, a_fc.addr)
+        self.assertEqual(self._fc.option_with_name("a").name, "a")
+
+        self.assertIsNone(self._fc.option_with_name("bloup"))
+
+    def test_option_with_name_invalid_type(self):
+        with self.assertRaisesRegex(TypeError, "'int' is not a 'str' object"):
+            self._fc.option_with_name(23)
+
 
 class _VariantFieldClassWithIntegerSelectorTestCase:
     @staticmethod
@@ -1202,6 +1219,24 @@ class _VariantFieldClassWithIntegerSelectorTestCase:
 
         with self.assertRaises(IndexError):
             self._fc.option_at_index(len(self._fc))
+
+    def test_option_with_name(self):
+        a_fc = self._tc.create_signed_integer_field_class(32)
+        b_fc = self._tc.create_string_field_class()
+        c_fc = self._tc.create_single_precision_real_field_class()
+        self._fc.append_option("c", c_fc, self._ranges1)
+        self._fc.append_option("a", a_fc, self._ranges2)
+        self._fc.append_option("b", b_fc, self._ranges3)
+
+        self.assertEqual(self._fc.option_with_name("a").field_class.addr, a_fc.addr)
+        self.assertEqual(self._fc.option_with_name("a").name, "a")
+        self.assertEqual(self._fc.option_with_name("a").ranges.addr, self._ranges2.addr)
+
+        self.assertIsNone(self._fc.option_with_name("bloup"))
+
+    def test_option_with_name_invalid_type(self):
+        with self.assertRaisesRegex(TypeError, "'int' is not a 'str' object"):
+            self._fc.option_with_name(23)
 
     def _fill_default_fc_for_field_path_test(self):
         # Create something equivalent to:
