@@ -777,7 +777,7 @@ enum bt_property_availability bt_plugin_get_version(const struct bt_plugin *plug
 	}
 
 	if (extra) {
-		*extra = plugin->info.version.extra->str;
+		*extra = plugin->info.version.extra_set ? plugin->info.version.extra->str : NULL;
 	}
 
 end:

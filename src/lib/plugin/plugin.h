@@ -52,6 +52,7 @@ struct bt_plugin {
 			unsigned int minor;
 			unsigned int patch;
 			GString *extra;
+			bool extra_set;
 		} version;
 		bool path_set;
 		bool name_set;
@@ -305,6 +306,7 @@ void bt_plugin_set_version(struct bt_plugin *plugin, unsigned int major,
 
 	if (extra) {
 		g_string_assign(plugin->info.version.extra, extra);
+		plugin->info.version.extra_set = BT_TRUE;
 	}
 
 	plugin->info.version_set = BT_TRUE;
