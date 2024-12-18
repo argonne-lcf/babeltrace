@@ -23,6 +23,10 @@ void ctf_trace_class_configure_ir_trace(const ctf::src::TraceCls& tc, bt2::Trace
         irTrace.nameSpace(*tc.ns());
     }
 
+    if (tc.name() && mipVersion >= 1) {
+        irTrace.name(*tc.name());
+    }
+
     if (tc.uid()) {
         if (mipVersion == 0) {
             /*

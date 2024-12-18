@@ -538,10 +538,20 @@ Ctf1MetadataStreamParser::_translateTraceCls(ctf_trace_class& origTraceCls)
         ns = lttngUserAttrsNs;
     }
 
-    /* UID */
+    /* Name and UID */
+    bt2s::optional<std::string> name;
     bt2s::optional<std::string> uid;
 
     if (origTraceCls.is_uuid_set) {
+        /*
+         * Because there's a UID, let's also set a name just in case. An
+         * empty string is fine here since we know the UID is "globally"
+         * unique anyway, whatever the namespace and name.
+         *
+         * The component needs at least a name and a UID to support the
+         * LTTng session rotation feature under MIP 1.
+         */
+        name = "";
         uid = bt2c::UuidView {origTraceCls.uuid}.str();
 
         /*
@@ -552,7 +562,7 @@ Ctf1MetadataStreamParser::_translateTraceCls(ctf_trace_class& origTraceCls)
     }
 
     /* Create trace class */
-    auto traceCls = createTraceCls(std::move(ns), bt2s::nullopt, std::move(uid),
+    auto traceCls = createTraceCls(std::move(ns), std::move(name), std::move(uid),
                                    envMapValFromOrigTraceCls(origTraceCls), std::move(pktHeaderFc));
 
     /* Mark original CTF IR trace class as translated */
