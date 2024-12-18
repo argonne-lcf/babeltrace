@@ -81,6 +81,7 @@
   },
   "type": "trace-class",
   "uid": "e375faaf-5a32-401c-8680-7957c204f064",
+  "name": "",
   "namespace": "lttng.org,2009"
 }
 {
