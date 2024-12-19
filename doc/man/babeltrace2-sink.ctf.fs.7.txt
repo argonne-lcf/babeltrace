@@ -1,7 +1,6 @@
 = babeltrace2-sink.ctf.fs(7)
 :manpagetype: component class
 :revdate: 16 October 2024
-:btns: babeltrace.org,2020
 
 == NAME
 
@@ -80,7 +79,7 @@ stream has no way to represent them.
 
 As of this version, with the param:ctf-version parameter set to `2`:
 
-* The component sets the `sink.ctf.fs` attribute, under the +{btns}+
+* The component sets the `sink.ctf.fs` attribute, under the +{bt_ns}+
   namespace, of the preamble fragment to `true`.
 
 * The structure member class names of packet context field classes
@@ -91,7 +90,7 @@ For example, the packet content length member class could be named
 `afe9ed0e-ce73-413f-8956-83663bab2047-content_size`.
 
 * The component translates an event class log level to the
-  `log-level` attribute under the +{btns}+ namespace as such:
+  `log-level` attribute under the +{bt_ns}+ namespace as such:
 +
 --
 `BT_EVENT_CLASS_LOG_LEVEL_EMERGENCY`:
@@ -141,7 +140,7 @@ For example, the packet content length member class could be named
 --
 
 * The component translates an event class EMF URI to the
-  `emf-uri` attribute under the +{btns}+ namespace as a JSON string.
+  `emf-uri` attribute under the +{bt_ns}+ namespace as a JSON string.
 
 * When the component needs to generate a length/selector field class
   __**F**__ for dynamic field classes without a length/selector
@@ -150,7 +149,7 @@ For example, the packet content length member class could be named
 ** The structure member name of __**F**__ is unspecified.
 
 ** __**F**__ contains the attribute `is-key-only`, under the
-   +{btns}+ namespace, set to `true`.
+   +{bt_ns}+ namespace, set to `true`.
 
 * The component doesn't translate trace and stream user attributes:
   a CTF~2 metadata stream has no way to represent them.

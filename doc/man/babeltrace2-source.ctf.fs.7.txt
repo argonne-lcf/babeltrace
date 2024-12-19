@@ -155,7 +155,7 @@ with MIP~1. In particular, a compcls:source.ctf.fs component:
 
 * For an LTTng trace:
 
-** Sets the namespace of any libbabeltrace2 trace to `lttng.org,2009`.
+** Sets the namespace of any libbabeltrace2 trace to +{lttng_ns}+.
 ** Sets the origin of any libbabeltrace2 clock class to the Unix epoch.
 
 * If the UUID of a CTF trace is available, then sets the UID of the
@@ -172,8 +172,8 @@ When reading a CTF~2 metadata stream (therefore working with MIP~1),
 a compcls:source.ctf.fs component:
 
 * Sets the log level of a libbabeltrace2 event class from the value of
-  the `log-level` attribute, under either the `lttng.org,2009` or
-  `babeltrace.org,2020` namespace, of its corresponding CTF event record
+  the `log-level` attribute, under either the +{lttng_ns}+ or
+  +{bt_ns}+ namespace, of its corresponding CTF event record
   class as such:
 +
 --
@@ -224,8 +224,8 @@ a compcls:source.ctf.fs component:
 --
 
 * Sets the EMF URI of a libbabeltrace2 event class from the value of
-  the `emf-uri` attribute, under either the `lttng.org,2009` or
-  `babeltrace.org,2020` namespace, of its corresponding CTF event record
+  the `emf-uri` attribute, under either the +{lttng_ns}+ or
+  +{bt_ns}+ namespace, of its corresponding CTF event record
   class.
 
 
