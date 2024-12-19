@@ -163,7 +163,8 @@ with MIP~1. In particular, a compcls:source.ctf.fs component:
   the trace UUID and its name to an empty string.
 
 * Sets the UID of a libbabeltrace2 clock class to the textual
-  representation of the UUID of its corresponding CTF clock class.
+  representation of the UUID of its corresponding CTF clock class,
+  if available.
 
 * Makes the accuracy of any libbabeltrace2 clock class unknown.
 
