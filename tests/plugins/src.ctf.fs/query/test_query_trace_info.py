@@ -158,13 +158,13 @@ class QueryTraceInfoPortNameTestCase(unittest.TestCase):
         self.assertEqual(len(streams), 2)
         self.assertRegex(
             str(streams[0]["port-name"]),
-            r"^7afe8fbe-79b8-4f6a-bbc7-d0c782e7ddaf \| 0 \| .*"
+            r"^\{name: ``, uid: `7afe8fbe-79b8-4f6a-bbc7-d0c782e7ddaf`} \| 0 \| .*"
             + re.escape(os_stream_path + "test_stream_0")
             + r"$",
         )
         self.assertRegex(
             str(streams[1]["port-name"]),
-            r"^7afe8fbe-79b8-4f6a-bbc7-d0c782e7ddaf \| 0 \| .*"
+            r"^\{name: ``, uid: `7afe8fbe-79b8-4f6a-bbc7-d0c782e7ddaf`} \| 0 \| .*"
             + re.escape(os_stream_path + "test_stream_1")
             + r"$",
         )
@@ -193,7 +193,7 @@ class QueryTraceInfoPortNameTestCase(unittest.TestCase):
         self.assertEqual(len(streams), 1)
         self.assertRegex(
             str(streams[0]["port-name"]),
-            r"^2a6422d0-6cee-11e0-8c08-cb07d7b3a564 \| .*"
+            r"^\{name: ``, uid: `2a6422d0-6cee-11e0-8c08-cb07d7b3a564`} \| .*"
             + re.escape(os_stream_path)
             + r"$",
         )

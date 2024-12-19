@@ -204,11 +204,16 @@ std::string ctf_fs_make_port_name(ctf_fs_ds_file_group *ds_file_group)
      *   - the stream
      */
 
-    /* For the trace, use the UID if present, else the path. */
-    /* ⚠️ TODO: also consider namespace and name? */
-    auto& uid = ds_file_group->ctf_fs_trace->cls()->uid();
-    if (uid) {
-        name << *uid;
+    /* For the trace, use the NS/name/UID if present, else the path. */
+    if (ds_file_group->ctf_fs_trace->cls()->name() && ds_file_group->ctf_fs_trace->cls()->uid()) {
+        name << '{';
+
+        if (ds_file_group->ctf_fs_trace->cls()->ns()) {
+            name << fmt::format("namespace: `{}`, ", *ds_file_group->ctf_fs_trace->cls()->ns());
+        }
+
+        name << fmt::format("name: `{}`, uid: `{}`}}", *ds_file_group->ctf_fs_trace->cls()->name(),
+                            *ds_file_group->ctf_fs_trace->cls()->uid());
     } else {
         name << ds_file_group->ctf_fs_trace->path;
     }

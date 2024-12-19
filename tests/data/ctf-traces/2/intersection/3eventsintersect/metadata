@@ -65,7 +65,8 @@
     "type": "structure"
   },
   "type": "trace-class",
-  "uid": "7afe8fbe-79b8-4f6a-bbc7-d0c782e7ddaf"
+  "uid": "7afe8fbe-79b8-4f6a-bbc7-d0c782e7ddaf",
+  "name": ""
 }
 {
   "description": "This is a test clock",

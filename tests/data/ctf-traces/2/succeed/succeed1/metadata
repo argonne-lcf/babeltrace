@@ -49,7 +49,8 @@
     "type": "structure"
   },
   "type": "trace-class",
-  "uid": "2a6422d0-6cee-11e0-8c08-cb07d7b3a564"
+  "uid": "2a6422d0-6cee-11e0-8c08-cb07d7b3a564",
+  "name": ""
 }
 {
   "packet-context-field-class": {

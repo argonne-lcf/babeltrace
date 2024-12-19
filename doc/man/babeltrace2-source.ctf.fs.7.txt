@@ -348,16 +348,25 @@ The component uses the second form when the stream class ID is not
 available.
 
 __TRACE-ID__::
-    Depending on the CTF version:
+    If the namespace `NS`, name `NAME`, and UID `UID` of the trace are
+    available, then the exact string:
 +
-CTF~1.8:::
-    Trace's UUID if available, otherwise trace's absolute directory
-    path.
-
-CTF~2:::
-    If both the trace's name and UID are available, a `/`-delimited list
-    of the trace's namespace, the trace's name, and the trace's UID.
-    Otherwise, the trace's absolute directory path.
+----
+{namespace: `NS`, name: `NAME`, uid: `UID`}
+----
++
+If the namespace of the trace is not available, but the name `NAME` and
+UID `UID` are, then the exact string:
++
+----
+{name: `NAME`, uid: `UID`}
+----
++
+Otherwise, the trace's absolute directory path.
++
+NOTE: The namespace of any LTTng trace is +{lttng_ns}+. If a CTF~1.8
+trace has a UUID, then its corresponding libbabeltrace2 trace always has
+a name and a UID (the textual representation of the UUID).
 
 __STREAM-CLASS-ID__::
     Stream class ID.
