@@ -137,7 +137,7 @@ barectf up to, but excluding, 2.3.1::
 --
 
 
-== Message Interchange Protocol (MIP) specifics
+=== Message Interchange Protocol (MIP) specifics
 
 A compcls:source.ctf.fs component can open and decode, depending on the
 effective MIP version:
