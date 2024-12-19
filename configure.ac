@@ -8,7 +8,7 @@ dnl Process this file with autoconf to produce a configure script.
 m4_define([bt_version_major], [2])
 m4_define([bt_version_minor], [1])
 m4_define([bt_version_patch], [0])
-m4_define([bt_version_dev_stage], [-rc1])
+m4_define([bt_version_dev_stage], [-rc2])
 m4_define([bt_version], bt_version_major[.]bt_version_minor[.]bt_version_patch[]bt_version_dev_stage)
 m4_define([bt_version_name], [[Brossard]])
 m4_define([bt_version_description], [[Brossard (/ˈbrɒsɑːr/) is a city in southwestern Québec[,] Canada[,] on the South Shore of the Fleuve Saint-Laurent near Montréal. Home to the Quartier DIX30 lifestyle complex and the Canadiens' practice facility[,] Brossard is defined by its suburban sprawl and stroads like boulevard Taschereau[,] seamlessly blending commercial hubs with car-dependent design.]])
