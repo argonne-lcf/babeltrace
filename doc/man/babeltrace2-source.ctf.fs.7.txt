@@ -158,8 +158,9 @@ with MIP~1. In particular, a compcls:source.ctf.fs component:
 ** Sets the namespace of any libbabeltrace2 trace to `lttng.org,2009`.
 ** Sets the origin of any libbabeltrace2 clock class to the Unix epoch.
 
-* Sets the UID of a libbabeltrace2 trace to the textual representation
-  of the UUID of its corresponding CTF trace.
+* If the UUID of a CTF trace is available, then sets the UID of the
+  corresponding libbabeltrace2 trace to the textual representation of
+  the trace UUID and its name to an empty string.
 
 * Sets the UID of a libbabeltrace2 clock class to the textual
   representation of the UUID of its corresponding CTF clock class.
