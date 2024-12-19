@@ -1,3 +1,11 @@
+2024-12-19 Babeltrace 2.1.0-rc1 (National Oatmeal Muffin Day)
+The main focus of Babeltrace 2.1 was to bring CTF 2 support to the project. This
+required major changes across the C API, the Python API, all the official
+plugins, the command-line interface, the documentation, as well as several
+internal aspects, including the tests. This is because CTF 2 introduces new
+concepts which are incompatible with the libbabeltrace 2.0 API, and then
+this library is the foundation of all the other parts of the project.
+
 2020-01-22 Babeltrace 2.0.0 (National Hot Sauce Day)
 	* cli: colorize version printing
 	* cli: print full version name
