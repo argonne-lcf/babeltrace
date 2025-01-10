@@ -310,7 +310,7 @@ static void ds_index_insert_ds_index_entry_sorted(ctf_fs_ds_index& index,
     /* Find the spot where to insert this index entry. */
     auto otherEntry = index.entries.begin();
     for (; otherEntry != index.entries.end(); ++otherEntry) {
-        if (entry.timestamp_begin_ns <= otherEntry->timestamp_begin_ns) {
+        if (entry.timestamp_begin <= otherEntry->timestamp_begin) {
             break;
         }
     }

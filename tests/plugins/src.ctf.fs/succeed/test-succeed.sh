@@ -24,7 +24,7 @@ source "$UTILSSH"
 
 this_dir_relative="plugins/src.ctf.fs/succeed"
 this_dir_build="$BT_TESTS_BUILDDIR/$this_dir_relative"
-expect_dir="$BT_TESTS_DATADIR/$this_dir_relative"
+data_dir="$BT_TESTS_DATADIR/$this_dir_relative"
 
 test_ctf_common_details_args=("-p" "with-trace-name=no,with-stream-name=no")
 
@@ -36,10 +36,10 @@ find_expect_file() {
 	local mip_version="$3"
 
 	names=(
-		"$expect_dir/trace-$test_name-ctf$ctf_version-mip$mip_version.expect"
-		"$expect_dir/trace-$test_name-ctf$ctf_version.expect"
-		"$expect_dir/trace-$test_name-mip$mip_version.expect"
-		"$expect_dir/trace-$test_name.expect"
+		"$data_dir/trace-$test_name-ctf$ctf_version-mip$mip_version.expect"
+		"$data_dir/trace-$test_name-ctf$ctf_version.expect"
+		"$data_dir/trace-$test_name-mip$mip_version.expect"
+		"$data_dir/trace-$test_name.expect"
 	)
 
 	for name in "${names[@]}"; do
@@ -58,7 +58,7 @@ test_ctf_gen_single() {
 
 	diag "Generating trace '$name'"
 	bt_diff_details_ctf_gen_single "$this_dir_build/gen-trace-$name" \
-		"$expect_dir/trace-$name.expect" \
+		"$data_dir/trace-$name.expect" \
 		"${test_ctf_common_details_args[@]}" "-p" "with-uuid=no,with-uid=no"
 	ok $? "Generated trace '$name' gives the expected output"
 }
@@ -179,7 +179,25 @@ test_force_origin_unix_epoch() {
 	done
 }
 
-plan_tests 46
+test_clock_offset_goes_back_in_time() {
+	local trace_name="clock-offset-goes-back-in-time"
+	local tmp_dir
+
+	tmp_dir=$(mktemp -d -t "test-$trace_name.XXXXXXX")
+
+	bt_gen_mctf_trace "$data_dir/$trace_name/chunk1.mctf" "$tmp_dir/chunk1"
+	bt_gen_mctf_trace "$data_dir/$trace_name/chunk2.mctf" "$tmp_dir/chunk2"
+
+	bt_diff_details_ctf_single \
+		"$data_dir/trace-$trace_name.expect" \
+		"$tmp_dir" \
+		-p "with-stream-name=no"
+	ok $? "Trace '$trace_name' gives the expected output"
+
+	rm -rf "$tmp_dir"
+}
+
+plan_tests 47
 
 test_force_origin_unix_epoch 2packets barectf-event-before-packet
 test_ctf_gen_single simple
@@ -196,3 +214,5 @@ test_ctf_single_version def-clk-freq 1
 
 test_packet_end lttng-event-after-packet
 test_packet_end lttng-crash
+
+test_clock_offset_goes_back_in_time
