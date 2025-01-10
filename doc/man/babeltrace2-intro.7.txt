@@ -1,6 +1,6 @@
 = babeltrace2-intro(7)
 :manpagetype: manual page
-:revdate: 14 September 2019
+:revdate: 10 January 2025
 
 
 == NAME
@@ -165,7 +165,7 @@ $ babeltrace2 net://localhost/host/myhost/my-session
 ----
 --
 
-https://diamon.org/ctf/[CTF] input/output::
+https://diamon.org/ctf/[CTF]~1.8 and~2 input/output::
 +
 --
 * The compcls:source.ctf.fs component class, which is more or less the
@@ -178,8 +178,8 @@ https://diamon.org/ctf/[CTF] input/output::
    https://github.com/efficios/barectf[barectf]), making it possible to
    decode malformed packets.
 
-** The component merges CTF traces sharing the same UUID into a single,
-   logical trace.
+** The component merges CTF traces sharing the same identity into a
+   single, logical trace.
 +
 This feature supports LTTng~2.11's tracing session rotation trace
 chunks.
