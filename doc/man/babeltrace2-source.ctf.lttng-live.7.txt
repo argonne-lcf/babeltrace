@@ -66,7 +66,7 @@ The "get supported MIP versions" method of compcls:source.ctf.lttng-live
 always reports to support MIP versions{nbsp}0 and{nbsp}1. If you attempt
 to make a compcls:source.ctf.lttng-live component read a CTF{nbsp}2
 recording session within a trace processing graph configured with
-MIP&nbsp;0, then the message iterator will fail at initialization or
+MIP{nbsp}0, then the message iterator will fail at initialization or
 "next" method call time.
 
 == INITIALIZATION PARAMETERS
