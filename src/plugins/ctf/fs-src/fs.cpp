@@ -693,10 +693,10 @@ static int merge_ctf_fs_traces(std::vector<ctf_fs_trace::UP> traces, ctf_fs_trac
 
     unsigned int winner_count = metadata_count_stream_and_event_classes(traces[0].get());
     ctf_fs_trace *winner = traces[0].get();
-    guint winner_i = 0;
+    std::size_t winner_i = 0;
 
     /* Find the trace with the largest metadata. */
-    for (guint i = 1; i < traces.size(); i++) {
+    for (std::size_t i = 1; i < traces.size(); i++) {
         ctf_fs_trace *candidate = traces[i].get();
         unsigned int candidate_count;
 
