@@ -408,6 +408,14 @@ Discarded packets::
     A count of discarded packets within a given time interval for a
     given stream.
 --
++
+The _Message Interchange Protocol_ (MIP) dictates the expected types,
+order, and contents of messages. When you create a <<graph,trace
+processing graph>>, you specify a MIP version, and all the
+<<comp,components>> of said graph must comply with the selected
+protocol. This feature is what makes forward and backward compatibility
+possible when a Babeltrace~2 release changes the
+<<libbabeltrace2,libbabeltrace2>>~API.
 
 [[graph]]Trace processing graph::
     A https://en.wikipedia.org/wiki/Filter_graph[filter graph] where
