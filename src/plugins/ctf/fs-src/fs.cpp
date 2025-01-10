@@ -700,10 +700,6 @@ static int merge_ctf_fs_traces(std::vector<ctf_fs_trace::UP> traces, ctf_fs_trac
         ctf_fs_trace *candidate = traces[i].get();
         unsigned int candidate_count;
 
-        /* A bit of sanity check. */
-        /* ⚠️ TODO: also consider namespace and name */
-        BT_ASSERT(winner->cls()->uid() == candidate->cls()->uid());
-
         candidate_count = metadata_count_stream_and_event_classes(candidate);
 
         if (candidate_count > winner_count) {
