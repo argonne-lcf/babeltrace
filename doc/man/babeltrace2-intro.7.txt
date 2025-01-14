@@ -409,8 +409,8 @@ Discarded packets::
     given stream.
 --
 +
-The _Message Interchange Protocol_ (MIP) dictates the expected types,
-order, and contents of messages. When you create a <<graph,trace
+[[mip]]The _Message Interchange Protocol_ (MIP) dictates the expected
+types, order, and contents of messages. When you create a <<graph,trace
 processing graph>>, you specify a MIP version, and all the
 <<comp,components>> of said graph must comply with the selected
 protocol. This feature is what makes forward and backward compatibility
