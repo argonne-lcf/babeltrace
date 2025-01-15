@@ -721,7 +721,7 @@ class _OptionFieldClassWithUnsignedIntegerSelectorFieldConst(
 
 
 _OptionWithUnsignedIntegerSelectorFieldClassConst = (
-    _OptionFieldClassWithIntegerSelectorFieldConst
+    _OptionFieldClassWithUnsignedIntegerSelectorFieldConst
 )
 
 
