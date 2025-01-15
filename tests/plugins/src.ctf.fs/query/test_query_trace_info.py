@@ -11,6 +11,7 @@ import bt2
 from test_all_ctf_versions import test_all_ctf_versions
 
 test_ctf_traces_path = os.environ["BT_CTF_TRACES_PATH"]
+query_object = "babeltrace.trace-infos"
 
 
 # Key to sort streams in a predictable order.
@@ -49,7 +50,7 @@ class QueryTraceInfoClockOffsetTestCase(unittest.TestCase):
 
     def test_no_clock_class_offset(self):
         res = bt2.QueryExecutor(
-            self._fs, "babeltrace.trace-infos", {"inputs": self._inputs}
+            self._fs, query_object, {"inputs": self._inputs}
         ).query()
         trace = res[0]
         self._check(trace, 0)
@@ -59,7 +60,7 @@ class QueryTraceInfoClockOffsetTestCase(unittest.TestCase):
     def test_clock_class_offset_s(self):
         res = bt2.QueryExecutor(
             self._fs,
-            "babeltrace.trace-infos",
+            query_object,
             {"inputs": self._inputs, "clock-class-offset-s": 2},
         ).query()
         trace = res[0]
@@ -70,7 +71,7 @@ class QueryTraceInfoClockOffsetTestCase(unittest.TestCase):
     def test_clock_class_offset_ns(self):
         res = bt2.QueryExecutor(
             self._fs,
-            "babeltrace.trace-infos",
+            query_object,
             {"inputs": self._inputs, "clock-class-offset-ns": 2},
         ).query()
         trace = res[0]
@@ -81,7 +82,7 @@ class QueryTraceInfoClockOffsetTestCase(unittest.TestCase):
     def test_clock_class_offset_both(self):
         res = bt2.QueryExecutor(
             self._fs,
-            "babeltrace.trace-infos",
+            query_object,
             {
                 "inputs": self._inputs,
                 "clock-class-offset-s": -2,
@@ -95,7 +96,7 @@ class QueryTraceInfoClockOffsetTestCase(unittest.TestCase):
         with self.assertRaises(bt2._Error):
             bt2.QueryExecutor(
                 self._fs,
-                "babeltrace.trace-infos",
+                query_object,
                 {"inputs": self._inputs, "clock-class-offset-s": "2"},
             ).query()
 
@@ -103,7 +104,7 @@ class QueryTraceInfoClockOffsetTestCase(unittest.TestCase):
         with self.assertRaises(bt2._Error):
             bt2.QueryExecutor(
                 self._fs,
-                "babeltrace.trace-infos",
+                query_object,
                 {"inputs": self._inputs, "clock-class-offset-s": None},
             ).query()
 
@@ -111,7 +112,7 @@ class QueryTraceInfoClockOffsetTestCase(unittest.TestCase):
         with self.assertRaises(bt2._Error):
             bt2.QueryExecutor(
                 self._fs,
-                "babeltrace.trace-infos",
+                query_object,
                 {"inputs": self._inputs, "clock-class-offset-ns": "2"},
             ).query()
 
@@ -119,7 +120,7 @@ class QueryTraceInfoClockOffsetTestCase(unittest.TestCase):
         with self.assertRaises(bt2._Error):
             bt2.QueryExecutor(
                 self._fs,
-                "babeltrace.trace-infos",
+                query_object,
                 {"inputs": self._inputs, "clock-class-offset-ns": None},
             ).query()
 
@@ -133,7 +134,7 @@ class QueryTraceInfoPortNameTestCase(unittest.TestCase):
     def test_trace_uuid_stream_class_id_no_stream_id(self):
         res = bt2.QueryExecutor(
             self._fs,
-            "babeltrace.trace-infos",
+            query_object,
             {
                 "inputs": [
                     os.path.join(
@@ -172,7 +173,7 @@ class QueryTraceInfoPortNameTestCase(unittest.TestCase):
     def test_trace_uuid_no_stream_class_id_no_stream_id(self):
         res = bt2.QueryExecutor(
             self._fs,
-            "babeltrace.trace-infos",
+            query_object,
             {
                 "inputs": [
                     os.path.join(test_ctf_traces_path, "1", "succeed", "succeed1")
@@ -213,7 +214,7 @@ class QueryTraceInfoRangeTestCase(unittest.TestCase):
 
         res = bt2.QueryExecutor(
             self._fs,
-            "babeltrace.trace-infos",
+            query_object,
             {
                 "inputs": [
                     os.path.join(
@@ -237,7 +238,7 @@ class QueryTraceInfoRangeTestCase(unittest.TestCase):
     def test_trace_with_tracefile_rotation(self):
         res = bt2.QueryExecutor(
             self._fs,
-            "babeltrace.trace-infos",
+            query_object,
             {
                 "inputs": [
                     os.path.join(
@@ -287,7 +288,7 @@ class QueryTraceInfoPacketTimestampQuirksTestCase(unittest.TestCase):
     def _test_lttng_quirks(self, trace_name):
         res = bt2.QueryExecutor(
             self._fs,
-            "babeltrace.trace-infos",
+            query_object,
             {"inputs": [self._trace_path(trace_name)]},
         ).query()
 

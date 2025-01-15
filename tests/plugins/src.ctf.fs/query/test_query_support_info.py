@@ -9,6 +9,8 @@ import unittest
 import bt2
 from test_all_ctf_versions import test_all_ctf_versions
 
+query_object = "babeltrace.support-info"
+
 
 @test_all_ctf_versions
 class QuerySupportInfoTestCase(unittest.TestCase):
@@ -73,7 +75,7 @@ class QuerySupportInfoTestCase(unittest.TestCase):
 
         def do_one_query(input, expected_group):
             qe = bt2.QueryExecutor(
-                fs, "babeltrace.support-info", {"input": input, "type": "directory"}
+                fs, query_object, {"input": input, "type": "directory"}
             )
 
             result = qe.query()
