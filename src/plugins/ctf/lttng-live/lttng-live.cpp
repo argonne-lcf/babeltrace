@@ -1629,40 +1629,37 @@ static bt2::Value::Shared lttng_live_query_list_sessions(const bt2::ConstMapValu
     return live_viewer_connection_list_sessions(viewer_connection.get());
 }
 
+static bt_param_validation_map_value_entry_descr supportInfoQueryParamsDesc[] = {
+    {"type", BT_PARAM_VALIDATION_MAP_VALUE_ENTRY_MANDATORY,
+     bt_param_validation_value_descr::makeString()},
+    {"input", BT_PARAM_VALIDATION_MAP_VALUE_ENTRY_MANDATORY,
+     bt_param_validation_value_descr::makeString()},
+    BT_PARAM_VALIDATION_MAP_VALUE_ENTRY_END};
+
 static bt2::Value::Shared lttng_live_query_support_info(const bt2::ConstMapValue params,
                                                         const bt2c::Logger& logger)
 {
+    gchar *validateError = NULL;
+    const auto validationStatus = bt_param_validation_validate(
+        params.libObjPtr(), supportInfoQueryParamsDesc, &validateError);
+
+    if (validationStatus == BT_PARAM_VALIDATION_STATUS_MEMORY_ERROR) {
+        throw bt2::MemoryError {};
+    } else if (validationStatus == BT_PARAM_VALIDATION_STATUS_VALIDATION_ERROR) {
+        const bt2c::GCharUP deleter {validateError};
+
+        BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(logger, bt2::Error, "{}", validateError);
+    }
+
     struct bt_common_lttng_live_url_parts parts = {};
     bt_common_lttng_live_url_parts_deleter partsDeleter {parts};
 
-    const auto typeValue = params["type"];
-    if (!typeValue) {
-        BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(logger, bt2::Error,
-                                               "Missing expected `type` parameter.");
-    }
-
-    if (!typeValue->isString()) {
-        BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(logger, bt2::Error,
-                                               "`type` parameter is not a string value.");
-    }
-
-    if (strcmp(typeValue->asString().value(), "string") != 0) {
+    if (params["type"]->asString().value() != "string") {
         /* We don't handle file system paths */
         return bt2::RealValue::create();
     }
 
-    const auto inputValue = params["input"];
-    if (!inputValue) {
-        BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(logger, bt2::Error,
-                                               "Missing expected `input` parameter.");
-    }
-
-    if (!inputValue->isString()) {
-        BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(logger, bt2::Error,
-                                               "`input` parameter is not a string value.");
-    }
-
-    parts = bt_common_parse_lttng_live_url(inputValue->asString().value(), NULL, 0);
+    parts = bt_common_parse_lttng_live_url(params["input"]->asString().value(), NULL, 0);
     if (parts.session_name) {
         /*
          * Looks pretty much like an LTTng live URL: we got the
