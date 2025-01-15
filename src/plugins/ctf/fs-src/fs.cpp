@@ -1424,7 +1424,7 @@ static bt_param_validation_map_value_entry_descr fs_params_entries_descr[] = {
      bt_param_validation_value_descr::makeBool()},
     BT_PARAM_VALIDATION_MAP_VALUE_ENTRY_END};
 
-ctf::src::fs::Parameters read_src_fs_parameters(const bt2::ConstMapValue params,
+ctf::src::fs::Parameters read_src_fs_parameters(const bt2::ConstValue params,
                                                 const bt2c::Logger& logger)
 {
     gchar *error = NULL;
@@ -1550,7 +1550,7 @@ bt_component_class_query_method_status ctf_fs_query(bt_self_component_class_sour
         bt2c::Logger logger {bt2::SelfComponentClass {comp_class_src},
                              bt2::PrivateQueryExecutor {priv_query_exec},
                              "PLUGIN/SRC.CTF.FS/QUERY"};
-        bt2::ConstMapValue paramsObj(params);
+        bt2::ConstValue paramsObj(params);
         bt2::Value::Shared resultObj;
 
         if (strcmp(object, "metadata-info") == 0) {

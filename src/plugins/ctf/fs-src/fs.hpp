@@ -207,8 +207,7 @@ struct Parameters
  * Throw if any parameter doesn't pass validation.
  */
 
-ctf::src::fs::Parameters read_src_fs_parameters(bt2::ConstMapValue params,
-                                                const bt2c::Logger& logger);
+ctf::src::fs::Parameters read_src_fs_parameters(bt2::ConstValue params, const bt2c::Logger& logger);
 
 /*
  * Generate the port name to be used for a given data stream file group.

@@ -72,6 +72,8 @@ dist_check_SCRIPTS = \
 	plugins/sink.text.pretty/test-pretty.sh \
 	plugins/sink.text.pretty/test-pretty-python.sh \
 	plugins/src.ctf.lttng-live/test-live.sh \
+	plugins/src.ctf.lttng-live/test-query.sh \
+	plugins/src.ctf.lttng-live/test_query.py \
 	python-plugin-provider/bt_plugin_test_python_plugin_provider.py \
 	python-plugin-provider/test-python-plugin-provider.sh \
 	python-plugin-provider/test_python_plugin_provider.py
@@ -185,6 +187,8 @@ if ENABLE_PYTHON_BINDINGS
 TESTS_PLUGINS += plugins/src.ctf.fs/query/test-query-support-info.sh
 TESTS_PLUGINS += plugins/src.ctf.fs/query/test-query-trace-info.sh
 TESTS_PLUGINS += plugins/src.ctf.fs/query/test-query-metadata-info.sh
+TESTS_PLUGINS += plugins/src.ctf.fs/query/test-query-metadata-info-py.sh
+TESTS_PLUGINS += plugins/src.ctf.lttng-live/test-query.sh
 TESTS_PLUGINS += plugins/sink.ctf.fs/test-assume-single-trace.sh
 TESTS_PLUGINS += plugins/sink.ctf.fs/test-stream-names.sh
 endif

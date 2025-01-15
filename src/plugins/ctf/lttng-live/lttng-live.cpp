@@ -1593,7 +1593,7 @@ static struct bt_param_validation_map_value_entry_descr list_sessions_params[] =
      bt_param_validation_value_descr::makeString()},
     BT_PARAM_VALIDATION_MAP_VALUE_ENTRY_END};
 
-static bt2::Value::Shared lttng_live_query_list_sessions(const bt2::ConstMapValue params,
+static bt2::Value::Shared lttng_live_query_list_sessions(const bt2::ConstValue params,
                                                          const bt2c::Logger& logger)
 {
     const char *url;
@@ -1636,7 +1636,7 @@ static bt_param_validation_map_value_entry_descr supportInfoQueryParamsDesc[] = 
      bt_param_validation_value_descr::makeString()},
     BT_PARAM_VALIDATION_MAP_VALUE_ENTRY_END};
 
-static bt2::Value::Shared lttng_live_query_support_info(const bt2::ConstMapValue params,
+static bt2::Value::Shared lttng_live_query_support_info(const bt2::ConstValue params,
                                                         const bt2c::Logger& logger)
 {
     gchar *validateError = NULL;
@@ -1681,7 +1681,7 @@ bt_component_class_query_method_status lttng_live_query(bt_self_component_class_
         bt2c::Logger logger {bt2::SelfComponentClass {comp_class},
                              bt2::PrivateQueryExecutor {priv_query_exec},
                              "PLUGIN/SRC.CTF.LTTNG-LIVE/QUERY"};
-        const bt2::ConstMapValue paramsObj(params);
+        const bt2::ConstValue paramsObj(params);
         bt2::Value::Shared resultObj;
 
         if (strcmp(object, "sessions") == 0) {

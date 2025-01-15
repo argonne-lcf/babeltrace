@@ -25,6 +25,12 @@ class QueryTraceInfoClockOffsetTestCase(unittest.TestCase):
         ctf = bt2.find_plugin("ctf")
         self._fs = ctf.source_component_classes["fs"]
 
+    def test_non_map_params(self):
+        with self.assertRaisesRegex(
+            bt2._Error, "Error validating parameters: top-level is not a map value"
+        ):
+            bt2.QueryExecutor(self._fs, query_object).query()
+
     @property
     def _inputs(self):
         return [

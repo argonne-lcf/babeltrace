@@ -17,10 +17,10 @@ class Logger;
 
 } /* namespace bt2c */
 
-bt2::Value::Shared metadata_info_query(bt2::ConstMapValue params, const bt2c::Logger& logger);
+bt2::Value::Shared metadata_info_query(bt2::ConstValue params, const bt2c::Logger& logger);
 
-bt2::Value::Shared trace_infos_query(bt2::ConstMapValue params, const bt2c::Logger& logger);
+bt2::Value::Shared trace_infos_query(bt2::ConstValue params, const bt2c::Logger& logger);
 
-bt2::Value::Shared support_info_query(bt2::ConstMapValue params, const bt2c::Logger& logger);
+bt2::Value::Shared support_info_query(bt2::ConstValue params, const bt2c::Logger& logger);
 
 #endif /* BABELTRACE_PLUGINS_CTF_FS_SRC_QUERY_HPP */

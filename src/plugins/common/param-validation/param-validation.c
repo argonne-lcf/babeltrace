@@ -396,6 +396,11 @@ enum bt_param_validation_status bt_param_validation_validate(
 		goto end;
 	}
 
+	if (bt_value_get_type(params) != BT_VALUE_TYPE_MAP) {
+		status = bt_param_validation_error(&ctx, "top-level is not a map value");
+		goto end;
+	}
+
 	map_value_descr.entries = entries;
 
 	status = validate_map_value(&map_value_descr, params, &ctx);

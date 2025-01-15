@@ -40,7 +40,7 @@ static bt_param_validation_map_value_entry_descr metadataInfoQueryParamsDesc[] =
      bt_param_validation_value_descr::makeString()},
     BT_PARAM_VALIDATION_MAP_VALUE_ENTRY_END};
 
-bt2::Value::Shared metadata_info_query(const bt2::ConstMapValue params, const bt2c::Logger& logger)
+bt2::Value::Shared metadata_info_query(const bt2::ConstValue params, const bt2c::Logger& logger)
 {
     gchar *validateError = nullptr;
     const auto validationStatus = bt_param_validation_validate(
@@ -141,7 +141,7 @@ static void populate_trace_info(const struct ctf_fs_trace *trace, const bt2::Map
     }
 }
 
-bt2::Value::Shared trace_infos_query(const bt2::ConstMapValue params, const bt2c::Logger& logger)
+bt2::Value::Shared trace_infos_query(const bt2::ConstValue params, const bt2c::Logger& logger)
 {
     const auto parameters = read_src_fs_parameters(params, logger);
     ctf_fs_component ctf_fs {parameters.clkClsCfg, logger};
@@ -166,7 +166,7 @@ static bt_param_validation_map_value_entry_descr supportInfoQueryParamsDesc[] = 
      bt_param_validation_value_descr::makeString()},
     BT_PARAM_VALIDATION_MAP_VALUE_ENTRY_END};
 
-bt2::Value::Shared support_info_query(const bt2::ConstMapValue params, const bt2c::Logger& logger)
+bt2::Value::Shared support_info_query(const bt2::ConstValue params, const bt2c::Logger& logger)
 {
     gchar *validateError = NULL;
     const auto validationStatus = bt_param_validation_validate(

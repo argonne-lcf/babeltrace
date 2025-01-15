@@ -14,10 +14,19 @@ query_object = "babeltrace.support-info"
 
 @test_all_ctf_versions
 class QuerySupportInfoTestCase(unittest.TestCase):
+    def setUp(self):
+        ctf = bt2.find_plugin("ctf")
+        assert ctf
+        self._fs = ctf.source_component_classes["fs"]
+
+    def test_non_map_params(self):
+        with self.assertRaisesRegex(
+            bt2._Error, "Error validating parameters: top-level is not a map value"
+        ):
+            bt2.QueryExecutor(self._fs, query_object).query()
+
     def test_support_info_with_uuid(self):
         # Test that the right group is reported for each trace.
-        ctf = bt2.find_plugin("ctf")
-        fs = ctf.source_component_classes["fs"]
 
         session_rotation_trace_path = os.path.join(
             os.environ["BT_CTF_TRACES_PATH"],
@@ -75,7 +84,9 @@ class QuerySupportInfoTestCase(unittest.TestCase):
 
         def do_one_query(input, expected_group):
             qe = bt2.QueryExecutor(
-                fs, query_object, {"input": input, "type": "directory"}
+                self._fs,
+                query_object,
+                {"input": input, "type": "directory"},
             )
 
             result = qe.query()
