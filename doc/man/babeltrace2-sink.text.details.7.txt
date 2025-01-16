@@ -1,6 +1,6 @@
 = babeltrace2-sink.text.details(7)
 :manpagetype: component class
-:revdate: 1 September 2023
+:revdate: 15 January 2025
 
 
 == NAME
@@ -86,7 +86,8 @@ parameter to disable this.
 
 You can hide specific properties with the param:with-stream-class-name,
 param:with-stream-class-namespace, param:with-stream-name,
-param:with-time, param:with-trace-name, and param:with-uuid parameters.
+param:with-time, param:with-trace-name, param:with-uid, and
+param:with-uuid parameters.
 
 To make the component hide many message details and print a single
 message per line, you can enable the compact mode with the param:compact
@@ -152,6 +153,11 @@ Default: true.
 
 param:with-trace-name='VAL' vtype:[optional boolean]::
     If 'VAL' is false, then do not print trace names.
++
+Default: true.
+
+param:with-uid='VAL' vtype:[optional boolean]::
+    If 'VAL' is false, then do not print unique IDs (UIDs).
 +
 Default: true.
 
