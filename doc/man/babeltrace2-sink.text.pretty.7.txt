@@ -1,6 +1,6 @@
 = babeltrace2-sink.text.pretty(7)
 :manpagetype: component class
-:revdate: 1 September 2023
+:revdate: 15 January 2025
 
 
 == NAME
@@ -277,6 +277,20 @@ Default: false.
 param:path='PATH' vtype:[optional string]::
     Print the text output to the file 'PATH' instead of the standard
     output.
+
+param:print-enum-flags='VAL' vtype:[optional boolean]::
+    If 'VAL' if
+    true, then try to print enumeration field values as a pipe-delimited
+    (`|`) list of bit flags, if it applies.
++
+When printing the value of an enumeration field without any
+corresponding mapping, a compcls:sink.text.pretty component splits the
+value into its individual bit values: if each set bit has a
+corresponding mapping, then it considers that those mappings are in fact
+bit flags.
++
+If a set bit has no corresponding mapping, then the component
+prints `<unknown>`.
 
 param:verbose='VAL' vtype:[optional boolean]::
     If 'VAL' if true, then turn the verbose mode on.
