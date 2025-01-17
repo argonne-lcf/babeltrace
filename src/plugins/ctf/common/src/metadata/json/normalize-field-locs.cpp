@@ -223,7 +223,7 @@ private:
 
         for (auto memberNameIt = _mMemberNames.begin(); memberNameIt != memberNameEndIt;
              ++memberNameIt) {
-            items.push_back(**memberNameIt);
+            items.emplace_back(**memberNameIt);
         }
 
         for (; tmpItemIt != tmpItems.end(); ++tmpItemIt) {

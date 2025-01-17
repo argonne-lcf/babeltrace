@@ -285,7 +285,7 @@ FieldLoc fieldLocOfJsonFc(const bt2c::JsonObjVal& jsonFc, const std::string& key
                 /* `null` becomes `bt2s::nullopt` */
                 items.emplace_back(bt2s::nullopt);
             } else {
-                items.push_back(*jsonItem->asStr());
+                items.emplace_back(*jsonItem->asStr());
             }
         }
     }

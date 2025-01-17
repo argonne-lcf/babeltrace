@@ -1258,7 +1258,7 @@ private:
     {
         CTF_SRC_ITEM_SEQ_ITER_CPPLOGT("Pushing onto stack: restoring-state={}, new-stack-len={}",
                                       wise_enum::to_string(restoringState), _mStack.size() + 1);
-        _mStack.push_back(_StackFrame {restoringState});
+        _mStack.emplace_back(restoringState);
     }
 
     /*
@@ -1281,7 +1281,7 @@ private:
             "Pushing onto stack: restoring-state={}, fc-deep-type={}, new-stack-len={}",
             wise_enum::to_string(restoringState), wise_enum::to_string(fc.deepType()),
             _mStack.size() + 1);
-        _mStack.push_back(_StackFrame {restoringState, fc});
+        _mStack.emplace_back(restoringState, fc);
     }
 
     /*
