@@ -1,14 +1,9 @@
-# SPDX-License-Identifier: BSD-2-Clause
-#
-# Copyright (c) 2016, Matt Layman
-
 import os
 from unittest import TextTestResult, TextTestRunner
 from unittest.runner import _WritelnDecorator
 import sys
 
 from tap import formatter
-from tap.i18n import _
 from tap.tracker import Tracker
 
 
@@ -18,6 +13,18 @@ class TAPTestResult(TextTestResult):
 
     def __init__(self, stream, descriptions, verbosity):
         super(TAPTestResult, self).__init__(stream, descriptions, verbosity)
+
+    def addSubTest(self, test, subtest, err):
+        super(TAPTestResult, self).addSubTest(test, subtest, err)
+        if err is not None:
+            diagnostics = formatter.format_exception(err)
+            self.tracker.add_not_ok(
+                self._cls_name(test),
+                self._description(subtest),
+                diagnostics=diagnostics,
+            )
+        else:
+            self.tracker.add_ok(self._cls_name(test), self._description(subtest))
 
     def stopTestRun(self):
         """Once the test run is complete, generate each of the TAP files."""
@@ -52,14 +59,16 @@ class TAPTestResult(TextTestResult):
         self.tracker.add_not_ok(
             self._cls_name(test),
             self._description(test),
-            _('(expected failure)'),
+            "TODO {}".format("(expected failure)"),
             diagnostics=diagnostics,
         )
 
     def addUnexpectedSuccess(self, test):
         super(TAPTestResult, self).addUnexpectedSuccess(test)
         self.tracker.add_ok(
-            self._cls_name(test), self._description(test), _('(unexpected success)')
+            self._cls_name(test),
+            self._description(test),
+            "TODO {}".format("(unexpected success)"),
         )
 
     def _cls_name(self, test):
@@ -70,15 +79,13 @@ class TAPTestResult(TextTestResult):
             try:
                 return self.FORMAT.format(
                     method_name=str(test),
-                    short_description=test.shortDescription() or '',
+                    short_description=test.shortDescription() or "",
                 )
             except KeyError:
                 sys.exit(
-                    _(
-                        'Bad format string: {format}\n'
-                        'Replacement options are: {{short_description}} and '
-                        '{{method_name}}'
-                    ).format(format=self.FORMAT)
+                    "Bad format string: {format}\n"
+                    "Replacement options are: {{short_description}} and "
+                    "{{method_name}}".format(format=self.FORMAT)
                 )
 
         return test.shortDescription() or str(test)
@@ -105,7 +112,7 @@ class TAPTestRunner(TextTestRunner):
 
         The test runner default output will be suppressed in favor of TAP.
         """
-        self.stream = _WritelnDecorator(open(os.devnull, 'w'))
+        self.stream = _WritelnDecorator(open(os.devnull, "w"))
         _tracker.streaming = streaming
         _tracker.stream = sys.stdout
 

@@ -1,7 +1,3 @@
-# SPDX-License-Identifier: BSD-2-Clause
-#
-# Copyright (c) 2016, Matt Layman
-
 import os
 import unittest
 
@@ -13,7 +9,7 @@ from tap.rules import Rules
 class Loader(object):
     """Load TAP lines into unittest-able objects."""
 
-    ignored_lines = set(['diagnostic', 'unknown'])
+    ignored_lines = set(["diagnostic", "unknown"])
 
     def __init__(self):
         self._parser = Parser()
@@ -54,9 +50,9 @@ class Loader(object):
         :returns: A ``unittest.TestSuite`` instance
         """
         suite = unittest.TestSuite()
-        rules = Rules('stream', suite)
+        rules = Rules("stream", suite)
         line_generator = self._parser.parse_stdin()
-        return self._load_lines('stream', line_generator, suite, rules)
+        return self._load_lines("stream", line_generator, suite, rules)
 
     def _find_tests_in_directory(self, directory, suite):
         """Find test files in the directory and add them to the suite."""
@@ -74,18 +70,18 @@ class Loader(object):
             if line.category in self.ignored_lines:
                 continue
 
-            if line.category == 'test':
+            if line.category == "test":
                 suite.addTest(Adapter(filename, line))
                 rules.saw_test()
-            elif line.category == 'plan':
+            elif line.category == "plan":
                 if line.skip:
                     rules.handle_skipping_plan(line)
                     return suite
                 rules.saw_plan(line, line_counter)
-            elif line.category == 'bail':
+            elif line.category == "bail":
                 rules.handle_bail(line)
                 return suite
-            elif line.category == 'version':
+            elif line.category == "version":
                 rules.saw_version_at(line_counter)
 
         rules.check(line_counter)

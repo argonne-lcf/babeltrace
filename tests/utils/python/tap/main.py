@@ -1,13 +1,9 @@
-# SPDX-License-Identifier: BSD-2-Clause
-#
-# Copyright (c) 2016, Matt Layman
-
 import argparse
 import sys
 import unittest
 
-from tap.i18n import _
 from tap.loader import Loader
+from tap.runner import TAPTestRunner
 
 
 def main(argv=sys.argv, stream=sys.stderr):
@@ -23,7 +19,7 @@ def main(argv=sys.argv, stream=sys.stderr):
 def build_suite(args):
     """Build a test suite by loading TAP files or a TAP stream."""
     loader = Loader()
-    if len(args.files) == 0 or args.files[0] == '-':
+    if len(args.files) == 0 or args.files[0] == "-":
         suite = loader.load_suite_from_stdin()
     else:
         suite = loader.load(args.files)
@@ -31,28 +27,28 @@ def build_suite(args):
 
 
 def parse_args(argv):
-    description = _('A TAP consumer for Python')
-    epilog = _(
-        'When no files are given or a dash (-) is used for the file name, '
-        'tappy will read a TAP stream from STDIN.'
+    description = "A TAP consumer for Python"
+    epilog = (
+        "When no files are given or a dash (-) is used for the file name, "
+        "tappy will read a TAP stream from STDIN."
     )
     parser = argparse.ArgumentParser(description=description, epilog=epilog)
     parser.add_argument(
-        'files',
-        metavar='FILE',
-        nargs='*',
-        help=_(
-            'A file containing TAP output. Any directories listed will be '
-            'scanned for files to include as TAP files.'
+        "files",
+        metavar="FILE",
+        nargs="*",
+        help=(
+            "A file containing TAP output. Any directories listed will be "
+            "scanned for files to include as TAP files."
         ),
     )
     parser.add_argument(
-        '-v',
-        '--verbose',
-        action='store_const',
+        "-v",
+        "--verbose",
+        action="store_const",
         default=1,
         const=2,
-        help=_('use verbose messages'),
+        help="use verbose messages",
     )
 
     # argparse expects the executable to be removed from argv.
@@ -73,3 +69,10 @@ def get_status(result):
         return 0
     else:
         return 1
+
+
+def main_module():
+    """Entry point for running as ``python -m tap``."""
+    runner = TAPTestRunner()
+    runner.set_stream(True)
+    unittest.main(module=None, testRunner=runner)

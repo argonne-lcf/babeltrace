@@ -1,8 +1,3 @@
-# SPDX-License-Identifier: BSD-2-Clause
-#
-# Copyright (c) 2016, Matt Layman
-
-
 class Adapter(object):
     """The adapter processes a TAP test line and updates a unittest result.
 
@@ -48,7 +43,7 @@ class Adapter(object):
         # Since TAP will not provide assertion data, clean up the assertion
         # section so it is not so spaced out.
         test, err = result.failures[-1]
-        result.failures[-1] = (test, '')
+        result.failures[-1] = (test, "")
 
     def __repr__(self):
-        return '<file={filename}>'.format(filename=self._filename)
+        return "<file={filename}>".format(filename=self._filename)

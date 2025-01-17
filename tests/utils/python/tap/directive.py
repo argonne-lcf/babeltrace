@@ -1,7 +1,3 @@
-# SPDX-License-Identifier: BSD-2-Clause
-#
-# Copyright (c) 2016, Matt Layman
-
 import re
 
 
@@ -22,7 +18,7 @@ class Directive(object):
     )
 
     def __init__(self, text):
-        """Initialize the directive by parsing the text.
+        r"""Initialize the directive by parsing the text.
 
         The text is assumed to be everything after a '#\s*' on a result line.
         """
@@ -34,17 +30,17 @@ class Directive(object):
         match = self.skip_pattern.match(text)
         if match:
             self._skip = True
-            self._reason = match.group('reason')
+            self._reason = match.group("reason")
 
         match = self.todo_pattern.match(text)
         if match:
-            if match.group('whitespace'):
+            if match.group("whitespace"):
                 self._todo = True
             else:
                 # Catch the case where the directive has no descriptive text.
-                if match.group('reason') == '':
+                if match.group("reason") == "":
                     self._todo = True
-            self._reason = match.group('reason')
+            self._reason = match.group("reason")
 
     @property
     def text(self):

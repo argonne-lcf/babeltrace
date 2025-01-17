@@ -15,3 +15,8 @@ Files:
   tests/data/*
 Copyright: 2011-2025 EfficiOS Inc.
 License: CC0-1.0
+
+Files:
+  tests/utils/python/tap/*.py
+Copyright: 2019 - present, Matt Layman and contributors
+License: BSD-2-Clause
