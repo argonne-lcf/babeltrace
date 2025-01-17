@@ -298,7 +298,7 @@ AX_LIB_SOCKET_NSL
 
 # Check for glib >= 2.28 with gmodule support
 AM_PATH_GLIB_2_0([2.28.0], [],
-  AC_MSG_ERROR([glib >= 2.28 is required - download it from ftp://ftp.gtk.org/pub/gtk]),
+  AC_MSG_ERROR([glib >= 2.28 is required - download it from ‘ftp://ftp.gtk.org/pub/gtk’]),
   [gmodule-no-export]
 )
 
@@ -343,17 +343,17 @@ AC_CHECK_FUNCS([ \
 
 # Check for fmemopen
 AC_CHECK_LIB([c], [fmemopen],
-  [AC_DEFINE_UNQUOTED([BABELTRACE_HAVE_FMEMOPEN], 1, [Has fmemopen support.])]
+  [AC_DEFINE_UNQUOTED([BABELTRACE_HAVE_FMEMOPEN], 1, [Has ‘fmemopen’ support.])]
 )
 
 # Check for open_memstream
 AC_CHECK_LIB([c], [open_memstream],
-  [AC_DEFINE_UNQUOTED([BABELTRACE_HAVE_OPEN_MEMSTREAM], 1, [Has open_memstream support.])]
+  [AC_DEFINE_UNQUOTED([BABELTRACE_HAVE_OPEN_MEMSTREAM], 1, [Has ‘open_memstream’ support.])]
 )
 
 # Check for posix_fallocate
 AC_CHECK_LIB([c], [posix_fallocate],
-  [AC_DEFINE_UNQUOTED([BABELTRACE_HAVE_POSIX_FALLOCATE], 1, [Has posix_fallocate support.])]
+  [AC_DEFINE_UNQUOTED([BABELTRACE_HAVE_POSIX_FALLOCATE], 1, [Has ‘posix_fallocate’ support.])]
 )
 
 
@@ -361,37 +361,37 @@ AC_CHECK_LIB([c], [posix_fallocate],
 ## User variables  ##
 ##                 ##
 
-AC_ARG_VAR([PYTHON_INCLUDE], [Include flags for Python, bypassing python-config])
-AC_ARG_VAR([PYTHON_LDFLAGS], [Linker flags for Python, bypassing python-config])
-AC_ARG_VAR([PYTHON_CONFIG], [Path to python-config])
+AC_ARG_VAR([PYTHON_INCLUDE], [Include flags for Python, bypassing ‘python-config’])
+AC_ARG_VAR([PYTHON_LDFLAGS], [Linker flags for Python, bypassing ‘python-config’])
+AC_ARG_VAR([PYTHON_CONFIG], [Path to ‘python-config’])
 
 # BABELTRACE_PLUGINS_DIR: Plugins directory
-AC_ARG_VAR([BABELTRACE_PLUGINS_DIR], [built-in plugins install directory [LIBDIR/babeltrace2/plugins]])
+AC_ARG_VAR([BABELTRACE_PLUGINS_DIR], [built-in plugins install directory [‘LIBDIR/babeltrace2/plugins’]])
 AS_IF([test "x$BABELTRACE_PLUGINS_DIR" = x], [BABELTRACE_PLUGINS_DIR='${libdir}/babeltrace2/plugins'])
 
 # BABELTRACE_PLUGIN_PROVIDERS_DIR: Plugin providers directory
-AC_ARG_VAR([BABELTRACE_PLUGIN_PROVIDERS_DIR], [built-in plugin providers install directory [LIBDIR/babeltrace2/plugin-providers]])
+AC_ARG_VAR([BABELTRACE_PLUGIN_PROVIDERS_DIR], [built-in plugin providers install directory [‘LIBDIR/babeltrace2/plugin-providers’]])
 AS_IF([test "x$BABELTRACE_PLUGIN_PROVIDERS_DIR" = x], [BABELTRACE_PLUGIN_PROVIDERS_DIR='${libdir}/babeltrace2/plugin-providers'])
 
 # BABELTRACE_MINIMAL_LOG_LEVEL:
-AC_ARG_VAR([BABELTRACE_MINIMAL_LOG_LEVEL], [Minimal log level for Babeltrace program, library, and plugins (TRACE, DEBUG (default), or INFO)])
+AC_ARG_VAR([BABELTRACE_MINIMAL_LOG_LEVEL], [Minimal log level for Babeltrace program, library, and plugins (‘TRACE’, ‘DEBUG’ (default), or ‘INFO’)])
 AS_IF([test "x$BABELTRACE_MINIMAL_LOG_LEVEL" = x], [BABELTRACE_MINIMAL_LOG_LEVEL="DEBUG"])
 AS_IF([test "$BABELTRACE_MINIMAL_LOG_LEVEL" != "TRACE" && \
        test "$BABELTRACE_MINIMAL_LOG_LEVEL" != "DEBUG" && \
        test "$BABELTRACE_MINIMAL_LOG_LEVEL" != "INFO"],
-  [AC_MSG_ERROR([Invalid BABELTRACE_MINIMAL_LOG_LEVEL value ($BABELTRACE_MINIMAL_LOG_LEVEL): use TRACE, DEBUG, or INFO.])]
+  [AC_MSG_ERROR([Invalid ‘BABELTRACE_MINIMAL_LOG_LEVEL’ value (‘$BABELTRACE_MINIMAL_LOG_LEVEL’): use ‘TRACE’, ‘DEBUG’, or ‘INFO’.])]
 )
 AC_DEFINE_UNQUOTED([BT_LOG_MINIMAL_LEVEL], [__BT_LOGGING_LEVEL_$BABELTRACE_MINIMAL_LOG_LEVEL], [Minimal log level])
 
 # BABELTRACE_DEV_MODE:
-AC_ARG_VAR([BABELTRACE_DEV_MODE], [Set to 1 to enable the Babeltrace developer mode (enables run-time checks for plugin developers)])
+AC_ARG_VAR([BABELTRACE_DEV_MODE], [Set to ‘1’ to enable the Babeltrace developer mode (enables run-time checks for plugin developers)])
 AS_IF([test "x$BABELTRACE_DEV_MODE" = x1], [
   AC_DEFINE([BT_DEV_MODE], 1, [Babeltrace developer mode])
 ], [BABELTRACE_DEV_MODE=0])
 AM_CONDITIONAL([DEV_MODE], [test "x$BABELTRACE_DEV_MODE" = x1])
 
 # BABELTRACE_DEBUG_MODE:
-AC_ARG_VAR([BABELTRACE_DEBUG_MODE], [Set to 1 to enable the Babeltrace debug mode (enables internal assertions for Babeltrace maintainers)])
+AC_ARG_VAR([BABELTRACE_DEBUG_MODE], [Set to ‘1’ to enable the Babeltrace debug mode (enables internal assertions for Babeltrace maintainers)])
 AS_IF([test "x$BABELTRACE_DEBUG_MODE" = x1], [
   AC_DEFINE([BT_DEBUG_MODE], 1, [Babeltrace debug mode])
 ], [BABELTRACE_DEBUG_MODE=0])
@@ -429,7 +429,7 @@ AE_FEATURE([api-doc],[build the HTML API documentation])
 # Built-in plugins
 # Disabled by default
 AE_FEATURE_DEFAULT_DISABLE
-AE_FEATURE([built-in-plugins],[Statically-link in-tree plug-ins into the babeltrace2 executable])
+AE_FEATURE([built-in-plugins],[Statically-link in-tree plug-ins into the ‘babeltrace2’ executable])
 
 # Built-in python plugin support
 # Disabled by default
@@ -467,7 +467,7 @@ AE_IF_FEATURE_ENABLED([python-plugins], [
       # --enable-python-plugins _and_ --disable-python-bindings were
       # used. This is invalid because Python plugins need the Python
       # bindings to be useful.
-      AC_MSG_ERROR(--enable-python-bindings must be used to support Python plugins)
+      AC_MSG_ERROR(‘--enable-python-bindings’ must be used to support Python plugins)
     ])
   ])
 ])
@@ -475,15 +475,15 @@ AE_IF_FEATURE_ENABLED([python-plugins], [
 # Check for conflicting optional features user choices
 AE_IF_FEATURE_ENABLED([built-in-plugins], [
   # Built-in plug-ins are only available when the --disable-shared --enable-static options are used.
-  AE_IF_FEATURE_NOT_ENABLED([static], [AC_MSG_ERROR(--enable-static must be used to bundle plug-ins in the babeltrace2 executable)])
-  AE_IF_FEATURE_ENABLED([shared], [AC_MSG_ERROR(--disable-shared must be used to bundle plug-ins in the babeltrace2 executable)])
+  AE_IF_FEATURE_NOT_ENABLED([static], [AC_MSG_ERROR(‘--enable-static’ must be used to bundle plug-ins in the ‘babeltrace2’ executable)])
+  AE_IF_FEATURE_ENABLED([shared], [AC_MSG_ERROR(‘--disable-shared’ must be used to bundle plug-ins in the ‘babeltrace2’ executable)])
 ])
 
 AE_IF_FEATURE_ENABLED([built-in-python-plugin-support], [
-  AE_IF_FEATURE_NOT_ENABLED([python-plugins], [AC_MSG_ERROR([--enable-python-plugins must be used to bundle Python plugin support in the babeltrace2 executable])])
+  AE_IF_FEATURE_NOT_ENABLED([python-plugins], [AC_MSG_ERROR([‘--enable-python-plugins’ must be used to bundle Python plugin support in the ‘babeltrace2’ executable])])
   # Built-in plug-ins are only available when the --disable-shared --enable-static options are used.
-  AE_IF_FEATURE_NOT_ENABLED([static], [AC_MSG_ERROR(--enable-static must be used to bundle Python plugin support in the babeltrace2 executable)])
-  AE_IF_FEATURE_ENABLED([shared], [AC_MSG_ERROR(--disable-shared must be used to bundle Python plugin support in the babeltrace2 executable)])
+  AE_IF_FEATURE_NOT_ENABLED([static], [AC_MSG_ERROR(‘--enable-static’ must be used to bundle Python plugin support in the ‘babeltrace2’ executable)])
+  AE_IF_FEATURE_ENABLED([shared], [AC_MSG_ERROR(‘--disable-shared’ must be used to bundle Python plugin support in the ‘babeltrace2’ executable)])
 ])
 
 
@@ -508,11 +508,11 @@ AM_CONDITIONAL([ENABLE_ASAN], AE_IS_FEATURE_ENABLED([asan]))
 ##                                                                    ##
 
 AE_IF_FEATURE_ENABLED([built-in-plugins],
-  [AC_DEFINE([BT_BUILT_IN_PLUGINS], [1], [Define to 1 to register plug-in attributes in static executable sections])]
+  [AC_DEFINE([BT_BUILT_IN_PLUGINS], [1], [Define to ‘1’ to register plug-in attributes in static executable sections])]
 )
 
 AE_IF_FEATURE_ENABLED([built-in-python-plugin-support],
-  [AC_DEFINE([BT_BUILT_IN_PYTHON_PLUGIN_SUPPORT], [1], [Define to 1 to register plug-in attributes in static executable sections])]
+  [AC_DEFINE([BT_BUILT_IN_PYTHON_PLUGIN_SUPPORT], [1], [Define to ‘1’ to register plug-in attributes in static executable sections])]
 )
 
 AE_IF_FEATURE_ENABLED([python-plugins], [ENABLE_PYTHON_PLUGINS=1], [ENABLE_PYTHON_PLUGINS=0])
@@ -549,7 +549,7 @@ AM_CONDITIONAL([HAVE_PYTHON_312_OR_GREATER], [test "x$have_python_312_or_greater
 
 AS_IF([AE_IS_FEATURE_ENABLED([python-bindings]) || AE_IS_FEATURE_ENABLED([python-plugins])], [
   AS_IF([test "x$have_python_dev" = xno], [
-    AC_MSG_ERROR([Cannot find a suitable python-config. You can override the python-config path with the PYTHON_CONFIG environment variable.])
+    AC_MSG_ERROR([Cannot find a suitable ‘python-config’. You can override the ‘python-config’ path with the ‘PYTHON_CONFIG’ environment variable.])
   ])
 
   AX_COMPARE_VERSION(["$PYTHON_VERSION"], [ge], ["3.12"], [
@@ -558,7 +558,7 @@ AS_IF([AE_IS_FEATURE_ENABLED([python-bindings]) || AE_IS_FEATURE_ENABLED([python
       AC_MSG_RESULT([yes])
     ], [
       AC_MSG_RESULT([no])
-      AC_MSG_ERROR([Python >= 3.12 removed 'distutils', the 'setuptools' module needs to be installed for the selected interpreter.])
+      AC_MSG_ERROR([Python >= 3.12 removed ‘distutils’, the ‘setuptools’ module needs to be installed for the selected interpreter.])
     ])
   ])
 ])
@@ -583,13 +583,13 @@ AE_IF_FEATURE_ENABLED([debug-info], [
       dnl PKG_CHECK_MODULES defines ELFUTILS_LIBS
     ],
     [
-      AC_MSG_WARN([pkg-config was unable to find a valid .pc for libelf/libdw. Set PKG_CONFIG_PATH to specify the pkg-config configuration file location.])
+      AC_MSG_WARN([pkg-config was unable to find a valid ‘.pc’ for libelf/libdw. Set ‘PKG_CONFIG_PATH’ to specify the pkg-config configuration file location.])
 
       # Turns out SLES12 doesn't bother shipping .pc file for libelf
       AC_MSG_WARN([Finding libelf without pkg-config.])
-      AC_CHECK_LIB([elf], [elf_version], [:], [AC_MSG_ERROR(Missing libelf (from elfutils >= 0.154) which is required by debug info. You can disable this feature using --disable-debug-info.)])
-      AC_CHECK_LIB([dw], [dwarf_begin], [:], [AC_MSG_ERROR(Missing libdw (from elfutils >= 0.154) which is required by debug info. You can disable this feature using --disable-debug-info.)])
-      AE_LIB_ELFUTILS([0], [154], [], [AC_MSG_ERROR(elfutils >= 0.154 is required to use the debug info feature. You can disable this feature using --disable-debug-info.)])
+      AC_CHECK_LIB([elf], [elf_version], [:], [AC_MSG_ERROR(Missing libelf (from elfutils >= 0.154) which is required by debug info. You can disable this feature using ‘--disable-debug-info’.)])
+      AC_CHECK_LIB([dw], [dwarf_begin], [:], [AC_MSG_ERROR(Missing libdw (from elfutils >= 0.154) which is required by debug info. You can disable this feature using ‘--disable-debug-info’.)])
+      AE_LIB_ELFUTILS([0], [154], [], [AC_MSG_ERROR(elfutils >= 0.154 is required to use the debug info feature. You can disable this feature using ‘--disable-debug-info’.)])
       ELFUTILS_LIBS="-lelf -ldw"
     ])
 ])
@@ -626,7 +626,7 @@ AE_IF_FEATURE_ENABLED([man-pages], [
       # to build the man pages
       AC_MSG_ERROR([
 You need asciidoc and xmlto to build the Babeltrace man pages. Use
---disable-man-pages to disable building the man pages, in which case
+‘--disable-man-pages’ to disable building the man pages, in which case
 they will not be installed.
       ])
     ], [
@@ -708,8 +708,8 @@ G_STATIC_ASSERT(sizeof(size_t) == GLIB_SIZEOF_SIZE_T);
   ])
 ],[:],[
   AC_MSG_ERROR([dnl
-sizeof(size_t) doesn't match GLIB_SIZEOF_SIZE_T. You probably need to set
-PKG_CONFIG_LIBDIR to point to the right pkg-config files for your build
+‘sizeof(size_t)’ doesn't match ‘GLIB_SIZEOF_SIZE_T’. You probably need to set
+‘PKG_CONFIG_LIBDIR’ to point to the right pkg-config files for your build
 target.
   ])
 ])
@@ -898,9 +898,9 @@ AE_PPRINT_PROP_BOOL([Have Python interpreter], $value)
 test "x$have_python_dev" = "xyes" && value=1 || value=0
 AE_PPRINT_PROP_BOOL([Have Python development libraries], $value)
 test "x$enable_python_bindings" = "xyes" && value=1 || value=0
-AE_PPRINT_PROP_BOOL_CUSTOM([Python bindings], $value, [To enable, use --enable-python-bindings])
+AE_PPRINT_PROP_BOOL_CUSTOM([Python bindings], $value, [To enable, use ‘--enable-python-bindings’])
 test "x$enable_python_plugins" = "xyes" && value=1 || value=0
-AE_PPRINT_PROP_BOOL_CUSTOM([Python plugin support], $value, [To enable, use --enable-python-plugins])
+AE_PPRINT_PROP_BOOL_CUSTOM([Python plugin support], $value, [To enable, use ‘--enable-python-plugins’])
 AS_IF([test "x$have_python" = "xyes"], [
   AE_PPRINT_PROP_STRING([Python interpreter path], [$PYTHON])
 ])
@@ -918,16 +918,16 @@ AS_ECHO
 AE_PPRINT_SUBTITLE([Plugins])
 AE_PPRINT_PROP_BOOL(['ctf' plugin], 1)
 test "x$enable_debug_info" = "xyes" && value=1 || value=0
-AE_PPRINT_PROP_BOOL_CUSTOM(['lttng-utils' plugin], $value, [To enable, use --enable-debug-info])
+AE_PPRINT_PROP_BOOL_CUSTOM(['lttng-utils' plugin], $value, [To enable, use ‘--enable-debug-info’])
 AE_PPRINT_PROP_BOOL(['text' plugin], 1)
 AE_PPRINT_PROP_BOOL(['utils' plugin], 1)
 
 AS_ECHO
 AE_PPRINT_SUBTITLE([Built-in features])
 test "x$enable_built_in_plugins" = "xyes" && value=1 || value=0
-AE_PPRINT_PROP_BOOL_CUSTOM([Built-in plugins], $value, [To enable, use --enable-built-in-plugins])
+AE_PPRINT_PROP_BOOL_CUSTOM([Built-in plugins], $value, [To enable, use ‘--enable-built-in-plugins’])
 test "x$enable_built_in_python_plugin_support" = "xyes" && value=1 || value=0
-AE_PPRINT_PROP_BOOL_CUSTOM([Built-in Python plugin support], $value, [To enable, use --enable-built-in-python-plugin-support])
+AE_PPRINT_PROP_BOOL_CUSTOM([Built-in Python plugin support], $value, [To enable, use ‘--enable-built-in-python-plugin-support’])
 
 AS_ECHO
 AE_PPRINT_SUBTITLE([Documentation])
@@ -948,15 +948,15 @@ AE_IF_FEATURE_ENABLED([man-pages], [
     ])
   ])
 ], [
-  AE_PPRINT_PROP_BOOL_CUSTOM([build_man_pages_msg], 0, [To build man pages, use --enable-man-pages])
+  AE_PPRINT_PROP_BOOL_CUSTOM([build_man_pages_msg], 0, [To build man pages, use ‘--enable-man-pages’])
 ])
 
 m4_popdef([build_man_pages_msg])
 
 test "x$enable_api_doc" = "xyes" && value=1 || value=0
-AE_PPRINT_PROP_BOOL_CUSTOM([HTML API documentation], $value, [To build documentation, use --enable-api-doc])
+AE_PPRINT_PROP_BOOL_CUSTOM([HTML API documentation], $value, [To build documentation, use ‘--enable-api-doc’])
 test "x$enable_python_bindings_doc" = "xyes" && value=1 || value=0
-AE_PPRINT_PROP_BOOL_CUSTOM([Python bindings documentation], $value, [To build the Python bindings documentation, use --enable-python-bindings-doc])
+AE_PPRINT_PROP_BOOL_CUSTOM([Python bindings documentation], $value, [To build the Python bindings documentation, use ‘--enable-python-bindings-doc’])
 
 AS_ECHO
 AE_PPRINT_SUBTITLE([Logging])
