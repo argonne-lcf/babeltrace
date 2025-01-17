@@ -13,7 +13,7 @@
 #include "cpp-common/bt2/trace-ir.hpp"
 #include "cpp-common/bt2c/aliases.hpp"
 #include "cpp-common/bt2c/call.hpp"
-#include "cpp-common/bt2c/fmt.hpp"
+#include "cpp-common/bt2c/fmt.hpp" /* IWYU pragma: keep */
 #include "cpp-common/vendor/fmt/format.h"
 
 #include "item-seq/item.hpp"
