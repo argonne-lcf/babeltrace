@@ -899,9 +899,9 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         options: typing.Optional[
             typing.Iterable[
                 typing.Union[
-                    typing.Tuple[typing.Optional[str], bt2_field_class._FieldClass],
+                    typing.Tuple[str, bt2_field_class._FieldClass],
                     typing.Tuple[
-                        typing.Optional[str],
+                        str,
                         bt2_field_class._FieldClass,
                         typing.Optional[bt2_value._MapValueConst],
                     ],
@@ -920,12 +920,12 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
             typing.Iterable[
                 typing.Union[
                     typing.Tuple[
-                        typing.Optional[str],
+                        str,
                         bt2_field_class._FieldClass,
                         bt2_integer_range_set._UnsignedIntegerRangeSetConst,
                     ],
                     typing.Tuple[
-                        typing.Optional[str],
+                        str,
                         bt2_field_class._FieldClass,
                         bt2_integer_range_set._UnsignedIntegerRangeSetConst,
                         typing.Optional[bt2_value._MapValueConst],
@@ -945,12 +945,12 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
             typing.Iterable[
                 typing.Union[
                     typing.Tuple[
-                        typing.Optional[str],
+                        str,
                         bt2_field_class._FieldClass,
                         bt2_integer_range_set._SignedIntegerRangeSetConst,
                     ],
                     typing.Tuple[
-                        typing.Optional[str],
+                        str,
                         bt2_field_class._FieldClass,
                         bt2_integer_range_set._SignedIntegerRangeSetConst,
                         typing.Optional[bt2_value._MapValueConst],
@@ -968,19 +968,19 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         options: typing.Optional[
             typing.Iterable[
                 typing.Union[
-                    typing.Tuple[typing.Optional[str], bt2_field_class._FieldClass],
+                    typing.Tuple[str, bt2_field_class._FieldClass],
                     typing.Tuple[
-                        typing.Optional[str],
+                        str,
                         bt2_field_class._FieldClass,
                         typing.Optional[bt2_value._MapValueConst],
                     ],
                     typing.Tuple[
-                        typing.Optional[str],
+                        str,
                         bt2_field_class._FieldClass,
                         bt2_integer_range_set._IntegerRangeSetConst,
                     ],
                     typing.Tuple[
-                        typing.Optional[str],
+                        str,
                         bt2_field_class._FieldClass,
                         bt2_integer_range_set._IntegerRangeSetConst,
                         typing.Optional[bt2_value._MapValueConst],
