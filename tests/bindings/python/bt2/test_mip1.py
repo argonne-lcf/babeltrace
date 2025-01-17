@@ -75,12 +75,16 @@ class TheSink(bt2._UserSinkComponent):
         # Test `_BitArrayFieldClassConst.length`
         self._test.assertEqual(bit_array_fc.length, 16)
 
-        # Test `_BitArrayFieldClassConst.active_flag_labels_for_value_as_integer`
+        # Test `_BitArrayFieldClassConst.active_flags_for_value_as_integer`
         self._test.assertEqual(
-            bit_array_fc.active_flag_labels_for_value_as_integer(0b10), ["flag1"]
+            [
+                flag.label
+                for flag in bit_array_fc.active_flags_for_value_as_integer(0b10)
+            ],
+            ["flag1"],
         )
         self._test.assertEqual(
-            bit_array_fc.active_flag_labels_for_value_as_integer(0b10000000000), []
+            bit_array_fc.active_flags_for_value_as_integer(0b10000000000), []
         )
 
         # Test `_BitArrayFieldClassConst.__len__()`

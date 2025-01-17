@@ -118,9 +118,9 @@ class _BitArrayFieldClassConst(
     def length(self) -> int:
         return native_bt.field_class_bit_array_get_length(self._ptr)
 
-    def active_flag_labels_for_value_as_integer(
+    def active_flags_for_value_as_integer(
         self, value_as_integer: int
-    ) -> typing.List[str]:
+    ) -> typing.List[_BitArrayFieldClassFlagConst]:
         bt2_utils._check_mip_ge(self, "Bit array field class flags", 1)
         bt2_utils._check_int64(value_as_integer)
         (
@@ -133,7 +133,7 @@ class _BitArrayFieldClassConst(
             status,
             "cannot get active flag labels for value {}".format(value_as_integer),
         )
-        return labels
+        return [self[label] for label in labels]
 
     def __len__(self) -> int:
         bt2_utils._check_mip_ge(self, "Bit array field class flags", 1)
