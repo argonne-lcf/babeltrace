@@ -555,7 +555,7 @@ void MsgIter::_handleItem(const PktInfoItem& item)
             // TODO: handle `*seqNum` being <= `*_mCurPktSeqNum`
             if (*_mCurPktSeqNum + 1 < *seqNum) {
                 /* Create and initialize the message */
-                const auto msg = this->_createInitDiscPktsMsg(prevPktEndDefClkVal);
+                auto msg = this->_createInitDiscPktsMsg(prevPktEndDefClkVal);
 
                 /* Set its count */
                 msg->asDiscardedPackets().count(*seqNum - *_mCurPktSeqNum - 1);
