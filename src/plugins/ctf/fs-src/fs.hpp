@@ -17,9 +17,9 @@
 #include "cpp-common/bt2c/aliases.hpp"
 #include "cpp-common/bt2c/logging.hpp"
 
+#include "../common/src/metadata/metadata-stream-parser-utils.hpp"
+#include "../common/src/msg-iter.hpp"
 #include "data-stream-file.hpp"
-#include "plugins/ctf/common/src/metadata/metadata-stream-parser-utils.hpp"
-#include "plugins/ctf/common/src/msg-iter.hpp"
 
 #define CTF_FS_METADATA_FILENAME "metadata"
 

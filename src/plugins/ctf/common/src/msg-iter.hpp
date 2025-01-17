@@ -22,8 +22,8 @@
 #include "item-seq/item-seq-iter.hpp"
 #include "item-seq/item-visitor.hpp"
 #include "item-seq/logging-item-visitor.hpp"
+#include "metadata/ctf-ir.hpp"
 #include "null-cp-finder.hpp"
-#include "plugins/ctf/common/src/metadata/ctf-ir.hpp"
 
 namespace ctf {
 namespace src {

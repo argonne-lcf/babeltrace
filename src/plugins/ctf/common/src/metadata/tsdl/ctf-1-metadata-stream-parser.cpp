@@ -11,9 +11,9 @@
 #include "compat/memstream.h"
 #include "cpp-common/bt2c/aliases.hpp"
 
+#include "../../../metadata/json-strings.hpp"
+#include "../ctf-ir.hpp"
 #include "ctf-1-metadata-stream-parser.hpp"
-#include "plugins/ctf/common/metadata/json-strings.hpp"
-#include "plugins/ctf/common/src/metadata/ctf-ir.hpp"
 
 namespace ctf {
 namespace src {

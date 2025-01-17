@@ -25,8 +25,8 @@
 #include "cpp-common/bt2s/optional.hpp"
 #include "cpp-common/vendor/nlohmann/json.hpp"
 
+#include "../common/metadata/json-strings.hpp"
 #include "fs-sink-ctf-meta.hpp"
-#include "plugins/ctf/common/metadata/json-strings.hpp"
 #include "translate-ctf-ir-to-json.hpp"
 
 namespace {

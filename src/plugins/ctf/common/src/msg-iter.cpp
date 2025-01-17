@@ -17,8 +17,8 @@
 #include "cpp-common/vendor/fmt/format.h"
 
 #include "item-seq/item.hpp"
+#include "metadata/ctf-ir.hpp"
 #include "msg-iter.hpp"
-#include "plugins/ctf/common/src/metadata/ctf-ir.hpp"
 
 namespace ctf {
 namespace src {
