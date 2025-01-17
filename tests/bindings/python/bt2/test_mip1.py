@@ -86,15 +86,15 @@ class TheSink(bt2._UserSinkComponent):
         # Test `_BitArrayFieldClassConst.__len__()`
         self._test.assertEqual(len(bit_array_fc), 2)
 
-        def flag_to_tuple(flag: bt2._BitArrayFieldClassFlag):
+        def flag_to_tuple(flag: bt2._BitArrayFieldClassFlagConst):
             self._test.assertIsInstance(flag.label, str)
             self._test.assertIsInstance(flag.ranges, bt2._UnsignedIntegerRangeSetConst)
             return (flag.label, [(rng.lower, rng.upper) for rng in flag.ranges])
 
         # Test `_BitArrayFieldClassConst.__iter__()`,
         # `_BitArrayFieldClassConst.__getitem__()`,
-        # `_BitArrayFieldClassFlag.label` and
-        # `_BitArrayFieldClassFlag.ranges`
+        # `_BitArrayFieldClassFlagConst.label` and
+        # `_BitArrayFieldClassFlagConst.ranges`
         self._test.assertEqual(
             [flag_to_tuple(bit_array_fc[name]) for name in bit_array_fc],
             [

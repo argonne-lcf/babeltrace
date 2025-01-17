@@ -91,7 +91,7 @@ class _BoolFieldClass(_BoolFieldClassConst, _FieldClass):
     _NAME = "Boolean"
 
 
-class _BitArrayFieldClassFlag:
+class _BitArrayFieldClassFlagConst:
     def __init__(self, ptr):
         self._label = native_bt.field_class_bit_array_flag_get_label(ptr)
         self._ranges = (
@@ -110,7 +110,7 @@ class _BitArrayFieldClassFlag:
 
 
 class _BitArrayFieldClassConst(
-    _FieldClassConst, typing.Mapping[str, _BitArrayFieldClassFlag]
+    _FieldClassConst, typing.Mapping[str, _BitArrayFieldClassFlagConst]
 ):
     _NAME = "Const bit array"
 
@@ -149,7 +149,7 @@ class _BitArrayFieldClassConst(
                 )
             )
 
-    def __getitem__(self, label: str) -> _BitArrayFieldClassFlag:
+    def __getitem__(self, label: str) -> _BitArrayFieldClassFlagConst:
         bt2_utils._check_mip_ge(self, "Bit array field class flags", 1)
         bt2_utils._check_str(label)
         flag_ptr = native_bt.field_class_bit_array_borrow_flag_by_label_const(
@@ -159,7 +159,7 @@ class _BitArrayFieldClassConst(
         if flag_ptr is None:
             raise KeyError(label)
 
-        return _BitArrayFieldClassFlag(flag_ptr)
+        return _BitArrayFieldClassFlagConst(flag_ptr)
 
 
 class _BitArrayFieldClass(_BitArrayFieldClassConst, _FieldClass):

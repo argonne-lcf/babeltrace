@@ -23,7 +23,7 @@ _public_names = [
     "_BitArrayField",
     "_BitArrayFieldClass",
     "_BitArrayFieldClassConst",
-    "_BitArrayFieldClassFlag",
+    "_BitArrayFieldClassFlagConst",
     "_BitArrayFieldConst",
     "_BlobField",
     "_BlobFieldClass",
