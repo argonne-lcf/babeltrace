@@ -20,7 +20,7 @@ clean_tmp() {
 	rm -rf "${out_path}" "${text_output1}" "${text_output2_intermediary}" "${text_output2}" "${stderr_file}"
 }
 
-plan_tests 163
+plan_tests 166
 
 for ctf_version in 1 2; do
 	for path in "${BT_CTF_TRACES_PATH}/$ctf_version/succeed/"*; do

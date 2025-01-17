@@ -179,7 +179,7 @@ test_force_origin_unix_epoch() {
 	done
 }
 
-plan_tests 44
+plan_tests 46
 
 test_force_origin_unix_epoch 2packets barectf-event-before-packet
 test_ctf_gen_single simple
@@ -192,5 +192,7 @@ test_ctf_single array-align-elem
 test_ctf_single struct-array-align-elem
 test_ctf_single meta-ctx-sequence
 test_ctf_single_version meta-clk-cls-before-trace-cls 2
+test_ctf_single_version def-clk-freq 1
+
 test_packet_end lttng-event-after-packet
 test_packet_end lttng-crash
