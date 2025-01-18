@@ -389,9 +389,9 @@ private:
      * Pushes a stack frame managing `field` on the stack.
      */
     template <typename FieldT>
-    void _stackPush(const FieldT field)
+    void _stackPush(FieldT&& field)
     {
-        _mStack.push(_StackFrame {field});
+        _mStack.emplace(std::forward<FieldT>(field));
     }
 
     /*
