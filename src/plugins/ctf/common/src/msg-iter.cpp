@@ -363,7 +363,7 @@ void MsgIter::_handleItem(const EventRecordEndItem&)
     BT_ASSERT_DBG(_mCurMsg);
 
     /* Emit current message (move to message queue) */
-    _mMsgs.emplace(std::move(_mCurMsg));
+    this->_addMsgToQueue(std::move(_mCurMsg));
     BT_ASSERT_DBG(!_mCurMsg);
 }
 
@@ -885,18 +885,22 @@ void MsgIter::_handleItem(const OptionalFieldEndItem&)
 
 void MsgIter::_addMsgToQueue(bt2::ConstMessage::Shared msg)
 {
-    _mMsgs.emplace(std::move(msg));
+    BT_ASSERT_DBG(_mMsgQueue.len < _mMsgQueue.array.size());
+    _mMsgQueue.array[_mMsgQueue.len] = std::move(msg);
+    ++_mMsgQueue.len;
 }
 
 bt2::ConstMessage::Shared MsgIter::_releaseNextMsg()
 {
-    if (_mMsgs.empty()) {
+    if (_mMsgQueue.len == 0) {
         return bt2::ConstMessage::Shared {};
     }
 
-    auto msg = std::move(_mMsgs.front());
+    auto msg = std::move(_mMsgQueue.array.front());
 
-    _mMsgs.pop();
+    _mMsgQueue.array[0] = std::move(_mMsgQueue.array[1]);
+    _mMsgQueue.array[1] = std::move(_mMsgQueue.array[2]);
+    --_mMsgQueue.len;
     return msg;
 }
 

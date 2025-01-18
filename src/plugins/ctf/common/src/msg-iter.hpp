@@ -7,7 +7,6 @@
 #ifndef BABELTRACE_PLUGINS_CTF_COMMON_SRC_MSG_ITER_HPP
 #define BABELTRACE_PLUGINS_CTF_COMMON_SRC_MSG_ITER_HPP
 
-#include <queue>
 #include <stack>
 
 #include <babeltrace2/babeltrace.h>
@@ -500,9 +499,19 @@ private:
      *
      * We're using a queue instead of keeping a single message because
      * because one item (from `_mItemSeqIter`) may correspond to more
-     * than one libbabeltrace2 message.
+     * than one libbabeltrace2 message. One item can generate at most
+     * three messages (see `_handleItem(const PktInfoItem&)`), therefore
+     * it's a queue of up to three messages.
+     *
+     * The head of the queue (the next message to return) is always at
+     * index 0 within `array`. `len` is the number of messages in
+     * the queue.
      */
-    std::queue<bt2::ConstMessage::Shared> _mMsgs;
+    struct
+    {
+        std::array<bt2::ConstMessage::Shared, 3> array;
+        std::size_t len;
+    } _mMsgQueue;
 
     /* Stack */
     std::stack<_StackFrame> _mStack;
