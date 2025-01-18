@@ -16,7 +16,6 @@
 #include "cpp-common/bt2/message.hpp"
 #include "cpp-common/bt2/self-message-iterator.hpp"
 #include "cpp-common/bt2/trace-ir.hpp"
-#include "cpp-common/bt2c/aliases.hpp"
 #include "cpp-common/bt2c/unicode-conv.hpp"
 
 #include "item-seq/item-seq-iter.hpp"
