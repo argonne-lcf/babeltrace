@@ -30,49 +30,6 @@ class ItemSeqIter;
  */
 class Item
 {
-private:
-    /* clang-format off */
-
-    struct _TypeTraits final
-    {
-        enum
-        {
-            End                         = 1ULL << 0,
-            Begin                       = 1ULL << 1,
-            Pkt                         = 1ULL << 2,
-            Scope                       = 1ULL << 3,
-            PktContent                  = 1ULL << 4,
-            EventRecord                 = 1ULL << 5,
-            PktMagicNumber              = 1ULL << 6,
-            MetadataStreamUuid          = 1ULL << 7,
-            DataStream                  = 1ULL << 8,
-            Info                        = 1ULL << 9,
-            DefClkVal                   = 1ULL << 10,
-            FixedLenBitArrayField       = 1ULL << 11,
-            FixedLenBitMapField         = FixedLenBitArrayField | (1ULL << 12),
-            FixedLenBoolField           = FixedLenBitArrayField | (1ULL << 13),
-            IntField                    = 1ULL << 14,
-            Signed                      = 1ULL << 15,
-            Unsigned                    = 1ULL << 16,
-            FixedLenFloatField          = FixedLenBitArrayField | (1ULL << 17),
-            VarLenIntField              = IntField | (1ULL << 18),
-            NullTerminatedStrField      = 1ULL << 19,
-            NonNullTerminatedStrField   = 1ULL << 20,
-            RawData                     = 1ULL << 21,
-            StructField                 = 1ULL << 22,
-            StaticLenField              = 1ULL << 23,
-            DynLenField                 = 1ULL << 24,
-            ArrayField                  = 1ULL << 25,
-            BlobField                   = 1ULL << 26,
-            VariantField                = 1ULL << 27,
-            IntSel                      = 1ULL << 28,
-            BoolSel                     = 1ULL << 29,
-            OptionalField               = 1ULL << 30,
-        };
-    };
-
-    /* clang-format on */
-
 public:
     /* clang-format off */
 
@@ -81,215 +38,151 @@ public:
      */
     WISE_ENUM_CLASS_MEMBER((Type, unsigned long long),
         /* `PktBeginItem` */
-        (PktBegin,                          _TypeTraits::Pkt |
-                                            _TypeTraits::Begin),
+        PktBegin,
 
         /* `PktEndItem` */
-        (PktEnd,                            _TypeTraits::Pkt |
-                                            _TypeTraits::End),
+        PktEnd,
 
         /* `ScopeBeginItem` */
-        (ScopeBegin,                        _TypeTraits::Scope |
-                                            _TypeTraits::Begin),
+        ScopeBegin,
 
         /* `ScopeEndItem` */
-        (ScopeEnd,                          _TypeTraits::Scope |
-                                            _TypeTraits::End),
+        ScopeEnd,
 
         /* `PktContentBeginItem` */
-        (PktContentBegin,                   _TypeTraits::PktContent |
-                                            _TypeTraits::Begin),
+        PktContentBegin,
 
         /* `PktContentEndItem` */
-        (PktContentEnd,                     _TypeTraits::PktContent |
-                                            _TypeTraits::End),
+        PktContentEnd,
 
         /* `EventRecordBeginItem` */
-        (EventRecordBegin,                  _TypeTraits::EventRecord |
-                                            _TypeTraits::Begin),
+        EventRecordBegin,
 
         /* `EventRecordEndItem` */
-        (EventRecordEnd,                    _TypeTraits::EventRecord |
-                                            _TypeTraits::End),
+        EventRecordEnd,
 
         /* `PktMagicNumberItem` */
-        (PktMagicNumber,                    _TypeTraits::PktMagicNumber),
+        PktMagicNumber,
 
         /* `MetadataStreamUuidItem` */
-        (MetadataStreamUuid,                _TypeTraits::MetadataStreamUuid),
+        MetadataStreamUuid,
 
         /* `DataStreamInfoItem` */
-        (DataStreamInfo,                    _TypeTraits::DataStream |
-                                            _TypeTraits::Info),
+        DataStreamInfo,
 
         /* `DefClkValItem` */
-        (DefClkValue,                       _TypeTraits::DefClkVal),
+        DefClkValue,
 
         /* `PktInfoItem` */
-        (PktInfo,                           _TypeTraits::Pkt |
-                                            _TypeTraits::Info),
+        PktInfo,
 
         /* `EventRecordInfoItem` */
-        (EventRecordInfo,                   _TypeTraits::EventRecord |
-                                            _TypeTraits::Info),
+        EventRecordInfo,
 
         /* `FixedLenBitArrayFieldItem` */
-        (FixedLenBitArrayField,             _TypeTraits::FixedLenBitArrayField),
+        FixedLenBitArrayField,
 
         /* `FixedLenBitMapFieldItem` */
-        (FixedLenBitMapField,               _TypeTraits::FixedLenBitMapField),
+        FixedLenBitMapField,
 
         /* `FixedLenBoolFieldItem` */
-        (FixedLenBoolField,                 _TypeTraits::FixedLenBoolField),
+        FixedLenBoolField,
 
         /* `FixedLenSIntFieldItem` */
-        (FixedLenSIntField,                 _TypeTraits::FixedLenBitArrayField |
-                                            _TypeTraits::IntField |
-                                            _TypeTraits::Signed),
+        FixedLenSIntField,
 
         /* `FixedLenUIntFieldItem` */
-        (FixedLenUIntField,                 _TypeTraits::FixedLenBitArrayField |
-                                            _TypeTraits::IntField |
-                                            _TypeTraits::Unsigned),
+        FixedLenUIntField,
 
         /* `FixedLenFloatFieldItem` */
-        (FixedLenFloatField,                _TypeTraits::FixedLenFloatField),
+        FixedLenFloatField,
 
         /* `VarLenSIntFieldItem` */
-        (VarLenSIntField,                   _TypeTraits::VarLenIntField |
-                                            _TypeTraits::Signed),
+        VarLenSIntField,
 
         /* `VarLenUIntFieldItem` */
-        (VarLenUIntField,                   _TypeTraits::VarLenIntField |
-                                            _TypeTraits::Unsigned),
+        VarLenUIntField,
 
         /* `NullTerminatedStrFieldBeginItem` */
-        (NullTerminatedStrFieldBegin,       _TypeTraits::NullTerminatedStrField |
-                                            _TypeTraits::Begin),
+        NullTerminatedStrFieldBegin,
 
         /* `NullTerminatedStrFieldEndItem` */
-        (NullTerminatedStrFieldEnd,         _TypeTraits::NullTerminatedStrField |
-                                            _TypeTraits::End),
+        NullTerminatedStrFieldEnd,
 
         /* `RawDataItem` */
-        (RawData,                           _TypeTraits::RawData),
+        RawData,
 
         /* `StructFieldBeginItem` */
-        (StructFieldBegin,                  _TypeTraits::StructField |
-                                            _TypeTraits::Begin),
+        StructFieldBegin,
 
         /* `StructFieldEndItem` */
-        (StructFieldEnd,                    _TypeTraits::StructField |
-                                            _TypeTraits::End),
+        StructFieldEnd,
 
         /* `StaticLenArrayFieldBeginItem` */
-        (StaticLenArrayFieldBegin,          _TypeTraits::StaticLenField |
-                                            _TypeTraits::ArrayField |
-                                            _TypeTraits::Begin),
+        StaticLenArrayFieldBegin,
 
         /* `StaticLenArrayFieldEndItem` */
-        (StaticLenArrayFieldEnd,            _TypeTraits::StaticLenField |
-                                            _TypeTraits::ArrayField |
-                                            _TypeTraits::End),
+        StaticLenArrayFieldEnd,
 
         /* `DynLenArrayFieldBeginItem` */
-        (DynLenArrayFieldBegin,             _TypeTraits::DynLenField |
-                                            _TypeTraits::ArrayField |
-                                            _TypeTraits::Begin),
+        DynLenArrayFieldBegin,
 
         /* `DynLenArrayFieldEndItem` */
-        (DynLenArrayFieldEnd,               _TypeTraits::DynLenField |
-                                            _TypeTraits::ArrayField |
-                                            _TypeTraits::End),
+        DynLenArrayFieldEnd,
 
         /* `StaticLenBlobFieldBeginItem` */
-        (StaticLenBlobFieldBegin,           _TypeTraits::StaticLenField |
-                                            _TypeTraits::BlobField |
-                                            _TypeTraits::Begin),
+        StaticLenBlobFieldBegin,
 
         /* `StaticLenBlobFieldEndItem` */
-        (StaticLenBlobFieldEnd,             _TypeTraits::StaticLenField |
-                                            _TypeTraits::BlobField |
-                                            _TypeTraits::End),
+        StaticLenBlobFieldEnd,
 
         /* `DynLenBlobFieldBeginItem` */
-        (DynLenBlobFieldBegin,              _TypeTraits::DynLenField |
-                                            _TypeTraits::BlobField |
-                                            _TypeTraits::Begin),
+        DynLenBlobFieldBegin,
 
         /* `DynLenBlobFieldEndItem` */
-        (DynLenBlobFieldEnd,                _TypeTraits::DynLenField |
-                                            _TypeTraits::BlobField |
-                                            _TypeTraits::End),
+        DynLenBlobFieldEnd,
 
         /* `StaticLenStrFieldBeginItem` */
-        (StaticLenStrFieldBegin,            _TypeTraits::StaticLenField |
-                                            _TypeTraits::NonNullTerminatedStrField |
-                                            _TypeTraits::Begin),
+        StaticLenStrFieldBegin,
 
         /* `StaticLenStrFieldEndItem` */
-        (StaticLenStrFieldEnd,              _TypeTraits::StaticLenField |
-                                            _TypeTraits::NonNullTerminatedStrField |
-                                            _TypeTraits::End),
+        StaticLenStrFieldEnd,
 
         /* `DynLenStrFieldBeginItem` */
-        (DynLenStrFieldBegin,               _TypeTraits::DynLenField |
-                                            _TypeTraits::NonNullTerminatedStrField |
-                                            _TypeTraits::Begin),
+        DynLenStrFieldBegin,
 
         /* `DynLenStrFieldEndItem` */
-        (DynLenStrFieldEnd,                 _TypeTraits::DynLenField |
-                                            _TypeTraits::NonNullTerminatedStrField |
-                                            _TypeTraits::End),
+        DynLenStrFieldEnd,
 
         /* `VariantFieldWithSIntSelBeginItem` */
-        (VariantFieldWithSIntSelBegin,      _TypeTraits::VariantField |
-                                            _TypeTraits::Signed |
-                                            _TypeTraits::Begin),
+        VariantFieldWithSIntSelBegin,
 
         /* `VariantFieldWithSIntSelEndItem` */
-        (VariantFieldWithSIntSelEnd,        _TypeTraits::VariantField |
-                                            _TypeTraits::Signed | _TypeTraits::End),
+        VariantFieldWithSIntSelEnd,
 
         /* `VariantFieldWithUIntSelBeginItem` */
-        (VariantFieldWithUIntSelBegin,      _TypeTraits::VariantField |
-                                            _TypeTraits::Unsigned |
-                                            _TypeTraits::Begin),
+        VariantFieldWithUIntSelBegin,
 
         /* `VariantFieldWithUIntSelEndItem` */
-        (VariantFieldWithUIntSelEnd,        _TypeTraits::VariantField |
-                                            _TypeTraits::Unsigned |
-                                            _TypeTraits::End),
+        VariantFieldWithUIntSelEnd,
 
         /* `OptionalFieldWithBoolSelBeginItem` */
-        (OptionalFieldWithBoolSelBegin,     _TypeTraits::OptionalField |
-                                            _TypeTraits::BoolSel |
-                                            _TypeTraits::Begin),
+        OptionalFieldWithBoolSelBegin,
 
         /* `OptionalFieldWithBoolSelEndItem` */
-        (OptionalFieldWithBoolSelEnd,       _TypeTraits::OptionalField |
-                                            _TypeTraits::BoolSel |
-                                            _TypeTraits::End),
+        OptionalFieldWithBoolSelEnd,
 
         /* `OptionalFieldWithSIntSelBeginItem` */
-        (OptionalFieldWithSIntSelBegin,     _TypeTraits::OptionalField |
-                                            _TypeTraits::Signed |
-                                            _TypeTraits::Begin),
+        OptionalFieldWithSIntSelBegin,
 
         /* `OptionalFieldWithSIntSelEndItem` */
-        (OptionalFieldWithSIntSelEnd,       _TypeTraits::OptionalField |
-                                            _TypeTraits::Signed |
-                                            _TypeTraits::End),
+        OptionalFieldWithSIntSelEnd,
 
         /* `OptionalFieldWithUIntSelBeginItem` */
-        (OptionalFieldWithUIntSelBegin,     _TypeTraits::OptionalField |
-                                            _TypeTraits::Unsigned |
-                                            _TypeTraits::Begin),
+        OptionalFieldWithUIntSelBegin,
 
         /* `OptionalFieldWithUIntSelEndItem` */
-        (OptionalFieldWithUIntSelEnd,       _TypeTraits::OptionalField |
-                                            _TypeTraits::Unsigned |
-                                            _TypeTraits::End)
+        OptionalFieldWithUIntSelEnd
     )
 
     /* clang-format on */
@@ -314,30 +207,6 @@ public:
     virtual void accept(ItemVisitor& visitor) const = 0;
 
     /*
-     * True if this item is a beginning item.
-     */
-    bool isBegin() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::Begin);
-    }
-
-    /*
-     * True if this item is an end item.
-     */
-    bool isEnd() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::End);
-    }
-
-    /*
-     * True if this item is a packet beginning/end item.
-     */
-    bool isPkt() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::Pkt);
-    }
-
-    /*
      * True if this item is a packet beginning item.
      */
     bool isPktBegin() const noexcept
@@ -351,14 +220,6 @@ public:
     bool isPktEnd() const noexcept
     {
         return _mType == Type::PktEnd;
-    }
-
-    /*
-     * True if this item is a scope beginning/end item.
-     */
-    bool isScope() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::Scope);
     }
 
     /*
@@ -378,14 +239,6 @@ public:
     }
 
     /*
-     * True if this item is a packet content beginning/end item.
-     */
-    bool isPktContent() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::PktContent);
-    }
-
-    /*
      * True if this item is a packet content beginning item.
      */
     bool isPktContentBegin() const noexcept
@@ -399,14 +252,6 @@ public:
     bool isPktContentEnd() const noexcept
     {
         return _mType == Type::PktContentEnd;
-    }
-
-    /*
-     * True if this item is an event record beginning/end item.
-     */
-    bool isEventRecord() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::EventRecord);
     }
 
     /*
@@ -458,14 +303,6 @@ public:
     }
 
     /*
-     * True if this item is an info item.
-     */
-    bool isInfo() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::Info);
-    }
-
-    /*
      * True if this item is a packet info item.
      */
     bool isPktInfo() const noexcept
@@ -482,14 +319,6 @@ public:
     }
 
     /*
-     * True if this item is a fixed-length bit array field item.
-     */
-    bool isFixedLenBitArrayField() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::FixedLenBitArrayField);
-    }
-
-    /*
      * True if this item is a fixed-length bit map field item.
      */
     bool isFixedLenBitMapField() const noexcept
@@ -503,38 +332,6 @@ public:
     bool isFixedLenBoolField() const noexcept
     {
         return _mType == Type::FixedLenBoolField;
-    }
-
-    /*
-     * True if this item is an integer field item.
-     */
-    bool isIntField() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::IntField);
-    }
-
-    /*
-     * True if this item is a fixed-length integer field item.
-     */
-    bool isFixedLenIntegerField() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::FixedLenBitArrayField | _TypeTraits::IntField);
-    }
-
-    /*
-     * True if this item is a signed integer field item.
-     */
-    bool isSIntField() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::IntField | _TypeTraits::Signed);
-    }
-
-    /*
-     * True if this item is an unsigned integer field item.
-     */
-    bool isUIntField() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::IntField | _TypeTraits::Unsigned);
     }
 
     /*
@@ -563,14 +360,6 @@ public:
     }
 
     /*
-     * True if this item is a variable-length integer field item.
-     */
-    bool isVarLenIntField() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::VarLenIntField);
-    }
-
-    /*
      * True if this item is a variable-length signed integer field item.
      */
     bool isVarLenSIntField() const noexcept
@@ -585,15 +374,6 @@ public:
     bool isVarLenUIntField() const noexcept
     {
         return _mType == Type::VarLenUIntField;
-    }
-
-    /*
-     * True if this item is a null-terminated string field beginning/end
-     * item.
-     */
-    bool isNullTerminatedStrField() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::NullTerminatedStrField);
     }
 
     /*
@@ -622,14 +402,6 @@ public:
     }
 
     /*
-     * True if this item is a structure field beginning/end item.
-     */
-    bool isStructField() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::StructField);
-    }
-
-    /*
      * True if this item is a structure field beginning item.
      */
     bool isStructFieldBegin() const noexcept
@@ -643,23 +415,6 @@ public:
     bool isStructFieldEnd() const noexcept
     {
         return _mType == Type::StructFieldEnd;
-    }
-
-    /*
-     * True if this item is an array field beginning/end item.
-     */
-    bool isArray() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::ArrayField);
-    }
-
-    /*
-     * True if this item is a static-length array field beginning/end
-     * item.
-     */
-    bool isStaticLenArray() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::StaticLenField | _TypeTraits::ArrayField);
     }
 
     /*
@@ -679,15 +434,6 @@ public:
     }
 
     /*
-     * True if this item is a dynamic-length array field beginning/end
-     * item.
-     */
-    bool isDynLenArray() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::DynLenField | _TypeTraits::ArrayField);
-    }
-
-    /*
      * True if this item is a dynamic-length array field beginning item.
      */
     bool isDynLenArrayFieldBegin() const noexcept
@@ -704,25 +450,6 @@ public:
     }
 
     /*
-     * True if this item is a non-null-terminated field beginning/end
-     * item.
-     */
-    bool isNonNullTerminatedStrField() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::NonNullTerminatedStrField);
-    }
-
-    /*
-     * True if this item is a static-length string field beginning/end
-     * item.
-     */
-    bool isStaticLenStrField() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::StaticLenField |
-                                   _TypeTraits::NonNullTerminatedStrField);
-    }
-
-    /*
      * True if this item is a static-length string field beginning item.
      */
     bool isStaticLenStrFieldBegin() const noexcept
@@ -736,16 +463,6 @@ public:
     bool isStaticLenStrFieldEnd() const noexcept
     {
         return _mType == Type::StaticLenStrFieldEnd;
-    }
-
-    /*
-     * True if this item is a dynamic-length string field beginning/end
-     * item.
-     */
-    bool isDynLenStrField() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::DynLenField |
-                                   _TypeTraits::NonNullTerminatedStrField);
     }
 
     /*
@@ -766,23 +483,6 @@ public:
     }
 
     /*
-     * True if this item is a BLOB field beginning/end item.
-     */
-    bool isBlobField() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::BlobField);
-    }
-
-    /*
-     * True if this item is a static-length BLOB field beginning/end
-     * item.
-     */
-    bool isStaticLenBlobField() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::StaticLenField | _TypeTraits::BlobField);
-    }
-
-    /*
      * True if this item is a static-length BLOB field beginning item.
      */
     bool isStaticLenBlobFieldBegin() const noexcept
@@ -799,15 +499,6 @@ public:
     }
 
     /*
-     * True if this item is a dynamic-length BLOB field beginning/end
-     * item.
-     */
-    bool isDynLenBlobField() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::DynLenField | _TypeTraits::BlobField);
-    }
-
-    /*
      * True if this item is a dynamic-length BLOB field beginning item.
      */
     bool isDynLenBlobFieldBegin() const noexcept
@@ -821,39 +512,6 @@ public:
     bool isDynLenBlobFieldEnd() const noexcept
     {
         return _mType == Type::DynLenBlobFieldEnd;
-    }
-
-    /*
-     * True if this item is a variant field beginning/end item.
-     */
-    bool isVariant() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::VariantField);
-    }
-
-    /*
-     * True if this item is a variant field beginning item.
-     */
-    bool isVariantFieldBegin() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::VariantField | _TypeTraits::Begin);
-    }
-
-    /*
-     * True if this item is a variant field end item.
-     */
-    bool isVariantFieldEnd() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::VariantField | _TypeTraits::End);
-    }
-
-    /*
-     * True if this item is a variant field with a signed integer
-     * selector beginning/end item.
-     */
-    bool isVariantWithSIntSel() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::VariantField | _TypeTraits::Signed);
     }
 
     /*
@@ -876,15 +534,6 @@ public:
 
     /*
      * True if this item is a variant field with an unsigned integer
-     * selector beginning/end item.
-     */
-    bool isVariantWithUIntSel() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::VariantField | _TypeTraits::Unsigned);
-    }
-
-    /*
-     * True if this item is a variant field with an unsigned integer
      * selector beginning item.
      */
     bool isVariantFieldWithUIntSelBegin() const noexcept
@@ -899,39 +548,6 @@ public:
     bool isVariantFieldWithUIntSelEnd() const noexcept
     {
         return _mType == Type::VariantFieldWithUIntSelEnd;
-    }
-
-    /*
-     * True if this item is an optional field beginning/end item.
-     */
-    bool isOptional() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::OptionalField);
-    }
-
-    /*
-     * True if this item is an optional field beginning item.
-     */
-    bool isOptionalFieldBegin() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::OptionalField | _TypeTraits::Begin);
-    }
-
-    /*
-     * True if this item is an optional field end item.
-     */
-    bool isOptionalFieldEnd() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::OptionalField | _TypeTraits::End);
-    }
-
-    /*
-     * True if this item is an optional field with a boolean selector
-     * beginning/end item.
-     */
-    bool isOptionalWithBoolSel() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::OptionalField | _TypeTraits::BoolSel);
     }
 
     /*
@@ -953,45 +569,6 @@ public:
     }
 
     /*
-     * True if this item is an optional field with an integer selector
-     * beginning/end item.
-     */
-    bool isOptionalWithIntegerSel() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::OptionalField | _TypeTraits::Signed |
-                                   _TypeTraits::Unsigned);
-    }
-
-    /*
-     * True if this item is an optional field with an integer selector
-     * beginning item.
-     */
-    bool isOptionalFieldWithIntSelBegin() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::OptionalField | _TypeTraits::Signed |
-                                   _TypeTraits::Unsigned | _TypeTraits::Begin);
-    }
-
-    /*
-     * True if this item is an optional field with an integer selector
-     * end item.
-     */
-    bool isOptionalFieldWithIntSelEnd() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::OptionalField | _TypeTraits::Signed |
-                                   _TypeTraits::Unsigned | _TypeTraits::End);
-    }
-
-    /*
-     * True if this item is an optional field with a signed integer
-     * selector beginning/end item.
-     */
-    bool isOptionalWithSIntSel() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::OptionalField | _TypeTraits::Signed);
-    }
-
-    /*
      * True if this item is an optional field with a signed integer
      * selector beginning item.
      */
@@ -1007,15 +584,6 @@ public:
     bool isOptionalFieldWithSIntSelEnd() const noexcept
     {
         return _mType == Type::OptionalFieldWithSIntSelEnd;
-    }
-
-    /*
-     * True if this item is an optional field with an unsigned integer
-     * selector beginning/end item.
-     */
-    bool isOptionalWithUIntSel() const noexcept
-    {
-        return this->_hasTypeTrait(_TypeTraits::OptionalField | _TypeTraits::Unsigned);
     }
 
     /*
@@ -1343,12 +911,6 @@ public:
      * selector end item.
      */
     const VariantFieldWithUIntSelEndItem& asVariantFieldWithUIntSelEnd() const noexcept;
-
-private:
-    bool _hasTypeTrait(const unsigned long long typeTrait) const noexcept
-    {
-        return (static_cast<unsigned long long>(_mType) & typeTrait) == typeTrait;
-    }
 
 private:
     Type _mType;
