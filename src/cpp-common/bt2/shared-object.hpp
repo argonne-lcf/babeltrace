@@ -126,15 +126,6 @@ public:
     }
 
     /*
-     * Builds a shared object from `libObjPtr`, immediately getting a
-     * new reference.
-     */
-    static SharedObject createWithRef(LibObjT * const libObjPtr) noexcept
-    {
-        return SharedObject::createWithRef(ObjT {libObjPtr});
-    }
-
-    /*
      * Copy constructor.
      */
     SharedObject(const SharedObject& other) noexcept : SharedObject {other, 0}
