@@ -1081,7 +1081,6 @@ private:
         ReadSubstrUntilNullCodepointUtf16,
         ReadSubstrUntilNullCodepointUtf32,
         ReadSubstrUntilNullCodepointUtf8,
-        ReadUuidByte,
         ReadVarLenSIntField,
         ReadVarLenSIntFieldSaveVal,
         ReadVarLenUIntField,
