@@ -121,7 +121,7 @@ public:
     {
         SharedObject sharedObj {obj};
 
-        sharedObj._getRef();
+        sharedObj._getRefNoNullCheck();
         return sharedObj;
     }
 
@@ -242,10 +242,8 @@ public:
      */
     void reset() noexcept
     {
-        if (_mObj) {
-            this->_putRef();
-            this->_reset();
-        }
+        this->_putRef();
+        this->_reset();
     }
 
     /*
@@ -276,20 +274,33 @@ private:
 
     /*
      * Gets a new reference using the configured libbabeltrace2
-     * reference incrementation function.
+     * reference incrementation function, only if `_mObj` isn't null.
      */
     void _getRef() const noexcept
+    {
+        if (_mObj) {
+            this->_getRefNoNullCheck();
+        }
+    }
+
+    /*
+     * Gets a new reference using the configured libbabeltrace2
+     * reference incrementation function without any null check.
+     */
+    void _getRefNoNullCheck() const noexcept
     {
         RefFuncsT::get(_mObj.libObjPtr());
     }
 
     /*
      * Puts a reference using the configured libbabeltrace2 reference
-     * decrementation function.
+     * decrementation function, only if `_mObj` isn't null.
      */
     void _putRef() const noexcept
     {
-        RefFuncsT::put(_mObj.libObjPtr());
+        if (_mObj) {
+            RefFuncsT::put(_mObj.libObjPtr());
+        }
     }
 
     OptionalBorrowedObject<ObjT> _mObj;
