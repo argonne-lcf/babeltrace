@@ -28,8 +28,8 @@ static bt2c::DataLen getFileSize(const char * const path, const bt2c::Logger& lo
 {
     struct stat st;
     if (stat(path, &st) != 0) {
-        BT_CPPLOGE_ERRNO_APPEND_CAUSE_AND_THROW_SPEC(logger, bt2::Error,
-                                                     "Failed to stat stream file", "path={}", path);
+        BT_CPPLOGE_ERRNO_APPEND_CAUSE_AND_THROW_SPEC(
+            logger, bt2::Error, "Failed to stat stream file", ": path={}", path);
     }
 
     return bt2c::DataLen::fromBytes(st.st_size);
