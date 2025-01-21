@@ -84,9 +84,9 @@ Immediately following a opt:--component option on the command line, the
 created component is known as the _current component_ (until the next
 opt:--component option).
 
-The opt:--params='PARAMS' option adds parameters to the current
-component's initialization parameters. If 'PARAMS' contains a key which
-exists in the current component's initialization parameters, this
+The opt:--params='PARAMS' option adds parameters to the initialization
+parameters of the current component. If 'PARAMS' contains a key which
+exists in the initialization parameters of the current component, this
 parameter is replaced.
 
 
@@ -128,8 +128,8 @@ input port to connect it to:
 
 ----
 For each connection rule (--connect options, in order):
-  If the output port's component's name matches UP-COMP-PAT and the
-  output port's name matches UP-PORT-PAT:
+  If the component name of the output port matches UP-COMP-PAT and the
+  output port name matches UP-PORT-PAT:
     For each component COMP in the trace processing graph:
       If the name of COMP matches DOWN-COMP-PAT:
         Select the first input port of COMP of which the name matches
@@ -230,8 +230,8 @@ opt:--params='PARAMS'::
     Add 'PARAMS' to the initialization parameters of the current
     component.
 +
-If 'PARAMS' contains a key which exists in the current component's
-initialization parameters, replace the parameter.
+If 'PARAMS' contains a key which exists in the initialization parameters
+of the current component, replace the parameter.
 +
 --
 include::common-cmd-params-format.txt[]
@@ -316,7 +316,7 @@ Possible resulting graph:
 ----
 ====
 
-.Use the opt:--params option to set the current component's initialization parameters.
+.Use the opt:--params option to set the initialization parameters of the current component.
 ====
 In this example, the opt:--params option only applies to component
 `the-source`.

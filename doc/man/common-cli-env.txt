@@ -10,7 +10,7 @@ include::common-lib-env.txt[]
 === CLI
 
 `BABELTRACE_CLI_LOG_LEVEL`='LVL'::
-    Force `babeltrace2` CLI's log level to be 'LVL'.
+    Force the log level of the log level `babeltrace2` CLI to be 'LVL'.
 +
 If this environment variable is set, it overrides the log level set by
 the manopt:babeltrace2(1):--log-level option for the CLI logger.

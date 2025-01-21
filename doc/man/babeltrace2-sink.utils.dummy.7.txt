@@ -9,7 +9,7 @@
 
 == NAME
 
-babeltrace2-sink.utils.dummy - Babeltrace 2's dummy sink component class
+babeltrace2-sink.utils.dummy - Babeltrace 2: Dummy sink component class
 
 
 == DESCRIPTION

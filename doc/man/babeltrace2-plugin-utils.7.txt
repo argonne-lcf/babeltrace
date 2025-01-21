@@ -9,7 +9,7 @@
 
 == NAME
 
-babeltrace2-plugin-utils - Babeltrace 2's common graph utilities plugin
+babeltrace2-plugin-utils - Babeltrace 2: Common graph utilities plugin
 
 
 == DESCRIPTION

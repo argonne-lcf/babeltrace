@@ -15,7 +15,7 @@ include::common-common-env.txt[]
     Disable the loading of any Babeltrace~2 Python plugin.
 
 `LIBBABELTRACE2_INIT_LOG_LEVEL`='LVL'::
-    Force the Babeltrace~2 library's initial log level to be 'LVL'.
+    Force the initial log level of the Babeltrace~2 library to be 'LVL'.
 +
 If this environment variable is set, it overrides the log level set by
 the manopt:babeltrace2(1):--log-level option for the Babeltrace~2

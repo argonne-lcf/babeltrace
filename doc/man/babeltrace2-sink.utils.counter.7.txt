@@ -9,7 +9,7 @@
 
 == NAME
 
-babeltrace2-sink.utils.counter - Babeltrace 2's message counter sink
+babeltrace2-sink.utils.counter - Babeltrace 2: Message counter sink
 component class
 
 
@@ -29,7 +29,7 @@ Messages -->@ in                 |    standard output
 
 include::common-see-babeltrace2-intro.txt[]
 
-The component's output looks like this:
+The output of the component looks like this:
 
 ----
         3842964 Event messages

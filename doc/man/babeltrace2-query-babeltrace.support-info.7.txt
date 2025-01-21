@@ -9,7 +9,7 @@
 
 == NAME
 
-babeltrace2-query-babeltrace.support-info - Babeltrace 2's support info
+babeltrace2-query-babeltrace.support-info - Babeltrace 2: Support info
 query object
 
 
@@ -24,7 +24,7 @@ directory path. Components which expect some form of URI can handle a
 string input, while components which expect an existing file or
 directory can handle a file/directory path input.
 
-When the source component class's query method replies that its
+When the query method of the source component class replies that its
 component can handle a given input, it can also specify the name of a
 group in which to put that input. All the inputs of a given group, for a
 given component class, should be passed when instantiating the component

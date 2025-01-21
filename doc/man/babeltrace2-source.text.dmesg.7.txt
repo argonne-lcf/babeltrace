@@ -9,7 +9,7 @@
 
 == NAME
 
-babeltrace2-source.text.dmesg - Babeltrace 2's Linux kernel ring buffer
+babeltrace2-source.text.dmesg - Babeltrace 2: Linux kernel ring buffer
 source component class
 
 
@@ -41,8 +41,8 @@ of the standard input stream. You can make the message iterator read the
 lines of a text file instead with the param:path parameter.
 
 By default, the message iterator tries to extract the timestamps of the
-kernel ring buffer lines and use them as the created events's
-timestamps. A typical man:dmesg(1) line looks like this:
+kernel ring buffer lines and use them as the timestamps of the created
+events. A typical man:dmesg(1) line looks like this:
 
 ----
 [87166.510937] PM: Finishing wakeup.
@@ -63,7 +63,7 @@ nlopt:--show-delta option of man:dmesg(1): some time differences can be
 negative.
 
 This is due to a https://lwn.net/Articles/780556/[2019 change] to the
-kernel's ring buffer API.
+API of the kernel ring buffer.
 
 As of this version, a compcls:source.text.dmesg message iterator
 requires that the input kernel ring buffer lines be sorted by timestamp
@@ -75,8 +75,8 @@ requires that the input kernel ring buffer lines be sorted by timestamp
 
 param:no-extract-timestamp='VAL' vtype:[optional boolean]::
     If 'VAL' is true, then do :not: extract timestamps from the kernel
-    ring buffer lines: set the created event's payload's `str` field to
-    the whole line, including any timestamp prefix.
+    ring buffer lines: set the `str` payload field of the created event
+    to the whole line, including any timestamp prefix.
 +
 Default: false.
 

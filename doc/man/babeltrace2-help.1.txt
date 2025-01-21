@@ -69,7 +69,7 @@ $ babeltrace2 help ctf
 ----
 ====
 
-.Get help for a specific plugin's source component class.
+.Get help for a specific source component class.
 ====
 [role="term"]
 ----
@@ -77,7 +77,7 @@ $ babeltrace2 help source.ctf.fs
 ----
 ====
 
-.Get help for a specific plugin's sink component class.
+.Get help for a specific sink component class.
 ====
 [role="term"]
 ----

@@ -11,7 +11,7 @@
 
 == NAME
 
-babeltrace2-filter.lttng-utils.debug-info - Babeltrace 2's debugging
+babeltrace2-filter.lttng-utils.debug-info - Babeltrace 2: Debugging
 information filter component class for LTTng traces
 
 
@@ -35,14 +35,14 @@ debugging information
 include::common-see-babeltrace2-intro.txt[]
 
 A {compcls} message iterator uses the LTTng state dump events as well as
-the event common context's `ip` (instruction pointer) and `vpid`
-(process ID) fields to locate and read the corresponding debugging
-information. The message iterator can find the extra debugging
-information in an executable file or in a directory containing debugging
-information which the compiler creates.
+the `ip` (instruction pointer) and `vpid`
+(process ID) common context fields of the event to locate and read the
+corresponding debugging information. The message iterator can find the
+extra debugging information in an executable file or in a directory
+containing debugging information which the compiler creates.
 
 The new LTTng events (copies of the original ones with added debugging
-information) contain, when possible, a new event common context's
+information) contain, when possible, a new event common context
 structure field (besides the `ip` field) named {defdebuginfoname} by
 default (you can use the param:debug-info-field-name parameter to choose
 another name). This structure field contains the following fields:
@@ -83,10 +83,10 @@ means that the message iterator copies messages of non-LTTng trace (see
 
 With GCC or Clang, you need to compile the program or library source
 files in debug mode with the nlopt:-g option. This option makes the
-compiler generate debugging information in the operating system's native
-format. This format is recognized by a {compcls} component: it can
-translate the instruction pointer field of an event's common context to
-a source file and line number, along with the name of the surrounding
+compiler generate debugging information in the native format of the
+operating system. This format is recognized by a {compcls} component: it
+can translate the instruction pointer field of an event common context
+to a source file and line number, along with the name of the surrounding
 function.
 
 IMPORTANT: This component class only supports the debugging information
@@ -94,14 +94,14 @@ in DWARF format, version~2 or later. Use the nlopt:-gdwarf or
 nlopt:-gdwarf-VERSION (where `VERSION` is the DWARF version) compiler
 options to explicitly generate DWARF debugging information.
 
-If you don't compile the executable's source files with the nlopt:-g
-option or with an equivalent option, no DWARF information is available:
-the message iterator uses ELF symbols from the executable file instead.
-In this case, the events that the message iterator creates do not
-contain the source file and line number (see the <<field-src,`src`
-field>>), but only the name of the nearest function symbol with an
-offset in bytes to the location in the executable from which the LTTng
-event occurred (see the <<field-func,`func` field>>).
+If you don't compile the source files of the executable with the
+nlopt:-g option or with an equivalent option, no DWARF information is
+available: the message iterator uses ELF symbols from the executable
+file instead. In this case, the events that the message iterator creates
+do not contain the source file and line number (see the
+<<field-src,`src` field>>), but only the name of the nearest function
+symbol with an offset in bytes to the location in the executable from
+which the LTTng event occurred (see the <<field-func,`func` field>>).
 
 If the executable file has neither ELF symbols nor DWARF information,
 the {compcls} message iterator cannot map the event to its source
@@ -116,7 +116,7 @@ A {compcls} message iterator can only analyze user space events which
 https://lttng.org[LTTng]~2.8.0 or later generates.
 
 To get debugging information for LTTng-UST events which occur in
-executables and libraries which the system's loader loads (what
+executables and libraries which the system loader loads (what
 you can see with man:ldd(1)):
 
 . Add the `ip` and `vpid` context fields to user space event records:
@@ -172,7 +172,7 @@ $ LD_PRELOAD=liblttng-ust-dl.so my-app
 === Separate debugging information
 
 You can store DWARF debugging information outside the executable itself,
-whether it is to reduce the executable's file size or simply to
+whether it is to reduce the file size of the executable or simply to
 facilitate sharing the debugging information.
 
 This is usually achieved via one of two mechanisms, namely _build ID_
@@ -214,8 +214,8 @@ If the trace was recorded on a separate machine, however, you can use
 the param:target-prefix parameter to specify a prefix directory, that
 is, the root of the target file system.
 
-For example, if an instrumented executable's path is `/usr/bin/foo` on
-the target system, you can place this file at
+For example, if the path of an instrumented executable is `/usr/bin/foo`
+on the target system, you can place this file at
 `/home/user/target/usr/bin/foo` on the system on which you use a
 {compcls} component. In this case, the target prefix to use is
 `/home/user/target`.

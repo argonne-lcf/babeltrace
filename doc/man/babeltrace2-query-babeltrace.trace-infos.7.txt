@@ -9,7 +9,7 @@
 
 == NAME
 
-babeltrace2-query-babeltrace.trace-infos - Babeltrace 2's trace infos
+babeltrace2-query-babeltrace.trace-infos - Babeltrace 2: Trace infos
 query object
 
 
@@ -58,12 +58,12 @@ nlqres:range-ns='RANGE' vtype:[range map]::
 +
 --
 nlqres:begin='NS' vtype:[signed integer]::
-    Beginning time of this stream (nanoseconds since the stream
-    class's default clock class's origin).
+    Beginning time of this stream (nanoseconds since the origin
+    of the default clock class of the stream class).
 
 nlqres:end='NS' vtype:[signed integer]::
-    End time of this stream (nanoseconds since the stream class's
-    default clock class's origin).
+    End time of this stream (nanoseconds since the origin of the
+    default clock class of the stream class).
 --
 
 nlqres:port-name='PORT-NAME' vtype:[string]::

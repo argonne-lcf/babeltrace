@@ -9,7 +9,7 @@
 
 == NAME
 
-babeltrace2-sink.text.pretty - Babeltrace 2's pretty-printing sink
+babeltrace2-sink.text.pretty - Babeltrace 2: Pretty-printing sink
 component class
 
 
@@ -36,9 +36,9 @@ component write to a file instead.
 The component prints warnings on the standard error stream when it
 consumes a discarded events or discarded packets message.
 
-If you don't use the param:path parameter and the application's standard
-output is connected to a color-capable terminal, the component emits
-terminal color codes to enhance the text output. You can use the
+If you don't use the param:path parameter and the standard output of the
+application is connected to a color-capable terminal, the component
+emits terminal color codes to enhance the text output. You can use the
 param:color parameter to force the color support or to disable it.
 
 This component class is equivalent to the `text` output format of
@@ -93,7 +93,7 @@ param:field-default=(`show` | `hide`) vtype:[optional string]::
     of all the parameters which start with `field-`.
 
 param:field-emf='VAL' vtype:[optional boolean]::
-    Show or hide the event's Eclipse Modeling Framework URI field.
+    Show or hide the Eclipse Modeling Framework URI field of the event.
 +
 Default, depending on the param:field-default parameter:
 +
@@ -109,7 +109,7 @@ Not set::
 --
 
 param:field-loglevel='VAL' vtype:[optional boolean]::
-    Show or hide the event's logging level field.
+    Show or hide the logging level field of the event.
 +
 Default, depending on the param:field-default parameter:
 +

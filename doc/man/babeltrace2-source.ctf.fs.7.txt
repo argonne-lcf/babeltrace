@@ -9,7 +9,7 @@
 
 == NAME
 
-babeltrace2-source.ctf.fs - Babeltrace 2's file system CTF source
+babeltrace2-source.ctf.fs - Babeltrace 2: File system CTF source
 component class
 
 
@@ -106,21 +106,22 @@ In general, for a CTF~1.8 trace:
 
 A compcls:source.ctf.fs component has special quirk handling for some
 https://lttng.org/[LTTng] and https://lttng.org/[barectf] traces,
-depending on the tracer's version:
+depending on the tracer version:
 
 All LTTng versions::
 +
 --
-* For CTF~1.8 traces, the component sets the `monotonic` clock class's
-  origin to the Unix epoch so that different LTTng traces are always
-  correlatable.
+* For CTF~1.8 traces, the component sets the origin of the `monotonic`
+  clock class to the Unix epoch so that different LTTng traces are
+  always correlatable.
 +
 This is the equivalent of setting the
 param:force-clock-class-origin-unix-epoch parameter to true.
 
 * For a given data stream, for all the contiguous last packets of which
   the `timestamp_end` context field is 0, the message iterator uses the
-  packet's last event record's time as the packet end message's time.
+  time of the last event record of the packet as the time of the
+  packet end message.
 +
 This is useful for the traces which man:lttng-crash(1) generates.
 --
@@ -130,17 +131,17 @@ LTTng-modules up to, but excluding, 2.9.13::
 LTTng-modules from 2.10.0 to 2.10.9::
 +
 --
-* For a given packet, the message iterator uses the packet's last
-  event record's time as the packet end message's time, ignoring the
-  packet context's `timestamp_end` field.
+* For a given packet, the message iterator uses the time of the
+  last event record of the packet as the time of the packet end message,
+  ignoring the `timestamp_end` packet context field.
 --
 
 barectf up to, but excluding, 2.3.1::
 +
 --
-* For a given packet, the message iterator uses the packet's first event
-  record's time as the packet beginning message's time, ignoring the
-  packet context's `timestamp_begin` field.
+* For a given packet, the message iterator uses the time of the first
+  event record of the packet as the time of the packet beginning
+  message, ignoring the `timestamp_begin` packet context field.
 --
 
 
@@ -316,7 +317,7 @@ param:inputs='DIRS' vtype:[array of strings]::
     Open and read the physical CTF traces located in 'DIRS'.
 +
 Each element of 'DIRS' is the path to a physical CTF trace directory
-containing the trace's stream files.
+containing the trace stream files.
 +
 All the specified physical CTF traces must belong to the same logical
 CTF trace. See <<input,``Input''>> to learn more about logical and
@@ -345,7 +346,7 @@ A compcls:source.ctf.fs component creates one output port for each
 logical CTF data stream. See <<input,``Input''>> to learn more about
 logical and physical CTF data streams.
 
-Each output port's name has one of the following forms:
+Each output port name has one of the following forms:
 
 [verse]
 __TRACE-ID__ | __STREAM-CLASS-ID__ | __STREAM-ID__
@@ -369,7 +370,7 @@ UID `UID` are, then the exact string:
 {name: `NAME`, uid: `UID`}
 ----
 +
-Otherwise, the trace's absolute directory path.
+Otherwise, the absolute directory path of the trace.
 +
 NOTE: The namespace of any LTTng trace is +{lttng_ns}+. If a CTF~1.8
 trace has a UUID, then its corresponding libbabeltrace2 trace always has
@@ -379,7 +380,8 @@ __STREAM-CLASS-ID__::
     Stream class ID.
 
 __STREAM-ID__::
-    Stream ID if available, otherwise stream's absolute file path.
+    Stream ID if available, otherwise the absolute file path of
+    the stream.
 
 
 [[query-objs]]
@@ -418,8 +420,8 @@ NOTE: The namespace of any LTTng trace is +{lttng_ns}+. If a CTF~1.8
 trace has a UUID, then its corresponding libbabeltrace2 trace always has
 a name and a UID (the textual representation of the UUID).
 
-You can leverage this query object's nlqres:group entry to assemble many
-physical CTF traces as a single logical CTF trace (see
+You can leverage the nlqres:group entry of this query object to assemble
+many physical CTF traces as a single logical CTF trace (see
 <<input,``Input''>> to learn more about logical and physical CTF
 traces). This is how the man:babeltrace2-convert(1) command makes it
 possible to specify as non-option arguments the paths to multiple

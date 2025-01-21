@@ -8,7 +8,7 @@
 
 == NAME
 
-babeltrace2-sink.ctf.fs - Babeltrace 2's file system CTF sink component
+babeltrace2-sink.ctf.fs - Babeltrace 2: File system CTF sink component
 class
 
 
@@ -58,8 +58,8 @@ field class translations can occur:
 * The component translates a boolean field class to a CTF unsigned 8-bit
   integer field class.
 +
-The unsigned integer field's value is 0 when the boolean field's value
-is false and 1 when the boolean field's value is true.
+The value of the unsigned integer field is{nbsp}0 when the value
+of the boolean field is false and{nbsp}1 when it's true.
 
 * The component translates a bit array field to a CTF unsigned
   integer field class having the same length.
@@ -191,8 +191,8 @@ The messages which a compcls:source.ctf.fs component creates satisfy all
 the requirements above.
 
 If a discarded events or packets message has no events/packets count,
-the compcls:sink.ctf.fs component adds 1 to the corresponding CTF
-stream's counter.
+the compcls:sink.ctf.fs component adds{nbsp}1 to the counter of the
+corresponding CTF stream.
 
 
 === Alignment and byte order
@@ -205,8 +205,8 @@ Fixed-length bit array fields with a size which is not a multiple of 8::
 All other scalar fields (fixed-length bit array, null-terminated string, BLOB)::
     8-bit.
 
-The component writes fields using the machine's native byte order. As of
-this version, there's no way to force a custom byte order.
+The component writes fields using the native byte order of the machine.
+As of this version, there's no way to force a custom byte order.
 
 
 [[output-path]]
@@ -250,7 +250,7 @@ With:
 +
 --
 __HOST__::
-    Target's hostname.
+    Target hostname.
 
 __SNAME__::
     Tracing session name.
@@ -262,7 +262,7 @@ __UID__::
     User ID.
 
 __ARCHW__::
-    Architecture's width (`32` or `64`).
+    Architecture width (`32` or `64`).
 
 __PNAME__::
     Process name.
@@ -271,7 +271,7 @@ __PID__::
     Process ID.
 
 __PTIME__::
-    Process's date/time.
+    Process date/time.
 --
 
 . If the input trace has a name, then the component sanitizes this name

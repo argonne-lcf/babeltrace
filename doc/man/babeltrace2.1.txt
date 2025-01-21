@@ -30,9 +30,9 @@ command 'CMD' (see <<commands,``COMMANDS''>>).
 
 [NOTE]
 --
-You might be looking for the man:babeltrace2-convert(1) command's
-manual page; the `convert` command is the default command of
-`babeltrace2` and is backward compatible with man:babeltrace(1).
+You might be looking for the manual page of the
+man:babeltrace2-convert(1); the `convert` command is the default command
+of `babeltrace2` and is backward compatible with man:babeltrace(1).
 
 See <<examples,``EXAMPLES''>> for `convert` command examples.
 --
@@ -127,15 +127,15 @@ The following commands also have their own nlopt:--help option.
     Convert one or more traces to a given format, possibly with filters
     in the conversion path.
 +
-This is the default command: you don't need to explicitly specify this
-command's name to use it.
+This is the default command: you don't need to explicitly specify the
+name of this command to use it.
 +
 This command is backward compatible with the man:babeltrace(1) program.
 +
 See man:babeltrace2-convert(1).
 
 `help`::
-    Get help for a specific plugin or plugin's component class.
+    Get help for a specific plugin or component class.
 +
 See man:babeltrace2-help(1).
 
@@ -204,9 +204,9 @@ Component classes:
 [[examples]]
 == EXAMPLES
 
-The following examples are the same as the man:babeltrace2-convert(1)
-manual page's examples because `convert` is the default `babeltrace2`
-program's command.
+The following examples are the same as the ones of the
+man:babeltrace2-convert(1) manual page because `convert` is the default
+command of the `babeltrace2` program.
 
 include::common-convert-examples.txt[]
 

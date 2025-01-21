@@ -9,7 +9,7 @@
 
 == NAME
 
-babeltrace2-filter.utils.trimmer - Babeltrace 2's trimmer filter
+babeltrace2-filter.utils.trimmer - Babeltrace 2: Trimmer filter
 component class
 
 
@@ -51,7 +51,7 @@ and end messages, returning an error status otherwise.
 == INITIALIZATION PARAMETERS
 
 param:begin='TIME' vtype:[optional string or signed integer]::
-    Set the trimming time range's beginning time to 'TIME'.
+    Set the beginning time of the trimming time range to 'TIME'.
 +
 If 'TIME' is a string, see below for its format. If 'TIME' is a signed
 integer, the component converts it to a string and treats it as such.
@@ -66,10 +66,10 @@ include::common-trimmer-time-format.txt[]
 --
 +
 If 'TIME' has no date information, then the message iterator uses the
-first upstream message's time to determine the date.
+time of the first upstream message to determine the date.
 
 param:end='TIME' vtype:[optional string or signed integer]::
-    Set the trimming time range's end time to 'TIME'.
+    Set the end time of the trimming time range to 'TIME'.
 +
 If 'TIME' is a string, see the param:begin parameter for its format. If
 'TIME' is a signed integer, the component converts it to a string and

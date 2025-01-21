@@ -9,7 +9,7 @@
 
 == NAME
 
-babeltrace2-plugin-ctf - Babeltrace 2's CTF plugin
+babeltrace2-plugin-ctf - Babeltrace 2: CTF plugin
 
 
 == DESCRIPTION

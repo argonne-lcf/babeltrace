@@ -9,7 +9,7 @@
 
 == NAME
 
-babeltrace2-sink.text.details - Babeltrace 2's detailed plain text sink
+babeltrace2-sink.text.details - Babeltrace 2: Detailed plain text sink
 component class
 
 

@@ -9,7 +9,7 @@
 
 == NAME
 
-babeltrace2-plugin-lttng-utils - Babeltrace 2's LTTng utilities plugin
+babeltrace2-plugin-lttng-utils - Babeltrace 2: LTTng utilities plugin
 
 
 == DESCRIPTION

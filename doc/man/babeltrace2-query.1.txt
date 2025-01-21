@@ -44,8 +44,8 @@ The exact object names and the parameters that a given component class
 expects are described in its own documentation. man:babeltrace2-help(1)
 can generally provide this information.
 
-You can use the opt:--params option to pass parameters to the component
-class's query operation.
+You can use the opt:--params option to pass parameters to the query
+operation of the component class.
 
 The output of the `query` command can look like https://yaml.org/[YAML],
 but it's not guaranteed to be YAML-compliant.

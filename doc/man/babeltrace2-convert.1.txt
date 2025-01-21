@@ -59,8 +59,8 @@ include::common-see-babeltrace2-intro.txt[]
 ====
 `convert` is the default man:babeltrace2(1) command: you generally don't
 need to specify its name. The following commands are equivalent if the
-`...` part does not start with another man:babeltrace2(1) command's
-name, like `run` or `list-plugins`:
+`...` part does not start with the name of another man:babeltrace2(1)
+command, like `run` or `list-plugins`:
 
 [role="term"]
 ----
@@ -229,8 +229,8 @@ opt:--params='PARAMS'::
     Add 'PARAMS' to the initialization parameters of the current
     component.
 +
-If 'PARAMS' contains a key which exists in the current component's
-initialization parameters, replace the parameter.
+If 'PARAMS' contains a key which exists in the initialization parameters
+of the current component, replace the parameter.
 
 See <<examples,``EXAMPLES''>> for usage examples.
 
@@ -272,7 +272,8 @@ opt:--params='PARAMS'::
     components.
 +
 For a given implicit component, if 'PARAMS' contains a key which exists
-in this component's initialization parameters, replace the parameter.
+in the initialization parameters of this component, replace the
+parameter.
 
 Note that it's also possible for two non-option arguments to cause the
 creation of a single implicit component. For example, if you specify:
@@ -733,7 +734,7 @@ debugging information.
 === Implicit compcls:sink.text.pretty component
 
 If you specify at least one of the following options, you force the
-`convert` command's sink component to be an implicit
+sink component of the `convert` command to be an implicit
 compcls:sink.text.pretty component.
 
 See man:babeltrace2-sink.text.pretty(7) to learn more about this
@@ -845,7 +846,7 @@ manparam:sink.ctf.fs:path initialization parameter of the implicit
 compcls:sink.ctf.fs component to 'PATH'.
 +
 Without any specified sink component, explicit or implicit, force the
-`convert` command's sink component to be an implicit
+sink component of the `convert` command to be an implicit
 compcls:sink.text.pretty component and set its
 manparam:sink.text.pretty:path initialization parameter to 'PATH'.
 +
@@ -897,12 +898,12 @@ opt:--stream-intersection::
 +
 In this mode, for each trace, the `convert` command filters out the
 events and other messages which are not in the time range where _all_
-the trace's streams are active.
+the trace streams are active.
 +
 To use this option, all the source components, explicit and implicit,
 must have classes which support the `babeltrace.trace-infos` query
 object (see man:babeltrace2-query-babeltrace.trace-infos(7)). The only
-Babeltrace~2 project's component class which supports this query
+component class of the Babeltrace~2 project which supports this query
 object is compcls:source.ctf.fs.
 +
 You cannot use this option with the opt:--run-args or opt:--run-args-0
@@ -916,14 +917,14 @@ man:babeltrace(1) program.
 opt:-d::
 opt:--debug::
     Legacy option: this is equivalent to nlopt:--log-level=`TRACE`,
-    where nlopt:--log-level is the general option (not this command's
-    opt:--log-level option).
+    where nlopt:--log-level is the general option (not the
+    opt:--log-level option of this command).
 
 opt:-v::
 opt:--verbose::
     Legacy option: this is equivalent to nlopt:--log-level=`INFO`, where
-    nlopt:--log-level is the general option (not this command's
-    opt:--log-level option).
+    nlopt:--log-level is the general option (not the opt:--log-level
+    option of this command).
 +
 This option also sets the manparam:sink.text.pretty:verbose parameter of
 the implicit compcls:sink.text.pretty component (see

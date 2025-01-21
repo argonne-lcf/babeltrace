@@ -9,7 +9,7 @@
 
 == NAME
 
-babeltrace2-source.ctf.lttng-live - Babeltrace 2's LTTng live source
+babeltrace2-source.ctf.lttng-live - Babeltrace 2: LTTng live source
 component class
 
 
@@ -85,15 +85,15 @@ param:inputs='URL' vtype:[array of one string]::
 net[4]://__RDHOST__[:__RDPORT__]/host/__TGTHOST__/__SESSION__
 
 'RDHOST'::
-    LTTng relay daemon's host name or IP address.
+    Host name or IP address of the LTTng relay daemon.
 
 'RDPORT'::
-    LTTng relay daemon's listening port.
+    Listening port of the LTTng relay daemon.
 +
 If not specified, the component uses the default port ({defrdport}).
 
 'TGTHOST'::
-    Target's host name or IP address.
+    Target host name or IP address.
 
 'SESSION'::
     Name of the LTTng tracing session from which to receive data.
@@ -165,10 +165,10 @@ The format of 'URL' is:
 net[4]://__RDHOST__[:__RDPORT__]
 
 'RDHOST'::
-    LTTng relay daemon's host name or IP address.
+    Host name or IP address of the LTTng relay daemon.
 
 'RDPORT'::
-    LTTng relay daemon's listening port.
+    Listening port of the LTTng relay daemon.
 +
 If not specified, the query operation uses the default port
 ({defrdport}).
@@ -182,7 +182,7 @@ qres:client-count vtype:[unsigned integer]::
     to receive data from this tracing session.
 
 qres:session-name vtype:[string]::
-    Tracing session's name.
+    Tracing session name.
 
 qres:stream-count vtype:[unsigned integer]::
     Current number of CTF streams in this tracing sessions, including
@@ -191,11 +191,11 @@ qres:stream-count vtype:[unsigned integer]::
 qres:target-hostname vtype:[string]::
     Hostname of the tracing session.
 +
-This is not necessarily the relay daemon's hostname.
+This is not necessarily the hostname of the relay daemon.
 
 qres:timer-us vtype:[unsigned integer]::
-    Tracing session's configured live timer's period (µs)
-    (see man:lttng-create(1)).
+    Configured period (µs) of the live timer of the tracing session (see
+    man:lttng-create(1)).
 
 qres:trace-format vtype:[string]::
     Format of the trace(s) of the tracing session amongst:

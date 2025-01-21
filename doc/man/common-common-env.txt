@@ -14,7 +14,7 @@ This environment variable is ignored when the application has the
 
 `BABELTRACE_TERM_COLOR`=(`AUTO` | `NEVER` | `ALWAYS`)::
     Force the terminal color support for the man:babeltrace2(1) program
-    and the project's plugins.
+    and the project plugins.
 +
 The available values are:
 +

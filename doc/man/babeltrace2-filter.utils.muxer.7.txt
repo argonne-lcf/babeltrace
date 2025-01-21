@@ -9,7 +9,7 @@
 
 == NAME
 
-babeltrace2-filter.utils.muxer - Babeltrace 2's message muxer filter
+babeltrace2-filter.utils.muxer - Babeltrace 2: Message muxer filter
 component class
 
 

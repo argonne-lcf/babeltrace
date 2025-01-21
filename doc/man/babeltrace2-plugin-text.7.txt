@@ -9,7 +9,7 @@
 
 == NAME
 
-babeltrace2-plugin-text - Babeltrace 2's plain text plugin
+babeltrace2-plugin-text - Babeltrace 2: Plain text plugin
 
 
 == DESCRIPTION
