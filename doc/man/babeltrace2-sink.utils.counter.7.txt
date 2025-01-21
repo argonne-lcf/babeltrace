@@ -59,7 +59,7 @@ the zero counts with the param:hide-zero parameter.
 == INITIALIZATION PARAMETERS
 
 param:hide-zero='VAL' vtype:[optional boolean]::
-    If 'VAL' is true, then do not print the statistics lines where the
+    If 'VAL' is true, then don't print the statistics lines where the
     count is zero.
 +
 Default: false.

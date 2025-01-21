@@ -18,10 +18,10 @@ nlopt:--log-level='LVL'::
     Set the log level of all known Babeltrace~2 loggers to 'LVL'.
 
 nlopt:--omit-home-plugin-path::
-    Do not search for plugins in `$HOME/.local/lib/babeltrace2/plugins`.
+    Don't search for plugins in `$HOME/.local/lib/babeltrace2/plugins`.
 
 nlopt:--omit-system-plugin-path::
-    Do not search for plugins in +{system_plugin_path}+.
+    Don't search for plugins in +{system_plugin_path}+.
 
 nlopt:--plugin-path='PATH'[:__PATH__]...::
     Add 'PATH' to the list of paths in which plugins can be found.

@@ -56,7 +56,7 @@ param:type=(`string` | `file` | `directory`) vtype:[string]::
 `directory`::
     param:input parameter is a directory path.
 +
-It is expected that the query method does not recurse into this
+It's expected that the query method don't recurse into this
 directory: the result object indicates whether or not the component
 class supports this specific directory (param:input).
 --

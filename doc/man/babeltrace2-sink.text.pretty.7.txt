@@ -273,7 +273,7 @@ Not set::
 --
 
 param:no-delta='VAL' vtype:[optional boolean]::
-    If 'VAL' is true, then do not print the time delta between
+    If 'VAL' is true, then don't print the time delta between
     consecutive lines.
 +
 Default: false.

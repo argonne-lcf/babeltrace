@@ -98,7 +98,7 @@ If you don't compile the source files of the executable with the
 nlopt:-g option or with an equivalent option, no DWARF information is
 available: the message iterator uses ELF symbols from the executable
 file instead. In this case, the events that the message iterator creates
-do not contain the source file and line number (see the
+don't contain the source file and line number (see the
 <<field-src,`src` field>>), but only the name of the nearest function
 symbol with an offset in bytes to the location in the executable from
 which the LTTng event occurred (see the <<field-func,`func` field>>).
@@ -172,7 +172,7 @@ $ LD_PRELOAD=liblttng-ust-dl.so my-app
 === Separate debugging information
 
 You can store DWARF debugging information outside the executable itself,
-whether it is to reduce the file size of the executable or simply to
+whether it's to reduce the file size of the executable or simply to
 facilitate sharing the debugging information.
 
 This is usually achieved via one of two mechanisms, namely _build ID_
@@ -200,7 +200,7 @@ You can use the param:debug-info-dir initialization parameter to
 override the default `/usr/lib/debug` directory used in the build ID and
 debug link methods.
 
-NOTE: It is currently not possible to make this component search for
+NOTE: It's currently not possible to make this component search for
 debugging information in multiple directories.
 
 

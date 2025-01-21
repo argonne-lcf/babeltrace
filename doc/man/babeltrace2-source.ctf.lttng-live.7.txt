@@ -49,7 +49,7 @@ The component connects to an LTTng relay daemon using the param:inputs
 parameter. This is an array of exactly one string which is the URL of
 the LTTng relay daemon to connect to.
 
-By default, if the remote tracing session name does not exist, the
+By default, if the remote tracing session name doesn't exist, the
 message iterator returns "try again later". This default mode makes the
 message iterator never end: even if the remote tracing session is
 destroyed, the message iterator keeps on waiting for a tracing session
@@ -100,7 +100,7 @@ If not specified, the component uses the default port ({defrdport}).
 --
 
 param:session-not-found-action=(`continue` | `fail` | `end`) vtype:[optional string]::
-    When the message iterator does not find the specified remote tracing
+    When the message iterator doesn't find the specified remote tracing
     session ('SESSION' part of the param:inputs parameter), do one of:
 +
 --
@@ -191,7 +191,7 @@ qres:stream-count vtype:[unsigned integer]::
 qres:target-hostname vtype:[string]::
     Hostname of the tracing session.
 +
-This is not necessarily the hostname of the relay daemon.
+This isn't necessarily the hostname of the relay daemon.
 
 qres:timer-us vtype:[unsigned integer]::
     Configured period (µs) of the live timer of the tracing session (see

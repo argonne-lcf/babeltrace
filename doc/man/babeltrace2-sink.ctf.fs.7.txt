@@ -44,7 +44,7 @@ compcls:sink.ctf.fs component class reports to support only MIP~0 with
 the param:ctf-version parameter set to~`1` and only MIP~1 with
 param:ctf-version set to~`2`.
 
-A compcls:sink.ctf.fs component does not merge traces: it writes the
+A compcls:sink.ctf.fs component doesn't merge traces: it writes the
 messages of different input traces to different output traces.
 
 
@@ -199,7 +199,7 @@ corresponding CTF stream.
 
 A compcls:sink.ctf.fs component always aligns data fields as such:
 
-Fixed-length bit array fields with a size which is not a multiple of 8::
+Fixed-length bit array fields with a size which isn't a multiple of 8::
     1-bit.
 
 All other scalar fields (fixed-length bit array, null-terminated string, BLOB)::
@@ -290,7 +290,7 @@ The trace name sanitization operation:
 In all the cases above, if the effective output trace path already
 exists on the file system, the component appends a numeric suffix to the
 name of the last subdirectory. The suffix starts at 0 and increments
-until the path does not exist.
+until the path doesn't exist.
 
 
 == INITIALIZATION PARAMETERS
@@ -338,7 +338,7 @@ See <<output-path,``Output path''>> to learn how the component uses this
 parameter to build the output path for a given input trace.
 
 param:quiet='VAL' vtype:[optional boolean]::
-    If 'VAL' is true, then do not write anything to the standard output.
+    If 'VAL' is true, then don't write anything to the standard output.
 +
 Default: false.
 

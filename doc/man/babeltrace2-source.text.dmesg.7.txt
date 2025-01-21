@@ -57,7 +57,7 @@ the param:no-extract-timestamp parameter.
 
 [NOTE]
 ====
-It is possible that the output of man:dmesg(1) contains unsorted lines,
+It's possible that the output of man:dmesg(1) contains unsorted lines,
 that is, their timestamps go back in time. You can see this with the
 nlopt:--show-delta option of man:dmesg(1): some time differences can be
 negative.

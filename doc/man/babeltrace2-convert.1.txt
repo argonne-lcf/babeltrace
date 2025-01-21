@@ -59,7 +59,7 @@ include::common-see-babeltrace2-intro.txt[]
 ====
 `convert` is the default man:babeltrace2(1) command: you generally don't
 need to specify its name. The following commands are equivalent if the
-`...` part does not start with the name of another man:babeltrace2(1)
+`...` part doesn't start with the name of another man:babeltrace2(1)
 command, like `run` or `list-plugins`:
 
 [role="term"]
@@ -163,7 +163,7 @@ This creates the following conversion graph:
                   +-----------------+
 ----
 
-It is equivalent to the following man:babeltrace2-run(1) command line:
+It's equivalent to the following man:babeltrace2-run(1) command line:
 
 [role="term"]
 ----
@@ -188,9 +188,9 @@ $ babeltrace2 run $(babeltrace2 --run-args /path/to/trace) ...
 ----
 
 The opt:--run-args-0 option is like the opt:--run-args option, but the
-printed arguments are :not: escaped and they are separated by a null
+printed arguments are :not: escaped and they're separated by a null
 character instead of a space. This is useful if the resulting arguments
-are not the direct input of a shell, for example if passed to
+aren't the direct input of a shell, for example if passed to
 `xargs -0`.
 
 See <<examples,``EXAMPLES''>> for usage examples.
@@ -363,7 +363,7 @@ $ babeltrace2 /path/to/trace --debug-info-full-path
 +
 The implicit compcls:sink.text.pretty component exists by default. If
 any other explicit or implicit sink component exists, the `convert`
-command does not automatically create the implicit
+command doesn't automatically create the implicit
 compcls:sink.text.pretty component.
 +
 The opt:--clock-cycles, opt:--clock-date, opt:--clock-gmt,
@@ -459,7 +459,7 @@ $ babeltrace2 run --component=auto-disc-source-ctf-fs:source.ctf.fs \
 ----
 
 The order of the implicit component options documented in this
-subsection is not significant.
+subsection isn't significant.
 
 See <<examples,``EXAMPLES''>> for more examples.
 
@@ -628,7 +628,7 @@ opt:--clock-force-correlate::
 The manparam:source.ctf.fs:force-clock-class-origin-unix-epoch
 initialization parameter makes all the created clock classes have a Unix
 epoch origin. This is useful to force the clock classes of multiple
-traces to be compatible even if they are not inherently.
+traces to be compatible even if they're not inherently.
 
 opt:--clock-offset='SEC'::
     Set the manparam:source.ctf.fs:clock-class-offset-s initialization
@@ -829,7 +829,7 @@ opt:--no-delta::
     of the component to true.
 +
 When the manparam:sink.text.pretty:no-delta parameter is true, the
-component does not print the duration since the last event on the line.
+component doesn't print the duration since the last event on the line.
 
 
 === Shared options
@@ -897,7 +897,7 @@ opt:--stream-intersection::
     Enable the stream intersection mode.
 +
 In this mode, for each trace, the `convert` command filters out the
-events and other messages which are not in the time range where _all_
+events and other messages which aren't in the time range where _all_
 the trace streams are active.
 +
 To use this option, all the source components, explicit and implicit,

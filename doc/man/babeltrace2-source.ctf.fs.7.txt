@@ -45,7 +45,7 @@ CTF trace on the file system is a directory which contains:
 
 * One metadata stream file named `metadata`.
 * One or more data stream files, that is, any file with a name that does
-  not start with `.` and which is not `metadata`.
+  not start with `.` and which isn't `metadata`.
 * **Optional**: One https://lttng.org/[LTTng] index directory named
   `index`.
 
@@ -71,7 +71,7 @@ param:inputs array parameter. Each entry in this array is the path to a
 physical CTF trace directory, that is, the directory directly containing
 the stream files.
 
-A compcls:source.ctf.fs component does not recurse into directories to
+A compcls:source.ctf.fs component doesn't recurse into directories to
 find CTF traces. However, the component class provides the
 `babeltrace.support-info` query object which indicates whether or not a
 given directory looks like a CTF trace directory (see
@@ -100,7 +100,7 @@ malformed streams.
 In general, for a CTF~1.8 trace:
 
 * If the `timestamp_begin` or `timestamp_end` packet context field class
-  exists, but it is not mapped to a clock class, and there's only one
+  exists, but it's not mapped to a clock class, and there's only one
   clock class at this point in the metadata stream, the component maps
   the field class to this unique clock class.
 
@@ -352,7 +352,7 @@ Each output port name has one of the following forms:
 __TRACE-ID__ | __STREAM-CLASS-ID__ | __STREAM-ID__
 __TRACE-ID__ | __STREAM-ID__
 
-The component uses the second form when the stream class ID is not
+The component uses the second form when the stream class ID isn't
 available.
 
 __TRACE-ID__::
@@ -363,7 +363,7 @@ __TRACE-ID__::
 {namespace: `NS`, name: `NAME`, uid: `UID`}
 ----
 +
-If the namespace of the trace is not available, but the name `NAME` and
+If the namespace of the trace isn't available, but the name `NAME` and
 UID `UID` are, then the exact string:
 +
 ----
@@ -407,14 +407,14 @@ nlqres:group::
 namespace: NS, name: NAME, uid: UID
 ----
 +
-If the namespace of the trace is not available, but the name `NAME` and
+If the namespace of the trace isn't available, but the name `NAME` and
 UID `UID` are, then the exact string:
 +
 ----
 name: NAME, uid: UID
 ----
 +
-Otherwise, the entry does not exist.
+Otherwise, the entry doesn't exist.
 +
 NOTE: The namespace of any LTTng trace is +{lttng_ns}+. If a CTF~1.8
 trace has a UUID, then its corresponding libbabeltrace2 trace always has
@@ -438,7 +438,7 @@ about this query object.
 === `metadata-info`
 
 You can query the `metadata-info` object for a specific CTF trace to get
-its plain text metadata stream as well as whether or not it is
+its plain text metadata stream as well as whether or not it's
 packetized.
 
 Parameters:

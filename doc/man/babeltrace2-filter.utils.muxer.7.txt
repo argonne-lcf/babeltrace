@@ -32,7 +32,7 @@ Messages -->@ in2             |
 
 include::common-see-babeltrace2-intro.txt[]
 
-A compcls:filter.utils.muxer message iterator does not alter the
+A compcls:filter.utils.muxer message iterator doesn't alter the
 messages it consumes: it only sorts them.
 
 The message iterator creates one upstream message iterator per connected

@@ -67,7 +67,7 @@ libbabeltrace2.
 Babeltrace~2 project plugins::
     The Babeltrace~2 <<plugin,plugins>> shipped with the project.
 +
-Those plugins are not special in that they only rely on libbabeltrace2
+Those plugins aren't special in that they only rely on libbabeltrace2
 and you don't need them to use libbabeltrace2, man:babeltrace2(1), or
 the Python bindings. However, the project plugins provide many widely
 used trace format encoders/decoders as well as common <<graph,trace
@@ -119,7 +119,7 @@ General::
   plugin and, as long as <<libbabeltrace2,libbabeltrace2>> finds it, any
   application linked to libbabeltrace2 can load it and use it.
 +
-Plugins are not just trace format encoders and decoders: they package
+Plugins aren't just trace format encoders and decoders: they package
 source, filter, and sink <<comp-cls,component classes>> so that you can
 connect specialized, reusable <<comp,components>> together in a
 <<graph,trace processing graph>> to create a customized trace conversion
@@ -270,7 +270,7 @@ bindings>>, but also as command-line actions and options in the
 manual pages assume that you are familiar with the following
 definitions.
 
-Some Babeltrace~2 concepts are interdependent: it is normal to jump
+Some Babeltrace~2 concepts are interdependent: it's normal to jump
 from one definition to another to understand the big picture.
 
 [[comp-cls]]Component class::
@@ -330,7 +330,7 @@ A component is the instance of a <<comp-cls,component class>>. The terms
 _component_ and _component class instance_ are equivalent.
 +
 Within a trace processing graph, each component has a unique name. This
-is not the name of its component class, but an instance name. If `human`
+isn't the name of its component class, but an instance name. If `human`
 is a component class name, than `Nancy` and `John` could be component
 names.
 +
@@ -348,7 +348,7 @@ components have input ports, and filter components have both.
 +
 You can only connect an output port to a single input port.
 +
-All ports do not need to be connected.
+All ports don't need to be connected.
 +
 A filter or sink component receiving messages from its input ports
 is said to _consume_ messages.
@@ -519,12 +519,12 @@ For example, here's a simple conversion graph:
                   +-----------------+
 ----
 
-Note that input port `in3` of component `muxer` is not connected in this
+Note that input port `in3` of component `muxer` isn't connected in this
 example.
 
 Sometimes, we symbolically represent other resources which are consumed
 from or produced by components. In this case, arrows are used, but they
-do not go to or from port symbols (`@`), except for messages. For
+don't go to or from port symbols (`@`), except for messages. For
 example, in the graph above, the `ctf` source component consumes a CTF
 trace and the `text` sink component prints plain text to the terminal,
 so here's a more complete diagram:

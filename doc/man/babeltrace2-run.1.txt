@@ -143,7 +143,7 @@ __DOWN-PORT-PAT__ are globbing patterns where only the wildcard
 character, `*`, is special: it matches zero or more characters. You must
 escape the `*`, `?`, `[`, `.`, `:`, and :bs: characters with :bs:.
 
-When you do not specify __UP-PORT-PAT__ or __DOWN-PORT-PAT__, they are
+When you don't specify __UP-PORT-PAT__ or __DOWN-PORT-PAT__, they're
 equivalent to `*`.
 
 You can leverage this connection mechanism to specify fallbacks with a
