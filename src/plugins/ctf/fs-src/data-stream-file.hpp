@@ -45,18 +45,10 @@ struct ctf_fs_ds_file_info
         return _mSize;
     }
 
-    std::int64_t beginNs() const noexcept
-    {
-        return _mBeginNs;
-    }
-
 private:
     bt2c::Logger _mLogger;
     std::string _mPath;
     bt2c::DataLen _mSize;
-
-    /* Guaranteed to be set, as opposed to the index. */
-    std::int64_t _mBeginNs = 0;
 };
 
 struct ctf_fs_ds_file
@@ -161,14 +153,13 @@ struct ctf_fs_ds_file_group
     }
 
     /*
-     * Insert ds_file_info in the list of ds_file_infos at the right
-     * place to keep it sorted.
+     * Add ds_file_info to the list of ds_file_infos.
      */
-    void insert_ds_file_info_sorted(ctf_fs_ds_file_info::UP ds_file_info);
+    void add_ds_file_info(ctf_fs_ds_file_info::UP ds_file_info);
 
     /*
-     * This is an _ordered_ array of data stream file infos which
-     * belong to this group (a single stream instance).
+     * This is an array of data stream file infos which belong to this
+     * group (a single stream instance).
      *
      * You can call ctf_fs_ds_file_create() with one of those paths
      * and the trace IR stream below.

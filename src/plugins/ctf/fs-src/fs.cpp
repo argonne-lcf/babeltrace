@@ -383,7 +383,7 @@ static int add_ds_file_to_ds_file_group(struct ctf_fs_trace *ctf_fs_trace, const
         ctf_fs_trace->ds_file_groups.emplace_back(bt2s::make_unique<ctf_fs_ds_file_group>(
             ctf_fs_trace, *sc, stream_instance_id ? *stream_instance_id : UINT64_C(-1),
             std::move(*index)));
-        ctf_fs_trace->ds_file_groups.back()->insert_ds_file_info_sorted(std::move(ds_file_info));
+        ctf_fs_trace->ds_file_groups.back()->add_ds_file_info(std::move(ds_file_info));
         return 0;
     }
 
@@ -404,7 +404,7 @@ static int add_ds_file_to_ds_file_group(struct ctf_fs_trace *ctf_fs_trace, const
         merge_ctf_fs_ds_indexes(ds_file_group->index, *index);
     }
 
-    ds_file_group->insert_ds_file_info_sorted(std::move(ds_file_info));
+    ds_file_group->add_ds_file_info(std::move(ds_file_info));
 
     return 0;
 }
@@ -598,14 +598,14 @@ static unsigned int metadata_count_stream_and_event_classes(struct ctf_fs_trace 
 
 /*
  * Merge the src ds_file_group into dest.  This consists of merging their
- * ds_file_infos, making sure to keep the result sorted.
+ * ds_file_infos and indexes.
  */
 
 static void merge_ctf_fs_ds_file_groups(struct ctf_fs_ds_file_group *dest,
                                         ctf_fs_ds_file_group::UP src)
 {
     for (auto& ds_file_info : src->ds_file_infos) {
-        dest->insert_ds_file_info_sorted(std::move(ds_file_info));
+        dest->add_ds_file_info(std::move(ds_file_info));
     }
 
     /* Merge both indexes. */
