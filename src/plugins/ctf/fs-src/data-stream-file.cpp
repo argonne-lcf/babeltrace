@@ -35,9 +35,9 @@ static bt2c::DataLen getFileSize(const char * const path, const bt2c::Logger& lo
     return bt2c::DataLen::fromBytes(st.st_size);
 }
 
-ctf_fs_ds_file_info::ctf_fs_ds_file_info(std::string pathParam, const bt2c::Logger& parentLogger) :
-    logger {parentLogger, "PLUGIN/SRC.CTF.FS/DS-FILE-INFO"}, path(std::move(pathParam)),
-    size(getFileSize(path.c_str(), logger))
+ctf_fs_ds_file_info::ctf_fs_ds_file_info(std::string path, const bt2c::Logger& parentLogger) :
+    _mLogger {parentLogger, "PLUGIN/SRC.CTF.FS/DS-FILE-INFO"}, _mPath(std::move(path)),
+    _mSize(getFileSize(_mPath.c_str(), _mLogger))
 {
 }
 
@@ -158,19 +158,19 @@ static int convert_cycles_to_ns(const ctf::src::ClkCls& clockClass, uint64_t cyc
 static bt2s::optional<ctf_fs_ds_index>
 build_index_from_idx_file(const ctf_fs_ds_file_info& fileInfo, const ctf::src::TraceCls& traceCls)
 {
-    const char *path = fileInfo.path.c_str();
-    BT_CPPLOGI_SPEC(fileInfo.logger, "Building index from .idx file of stream file {}", path);
+    const char *path = fileInfo.path().c_str();
+    BT_CPPLOGI_SPEC(fileInfo.logger(), "Building index from .idx file of stream file {}", path);
 
     /* Look for index file in relative path index/name.idx. */
     bt2c::GCharUP basename {g_path_get_basename(path)};
     if (!basename) {
-        BT_CPPLOGE_SPEC(fileInfo.logger, "Cannot get the basename of datastream file {}", path);
+        BT_CPPLOGE_SPEC(fileInfo.logger(), "Cannot get the basename of datastream file {}", path);
         return bt2s::nullopt;
     }
 
     bt2c::GCharUP directory {g_path_get_dirname(path)};
     if (!directory) {
-        BT_CPPLOGE_SPEC(fileInfo.logger, "Cannot get dirname of datastream file {}", path);
+        BT_CPPLOGE_SPEC(fileInfo.logger(), "Cannot get dirname of datastream file {}", path);
         return bt2s::nullopt;
     }
 
@@ -179,7 +179,8 @@ build_index_from_idx_file(const ctf_fs_ds_file_info& fileInfo, const ctf::src::T
         g_build_filename(directory.get(), "index", index_basename.c_str(), NULL)};
     bt2c::GMappedFileUP mapped_file {g_mapped_file_new(index_file_path.get(), FALSE, NULL)};
     if (!mapped_file) {
-        BT_CPPLOGD_SPEC(fileInfo.logger, "Cannot create new mapped file {}", index_file_path.get());
+        BT_CPPLOGD_SPEC(fileInfo.logger(), "Cannot create new mapped file {}",
+                        index_file_path.get());
         return bt2s::nullopt;
     }
 
@@ -190,7 +191,7 @@ build_index_from_idx_file(const ctf_fs_ds_file_info& fileInfo, const ctf::src::T
      */
     gsize filesize = g_mapped_file_get_length(mapped_file.get());
     if (filesize < sizeof(ctf_packet_index_file_hdr)) {
-        BT_CPPLOGW_SPEC(fileInfo.logger,
+        BT_CPPLOGW_SPEC(fileInfo.logger(),
                         "Invalid LTTng trace index file: "
                         "file size ({} bytes) < header size ({} bytes)",
                         filesize, sizeof(ctf_packet_index_file_hdr));
@@ -202,7 +203,7 @@ build_index_from_idx_file(const ctf_fs_ds_file_info& fileInfo, const ctf::src::T
 
     const char *file_pos = g_mapped_file_get_contents(mapped_file.get()) + sizeof(*header);
     if (be32toh(header->magic) != CTF_INDEX_MAGIC) {
-        BT_CPPLOGW_SPEC(fileInfo.logger,
+        BT_CPPLOGW_SPEC(fileInfo.logger(),
                         "Invalid LTTng trace index: \"magic\" field validation failed");
         return bt2s::nullopt;
     }
@@ -210,7 +211,7 @@ build_index_from_idx_file(const ctf_fs_ds_file_info& fileInfo, const ctf::src::T
     uint32_t version_major = be32toh(header->index_major);
     uint32_t version_minor = be32toh(header->index_minor);
     if (version_major != 1) {
-        BT_CPPLOGW_SPEC(fileInfo.logger, "Unknown LTTng trace index version: major={}, minor={}",
+        BT_CPPLOGW_SPEC(fileInfo.logger(), "Unknown LTTng trace index version: major={}, minor={}",
                         version_major, version_minor);
         return bt2s::nullopt;
     }
@@ -218,7 +219,7 @@ build_index_from_idx_file(const ctf_fs_ds_file_info& fileInfo, const ctf::src::T
     size_t file_index_entry_size = be32toh(header->packet_index_len);
     if (file_index_entry_size < CTF_INDEX_1_0_SIZE) {
         BT_CPPLOGW_SPEC(
-            fileInfo.logger,
+            fileInfo.logger(),
             "Invalid `packet_index_len` in LTTng trace index file (`packet_index_len` < CTF index 1.0 index entry size): "
             "packet_index_len={}, CTF_INDEX_1_0_SIZE={}",
             file_index_entry_size, CTF_INDEX_1_0_SIZE);
@@ -227,7 +228,7 @@ build_index_from_idx_file(const ctf_fs_ds_file_info& fileInfo, const ctf::src::T
 
     size_t file_entry_count = (filesize - sizeof(*header)) / file_index_entry_size;
     if ((filesize - sizeof(*header)) % file_index_entry_size) {
-        BT_CPPLOGW_SPEC(fileInfo.logger,
+        BT_CPPLOGW_SPEC(fileInfo.logger(),
                         "Invalid LTTng trace index: the index's size after the header "
                         "({} bytes) is not a multiple of the index entry size "
                         "({} bytes)",
@@ -241,19 +242,19 @@ build_index_from_idx_file(const ctf_fs_ds_file_info& fileInfo, const ctf::src::T
      * We don't know the size of that packet yet, so pretend that it spans the
      * whole file (the reader will only read the header anyway).
      */
-    ctf_fs_ds_index_entry tempIndexEntry {path, 0_bits, fileInfo.size};
+    ctf_fs_ds_index_entry tempIndexEntry {path, 0_bits, fileInfo.size()};
     ctf_fs_ds_index tempIndex;
     tempIndex.entries.emplace_back(tempIndexEntry);
 
     ctf::src::fs::Medium::UP medium =
-        bt2s::make_unique<ctf::src::fs::Medium>(tempIndex, fileInfo.logger);
+        bt2s::make_unique<ctf::src::fs::Medium>(tempIndex, fileInfo.logger());
     ctf::src::PktProps props =
-        ctf::src::readPktProps(traceCls, std::move(medium), 0_bytes, fileInfo.logger);
+        ctf::src::readPktProps(traceCls, std::move(medium), 0_bytes, fileInfo.logger());
 
     const ctf::src::DataStreamCls *sc = props.dataStreamCls;
     BT_ASSERT(sc);
     if (!sc->defClkCls()) {
-        BT_CPPLOGI_SPEC(fileInfo.logger, "Cannot find stream class's default clock class.");
+        BT_CPPLOGI_SPEC(fileInfo.logger(), "Cannot find stream class's default clock class.");
         return bt2s::nullopt;
     }
 
@@ -266,7 +267,7 @@ build_index_from_idx_file(const ctf_fs_ds_file_info& fileInfo, const ctf::src::T
         const auto packetSize = bt2c::DataLen::fromBits(be64toh(file_index->packet_size));
 
         if (packetSize.hasExtraBits()) {
-            BT_CPPLOGW_SPEC(fileInfo.logger,
+            BT_CPPLOGW_SPEC(fileInfo.logger(),
                             "Invalid packet size encountered in LTTng trace index file");
             return bt2s::nullopt;
         }
@@ -275,7 +276,7 @@ build_index_from_idx_file(const ctf_fs_ds_file_info& fileInfo, const ctf::src::T
 
         if (i != 0 && offset < prev_index_entry->offsetInFile) {
             BT_CPPLOGW_SPEC(
-                fileInfo.logger,
+                fileInfo.logger(),
                 "Invalid, non-monotonic, packet offset encountered in LTTng trace index file: "
                 "previous offset={} bytes, current offset={} bytes",
                 prev_index_entry->offsetInFile.bytes(), offset.bytes());
@@ -287,7 +288,7 @@ build_index_from_idx_file(const ctf_fs_ds_file_info& fileInfo, const ctf::src::T
         index_entry.timestamp_end = be64toh(file_index->timestamp_end);
         if (index_entry.timestamp_end < index_entry.timestamp_begin) {
             BT_CPPLOGW_SPEC(
-                fileInfo.logger,
+                fileInfo.logger(),
                 "Invalid packet time bounds encountered in LTTng trace index file (begin > end): "
                 "timestamp_begin={}, timestamp_end={}",
                 index_entry.timestamp_begin, index_entry.timestamp_end);
@@ -299,7 +300,7 @@ build_index_from_idx_file(const ctf_fs_ds_file_info& fileInfo, const ctf::src::T
                                        &index_entry.timestamp_begin_ns);
         if (ret) {
             BT_CPPLOGI_SPEC(
-                fileInfo.logger,
+                fileInfo.logger(),
                 "Failed to convert raw timestamp to nanoseconds since Epoch during index parsing");
             return bt2s::nullopt;
         }
@@ -307,7 +308,7 @@ build_index_from_idx_file(const ctf_fs_ds_file_info& fileInfo, const ctf::src::T
                                    &index_entry.timestamp_end_ns);
         if (ret) {
             BT_CPPLOGI_SPEC(
-                fileInfo.logger,
+                fileInfo.logger(),
                 "Failed to convert raw timestamp to nanoseconds since Epoch during LTTng trace index parsing");
             return bt2s::nullopt;
         }
@@ -325,11 +326,11 @@ build_index_from_idx_file(const ctf_fs_ds_file_info& fileInfo, const ctf::src::T
     }
 
     /* Validate that the index addresses the complete stream. */
-    if (fileInfo.size != totalPacketsSize) {
-        BT_CPPLOGW_SPEC(fileInfo.logger,
+    if (fileInfo.size() != totalPacketsSize) {
+        BT_CPPLOGW_SPEC(fileInfo.logger(),
                         "Invalid LTTng trace index file; indexed size != stream file size: "
                         "stream-file-size-bytes={}, total-packets-size-bytes={}",
-                        fileInfo.size.bytes(), totalPacketsSize.bytes());
+                        fileInfo.size().bytes(), totalPacketsSize.bytes());
         return bt2s::nullopt;
     }
 
@@ -377,19 +378,19 @@ static bt2s::optional<ctf_fs_ds_index>
 build_index_from_stream_file(const ctf_fs_ds_file_info& fileInfo,
                              const ctf::src::TraceCls& traceCls)
 {
-    const char *path = fileInfo.path.c_str();
+    const char *path = fileInfo.path().c_str();
 
-    BT_CPPLOGI_SPEC(fileInfo.logger, "Indexing stream file {}", path);
+    BT_CPPLOGI_SPEC(fileInfo.logger(), "Indexing stream file {}", path);
 
     ctf_fs_ds_index index;
     auto currentPacketOffset = 0_bytes;
 
     while (true) {
-        if (currentPacketOffset > fileInfo.size) {
-            BT_CPPLOGE_SPEC(fileInfo.logger,
+        if (currentPacketOffset > fileInfo.size()) {
+            BT_CPPLOGE_SPEC(fileInfo.logger(),
                             "Unexpected current packet's offset (larger than file).");
             return bt2s::nullopt;
-        } else if (currentPacketOffset == fileInfo.size) {
+        } else if (currentPacketOffset == fileInfo.size()) {
             /* No more data */
             break;
         }
@@ -401,13 +402,13 @@ build_index_from_stream_file(const ctf_fs_ds_file_info& fileInfo,
          * of the file.
          */
         ctf_fs_ds_index_entry tempIndexEntry {path, currentPacketOffset,
-                                              fileInfo.size - currentPacketOffset};
+                                              fileInfo.size() - currentPacketOffset};
         ctf_fs_ds_index tempIndex;
         tempIndex.entries.emplace_back(tempIndexEntry);
         ctf::src::fs::Medium::UP medium =
-            bt2s::make_unique<ctf::src::fs::Medium>(tempIndex, fileInfo.logger);
+            bt2s::make_unique<ctf::src::fs::Medium>(tempIndex, fileInfo.logger());
         ctf::src::PktProps props = ctf::src::readPktProps(traceCls, std::move(medium),
-                                                          currentPacketOffset, fileInfo.logger);
+                                                          currentPacketOffset, fileInfo.logger());
 
         /*
          * Get the current packet size from the packet header, if set.  Else,
@@ -415,34 +416,34 @@ build_index_from_stream_file(const ctf_fs_ds_file_info& fileInfo,
          * as the packet size.
          */
         const auto currentPacketSize =
-            props.expectedTotalLen ? *props.expectedTotalLen : fileInfo.size;
+            props.expectedTotalLen ? *props.expectedTotalLen : fileInfo.size();
 
-        BT_CPPLOGI_SPEC(fileInfo.logger,
+        BT_CPPLOGI_SPEC(fileInfo.logger(),
                         "Packet: offset-bytes={}, len-bytes={}, begin-clk={}, end-clk={}",
                         currentPacketOffset.bytes(), currentPacketSize.bytes(),
                         props.snapshots.beginDefClk ? *props.snapshots.beginDefClk : -1,
                         props.snapshots.endDefClk ? *props.snapshots.endDefClk : -1);
 
-        if (currentPacketOffset + currentPacketSize > fileInfo.size) {
-            BT_CPPLOGW_SPEC(fileInfo.logger,
+        if (currentPacketOffset + currentPacketSize > fileInfo.size()) {
+            BT_CPPLOGW_SPEC(fileInfo.logger(),
                             "Invalid packet size reported in file: stream=\"{}\", "
                             "packet-offset-bytes={}, packet-size-bytes={}, "
                             "file-size-bytes={}",
                             path, currentPacketOffset.bytes(), currentPacketSize.bytes(),
-                            fileInfo.size.bytes());
+                            fileInfo.size().bytes());
             return bt2s::nullopt;
         }
 
         ctf_fs_ds_index_entry index_entry {path, currentPacketOffset, currentPacketSize};
 
-        if (init_index_entry(index_entry, &props, *props.dataStreamCls, fileInfo.logger)) {
+        if (init_index_entry(index_entry, &props, *props.dataStreamCls, fileInfo.logger())) {
             return bt2s::nullopt;
         }
 
         index.entries.emplace_back(index_entry);
 
         currentPacketOffset += currentPacketSize;
-        BT_CPPLOGD_SPEC(fileInfo.logger,
+        BT_CPPLOGD_SPEC(fileInfo.logger(),
                         "Seeking to next packet: current-packet-offset-bytes={}, "
                         "next-packet-offset-bytes={}",
                         (currentPacketOffset - currentPacketSize).bytes(),
@@ -610,8 +611,8 @@ bt2s::optional<ctf_fs_ds_index> ctf_fs_ds_file_build_index(const ctf_fs_ds_file_
         return index;
     }
 
-    BT_CPPLOGI_SPEC(fileInfo.logger, "Failed to build index from .index file; "
-                                     "falling back to stream indexing.");
+    BT_CPPLOGI_SPEC(fileInfo.logger(), "Failed to build index from .index file; "
+                                       "falling back to stream indexing.");
     return build_index_from_stream_file(fileInfo, traceCls);
 }
 
@@ -628,7 +629,7 @@ void ctf_fs_ds_file_group::insert_ds_file_info_sorted(ctf_fs_ds_file_info::UP ds
     for (; it != this->ds_file_infos.end(); ++it) {
         const ctf_fs_ds_file_info& other_ds_file_info = **it;
 
-        if (ds_file_info->begin_ns < other_ds_file_info.begin_ns) {
+        if (ds_file_info->beginNs() < other_ds_file_info.beginNs()) {
             break;
         }
     }

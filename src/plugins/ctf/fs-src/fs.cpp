@@ -232,7 +232,7 @@ std::string ctf_fs_make_port_name(ctf_fs_ds_file_group *ds_file_group)
     } else {
         BT_ASSERT(ds_file_group->ds_file_infos.size() == 1);
         const auto& ds_file_info = *ds_file_group->ds_file_infos[0];
-        name << " | " << ds_file_info.path;
+        name << " | " << ds_file_info.path();
     }
 
     return name.str();
@@ -340,7 +340,7 @@ static int add_ds_file_to_ds_file_group(struct ctf_fs_trace *ctf_fs_trace, const
     auto ds_file_info = bt2s::make_unique<ctf_fs_ds_file_info>(path, logger);
     const auto& traceCls = *ctf_fs_trace->cls();
     ctf_fs_ds_index tempIndex;
-    ctf_fs_ds_index_entry tempIndexEntry {path, 0_bytes, ds_file_info->size};
+    ctf_fs_ds_index_entry tempIndexEntry {path, 0_bytes, ds_file_info->size()};
 
     tempIndex.entries.emplace_back(tempIndexEntry);
 
@@ -1265,7 +1265,7 @@ static bool compare_ds_file_groups_by_first_path(const ctf_fs_ds_file_group::UP&
     const auto& first_ds_file_info_a = *ds_file_group_a->ds_file_infos[0];
     const auto& first_ds_file_info_b = *ds_file_group_b->ds_file_infos[0];
 
-    return first_ds_file_info_a.path < first_ds_file_info_b.path;
+    return first_ds_file_info_a.path() < first_ds_file_info_b.path();
 }
 
 int ctf_fs_component_create_ctf_fs_trace(
@@ -1377,7 +1377,7 @@ get_stream_instance_unique_name(struct ctf_fs_ds_file_group *ds_file_group)
      * name.
      */
     BT_ASSERT(!ds_file_group->ds_file_infos.empty());
-    return ds_file_group->ds_file_infos[0]->path;
+    return ds_file_group->ds_file_infos[0]->path();
 }
 
 /* Create the IR stream objects for ctf_fs_trace. */

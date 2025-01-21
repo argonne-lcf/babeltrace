@@ -28,14 +28,35 @@ struct ctf_fs_ds_file_info
 {
     using UP = std::unique_ptr<ctf_fs_ds_file_info>;
 
-    ctf_fs_ds_file_info(std::string pathParam, const bt2c::Logger& parentLogger);
+    ctf_fs_ds_file_info(std::string path, const bt2c::Logger& parentLogger);
 
-    bt2c::Logger logger;
-    std::string path;
-    bt2c::DataLen size;
+    const bt2c::Logger& logger() const noexcept
+    {
+        return _mLogger;
+    }
+
+    const std::string& path() const noexcept
+    {
+        return _mPath;
+    }
+
+    bt2c::DataLen size() const noexcept
+    {
+        return _mSize;
+    }
+
+    std::int64_t beginNs() const noexcept
+    {
+        return _mBeginNs;
+    }
+
+private:
+    bt2c::Logger _mLogger;
+    std::string _mPath;
+    bt2c::DataLen _mSize;
 
     /* Guaranteed to be set, as opposed to the index. */
-    int64_t begin_ns = 0;
+    std::int64_t _mBeginNs = 0;
 };
 
 struct ctf_fs_ds_file
