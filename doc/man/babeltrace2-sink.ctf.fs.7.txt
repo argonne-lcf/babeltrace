@@ -199,7 +199,7 @@ corresponding CTF stream.
 
 A compcls:sink.ctf.fs component always aligns data fields as such:
 
-Fixed-length bit array fields with a size which isn't a multiple of 8::
+Fixed-length bit array fields with a size which isn't a multiple of~8::
     1-bit.
 
 All other scalar fields (fixed-length bit array, null-terminated string, BLOB)::
@@ -289,7 +289,7 @@ The trace name sanitization operation:
 
 In all the cases above, if the effective output trace path already
 exists on the file system, then the component appends a numeric suffix
-to the name of the last subdirectory. The suffix starts at 0 and
+to the name of the last subdirectory. The suffix starts at~0 and
 increments until the path doesn't exist.
 
 

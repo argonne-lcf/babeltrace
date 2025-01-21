@@ -66,10 +66,10 @@ class supports this specific directory (param:input).
 
 The result object can be one of:
 
-* [[simple-real]]A simple real value which is the weight, between 0 and
-  1, of the support by the component class for the given input.
+* [[simple-real]]A simple real value which is the weight, between~0
+  and~1, of the support by the component class for the given input.
 +
-A weight of 0 means the input is unsupported while a weight of 1 means
+A weight of~0 means the input is unsupported while a weight of~1 means
 it's fully supported. Any value in between shows how confident the
 component class is about the support of the given input.
 

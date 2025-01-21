@@ -119,7 +119,7 @@ This is the equivalent of setting the
 param:force-clock-class-origin-unix-epoch parameter to true.
 
 * For a given data stream, for all the contiguous last packets of which
-  the `timestamp_end` context field is 0, the message iterator uses the
+  the `timestamp_end` context field is~0, the message iterator uses the
   time of the last event record of the packet as the time of the
   packet end message.
 +

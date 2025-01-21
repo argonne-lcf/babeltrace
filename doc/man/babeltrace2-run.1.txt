@@ -277,7 +277,7 @@ See <<connect-comps,``Connect components''>> to learn more.
 
 opt:-m 'VERSION'::
 opt:--allowed-mip-versions='VERSION'::
-    Only allow the graph to honour version 'VERSION' (0 or 1)
+    Only allow the graph to honour version 'VERSION' (0 or~1)
     of the Message Interchange Protocol (MIP) instead of allowing
     both versions.
 

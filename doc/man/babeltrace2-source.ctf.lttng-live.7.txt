@@ -145,7 +145,7 @@ See man:babeltrace2-query-babeltrace.support-info(7) to learn more
 about this query object.
 
 For a string input which honors the LTTng live URL format (see the
-param:inputs parameter), the result object is 0.75.
+param:inputs parameter), the result object is~0.75.
 
 
 === `sessions`

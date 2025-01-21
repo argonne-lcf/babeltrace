@@ -42,7 +42,7 @@ NOTE: To support muxing messages with different default clock classes,
 the message iterator converts the message times to nanoseconds from the
 common origin (Unix epoch, for example). This means that the resulting
 message sequence could be incorrect if one or more clock classes have a
-frequency which is greater than 1~GHz.
+frequency which is greater than~1~GHz.
 
 
 == PORTS

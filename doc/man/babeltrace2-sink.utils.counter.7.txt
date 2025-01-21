@@ -44,7 +44,7 @@ The output of the component looks like this:
 ----
 
 By default, a compcls:sink.utils.counter component prints a new block of
-statistics every 1000 consumed messages, whatever their types. You can
+statistics every~1000 consumed messages, whatever their types. You can
 use the param:step parameter to override this default period.
 
 The component always prints a block of statistics when there's no more
@@ -52,7 +52,7 @@ messages to consume from its upstream message iterator and the last
 block was different.
 
 By default, a compcls:sink.utils.counter component prints the count of
-messages for each type, even if this count is 0. You can make it hide
+messages for each type, even if this count is~0. You can make it hide
 the zero counts with the param:hide-zero parameter.
 
 
@@ -66,9 +66,9 @@ Default: false.
 
 param:step='STEP' vtype:[optional unsigned integer]::
     Print a new block of statistics every 'STEP' consumed messages
-    instead of 1000.
+    instead of~1000.
 +
-If 'STEP' is 0, then the component only prints statistics when there's
+If 'STEP' is~0, then the component only prints statistics when there's
 no more messages to consume.
 
 
