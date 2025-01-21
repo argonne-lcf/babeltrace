@@ -4,7 +4,7 @@
 
 = babeltrace2-source.ctf.fs(7)
 :manpagetype: component class
-:revdate: 16 December 2024
+:revdate: 21 January 2025
 
 
 == NAME
@@ -61,7 +61,10 @@ CTF 2::
 
 Opening more than one physical CTF trace to constitute a single logical
 CTF trace is needed to support LTTng's tracing session rotation feature,
-for example (see man:lttng-rotate(1) starting from LTTng~2.11).
+for example (see man:lttng-rotate(1) starting from LTTng~2.11). In that
+case, the component elects the largest metadata stream, considering the
+total count of data stream classes and event record classes, as the one
+to use to decode the data streams of all the physical traces.
 
 You specify which physical CTF traces to open and read with the
 param:inputs array parameter. Each entry in this array is the path to a
