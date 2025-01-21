@@ -58,8 +58,8 @@ field class translations can occur:
 * The component translates a boolean field class to a CTF unsigned 8-bit
   integer field class.
 +
-The value of the unsigned integer field is{nbsp}0 when the value
-of the boolean field is false and{nbsp}1 when it's true.
+The value of the unsigned integer field is~0 when the value
+of the boolean field is false and~1 when it's true.
 
 * The component translates a bit array field to a CTF unsigned
   integer field class having the same length.
@@ -191,7 +191,7 @@ The messages which a compcls:source.ctf.fs component creates satisfy all
 the requirements above.
 
 If a discarded events or packets message has no events/packets count,
-then the compcls:sink.ctf.fs component adds{nbsp}1 to the counter of the
+then the compcls:sink.ctf.fs component adds~1 to the counter of the
 corresponding CTF stream.
 
 
