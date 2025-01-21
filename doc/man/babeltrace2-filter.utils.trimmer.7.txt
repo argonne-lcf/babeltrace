@@ -54,10 +54,11 @@ param:begin='TIME' vtype:[optional string or signed integer]::
     Set the beginning time of the trimming time range to 'TIME'.
 +
 If 'TIME' is a string, see below for its format. If 'TIME' is a signed
-integer, the component converts it to a string and treats it as such.
+integer, then the component converts it to a string and treats it as
+such.
 +
-If you don't specify this parameter, the component discards no events
-until the end of the trimming time range.
+If you don't specify this parameter, then the component discards no
+events until the end of the trimming time range.
 +
 The format of 'TIME' when it's a string is one of:
 +
@@ -72,11 +73,11 @@ param:end='TIME' vtype:[optional string or signed integer]::
     Set the end time of the trimming time range to 'TIME'.
 +
 If 'TIME' is a string, see the param:begin parameter for its format. If
-'TIME' is a signed integer, the component converts it to a string and
-treats it as such.
+'TIME' is a signed integer, then the component converts it to a string
+and treats it as such.
 +
-If you don't specify this parameter, the component discards no events
-from the beginning of the trimming time range.
+If you don't specify this parameter, then the component discards no
+events from the beginning of the trimming time range.
 
 param:gmt='VAL' vtype:[optional boolean]::
     If 'VAL' is true, then set the time zone of the param:begin and

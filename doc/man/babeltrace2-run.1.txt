@@ -86,8 +86,8 @@ opt:--component option).
 
 The opt:--params='PARAMS' option adds parameters to the initialization
 parameters of the current component. If 'PARAMS' contains a key which
-exists in the initialization parameters of the current component, this
-parameter is replaced.
+exists in the initialization parameters of the current component, then
+this parameter is replaced.
 
 
 [[connect-comps]]
@@ -231,7 +231,7 @@ opt:--params='PARAMS'::
     component.
 +
 If 'PARAMS' contains a key which exists in the initialization parameters
-of the current component, replace the parameter.
+of the current component, then replace the parameter.
 +
 --
 include::common-cmd-params-format.txt[]

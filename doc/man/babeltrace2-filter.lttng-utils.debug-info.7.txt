@@ -95,8 +95,8 @@ nlopt:-gdwarf-VERSION (where `VERSION` is the DWARF version) compiler
 options to explicitly generate DWARF debugging information.
 
 If you don't compile the source files of the executable with the
-nlopt:-g option or with an equivalent option, no DWARF information is
-available: the message iterator uses ELF symbols from the executable
+nlopt:-g option or with an equivalent option, then no DWARF information
+is available: the message iterator uses ELF symbols from the executable
 file instead. In this case, the events that the message iterator creates
 don't contain the source file and line number (see the
 <<field-src,`src` field>>), but only the name of the nearest function
@@ -104,7 +104,7 @@ symbol with an offset in bytes to the location in the executable from
 which the LTTng event occurred (see the <<field-func,`func` field>>).
 
 If the executable file has neither ELF symbols nor DWARF information,
-the {compcls} message iterator cannot map the event to its source
+then the {compcls} message iterator cannot map the event to its source
 location: the message iterator still copies the upstream messages but
 without altering them.
 
@@ -210,12 +210,12 @@ The debugging information analysis that a {compcls} message iterator
 performs uses the paths to the executables as collected during tracing
 as the default mechanism to resolve DWARF and ELF information.
 
-If the trace was recorded on a separate machine, however, you can use
-the param:target-prefix parameter to specify a prefix directory, that
-is, the root of the target file system.
+If the trace was recorded on a separate machine, however, then you can
+use the param:target-prefix parameter to specify a prefix directory,
+that is, the root of the target file system.
 
 For example, if the path of an instrumented executable is `/usr/bin/foo`
-on the target system, you can place this file at
+on the target system, then you can place this file at
 `/home/user/target/usr/bin/foo` on the system on which you use a
 {compcls} component. In this case, the target prefix to use is
 `/home/user/target`.

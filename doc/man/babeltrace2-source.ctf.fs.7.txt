@@ -82,7 +82,7 @@ More than one physical CTF data stream file can support a single logical
 CTF data stream (LTTng's trace file rotation and tracing session
 rotation can cause this).
 
-If two or more data stream files contain the same packets, a
+If two or more data stream files contain the same packets, then a
 compcls:source.ctf.fs message iterator reads each of them only once so
 that it never emits duplicated messages. This feature makes it possible,
 for example, to open overlapping
@@ -101,8 +101,8 @@ In general, for a CTF~1.8 trace:
 
 * If the `timestamp_begin` or `timestamp_end` packet context field class
   exists, but it's not mapped to a clock class, and there's only one
-  clock class at this point in the metadata stream, the component maps
-  the field class to this unique clock class.
+  clock class at this point in the metadata stream, then the component
+  maps the field class to this unique clock class.
 
 A compcls:source.ctf.fs component has special quirk handling for some
 https://lttng.org/[LTTng] and https://lttng.org/[barectf] traces,

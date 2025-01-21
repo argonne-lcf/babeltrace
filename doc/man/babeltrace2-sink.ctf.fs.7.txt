@@ -191,7 +191,7 @@ The messages which a compcls:source.ctf.fs component creates satisfy all
 the requirements above.
 
 If a discarded events or packets message has no events/packets count,
-the compcls:sink.ctf.fs component adds{nbsp}1 to the counter of the
+then the compcls:sink.ctf.fs component adds{nbsp}1 to the counter of the
 corresponding CTF stream.
 
 
@@ -288,9 +288,9 @@ The trace name sanitization operation:
   specified by the param:path parameter.
 
 In all the cases above, if the effective output trace path already
-exists on the file system, the component appends a numeric suffix to the
-name of the last subdirectory. The suffix starts at 0 and increments
-until the path doesn't exist.
+exists on the file system, then the component appends a numeric suffix
+to the name of the last subdirectory. The suffix starts at 0 and
+increments until the path doesn't exist.
 
 
 == INITIALIZATION PARAMETERS

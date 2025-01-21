@@ -17,8 +17,8 @@ include::common-common-env.txt[]
 `LIBBABELTRACE2_INIT_LOG_LEVEL`='LVL'::
     Force the initial log level of the Babeltrace~2 library to be 'LVL'.
 +
-If this environment variable is set, it overrides the log level set by
-the manopt:babeltrace2(1):--log-level option for the Babeltrace~2
+If this environment variable is set, then it overrides the log level set
+by the manopt:babeltrace2(1):--log-level option for the Babeltrace~2
 library logger.
 +
 The available values for 'LVL' are:
@@ -36,8 +36,8 @@ include::common-log-levels.txt[]
     Set the directory from which the Babeltrace~2 library
     dynamically loads plugin provider shared objects to 'DIR'.
 +
-If this environment variable is set, it overrides the default plugin
-provider directory.
+If this environment variable is set, then it overrides the default
+plugin provider directory.
 
 
 === Babeltrace~2 Python bindings
@@ -45,8 +45,8 @@ provider directory.
 `BABELTRACE_PYTHON_BT2_LOG_LEVEL`='LVL'::
     Force the Babeltrace~2 Python bindings log level to be 'LVL'.
 +
-If this environment variable is set, it overrides the log level set by
-the manopt:babeltrace2(1):--log-level option for the Python bindings
+If this environment variable is set, then it overrides the log level set
+by the manopt:babeltrace2(1):--log-level option for the Python bindings
 logger.
 +
 The available values for 'LVL' are:

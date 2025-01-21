@@ -49,7 +49,7 @@ The component connects to an LTTng relay daemon using the param:inputs
 parameter. This is an array of exactly one string which is the URL of
 the LTTng relay daemon to connect to.
 
-By default, if the remote tracing session name doesn't exist, the
+By default, if the remote tracing session name doesn't exist, then the
 message iterator returns "try again later". This default mode makes the
 message iterator never end: even if the remote tracing session is
 destroyed, the message iterator keeps on waiting for a tracing session
@@ -90,7 +90,7 @@ net[4]://__RDHOST__[:__RDPORT__]/host/__TGTHOST__/__SESSION__
 'RDPORT'::
     Listening port of the LTTng relay daemon.
 +
-If not specified, the component uses the default port ({defrdport}).
+If not specified, then the component uses the default port ({defrdport}).
 
 'TGTHOST'::
     Target host name or IP address.
@@ -170,7 +170,7 @@ net[4]://__RDHOST__[:__RDPORT__]
 'RDPORT'::
     Listening port of the LTTng relay daemon.
 +
-If not specified, the query operation uses the default port
+If not specified, then the query operation uses the default port
 ({defrdport}).
 --
 

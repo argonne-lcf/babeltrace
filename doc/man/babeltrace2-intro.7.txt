@@ -216,11 +216,11 @@ initialization parameter controls what a compcls:source.ctf.lttng-live
 <<msg-iter,message iterator>> does when it cannot find the remote
 tracing session.
 +
-If the action is `end`, the message iterator does like man:babeltrace(1)
-and simply ends successfully.
+If the action is `end`, then the message iterator does like
+man:babeltrace(1) and simply ends successfully.
 +
-If the action is `continue` (the default), the message iterator never
-ends: it keeps on trying until the tracing session exists, indeed
+If the action is `continue` (the default), then the message iterator
+never ends: it keeps on trying until the tracing session exists, indeed
 subscribing to the session.
 --
 
@@ -331,7 +331,7 @@ _component_ and _component class instance_ are equivalent.
 +
 Within a trace processing graph, each component has a unique name. This
 isn't the name of its component class, but an instance name. If `human`
-is a component class name, than `Nancy` and `John` could be component
+is a component class name, then `Nancy` and `John` could be component
 names.
 +
 Once a <<graph,graph>> is configured (the first time it runs), you

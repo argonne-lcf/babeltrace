@@ -69,7 +69,7 @@ $ babeltrace2 ...
 ----
 
 If you need to make sure that you are executing the `convert` command,
-use `babeltrace2 convert` explicitly.
+then use `babeltrace2 convert` explicitly.
 ====
 
 More specifically, the `convert` command creates a conversion graph.
@@ -99,8 +99,8 @@ Note that the trimmer, debugging information, and other filters are
 optional. See <<comp-create-impl-opt,``Create implicit components from
 options''>> to learn how to enable them.
 
-If you need another trace processing graph layout, use the more flexible
-man:babeltrace2-run(1) command.
+If you need another trace processing graph layout, then use the more
+flexible man:babeltrace2-run(1) command.
 
 Like with the man:babeltrace2-run(1) command, you can create components
 explicitly with the opt:--component option (see
@@ -230,7 +230,7 @@ opt:--params='PARAMS'::
     component.
 +
 If 'PARAMS' contains a key which exists in the initialization parameters
-of the current component, replace the parameter.
+of the current component, then replace the parameter.
 
 See <<examples,``EXAMPLES''>> for usage examples.
 
@@ -272,7 +272,7 @@ opt:--params='PARAMS'::
     components.
 +
 For a given implicit component, if 'PARAMS' contains a key which exists
-in the initialization parameters of this component, replace the
+in the initialization parameters of this component, then replace the
 parameter.
 
 Note that it's also possible for two non-option arguments to cause the
@@ -362,7 +362,7 @@ $ babeltrace2 /path/to/trace --debug-info-full-path
   specify no other sink components, explicit or implicit.
 +
 The implicit compcls:sink.text.pretty component exists by default. If
-any other explicit or implicit sink component exists, the `convert`
+any other explicit or implicit sink component exists, then the `convert`
 command doesn't automatically create the implicit
 compcls:sink.text.pretty component.
 +
@@ -522,7 +522,7 @@ opt:--params='PARAMS'::
     component(s).
 +
 If 'PARAMS' contains a key which exists in the initialization parameters
-of the current component(s), replace the parameter.
+of the current component(s), then replace the parameter.
 +
 --
 include::common-cmd-params-format.txt[]
@@ -733,7 +733,7 @@ debugging information.
 [[impl-opts-text]]
 === Implicit compcls:sink.text.pretty component
 
-If you specify at least one of the following options, you force the
+If you specify at least one of the following options, then you force the
 sink component of the `convert` command to be an implicit
 compcls:sink.text.pretty component.
 
