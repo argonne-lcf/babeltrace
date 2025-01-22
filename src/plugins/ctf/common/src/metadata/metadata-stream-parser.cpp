@@ -680,7 +680,7 @@ bt2::ConstMapValue::Shared filterKnownUserAttrs(const bt2::ConstMapValue attrs)
  * (`obj.libCls()`) to the attributes of `obj`.
  */
 template <typename ObjT>
-void trySetLibUserAttrs(ObjT& obj) noexcept
+void trySetLibUserAttrs(ObjT& obj)
 {
     BT_ASSERT(obj.libCls());
 
@@ -1050,7 +1050,7 @@ private:
      * last translated trace IR field class.
      */
     template <typename FcT>
-    void _setLibFc(FcT& fc, bt2::FieldClass::Shared libFc) noexcept
+    void _setLibFc(FcT& fc, bt2::FieldClass::Shared libFc)
     {
         fc.libCls(*libFc);
         trySetLibUserAttrs(fc);
