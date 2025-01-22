@@ -118,9 +118,6 @@ void Ctf2MetadataStreamParser::_parseFragments(const bt2c::ConstBytes buffer)
         fragmentBegin = fragmentEnd;
         ++_mCurFragmentIndex;
     }
-
-    /* Adjust offset in metadata stream for the next section to parse */
-    _mCurOffsetInStream = curSectionOffsetInStream + bt2c::DataLen::fromBytes(buffer.size());
 }
 
 void Ctf2MetadataStreamParser::_parseFragment(const bt2c::ConstBytes buffer)
