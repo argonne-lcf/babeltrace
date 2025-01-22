@@ -565,7 +565,6 @@ static inline void format_field_location(char **buf_ch, bool extended,
 			bt_field_location_get_item_by_index (field_location, i);
 
 		BUF_APPEND(", %s", item);
-		break;
 	}
 
 	BUF_APPEND("%s", "]");
