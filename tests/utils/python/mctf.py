@@ -171,6 +171,8 @@ def _try_run_cli():
                 file=sys.stderr,
             )
 
+        sys.exit(1)
+
 
 if __name__ == "__main__":
     _try_run_cli()
