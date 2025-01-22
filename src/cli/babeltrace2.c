@@ -1010,7 +1010,7 @@ enum bt_cmd_status cmd_print_lttng_live_sessions(struct bt_config *cfg)
 		const char *trace_fmt;
 
 		if (strcmp(text, "ctf-1.8") == 0) {
-			fprintf(out_stream, "CTF v1.8)");
+			fprintf(out_stream, "CTF 1.8)");
 		} else if (strcmp(text, "ctf-2.0") == 0) {
 			fprintf(out_stream, "CTF 2)");
 		} else {
