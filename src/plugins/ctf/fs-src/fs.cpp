@@ -417,9 +417,7 @@ static int create_ds_file_groups(struct ctf_fs_trace *ctf_fs_trace, const bt2c::
     if (!dir) {
         BT_CPPLOGE_APPEND_CAUSE_SPEC(logger, "Cannot open directory `{}`: {} (code {})",
                                      ctf_fs_trace->path, error->message, error->code);
-        if (error) {
-            g_error_free(error);
-        }
+        g_error_free(error);
         return -1;
     }
 
