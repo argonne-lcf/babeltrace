@@ -1012,7 +1012,7 @@ enum bt_cmd_status cmd_print_lttng_live_sessions(struct bt_config *cfg)
 		if (strcmp(text, "ctf-1.8") == 0) {
 			fprintf(out_stream, "CTF v1.8)");
 		} else if (strcmp(text, "ctf-2.0") == 0) {
-			fprintf(out_stream, "CTF v2.0)");
+			fprintf(out_stream, "CTF 2)");
 		} else {
 			fprintf(out_stream, "unknown trace format [`%s`])", trace_fmt);
 		}
