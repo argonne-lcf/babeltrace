@@ -149,7 +149,7 @@ static typename IntFcT::Mappings intFcMappingsFromOrigEnumFc(const ctf_field_cla
                            static_cast<typename IntFcT::Val>(origRange.upper.u));
         }
 
-        mappings.emplace(std::make_pair(origMapping.label->str, RangeSet {ranges}));
+        mappings.emplace(origMapping.label->str, RangeSet {std::move(ranges)});
     }
 
     return mappings;
