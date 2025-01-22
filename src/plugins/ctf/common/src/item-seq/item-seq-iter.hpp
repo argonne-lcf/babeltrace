@@ -4016,8 +4016,6 @@ private:
             /* Not the last byte */
             this->_appendVarLenIntByte<SignednessV>(byte);
         }
-
-        bt_common_abort();
     }
 
     /*
