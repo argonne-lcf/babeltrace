@@ -28,13 +28,6 @@
 
 #define METADATA_TEXT_SIG "/* CTF 1.8"
 
-struct range
-{
-    int64_t begin_ns = 0;
-    int64_t end_ns = 0;
-    bool set = false;
-};
-
 static bt_param_validation_map_value_entry_descr metadataInfoQueryParamsDesc[] = {
     {"path", BT_PARAM_VALIDATION_MAP_VALUE_ENTRY_MANDATORY,
      bt_param_validation_value_descr::makeString()},
@@ -80,19 +73,32 @@ bt2::Value::Shared metadata_info_query(const bt2::ConstValue params, const bt2c:
     }
 }
 
-static void add_range(const bt2::MapValue info, const range& range, const char *range_name)
+static void add_range(const bt2::MapValue info, const std::int64_t beginNs,
+                      const std::int64_t endNs)
 {
-    if (!range.set) {
-        /* Not an error. */
-        return;
-    }
+    const auto rangeMap = info.insertEmptyMap("range-ns");
 
-    const auto rangeMap = info.insertEmptyMap(range_name);
-    rangeMap.insert("begin", range.begin_ns);
-    rangeMap.insert("end", range.end_ns);
+    rangeMap.insert("begin", beginNs);
+    rangeMap.insert("end", endNs);
 }
 
-static void populate_stream_info(struct ctf_fs_ds_file_group *group, const bt2::MapValue groupInfo)
+static std::int64_t convertCyclesToNs(const ctf::src::ClkCls& clockClass,
+                                      const std::uint64_t cycles, const bt2c::Logger& logger)
+{
+    std::int64_t res;
+
+    if (bt_util_clock_cycles_to_ns_from_origin(cycles, clockClass.freq(),
+                                               clockClass.offsetFromOrigin().seconds(),
+                                               clockClass.offsetFromOrigin().cycles(), &res)) {
+        BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(
+            logger, bt2::Error, "Cannot convert clock cycles to nanoseconds from origin");
+    }
+
+    return res;
+}
+
+static void populate_stream_info(struct ctf_fs_ds_file_group *group, const bt2::MapValue groupInfo,
+                                 const bt2c::Logger& logger)
 {
     /*
      * Since each `struct ctf_fs_ds_file_group` has a sorted array of
@@ -102,24 +108,25 @@ static void populate_stream_info(struct ctf_fs_ds_file_group *group, const bt2::
      */
     BT_ASSERT(!group->index.entries.empty());
 
-    /* First entry. */
+    /* First and last entries. */
     const auto& first_ds_index_entry = group->index.entries.front();
-
-    /* Last entry. */
     const auto& last_ds_index_entry = group->index.entries.back();
-
-    range stream_range;
-    stream_range.begin_ns = first_ds_index_entry.timestamp_begin_ns;
-    stream_range.end_ns = last_ds_index_entry.timestamp_end_ns;
 
     /*
      * If any of the begin and end timestamps is not set it means that
      * packets don't include `timestamp_begin` _and_ `timestamp_end` fields
      * in their packet context so we can't set the range.
      */
-    stream_range.set = stream_range.begin_ns != UINT64_C(-1) && stream_range.end_ns != UINT64_C(-1);
+    if (first_ds_index_entry.timestamp_begin != UINT64_C(-1) &&
+        last_ds_index_entry.timestamp_end != UINT64_C(-1)) {
+        /* Convert the packet's bound to nanoseconds since Epoch. */
+        add_range(groupInfo,
+                  convertCyclesToNs(*group->dataStreamCls->defClkCls(),
+                                    first_ds_index_entry.timestamp_begin, logger),
+                  convertCyclesToNs(*group->dataStreamCls->defClkCls(),
+                                    last_ds_index_entry.timestamp_end, logger));
+    }
 
-    add_range(groupInfo, stream_range, "range-ns");
     groupInfo.insert("port-name", ctf_fs_make_port_name(group));
 }
 
@@ -137,7 +144,7 @@ static void populate_trace_info(const struct ctf_fs_trace *trace, const bt2::Map
     /* Find range of all stream groups, and of the trace. */
     for (const auto& group : trace->ds_file_groups) {
         const auto groupInfo = fileGroups.appendEmptyMap();
-        populate_stream_info(group.get(), groupInfo);
+        populate_stream_info(group.get(), groupInfo, logger);
     }
 }
 

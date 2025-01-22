@@ -117,12 +117,6 @@ struct ctf_fs_ds_index_entry
     uint64_t timestamp_begin = 0, timestamp_end = 0;
 
     /*
-     * Converted from the packet context, relative to the trace's EPOCH
-     * (in ns since EPOCH).
-     */
-    int64_t timestamp_begin_ns = 0, timestamp_end_ns = 0;
-
-    /*
      * Packet sequence number, or UINT64_MAX if not present in the index.
      */
     uint64_t packet_seq_num = UINT64_MAX;

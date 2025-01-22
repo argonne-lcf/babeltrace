@@ -148,13 +148,6 @@ void ctf_fs_ds_index::updateOffsetsInStream()
     }
 }
 
-static int convert_cycles_to_ns(const ctf::src::ClkCls& clockClass, uint64_t cycles, int64_t *ns)
-{
-    return bt_util_clock_cycles_to_ns_from_origin(cycles, clockClass.freq(),
-                                                  clockClass.offsetFromOrigin().seconds(),
-                                                  clockClass.offsetFromOrigin().cycles(), ns);
-}
-
 static bt2s::optional<ctf_fs_ds_index>
 build_index_from_idx_file(const ctf_fs_ds_file_info& fileInfo, const ctf::src::TraceCls& traceCls)
 {
@@ -295,24 +288,6 @@ build_index_from_idx_file(const ctf_fs_ds_file_info& fileInfo, const ctf::src::T
             return bt2s::nullopt;
         }
 
-        /* Convert the packet's bound to nanoseconds since Epoch. */
-        int ret = convert_cycles_to_ns(*sc->defClkCls(), index_entry.timestamp_begin,
-                                       &index_entry.timestamp_begin_ns);
-        if (ret) {
-            BT_CPPLOGI_SPEC(
-                fileInfo.logger(),
-                "Failed to convert raw timestamp to nanoseconds since Epoch during index parsing");
-            return bt2s::nullopt;
-        }
-        ret = convert_cycles_to_ns(*sc->defClkCls(), index_entry.timestamp_end,
-                                   &index_entry.timestamp_end_ns);
-        if (ret) {
-            BT_CPPLOGI_SPEC(
-                fileInfo.logger(),
-                "Failed to convert raw timestamp to nanoseconds since Epoch during LTTng trace index parsing");
-            return bt2s::nullopt;
-        }
-
         if (version_minor >= 1) {
             index_entry.packet_seq_num = be64toh(file_index->packet_seq_num);
         }
@@ -337,38 +312,18 @@ build_index_from_idx_file(const ctf_fs_ds_file_info& fileInfo, const ctf::src::T
     return index;
 }
 
-static int init_index_entry(ctf_fs_ds_index_entry& entry, ctf::src::PktProps *props,
-                            const ctf::src::DataStreamCls& dataStreamCls,
-                            const bt2c::Logger& logger)
+static int init_index_entry(ctf_fs_ds_index_entry& entry, ctf::src::PktProps *props)
 {
     if (props->snapshots.beginDefClk) {
         entry.timestamp_begin = *props->snapshots.beginDefClk;
-
-        /* Convert the packet's bound to nanoseconds since Epoch. */
-        int ret = convert_cycles_to_ns(*dataStreamCls.defClkCls(), *props->snapshots.beginDefClk,
-                                       &entry.timestamp_begin_ns);
-        if (ret) {
-            BT_CPPLOGI_SPEC(logger, "Failed to convert raw timestamp to nanoseconds since Epoch.");
-            return ret;
-        }
     } else {
         entry.timestamp_begin = UINT64_C(-1);
-        entry.timestamp_begin_ns = UINT64_C(-1);
     }
 
     if (props->snapshots.endDefClk) {
         entry.timestamp_end = *props->snapshots.endDefClk;
-
-        /* Convert the packet's bound to nanoseconds since Epoch. */
-        int ret = convert_cycles_to_ns(*dataStreamCls.defClkCls(), *props->snapshots.endDefClk,
-                                       &entry.timestamp_end_ns);
-        if (ret) {
-            BT_CPPLOGI_SPEC(logger, "Failed to convert raw timestamp to nanoseconds since Epoch.");
-            return ret;
-        }
     } else {
         entry.timestamp_end = UINT64_C(-1);
-        entry.timestamp_end_ns = UINT64_C(-1);
     }
 
     return 0;
@@ -436,7 +391,7 @@ build_index_from_stream_file(const ctf_fs_ds_file_info& fileInfo,
 
         ctf_fs_ds_index_entry index_entry {path, currentPacketOffset, currentPacketSize};
 
-        if (init_index_entry(index_entry, &props, *props.dataStreamCls, fileInfo.logger())) {
+        if (init_index_entry(index_entry, &props)) {
             return bt2s::nullopt;
         }
 

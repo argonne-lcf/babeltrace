@@ -782,11 +782,10 @@ private:
 };
 
 static int decode_clock_snapshot_after_event(struct ctf_fs_trace *ctf_fs_trace,
-                                             const ClkCls& default_cc,
                                              const ctf_fs_ds_index_entry& index_entry,
                                              ClockSnapshotAfterEventItemVisitor& visitor,
                                              const char *firstOrLast, const bt2c::Logger& logger,
-                                             uint64_t *cs, int64_t *ts_ns)
+                                             uint64_t *cs)
 {
     BT_ASSERT(ctf_fs_trace);
     BT_ASSERT(ctf_fs_trace->cls());
@@ -817,41 +816,27 @@ static int decode_clock_snapshot_after_event(struct ctf_fs_trace *ctf_fs_trace,
     }
 
     *cs = *visitor.result();
-
-    /* Convert clock snapshot to timestamp. */
-    int ret = bt_util_clock_cycles_to_ns_from_origin(*cs, default_cc.freq(),
-                                                     default_cc.offsetFromOrigin().seconds(),
-                                                     default_cc.offsetFromOrigin().cycles(), ts_ns);
-    if (ret) {
-        BT_CPPLOGE_APPEND_CAUSE_SPEC(logger, "Failed to convert clock snapshot to timestamp");
-        return ret;
-    }
-
-    return ret;
+    return 0;
 }
 
 static int decode_packet_first_event_timestamp(struct ctf_fs_trace *ctf_fs_trace,
-                                               const ClkCls& default_cc,
                                                const ctf_fs_ds_index_entry& index_entry,
-                                               const bt2c::Logger& logger, uint64_t *cs,
-                                               int64_t *ts_ns)
+                                               const bt2c::Logger& logger, uint64_t *cs)
 {
     ClockSnapshotAfterFirstEventItemVisitor visitor {};
 
-    return decode_clock_snapshot_after_event(ctf_fs_trace, default_cc, index_entry, visitor,
-                                             "first", logger, cs, ts_ns);
+    return decode_clock_snapshot_after_event(ctf_fs_trace, index_entry, visitor, "first", logger,
+                                             cs);
 }
 
 static int decode_packet_last_event_timestamp(struct ctf_fs_trace *ctf_fs_trace,
-                                              const ClkCls& default_cc,
                                               const ctf_fs_ds_index_entry& index_entry,
-                                              const bt2c::Logger& logger, uint64_t *cs,
-                                              int64_t *ts_ns)
+                                              const bt2c::Logger& logger, uint64_t *cs)
 {
     ClockSnapshotAfterLastEventItemVisitor visitor {};
 
-    return decode_clock_snapshot_after_event(ctf_fs_trace, default_cc, index_entry, visitor, "last",
-                                             logger, cs, ts_ns);
+    return decode_clock_snapshot_after_event(ctf_fs_trace, index_entry, visitor, "last", logger,
+                                             cs);
 }
 
 /*
@@ -894,7 +879,6 @@ static int fix_index_lttng_event_after_packet_bug(struct ctf_fs_trace *trace,
              * the next index entry `begin` timestamp.
              */
             curr_entry.timestamp_end = next_entry.timestamp_begin;
-            curr_entry.timestamp_end_ns = next_entry.timestamp_begin_ns;
         }
 
         /*
@@ -903,16 +887,12 @@ static int fix_index_lttng_event_after_packet_bug(struct ctf_fs_trace *trace,
          */
         auto& last_entry = index.entries.back();
 
-        BT_ASSERT(ds_file_group->dataStreamCls->defClkCls());
-        const ClkCls& default_cc = *ds_file_group->dataStreamCls->defClkCls();
-
         /*
          * Decode packet to read the timestamp of the last event of the
          * entry.
          */
-        int ret = decode_packet_last_event_timestamp(trace, default_cc, last_entry, logger,
-                                                     &last_entry.timestamp_end,
-                                                     &last_entry.timestamp_end_ns);
+        int ret = decode_packet_last_event_timestamp(trace, last_entry, logger,
+                                                     &last_entry.timestamp_end);
         if (ret) {
             BT_CPPLOGE_APPEND_CAUSE_SPEC(
                 logger,
@@ -946,9 +926,6 @@ static int fix_index_barectf_event_before_packet_bug(struct ctf_fs_trace *trace,
 
         BT_ASSERT(!index.entries.empty());
 
-        BT_ASSERT(ds_file_group->dataStreamCls->defClkCls());
-        const ClkCls& default_cc = *ds_file_group->dataStreamCls->defClkCls();
-
         /*
          * 1. Iterate over the index, starting from the second entry
          * (index = 1).
@@ -960,9 +937,8 @@ static int fix_index_barectf_event_before_packet_bug(struct ctf_fs_trace *trace,
              * 2. Set the current entry `begin` timestamp to the
              * timestamp of the first event of the current packet.
              */
-            int ret = decode_packet_first_event_timestamp(trace, default_cc, curr_entry, logger,
-                                                          &curr_entry.timestamp_begin,
-                                                          &curr_entry.timestamp_begin_ns);
+            int ret = decode_packet_first_event_timestamp(trace, curr_entry, logger,
+                                                          &curr_entry.timestamp_begin);
             if (ret) {
                 BT_CPPLOGE_APPEND_CAUSE_SPEC(logger,
                                              "Failed to decode first event's clock snapshot");
@@ -974,7 +950,6 @@ static int fix_index_barectf_event_before_packet_bug(struct ctf_fs_trace *trace,
              * timestamp of the first event of the current packet.
              */
             prev_entry.timestamp_end = curr_entry.timestamp_begin;
-            prev_entry.timestamp_end_ns = curr_entry.timestamp_begin_ns;
         }
     }
 
@@ -1004,9 +979,6 @@ static int fix_index_lttng_crash_quirk(struct ctf_fs_trace *trace, const bt2c::L
         BT_ASSERT(ds_file_group);
         auto& index = ds_file_group->index;
 
-        BT_ASSERT(ds_file_group->dataStreamCls->defClkCls());
-        const ClkCls& default_cc = *ds_file_group->dataStreamCls->defClkCls();
-
         BT_ASSERT(!index.entries.empty());
 
         auto& last_entry = index.entries.back();
@@ -1017,9 +989,8 @@ static int fix_index_lttng_crash_quirk(struct ctf_fs_trace *trace, const bt2c::L
              * Decode packet to read the timestamp of the
              * last event of the stream file.
              */
-            int ret = decode_packet_last_event_timestamp(trace, default_cc, last_entry, logger,
-                                                         &last_entry.timestamp_end,
-                                                         &last_entry.timestamp_end_ns);
+            int ret = decode_packet_last_event_timestamp(trace, last_entry, logger,
+                                                         &last_entry.timestamp_end);
             if (ret) {
                 BT_CPPLOGE_APPEND_CAUSE_SPEC(logger,
                                              "Failed to decode last event's clock snapshot");
@@ -1038,7 +1009,6 @@ static int fix_index_lttng_crash_quirk(struct ctf_fs_trace *trace, const bt2c::L
                  * the next index entry `begin` timestamp.
                  */
                 curr_entry.timestamp_end = next_entry.timestamp_begin;
-                curr_entry.timestamp_end_ns = next_entry.timestamp_begin_ns;
             }
         }
     }
