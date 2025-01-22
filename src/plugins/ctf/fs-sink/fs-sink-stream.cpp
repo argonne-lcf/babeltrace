@@ -326,7 +326,7 @@ static inline int write_option_field(struct fs_sink_stream *stream,
                                      struct fs_sink_ctf_field_class_option *fc,
                                      const bt_field *field)
 {
-    int ret;
+    int ret = 0;
     const bt_field *content_field = bt_field_option_borrow_field_const(field);
 
     if (fc->tag_is_before) {
