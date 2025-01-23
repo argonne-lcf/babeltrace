@@ -338,28 +338,28 @@ CLEANFILES += \
 else # HAVE_BISON
 # Create target used to stop the build if we want to build the parser,
 # but we don't have the necessary tool to do so
-plugins/ctf/common/metadata/parser.cpp plugins/ctf/common/metadata/parser.hpp: plugins/ctf/common/metadata/parser.ypp
+plugins/ctf/common/src/metadata/tsdl/parser.cpp plugins/ctf/common/src/metadata/tsdl/parser.hpp: plugins/ctf/common/src/metadata/tsdl/parser.ypp
 	@echo "Error: Cannot build target because bison is missing."
 	@echo "Make sure bison is installed and run the configure script again."
 	@false
 
 ALL_LOCAL += \
-	plugins/ctf/common/metadata/parser.cpp \
-	plugins/ctf/common/metadata/parser.hpp
+	plugins/ctf/common/src/metadata/tsdl/parser.cpp \
+	plugins/ctf/common/src/metadata/tsdl/parser.hpp
 endif # HAVE_BISON
 
 if HAVE_FLEX
 # We have flex: we can clean the generated lexer files
-CLEANFILES += plugins/ctf/common/metadata/lexer.cpp
+CLEANFILES += plugins/ctf/src/common/metadata/tsdl/lexer.cpp
 else # HAVE_FLEX
 # Create target used to stop the build if we want to build the lexer,
 # but we don't have the necessary tool to do so
-plugins/ctf/common/metadata/lexer.cpp: plugins/ctf/common/metadata/lexer.lpp
+plugins/ctf/common/src/metadata/tsdl/lexer.cpp: plugins/ctf/common/src/metadata/tsdl/lexer.lpp
 	@echo "Error: Cannot build target because flex is missing."
 	@echo "Make sure flex is installed and run the configure script again."
 	@false
 
-ALL_LOCAL += plugins/ctf/common/metadata/lexer.cpp
+ALL_LOCAL += plugins/ctf/common/src/metadata/tsdl/lexer.cpp
 endif # HAVE_FLEX
 
 all-local: $(ALL_LOCAL)
