@@ -9,6 +9,7 @@
 
 #include "common/assert.h"
 #include "common/common.h"
+#include "common/macros.h"
 #include "lib/object.h"
 #include <babeltrace2/graph/component-class.h>
 #include <babeltrace2/graph/self-component-port.h>
@@ -182,6 +183,7 @@ enum bt_component_class_sink_consume_method_status simple_sink_consume(
 	return status;
 }
 
+BT_EXPORT
 struct bt_component_class_sink *bt_component_class_sink_simple_borrow(void)
 {
 	enum bt_component_class_set_method_status set_method_status;
