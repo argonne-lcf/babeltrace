@@ -295,6 +295,8 @@ bit flags.
 +
 If a set bit has no corresponding mapping, then the component
 prints `<unknown>`.
++
+Default: false.
 
 param:verbose='VAL' vtype:[optional boolean]::
     If 'VAL' if true, then turn the verbose mode on.
