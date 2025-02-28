@@ -5,8 +5,8 @@
 // Render with Asciidoctor
 
 = Babeltrace 2
-4 March 2024
-:btversion: 2.0
+28 February 2025
+:btversion: 2.1
 :bt2: Babeltrace{nbsp}2
 ifdef::env-github[]
 :toc: macro
