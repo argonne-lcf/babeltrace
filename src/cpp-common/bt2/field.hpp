@@ -1136,7 +1136,8 @@ public:
 
     bt2s::span<typename internal::CommonBlobFieldSpec<LibObjT>::Data> data() const noexcept
     {
-        return {internal::CommonBlobFieldSpec<LibObjT>::data(this->libObjPtr()), this->length()};
+        return {internal::CommonBlobFieldSpec<LibObjT>::data(this->libObjPtr()),
+                static_cast<std::size_t>(this->length())};
     }
 
     std::uint64_t length() const noexcept
