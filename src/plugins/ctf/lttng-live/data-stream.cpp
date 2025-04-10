@@ -145,38 +145,6 @@ lttng_live_stream_iterator_create_msg_iter(lttng_live_stream_iterator *liveStrea
     return LTTNG_LIVE_ITERATOR_STATUS_OK;
 }
 
-enum lttng_live_iterator_status lttng_live_lazy_msg_init(struct lttng_live_session *session,
-                                                         const bt2::SelfMessageIterator selfMsgIter)
-{
-    if (!session->lazy_stream_msg_init) {
-        return LTTNG_LIVE_ITERATOR_STATUS_OK;
-    }
-
-    BT_CPPLOGD_SPEC(session->logger,
-                    "Lazily initializing self message iterator for live session: "
-                    "session-id={}, self-msg-iter-addr={}",
-                    session->id, fmt::ptr(selfMsgIter.libObjPtr()));
-
-    for (lttng_live_trace::UP& trace : session->traces) {
-        for (lttng_live_stream_iterator::UP& stream_iter : trace->stream_iterators) {
-            if (stream_iter->msg_iter) {
-                continue;
-            }
-
-            const ctf::src::TraceCls *ctfTraceCls = trace->metadata->traceCls();
-            BT_CPPLOGD_SPEC(session->logger,
-                            "Creating CTF message iterator: session-id={}, ctf-tc-addr={}, "
-                            "stream-iter-name={}, self-msg-iter-addr={}",
-                            session->id, fmt::ptr(ctfTraceCls), stream_iter->name.c_str(),
-                            fmt::ptr(selfMsgIter.libObjPtr()));
-        }
-    }
-
-    session->lazy_stream_msg_init = false;
-
-    return LTTNG_LIVE_ITERATOR_STATUS_OK;
-}
-
 struct lttng_live_stream_iterator *
 lttng_live_stream_iterator_create(struct lttng_live_session *session, uint64_t ctf_trace_id,
                                   uint64_t stream_id)
