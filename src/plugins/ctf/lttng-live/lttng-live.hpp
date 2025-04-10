@@ -298,7 +298,6 @@ struct lttng_live_session
 
     bool attached = false;
     bool new_streams_needed = false;
-    bool lazy_stream_msg_init = false;
     bool closed = false;
 };
 

@@ -994,7 +994,6 @@ static enum lttng_live_viewer_status receive_streams(struct lttng_live_session *
                                              "Error creating metadata stream");
                 return LTTNG_LIVE_VIEWER_STATUS_ERROR;
             }
-            session->lazy_stream_msg_init = true;
         } else {
             BT_CPPLOGI_SPEC(viewer_connection->logger, "    stream {} : {}/{}", stream_id,
                             stream.path_name, stream.channel_name);

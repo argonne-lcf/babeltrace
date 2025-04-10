@@ -368,11 +368,7 @@ lttng_live_get_session(struct lttng_live_msg_iter *lttng_live_msg_iter,
         }
     }
 
-    /*
-     * Now that we have the metadata we can initialize the downstream
-     * iterator.
-     */
-    return lttng_live_lazy_msg_init(session, lttng_live_msg_iter->selfMsgIter);
+    return LTTNG_LIVE_ITERATOR_STATUS_OK;
 }
 
 static void
