@@ -12,7 +12,7 @@ repos:
         files: \.(py|py.in)$
         exclude: '(src/bindings/python/bt2/bt2/local_typing.py|tests/utils/python/normand.py|tests/utils/python/tap/.*|tests/utils/python/typing/.*)'
   - repo:  https://github.com/pycqa/flake8
-    rev: 7.1.1
+    rev: 7.2.0
     hooks:
       - id: flake8
         types: [file]
