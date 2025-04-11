@@ -222,7 +222,6 @@ class QueryExecutorTestCase(unittest.TestCase):
 
             @classmethod
             def _user_query(cls, priv_query_exec, obj, params, method_obj):
-                nonlocal interrupter2
                 test_self.assertFalse(query_exec.is_interrupted)
                 interrupter2.set()
                 test_self.assertTrue(query_exec.is_interrupted)

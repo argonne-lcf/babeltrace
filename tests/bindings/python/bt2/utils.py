@@ -303,8 +303,6 @@ def create_const_field(tc, field_class, field_value_setter_fn):
 
     class MyIter(bt2._UserMessageIterator):
         def __init__(self, config, self_port_output):
-            nonlocal field_class
-            nonlocal field_value_setter_fn
             trace = tc()
             sc = tc.create_stream_class(
                 packet_context_field_class=tc.create_structure_field_class(

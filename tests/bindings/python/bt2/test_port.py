@@ -798,7 +798,7 @@ class PortTestCase(unittest.TestCase):
             bt2._UserFilterComponent, message_iterator_class=bt2._UserMessageIterator
         ):
             def __init__(comp_self, config, params, obj):
-                nonlocal user_datas
+                nonlocal user_datas  # noqa: F824
 
                 p = comp_self._add_output_port("port1")
                 user_datas.append(p.user_data)
@@ -832,7 +832,7 @@ class PortTestCase(unittest.TestCase):
             bt2._UserFilterComponent, message_iterator_class=bt2._UserMessageIterator
         ):
             def __init__(comp_self, config, params, obj):
-                nonlocal user_datas
+                nonlocal user_datas  # noqa: F824
 
                 p = comp_self._add_output_port("port1")
                 user_datas.append(p.user_data)
@@ -874,7 +874,7 @@ class PortTestCase(unittest.TestCase):
 
         class MySink(bt2._UserSinkComponent):
             def __init__(comp_self, config, params, obj):
-                nonlocal user_datas
+                nonlocal user_datas  # noqa: F824
 
                 p = comp_self._add_input_port("port1")
                 user_datas.append(p.user_data)
