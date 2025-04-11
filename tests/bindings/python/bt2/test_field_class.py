@@ -27,8 +27,6 @@ def _create_const_field_class(tc, field_class, value_setter_fn):
 
     class MyIter(bt2._UserMessageIterator):
         def __init__(self, config, self_port_output):
-            nonlocal field_class
-            nonlocal value_setter_fn
             stream = _create_stream(tc, [(field_name, field_class)])
             packet = stream.create_packet()
 

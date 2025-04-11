@@ -288,7 +288,6 @@ class GraphTestCase(unittest.TestCase):
 
             def _user_consume(self):
                 # Pretend that somebody asynchronously interrupted the graph.
-                nonlocal graph
                 graph.default_interrupter.set()
                 return next(self._msg_iter)
 
@@ -462,7 +461,6 @@ class GraphTestCase(unittest.TestCase):
             def __next__(self):
                 # If this gets called after the sink raised an exception, it is
                 # an error.
-                nonlocal raised_in_sink
                 assert raised_in_sink is False
 
                 if self._at == 0:
@@ -529,7 +527,6 @@ class GraphTestCase(unittest.TestCase):
                 self._add_input_port("taste")
 
         def port_added_listener(component, port):
-            nonlocal calls
             calls.append((port_added_listener, component, port))
 
         calls = []

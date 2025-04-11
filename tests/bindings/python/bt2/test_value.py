@@ -1089,7 +1089,6 @@ def _create_const_value(value):
 
         @classmethod
         def _user_query(cls, priv_query_exec, obj, params, method_obj):
-            nonlocal value
             return {"my_value": value}
 
     res = bt2.QueryExecutor(MySink, "obj", None).query()
