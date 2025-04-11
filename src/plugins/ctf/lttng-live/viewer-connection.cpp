@@ -1222,10 +1222,10 @@ lttng_live_get_one_metadata_packet(struct lttng_live_trace *trace, std::vector<u
         return LTTNG_LIVE_GET_ONE_METADATA_STATUS_END;
     case LTTNG_VIEWER_METADATA_ERR:
         /*
-             * The Relayd cannot find this stream id. Maybe its
-             * gone already. This can happen in short lived UST app
-             * in a per-pid session.
-             */
+         * The Relayd cannot find this stream id. Maybe its
+         * gone already. This can happen in short lived UST app
+         * in a per-pid session.
+         */
         BT_CPPLOGD_SPEC(viewer_connection->logger, "Received get_metadata response: error");
         return LTTNG_LIVE_GET_ONE_METADATA_STATUS_CLOSED;
     default:
