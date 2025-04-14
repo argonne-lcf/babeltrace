@@ -1,3 +1,14 @@
+2025-04-14 Babeltrace 2.1.1 (Pecan Day)
+	* src.ctf.lttng-live: remove lttng_live_lazy_msg_init function
+	* src.ctf.lttng-live: fix comment formatting
+	* README.adoc: Update working version to 2.1
+	* fix: export bt_component_class_sink_simple_borrow
+	* fix: building from the release tarball without flex
+	* doc/api/libbabeltrace2: use `<code>` i.o. `<span>` in `<dt>`
+	* Fix: doc/api/libbabeltrace2/Doxyfile.in: set version to 2.1
+	* babeltrace2-sink.text.pretty(7): add missing default param. value
+	* Update working version to Babeltrace v2.1.1
+
 # SPDX-FileCopyrightText: 2025 EfficiOS, Inc
 #
 # SPDX-License-Identifier: CC-BY-SA-4.0
