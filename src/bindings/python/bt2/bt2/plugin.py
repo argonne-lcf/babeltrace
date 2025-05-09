@@ -77,6 +77,14 @@ class _PluginComponentClasses(typing.Mapping[str, _ComponentClassT]):
     def __init__(self, plugin):
         self._plugin = plugin
 
+    # items() and values() are not provided by typing.Mapping as of Python 3.5
+    # so we provide them ourselves.
+    def items(self) -> typing.ItemsView[str, _ComponentClassT]:
+        return ((key, self[key]) for key in self)
+
+    def values(self) -> typing.ValuesView[_ComponentClassT]:
+        return {key: self[key] for key in self}.values()
+
     def __getitem__(self, key: str) -> _ComponentClassT:
         bt2_utils._check_str(key)
         cc_ptr = self._borrow_component_class_by_name(self._plugin._ptr, key)
