@@ -157,6 +157,14 @@ class _ComponentPorts(typing.Mapping[str, _PortPyCls]):
         self._get_port_count = get_port_count
         self._port_pycls = port_pycls
 
+    # items() and values() are not provided by typing.Mapping as of Python 3.5
+    # so we provide them ourselves.
+    def items(self) -> typing.ItemsView[str, _PortPyCls]:
+        return ((key, self[key]) for key in self)
+
+    def values(self) -> typing.ValuesView[_PortPyCls]:
+        return {key: self[key] for key in self}.values()
+
     def __getitem__(self, key: str) -> _PortPyCls:
         bt2_utils._check_str(key)
         port_ptr = self._borrow_port_ptr_by_name(self._component_ptr, key)
