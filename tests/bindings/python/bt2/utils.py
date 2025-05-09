@@ -280,6 +280,11 @@ class TestOutputPortMessageIterator(typing.Iterator[bt2._MessageConst]):
         sink = graph.add_component(TestProxySink, "test-proxy-sink", obj=self._msg_list)
         graph.connect_ports(output_port, sink.input_ports["in"])
 
+    # Needed for compatibility with Python 3.5 in which the typing.Iterator
+    # protocol is not implemented in the standard library.
+    def __iter__(self):
+        return self
+
     def __next__(self):
         assert self._msg_list[0] is None
         self._graph.run_once()
