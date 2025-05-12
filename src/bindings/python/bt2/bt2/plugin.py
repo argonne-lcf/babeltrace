@@ -102,6 +102,14 @@ class _PluginComponentClasses(typing.Mapping[str, _ComponentClassT]):
     def __iter__(self) -> typing.Iterator[str]:
         return _PluginComponentClassesIterator(self)
 
+    # __conrains__ is not provided by typing.Mapping as of Python 3.5
+    # so we provide it ourselves.
+    def __contains__(self, key: str) -> bool:
+        try:
+            return self.__getitem__(key) is not None
+        except KeyError:
+            return False
+
 
 class _PluginSourceComponentClasses(
     _PluginComponentClasses[bt2_component._SourceComponentClassConst]
