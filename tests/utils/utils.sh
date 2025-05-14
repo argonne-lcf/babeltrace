@@ -313,11 +313,11 @@ bt_diff_cli() {
 	local -r temp_stderr_output_file=$(mktemp -t actual-stderr.XXXXXX)
 
 	bt_cli "$temp_stdout_output_file" "$temp_stderr_output_file" "${args[@]}"
-	bt_diff "$expected_stdout_file" "$temp_stdout_output_file" "${args[@]}"
+	bt_diff "$expected_stdout_file" "$temp_stdout_output_file"
 
 	local -r ret_stdout=$?
 
-	bt_diff "$expected_stderr_file" "$temp_stderr_output_file" "${args[@]}"
+	bt_diff "$expected_stderr_file" "$temp_stderr_output_file"
 
 	local -r ret_stderr=$?
 
