@@ -61,7 +61,7 @@ function run_test
 	actual_stdout_file="$(mktemp -t actual-pretty-stdout.XXXXXX)"
 	actual_stderr_file="$(mktemp -t actual-pretty-stderr.XXXXXX)"
 
-	bt_cli "$actual_stdout_file" "$actual_stderr_file" "${local_args[@]}"
+	bt_cli --stdout-file "$actual_stdout_file" --stderr-file "$actual_stderr_file" -- "${local_args[@]}"
 
 	compare_enum_sorted "$expected_stdout_file" "$actual_stdout_file"
 	ret_stdout=$?

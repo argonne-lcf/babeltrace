@@ -62,7 +62,7 @@ expect_failure() {
 	test_name="$1"
 	inputs="$2"
 
-	bt_cli "${stdout_file}" "${stderr_file}" \
+	bt_cli --stdout-file "${stdout_file}" --stderr-file "${stderr_file}" -- \
 		-c src.ctf.fs -p "inputs=[${inputs}]"
 	isnt 0 "$?" "${test_name}: exit status is not 0"
 
@@ -84,7 +84,7 @@ expect_success() {
 	test_name="$1"
 	inputs="$2"
 
-	bt_cli "${stdout_file}" "${stderr_file}" \
+	bt_cli --stdout-file "${stdout_file}" --stderr-file "${stderr_file}" -- \
 		-c src.ctf.fs -p "inputs=[${inputs}]" \
 		-c sink.text.details -p 'with-trace-name=no,with-stream-name=no,with-metadata=no,compact=yes'
 	ok "$?" "${test_name}: exit status is 0"

@@ -32,7 +32,7 @@ for ctf_version in 1 2; do
 		trace="$(basename "${path}")"
 		sort_cmd="cat" # by default do not sort the trace
 
-		bt_cli "${text_output1}" "/dev/null" --no-delta "${path}"
+		bt_cli --stdout-file "${text_output1}" -- --no-delta "${path}"
 		ret=$?
 		cnt="$(wc -l < "${text_output1}")"
 		if test "$ret" == 0 && test "${cnt// /}" == 0; then
@@ -62,19 +62,19 @@ for ctf_version in 1 2; do
 			fi
 		fi
 
-		bt_cli "/dev/null" "${stderr_file}" "${path}" --component sink.ctf.fs "--params=path=\"${out_path}\",ctf-version=\"$ctf_version\""
+		bt_cli --stderr-file "${stderr_file}" -- "${path}" --component sink.ctf.fs "--params=path=\"${out_path}\",ctf-version=\"$ctf_version\""
 		if ! ok $? "Copy trace ${trace} with ctf-fs sink (CTF $ctf_version)"; then
 			diag "stderr:"
 			diag_file "${stderr_file}"
 		fi
 
-		bt_cli "/dev/null" "${stderr_file}" "${out_path}"
+		bt_cli --stderr-file "${stderr_file}" -- "${out_path}"
 		if ! ok $? "Read the new trace in ${out_path} (CTF $ctf_version)"; then
 			diag "stderr:"
 			diag_file "${stderr_file}"
 		fi
 
-		if ! bt_cli "${text_output2_intermediary}" "${stderr_file}" --no-delta "${out_path}"; then
+		if ! bt_cli --stdout-file "${text_output2_intermediary}" --stderr-file "${stderr_file}" -- --no-delta "${out_path}"; then
 			diag "stderr:"
 			diag_file "${stderr_file}"
 		fi

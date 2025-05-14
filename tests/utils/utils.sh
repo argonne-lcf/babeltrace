@@ -224,20 +224,59 @@ bt_remove_crlf() {
 }
 
 # Runs the `$BT_TESTS_BT2_BIN` command within an environment which can
-# import the `bt2` Python package, redirecting the standard output to
-# the `$1` file and the standard error to the `$2` file.
+# import the `bt2` Python package, optionally redirecting the standard
+# output and error streams to specified files.
 #
-# The remaining arguments are forwarded to the `$BT_TESTS_BT2_BIN`
-# command.
+# Usage
+# ─────
+#     bt_cli [--stdout-file STDOUT] [--stderr-file STDERR] -- ARGS...
 #
-# Returns the exit status of the executed `$BT_TESTS_BT2_BIN`.
+# This function forwards the arguments ARGS to `$BT_TESTS_BT2_BIN`.
+#
+# Options
+# ───────
+# --stdout-file STDOUT:
+#     Redirect the standard output stream to the file STDOUT instead
+#     of `/dev/null`.
+#
+# --stderr-file STDERR:
+#     Redirect the standard error stream to the file STDERR instead
+#     of `/dev/null`.
+#
+# ┌───────────────────────────────────────────────────┐
+# │ NOTE: This function doesn't accept options in the │
+# │ `--opt=val` format.                               │
+# └───────────────────────────────────────────────────┘
+#
+# Exit status
+# ───────────
+# Exit status of the executed `$BT_TESTS_BT2_BIN` command.
 bt_cli() {
-	local -r stdout_file=$1
-	local -r stderr_file=$2
+	local stdout_file=/dev/null
+	local stderr_file=/dev/null
 
-	shift 2
+	while (($# > 0)); do
+		case $1 in
+		--stdout-file)
+			stdout_file=$2
+			shift 2
+			;;
+		--stderr-file)
+			stderr_file=$2
+			shift 2
+			;;
+		--)
+			shift
+			break
+			;;
+		*)
+			echo "ERROR: bt_cli() received unexpected argument \`$1\`" >&2
+			return 1
+			;;
+		esac
+	done
 
-	local -a bt_cli_args=("$@")
+	local -ra bt_cli_args=("$@")
 
 	_bt_print "Running: \`$BT_TESTS_BT2_BIN ${bt_cli_args[*]}\`" >&2
 	bt_run_in_py_env "$BT_TESTS_BT2_BIN" "${bt_cli_args[@]}" 1>"$stdout_file" 2>"$stderr_file"
@@ -312,7 +351,7 @@ bt_diff_cli() {
 	local -r temp_stdout_output_file=$(mktemp -t actual-stdout.XXXXXX)
 	local -r temp_stderr_output_file=$(mktemp -t actual-stderr.XXXXXX)
 
-	bt_cli "$temp_stdout_output_file" "$temp_stderr_output_file" "${args[@]}"
+	bt_cli --stdout-file "$temp_stdout_output_file" --stderr-file "$temp_stderr_output_file" -- "${args[@]}"
 	bt_diff "$expected_stdout_file" "$temp_stdout_output_file"
 
 	local -r ret_stdout=$?

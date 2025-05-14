@@ -28,7 +28,7 @@ stdout_expected_file="${BT_TESTS_DATADIR}/cli/convert/auto-source-discovery-grou
 stdout_actual_file=$(mktemp -t stdout-actual.XXXXXX)
 stderr_actual_file=$(mktemp -t actual-stderr.XXXXXX)
 
-bt_cli "$stdout_actual_file" "$stderr_actual_file" \
+bt_cli --stdout-file "$stdout_actual_file" --stderr-file "$stderr_actual_file" -- \
 	--plugin-path "${plugin_dir}" convert "ABCDE" "${trace_dir}" some_other_non_opt \
 	-c sink.text.details --params='with-metadata=false'
 ok "$?" "CLI runs successfully"

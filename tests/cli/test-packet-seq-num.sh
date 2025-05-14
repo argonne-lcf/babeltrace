@@ -25,10 +25,10 @@ discarded_re="WARNING: Tracer discarded"
 test_no_lost() {
 	local trace=$1
 
-	bt_cli "/dev/null" "/dev/null" "$trace"
+	bt_cli -- "$trace"
 	ok $? "Trace parses"
 
-	bt_cli /dev/null /dev/fd/3 "$trace" 3>&1 | bt_grep "$discarded_re"
+	bt_cli --stderr-file /dev/fd/3 -- "$trace" 3>&1 | bt_grep "$discarded_re"
 	isnt $? 0 "No events lost"
 }
 
@@ -36,14 +36,14 @@ test_lost() {
 	local trace=$1
 	local expectedcountstr=$2
 
-	bt_cli "/dev/null" "/dev/null" "$trace"
+	bt_cli -- "$trace"
 	ok $? "Trace parses"
 
 	# Convert warnings like:
 	# WARNING: Tracer discarded 2 trace packets between ....
 	# WARNING: Tracer discarded 3 trace packets between ....
 	# into "2,3" and make sure it matches the expected result
-	bt_cli /dev/null /dev/fd/3 "$trace" 3>&1 | bt_grep "$discarded_re" \
+	bt_cli --stderr-file /dev/fd/3 -- "$trace" 3>&1 | bt_grep "$discarded_re" \
 		| cut -d" " -f4 | tr "\n" "," | "${BT_TESTS_SED_BIN}" "s/.$//" | \
 		bt_grep "$expectedcountstr" >/dev/null
 	ok $? "Lost events string matches $expectedcountstr"

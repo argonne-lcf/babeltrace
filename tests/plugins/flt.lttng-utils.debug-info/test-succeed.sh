@@ -71,16 +71,18 @@ test_compare_to_ctf_fs() {
 
 	# Create expected files using a graph without a `debug-info` component.
 	bt_cli \
-		"$expected_stdout" \
-		"$expected_stderr" \
+		--stdout-file "$expected_stdout" \
+		--stderr-file "$expected_stderr" \
+		-- \
 		"${cli_args[@]}" \
 		--allowed-mip-versions="$mip_version" \
 		"${details_cli_args[@]}"
 
 	# Read the same trace with a `debug-info` component in the graph.
 	bt_cli \
-		"$actual_stdout" \
-		"$actual_stderr" \
+		--stdout-file "$actual_stdout" \
+		--stderr-file "$actual_stderr" \
+		-- \
 		"${cli_args[@]}" \
 		--allowed-mip-versions="$mip_version" \
 		"${details_cli_args[@]}" \

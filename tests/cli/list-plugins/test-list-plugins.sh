@@ -20,12 +20,11 @@ data_dir="${BT_TESTS_DATADIR}/cli/list-plugins"
 plugin_dir="${data_dir}"
 
 stdout_file=$(mktemp -t test-cli-list-plugins-stdout.XXXXXX)
-stderr_file=$(mktemp -t test-cli-list-plugins-stderr.XXXXXX)
 grep_stdout_file=$(mktemp -t test-cli-list-plugins-grep-stdout.XXXXXX)
 py_plugin_expected_stdout_file=$(mktemp -t test-cli-list-plugins-expected-py-plugin-stdout.XXXXXX)
 
 # Run list-plugins.
-bt_cli "$stdout_file" "$stderr_file" \
+bt_cli --stdout-file "$stdout_file" -- \
 	--plugin-path "$plugin_dir" \
 	list-plugins
 ok "$?" "exit code is 0"
@@ -61,6 +60,5 @@ bt_diff "${py_plugin_expected_stdout_file}" "${grep_stdout_file}"
 ok "$?" "entry for this-is-a-plugin is as expected"
 
 rm -f "${stdout_file}"
-rm -f "${stderr_file}"
 rm -f "${grep_stdout_file}"
 rm -f "${py_plugin_expected_stdout_file}"

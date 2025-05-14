@@ -27,7 +27,7 @@ test_interrupted_graph() {
 	actual_stdout=$(mktemp -t test-cli-exit-status-stdout-actual.XXXXXX)
 	actual_stderr=$(mktemp -t test-cli-exit-status-stderr-actual.XXXXXX)
 
-	bt_cli "$actual_stdout" "$actual_stderr" "${cli_args[@]}"
+	bt_cli --stdout-file "$actual_stdout" --stderr-file "$actual_stderr" -- "${cli_args[@]}"
 
 	is $? 2 "Interrupted graph exits with status 2"
 
@@ -49,7 +49,7 @@ test_error_graph() {
 	actual_stdout=$(mktemp -t test-cli-exit-status-stdout-actual.XXXXXX)
 	actual_stderr=$(mktemp -t test-cli-exit-status-stderr-actual.XXXXXX)
 
-	bt_cli "$actual_stdout" "$actual_stderr" "${cli_args[@]}"
+	bt_cli --stdout-file "$actual_stdout" --stderr-file "$actual_stderr" -- "${cli_args[@]}"
 
 	is $? 1 "Erroring graph exits with status 1"
 
@@ -71,7 +71,7 @@ test_stop_graph() {
 	actual_stdout=$(mktemp -t test-cli-exit-status-stdout-actual.XXXXXX)
 	actual_stderr=$(mktemp -t test-cli-exit-status-stderr-actual.XXXXXX)
 
-	bt_cli "$actual_stdout" "$actual_stderr" "${cli_args[@]}"
+	bt_cli --stdout-file "$actual_stdout" --stderr-file "$actual_stderr" -- "${cli_args[@]}"
 
 	is $? 0 "Successful graph exits with status 0"
 

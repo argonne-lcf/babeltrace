@@ -119,7 +119,7 @@ test_packet_end() {
 			temp_greped_stdout_output_file="$(mktemp -t greped-stdout.XXXXXX)"
 			temp_stderr_output_file="$(mktemp -t actual-stderr.XXXXXX)"
 
-			bt_cli "$temp_stdout_output_file" "$temp_stderr_output_file" \
+			bt_cli --stdout-file "$temp_stdout_output_file" --stderr-file "$temp_stderr_output_file" -- \
 			"$trace_path" "${details_comp[@]}" "${details_args[@]}"
 
 			bt_grep "Packet end" "$temp_stdout_output_file" > "$temp_greped_stdout_output_file"
@@ -162,7 +162,7 @@ test_force_origin_unix_epoch() {
 			expected_stdout=$(find_expect_file "$name1-$name2" $ctf_version $mip_version)
 
 			diag "CTF $ctf_version, MIP $mip_version, expected file $expected_stdout"
-			bt_cli "$temp_stdout_output_file" "$temp_stderr_output_file" \
+			bt_cli --stdout-file "$temp_stdout_output_file" --stderr-file "$temp_stderr_output_file" -- \
 				--allowed-mip-versions=$mip_version \
 				"$trace_1_path" "${src_ctf_fs_args[@]}" \
 				"$trace_2_path" "${src_ctf_fs_args[@]}" \

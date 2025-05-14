@@ -28,13 +28,13 @@ test_intersect() {
 
 	local cnt
 
-	bt_cli "${stdout}" "/dev/null" "${trace}"
+	bt_cli --stdout-file "${stdout}" -- "${trace}"
 	ok $? "run without --stream-intersection"
 
 	cnt=$(wc -l < "${stdout}")
 	is "${cnt// /}" "$totalevents" "$totalevents events in the whole trace"
 
-	bt_cli "${stdout}" "/dev/null" --stream-intersection "${trace}"
+	bt_cli --stdout-file "${stdout}" -- --stream-intersection "${trace}"
 	ok $? "run with --stream-intersection"
 
 	cnt=$(wc -l < "${stdout}")
@@ -46,14 +46,14 @@ test_intersect_fails() {
 	local totalevents="$2"
 	local expected_error_message="$3"
 
-	bt_cli "${stdout}" "/dev/null" "${trace}"
+	bt_cli --stdout-file "${stdout}" -- "${trace}"
 	ok $? "run without --stream-intersection"
 
 	cnt=$(wc -l < "${stdout}")
 	test "${cnt// /}" = "$totalevents"
 	ok $? "$totalevents events in the whole trace"
 
-	bt_cli "${stdout}" "${stderr}" --stream-intersection "${trace}"
+	bt_cli --stdout-file "${stdout}" --stderr-file "${stderr}" -- --stream-intersection "${trace}"
 	isnt "$?" 0 "run with --stream-intersection fails"
 
 	bt_grep_ok \
