@@ -197,7 +197,16 @@ test_clock_offset_goes_back_in_time() {
 	rm -rf "$tmp_dir"
 }
 
-plan_tests 47
+test_meta_trailing_byte() {
+	local trace_path="$BT_CTF_TRACES_PATH/1/succeed/meta-trailing-byte"
+
+
+	bt_test_cli "packetized metadata with trailing byte" \
+		--expect-stderr-re "Remaining buffer isn't large enough to hold a packet header" -- \
+		"$trace_path" -c sink.text.details
+}
+
+plan_tests 49
 
 test_force_origin_unix_epoch 2packets barectf-event-before-packet
 test_ctf_gen_single simple
@@ -211,6 +220,7 @@ test_ctf_single struct-array-align-elem
 test_ctf_single meta-ctx-sequence
 test_ctf_single_version meta-clk-cls-before-trace-cls 2
 test_ctf_single_version def-clk-freq 1
+test_meta_trailing_byte
 
 test_packet_end lttng-event-after-packet
 test_packet_end lttng-crash
