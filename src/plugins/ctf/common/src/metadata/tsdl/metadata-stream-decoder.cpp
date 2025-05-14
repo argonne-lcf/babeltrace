@@ -241,8 +241,8 @@ std::string MetadataStreamDecoder::_textFromPacketizedMetadata(const bt2c::Const
             const auto pktData = buffer.data() + curOffset.bytes();
 
             if (curOffset + _PktHeader::len > bt2c::DataLen::fromBytes(buffer.size())) {
-                BT_CPPLOGE_APPEND_CAUSE_AND_THROW(
-                    bt2c::Error, "Remaining buffer isn't large enough to hold a packet header.");
+                BT_CPPLOGW("Remaining buffer isn't large enough to hold a packet header.");
+                break;
             }
 
             const auto header = this->_readPktHeader(pktData, *byteOrder, curOffset);
