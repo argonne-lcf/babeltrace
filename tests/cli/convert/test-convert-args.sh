@@ -30,7 +30,7 @@ test_bt_convert_run_args() {
 	IFS=' ' read -ra convert_args_array <<< "$convert_args"
 
 	# Execute convert command.
-	bt_cli "${tmp_stdout}" "${tmp_stderr}" convert --run-args "${convert_args_array[@]}"
+	bt_cli --stdout-file "${tmp_stdout}" -- convert --run-args "${convert_args_array[@]}"
 	ok $? "${what}: success exit status"
 
 	run_args=$(cat "${tmp_stdout}")
@@ -49,7 +49,7 @@ test_bt_convert_fails() {
 	IFS=' ' read -ra convert_args_array <<< "$convert_args"
 
 	# Execute convert command.
-	bt_cli "${tmp_stdout}" "${tmp_stderr}" convert --run-args "${convert_args_array[@]}"
+	bt_cli --stdout-file "${tmp_stdout}" --stderr-file "${tmp_stderr}" -- convert --run-args "${convert_args_array[@]}"
 	isnt "$?" 0 "failure exit status"
 
 	# Nothing should be printed on stdout.

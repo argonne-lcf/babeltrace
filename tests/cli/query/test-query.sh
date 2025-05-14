@@ -47,7 +47,7 @@ expect_failure() {
 
 	echo -n > "$stdout_expected_file"
 
-	bt_cli "$stdout_file" "$stderr_file" \
+	bt_cli --stdout-file "$stdout_file" --stderr-file "$stderr_file" -- \
 		--plugin-path "$plugin_dir" \
 		query \
 		"${args[@]}"

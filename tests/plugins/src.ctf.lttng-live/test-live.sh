@@ -167,7 +167,7 @@ get_cli_output_with_lttng_live_server() {
 		allowed_mip_versions_arg=("--allowed-mip-versions=$allowed_mip_versions")
 	fi
 
-	if ! bt_cli "$cli_stdout_file" "$cli_stderr_file" "${allowed_mip_versions_arg[@]+"${allowed_mip_versions_arg[@]}"}" "${cli_args[@]}"; then
+	if ! bt_cli --stdout-file "$cli_stdout_file" --stderr-file "$cli_stderr_file" -- "${allowed_mip_versions_arg[@]+"${allowed_mip_versions_arg[@]}"}" "${cli_args[@]}"; then
 		# CLI failed: cancel everything else
 		if [[ $kill_server_on_cli_failure == true ]]; then
 			kill_lttng_live_server "$server_pid_file"
@@ -444,8 +444,9 @@ test_compare_to_ctf_fs() {
 	expected_stderr="$(mktemp -t test-live-compare-stderr-expected.XXXXXX)"
 
 	bt_cli \
-		"$expected_stdout" \
-		"$expected_stderr" \
+		--stdout-file "$expected_stdout" \
+		--stderr-file "$expected_stderr" \
+		-- \
 		--allowed-mip-versions=0 \
 		"${trace_dir}/1/succeed/multi-domains" \
 		-c sink.text.details \

@@ -21,18 +21,16 @@ NUM_TESTS=3
 plan_tests $NUM_TESTS
 
 tmp_metadata=$(mktemp)
-tmp_stderr=$(mktemp)
 
 # Test a valid trace directory.
-bt_cli "$tmp_metadata" "$tmp_stderr" -o ctf-metadata "${BT_CTF_TRACES_PATH}/1/succeed/wk-heartbeat-u"
+bt_cli --stdout-file "$tmp_metadata"  -- -o ctf-metadata "${BT_CTF_TRACES_PATH}/1/succeed/wk-heartbeat-u"
 ok $? "Run babeltrace -o ctf-metadata with a valid trace directory, correct exit status"
 
 bt_diff "${BT_TESTS_DATADIR}/cli/test-output-ctf-metadata.ref" "$tmp_metadata"
 ok $? "Run babeltrace -o ctf-metadata with a valid trace directory, correct output"
 
 # Test an invalid trace directory.
-bt_cli "$tmp_metadata" "$tmp_stderr" -o ctf-metadata "${BT_CTF_TRACES_PATH}"
+bt_cli -- -o ctf-metadata "${BT_CTF_TRACES_PATH}"
 isnt $? 0 "Run babeltrace -o ctf-metadata with an invalid trace directory, expecting failure"
 
 rm -f "$tmp_metadata"
-rm -f "$tmp_stderr"

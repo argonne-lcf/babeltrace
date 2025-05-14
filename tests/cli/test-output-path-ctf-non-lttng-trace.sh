@@ -40,7 +40,7 @@ cp -a "${BT_CTF_TRACES_PATH}/1/intersection/3eventsintersectreverse" "${temp_inp
 mkdir -p "${temp_input_dir}/d/e/f"
 cp -a "${BT_CTF_TRACES_PATH}/1/intersection/nointersect" "${temp_input_dir}/d/e/f"
 
-bt_cli "/dev/null" "/dev/null" "${temp_input_dir}" -c sink.ctf.fs -p "path=\"${temp_output_dir}\""
+bt_cli -- "${temp_input_dir}" -c sink.ctf.fs -p "path=\"${temp_output_dir}\""
 
 test -f "${temp_output_dir}/a/b/c/3eventsintersect/metadata"
 ok "$?" "3eventsintersect output trace exists"

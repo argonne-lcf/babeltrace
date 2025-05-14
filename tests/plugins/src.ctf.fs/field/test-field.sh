@@ -34,7 +34,7 @@ test_pass() {
 
     local -r res_path=$(mktemp)
     local -r cli_cmd=(
-        "$res_path" /dev/null --plugin-path="$data_dir"
+        --stdout-file "$res_path" -- --plugin-path="$data_dir"
         -c sink.test-text.single "$output_dir/trace"
     )
 

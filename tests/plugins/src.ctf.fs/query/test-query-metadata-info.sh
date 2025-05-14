@@ -33,7 +33,7 @@ test_query_metadata_info() {
 	temp_stdout_output_file="$(mktemp -t actual-stdout.XXXXXX)"
 	temp_stderr_output_file="$(mktemp -t actual-stderr.XXXXXX)"
 
-	bt_cli "$temp_stdout_output_file" "$temp_stderr_output_file" \
+	bt_cli --stdout-file "$temp_stdout_output_file" --stderr-file "$temp_stderr_output_file" -- \
 		"${query[@]}"
 
 	bt_diff "$expected_stdout" "$temp_stdout_output_file"
@@ -62,7 +62,7 @@ test_non_existent_trace_dir() {
 	stderr_file_no_crlf="$(mktemp -t actual-stderr-no-crlf.XXXXXX)"
 	query=("query" "src.ctf.fs" "metadata-info" "--params" "path=\"$empty_dir\"")
 
-	bt_cli "$stdout_file" "$stderr_file" \
+	bt_cli --stdout-file "$stdout_file" --stderr-file "$stderr_file" -- \
 		"${query[@]}"
 	isnt $? 0 "non existent trace dir: babeltrace exits with an error"
 

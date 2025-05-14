@@ -47,10 +47,10 @@ test_fail_method() {
 	trace_path=$(fail_trace_path "$name" "$ctf_version")
 
 	if [ "$method" = "autodisc" ]; then
-		bt_cli "${stdout_file}" "${stderr_file}" \
+		bt_cli --stdout-file "${stdout_file}" --stderr-file "${stderr_file}" -- \
 			-c sink.text.details -p "with-trace-name=no,with-stream-name=no" "$trace_path"
 	elif [ "$method" = "component" ]; then
-		bt_cli "${stdout_file}" "${stderr_file}" \
+		bt_cli --stdout-file "${stdout_file}" --stderr-file "${stderr_file}" -- \
 			-c sink.text.details -p "with-trace-name=no,with-stream-name=no" -c src.ctf.fs -p "inputs=[\"$(bt_maybe_cygpath_m "$trace_path")\"]"
 	else
 		echo "invalid method: $method"
