@@ -21,9 +21,8 @@ source "$UTILSSH"
 
 data_dir="$BT_TESTS_DATADIR/plugins/flt.utils.trimmer"
 temp_stdout_expected=$(mktemp)
-temp_stderr_expected="/dev/null"
 
-plan_tests 56
+plan_tests 168
 
 function run_test
 {
@@ -66,8 +65,8 @@ function run_test
 		test_name="$test_name, without --end"
 	fi
 
-	bt_diff_cli "$temp_stdout_expected" "$temp_stderr_expected" "${local_args[@]}"
-	ok $? "$test_name"
+	bt_test_cli "$test_name" --expect-stdout "$temp_stdout_expected" -- \
+		"${local_args[@]}"
 }
 
 function test_with_stream_msg_cs_with_packets {
@@ -620,6 +619,4 @@ test_without_stream_msg_cs_with_packets
 test_with_stream_msg_cs_without_packets
 test_without_stream_msg_cs_without_packets
 
-# Do not `rm` $temp_stderr_expected because it's set to `/dev/null` right now
-# and that would print an error.
 rm -f "$temp_stdout_expected"

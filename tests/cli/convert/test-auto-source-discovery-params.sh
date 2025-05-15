@@ -17,7 +17,7 @@ fi
 # shellcheck source=../../utils/utils.sh
 SH_TAP=1 source "$UTILSSH"
 
-NUM_TESTS=4
+NUM_TESTS=12
 
 plan_tests $NUM_TESTS
 
@@ -53,11 +53,11 @@ Stream end
 Stream end
 END
 
-bt_diff_cli "$expected_file" "/dev/null" \
+bt_test_cli "apply params to two components from one non-option argument" \
+	--expect-stdout "$expected_file" -- \
 	--plugin-path "${plugin_dir}" convert \
 	"${dir_ab}" --params 'test-allo="madame"' "${print_test_params[@]}" \
 	"${details_sink[@]}"
-ok "$?" "apply params to two components from one non-option argument"
 
 # Apply params to two components from two distinct non-option arguments.
 cat > "$expected_file" <<END
@@ -80,11 +80,11 @@ Stream end
 Stream end
 END
 
-bt_diff_cli "$expected_file" "/dev/null" \
+bt_test_cli "apply params to two non-option arguments" \
+	--expect-stdout "$expected_file" -- \
 	--plugin-path "${plugin_dir}" convert \
 	"${dir_a}" --params 'test-allo="madame"' "${print_test_params[@]}" "${dir_b}" --params 'test-bonjour="monsieur"' "${print_test_params[@]}" \
 	"${details_sink[@]}"
-ok "$?" "apply params to two non-option arguments"
 
 # Apply params to one component coming from one non-option argument and one component coming from two non-option arguments (1).
 cat > "$expected_file" <<END
@@ -107,11 +107,11 @@ Stream end
 Stream end
 END
 
-bt_diff_cli "$expected_file" "/dev/null" \
+bt_test_cli "apply params to one component coming from one non-option argument and one component coming from two non-option arguments (1)" \
+	--expect-stdout "$expected_file" -- \
 	--plugin-path "${plugin_dir}" convert \
 	"${dir_a}" --params 'test-allo="madame"' "${print_test_params[@]}" "${dir_ab}" --params 'test-bonjour="monsieur"' "${print_test_params[@]}" \
 	"${details_sink[@]}"
-ok "$?" "apply params to one component coming from one non-option argument and one component coming from two non-option arguments (1)"
 
 # Apply params to one component coming from one non-option argument and one component coming from two non-option arguments (2).
 cat > "$expected_file" <<END
@@ -134,10 +134,10 @@ Stream end
 Stream end
 END
 
-bt_diff_cli "$expected_file" "/dev/null" \
+bt_test_cli  "apply params to one component coming from one non-option argument and one component coming from two non-option arguments (2)" \
+	--expect-stdout "$expected_file" -- \
 	--plugin-path "${plugin_dir}" convert \
 	"${dir_ab}" --params 'test-bonjour="madame",test-salut="les amis"' "${print_test_params[@]}" "${dir_a}" --params 'test-bonjour="monsieur"' "${print_test_params[@]}" \
 	"${details_sink[@]}"
-ok "$?" "apply params to one component coming from one non-option argument and one component coming from two non-option arguments (2)"
 
 rm -f "$expected_file"

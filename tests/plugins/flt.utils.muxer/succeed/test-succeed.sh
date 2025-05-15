@@ -20,7 +20,7 @@ source "$UTILSSH"
 
 data_dir="$BT_TESTS_DATADIR/plugins/flt.utils.muxer"
 
-plan_tests 12
+plan_tests 36
 
 function run_test
 {
@@ -34,8 +34,8 @@ function run_test
 	)
 
 	stdout_expected="$data_dir/succeed/$test_name.expect"
-	bt_diff_cli "$stdout_expected" /dev/null "${local_args[@]}"
-	ok $? "$test_name"
+	bt_test_cli "$test_name" --expect-stdout "$stdout_expected" -- \
+		"${local_args[@]}"
 }
 
 

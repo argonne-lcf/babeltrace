@@ -21,24 +21,9 @@ source_name="src.test-exit-status.StatusSrc"
 
 test_interrupted_graph() {
 	local cli_args=("--plugin-path=$data_dir" "-c" "$source_name" "-p" "case=\"INTERRUPTED\"")
-	local actual_stdout
-	local actual_stderr
 
-	actual_stdout=$(mktemp -t test-cli-exit-status-stdout-actual.XXXXXX)
-	actual_stderr=$(mktemp -t test-cli-exit-status-stderr-actual.XXXXXX)
-
-	bt_cli --stdout-file "$actual_stdout" --stderr-file "$actual_stderr" -- "${cli_args[@]}"
-
-	is $? 2 "Interrupted graph exits with status 2"
-
-	bt_diff /dev/null "$actual_stdout"
-	ok $? "Interrupted graph gives no stdout"
-
-	bt_diff /dev/null "$actual_stderr"
-	ok $? "Interrupted graph gives no stderr"
-
-	rm -f "${actual_stdout}"
-	rm -f "${actual_stderr}"
+	bt_test_cli "interrupted graph" \
+		--expect-stdout /dev/null --expect-exit-status 2 -- "${cli_args[@]}"
 }
 
 test_error_graph() {

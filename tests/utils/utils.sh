@@ -282,6 +282,141 @@ bt_cli() {
 	bt_run_in_py_env "$BT_TESTS_BT2_BIN" "${bt_cli_args[@]}" 1>"$stdout_file" 2>"$stderr_file"
 }
 
+# Runs bt_cli(), checks some aspects of the result, and then records TAP
+# test results.
+#
+# Usage
+# ─────
+#     bt_test_cli [--expect-stdout STDOUT] [--expect-stderr-re STDERR]
+#                 [--expect-exit-status STATUS] NAME -- ARGS...
+#
+# The mandatory NAME argument is a prefix of the TAP test names.
+#
+# This function forwards the arguments ARGS to bt_cli().
+#
+# Options
+# ───────
+# --expect-stdout STDOUT:
+#     Compare the standard output stream to the file STDOUT, and then
+#     record a pass if they're identical, or a failure otherwise.
+#
+# --expect-stderr-re STDERR:
+#     Record a pass if the BRE regular expression STDERR matches the
+#     standard error stream, or a failure otherwise.
+#
+#     If not specified: record a pass if the standard error stream is
+#     empty, or a failure otherwise.
+#
+# --expect-exit-status STATUS:
+#     Record a pass if the exit status of bt_cli() is STATUS, or a
+#     failure otherwise.
+#
+#     If not specified: record a pass if the exit status is 0.
+#
+# ┌───────────────────────────────────────────────────┐
+# │ NOTE: This function doesn't accept options in the │
+# │ `--opt=val` format.                               │
+# └───────────────────────────────────────────────────┘
+#
+# Exit status
+# ───────────
+# 0:
+#     All checks pass.
+#
+# Another value:
+#     At least one check fails.
+bt_test_cli() {
+	local test_name=""
+	local expected_stdout_file=""
+	local expected_stderr_re=""
+	local expected_exit_status=0
+
+	while (($# > 0)); do
+		case $1 in
+		--expect-stdout)
+			expected_stdout_file=$2
+			shift 2
+			;;
+		--expect-stderr-re)
+			expected_stderr_re=$2
+			shift 2
+			;;
+		--expect-exit-status)
+			expected_exit_status=$2
+			shift 2
+			;;
+		--)
+			shift
+			break
+			;;
+		--*)
+			echo "ERROR: bt_test_cli(): received unexpected option \`$1\`" >&2
+			return 1
+			;;
+		*)
+			if [[ -z $test_name ]]; then
+				test_name=$1
+				shift
+
+				if [[ -z $test_name ]]; then
+					echo "ERROR: bt_test_cli(): empty test name" >&2
+					return 1
+				fi
+			else
+				echo "ERROR: bt_test_cli(): received unexpected argument \`$1\`" >&2
+				return 1
+			fi
+			;;
+		esac
+	done
+
+	if [[ -z $test_name ]]; then
+		echo "ERROR: bt_test_cli(): missing test name" >&2
+		return 1
+	fi
+
+	# Run bt_cli().
+	local -r actual_stdout_file=$(mktemp -t actual-stdout.XXXXXX)
+	local -r actual_stderr_file=$(mktemp -t actual-stderr.XXXXXX)
+	local -r bt_cli_args=(
+		--stdout-file "$actual_stdout_file"
+		--stderr-file "$actual_stderr_file"
+	)
+	local ret=0
+
+	bt_cli "${bt_cli_args[@]}" -- "$@"
+
+	# Check exit status.
+	if ! is $? "$expected_exit_status" "$test_name: exit status is expected"; then
+		ret=1
+	fi
+
+	# Check standard output.
+	if [[ -n $expected_stdout_file ]]; then
+		bt_diff "$expected_stdout_file" "$actual_stdout_file"
+
+		if ! ok $? "$test_name: standard output is expected"; then
+			ret=1
+		fi
+	fi
+
+	# Check standard error.
+	if [[ -n $expected_stderr_re ]]; then
+		bt_grep --silent "$expected_stderr_re" "$actual_stderr_file"
+	else
+		[[ ! -s $actual_stderr_file ]]
+	fi
+
+	if ! ok $? "$test_name: standard error is expected"; then
+		ret=1
+		diag "standard error contents:"
+		diag_file "$actual_stderr_file"
+	fi
+
+	rm -f "$actual_stdout_file" "$actual_stderr_file"
+	return $ret
+}
+
 # Checks the differences between:
 #
 # • The (expected) contents of the file having the path `$1`.

@@ -14,7 +14,7 @@ fi
 # shellcheck source=../../utils/utils.sh
 SH_TAP=1 source "$UTILSSH"
 
-NUM_TESTS=15
+NUM_TESTS=21
 
 plan_tests $NUM_TESTS
 
@@ -32,11 +32,10 @@ expect_success() {
 
 	echo "$expected_str" > "$stdout_expected_file"
 
-	bt_diff_cli "$stdout_expected_file" /dev/null \
+	bt_test_cli "${args[*]}" --expect-stdout "$stdout_expected_file" -- \
 		--plugin-path "$plugin_dir" \
 		query "src.query.SourceWithQueryThatPrintsParams" \
 		"${args[@]}"
-	ok "$?" "${args[*]}"
 }
 
 expect_failure() {
