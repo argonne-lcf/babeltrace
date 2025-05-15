@@ -33,7 +33,7 @@ if [ "$BT_TESTS_ENABLE_PYTHON_PLUGINS" != "1" ]; then
 	exit
 fi
 
-plan_tests 7
+plan_tests 9
 
 bt_cli --stdout-file "$temp_stdout" --stderr-file "$temp_stderr" -- \
 	"--plugin-path=${data_dir}" \
@@ -67,8 +67,8 @@ ok "$?" "the-stream file exists"
 
 # Read back the output trace to make sure it's properly formed.
 echo "the-event: " > "$temp_expected_stdout"
-bt_diff_cli "$temp_expected_stdout" /dev/null "$trace_dir"
-ok "$?" "read back output trace"
+bt_test_cli "read back output trace" --expect-stdout "$temp_expected_stdout" -- \
+	"$trace_dir"
 
 rm -f "$temp_stdout"
 rm -f "$temp_stderr"

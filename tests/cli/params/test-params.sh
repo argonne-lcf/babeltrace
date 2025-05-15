@@ -17,7 +17,7 @@ fi
 # shellcheck source=../../utils/utils.sh
 SH_TAP=1 source "$UTILSSH"
 
-NUM_TESTS=9
+NUM_TESTS=27
 
 plan_tests $NUM_TESTS
 
@@ -34,9 +34,9 @@ function expect_success
 
 	echo "$expected_str" > "$expected_file"
 
-	bt_diff_cli "$expected_file" /dev/null --plugin-path "$plugin_dir" -c "src.text.dmesg" \
+	bt_test_cli "$test_name" --expect-stdout "$expected_file" -- \
+		--plugin-path "$plugin_dir" -c "src.text.dmesg" \
 		-c "sink.params.SinkThatPrintsParams" --params "$params_str"
-	ok "$?" "$test_name"
 }
 
 expect_success 'null' 'a=null,b=nul,c=NULL' \

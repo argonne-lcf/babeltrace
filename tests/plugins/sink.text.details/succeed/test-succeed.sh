@@ -63,11 +63,11 @@ test_details() {
 			expect_path="$(find_expect_file "$test_name" $ctf_version $mip_version)"
 
 			diag "CTF $ctf_version, MIP $mip_version, expect file $expect_path"
-			bt_diff_cli "$expect_path" /dev/null \
+			bt_test_cli "CTF $ctf_version: MIP $mip_version: '$test_name' test has the expected output" \
+				--expect-stdout "$expect_path" -- \
 				--allowed-mip-versions=$mip_version \
 				"$trace_dir" -p trace-name=the-trace \
 				-c sink.text.details "${details_args[@]+${details_args[@]}}"
-			ok $? "CTF $ctf_version: MIP $mip_version: '$test_name' test has the expected output"
 		done
 	done
 }
@@ -84,7 +84,7 @@ test_details_no_stream_name() {
 		"${details_args[@]+${details_args[@]}}" -p with-stream-name=no
 }
 
-plan_tests 36
+plan_tests 108
 
 test_details_no_stream_name default wk-heartbeat-u
 test_details_no_stream_name default-compact wk-heartbeat-u -p compact=yes

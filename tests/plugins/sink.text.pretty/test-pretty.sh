@@ -15,8 +15,9 @@ fi
 # shellcheck source=../../utils/utils.sh
 source "$UTILSSH"
 
-plan_tests 1
+plan_tests 3
 
-bt_diff_cli "$BT_TESTS_DATADIR/plugins/sink.text.pretty/fl-bm-ctf2.expect" /dev/null \
+bt_test_cli "show basic bit array fields with flags" \
+	--expect-stdout "$BT_TESTS_DATADIR/plugins/sink.text.pretty/fl-bm-ctf2.expect" \
+	-- \
 	"$BT_TESTS_DATADIR/ctf-traces/2/succeed/fl-bm"
-ok "$?" "show basic bit array fields with flags"

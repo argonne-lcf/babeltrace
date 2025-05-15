@@ -17,7 +17,7 @@ fi
 # shellcheck source=../../utils/utils.sh
 SH_TAP=1 source "$UTILSSH"
 
-NUM_TESTS=4
+NUM_TESTS=12
 
 plan_tests $NUM_TESTS
 
@@ -53,11 +53,11 @@ Stream end
 Stream end
 END
 
-bt_diff_cli "$expected_file" "/dev/null" \
+bt_test_cli "apply log level to two components from one non-option argument" \
+	 --expect-stdout "$expected_file" -- \
 	--plugin-path "${plugin_dir}" convert \
 	"${dir_ab}" --log-level DEBUG "${print_log_level[@]}" \
 	"${details_sink[@]}"
-ok "$?" "apply log level to two components from one non-option argument"
 
 # Apply log level to two components from two distinct non-option arguments.
 cat > "$expected_file" <<END
@@ -80,11 +80,11 @@ Stream end
 Stream end
 END
 
-bt_diff_cli "$expected_file" "/dev/null" \
+bt_test_cli "apply log level to two non-option arguments" \
+	--expect-stdout "$expected_file" -- \
 	--plugin-path "${plugin_dir}" convert \
 	"${dir_a}" --log-level DEBUG "${print_log_level[@]}" "${dir_b}" --log-level TRACE "${print_log_level[@]}" \
 	"${details_sink[@]}"
-ok "$?" "apply log level to two non-option arguments"
 
 # Apply log level to one component coming from one non-option argument and one component coming from two non-option arguments (1).
 cat > "$expected_file" <<END
@@ -107,11 +107,11 @@ Stream end
 Stream end
 END
 
-bt_diff_cli "$expected_file" "/dev/null" \
+bt_test_cli "apply log level to one component coming from one non-option argument and one component coming from two non-option arguments (1)" \
+	--expect-stdout "$expected_file" -- \
 	--plugin-path "${plugin_dir}" convert \
 	"${dir_a}" --log-level DEBUG "${print_log_level[@]}" "${dir_ab}" --log-level TRACE "${print_log_level[@]}" \
 	"${details_sink[@]}"
-ok "$?" "apply log level to one component coming from one non-option argument and one component coming from two non-option arguments (1)"
 
 # Apply log level to one component coming from one non-option argument and one component coming from two non-option arguments (2).
 cat > "$expected_file" <<END
@@ -134,10 +134,10 @@ Stream end
 Stream end
 END
 
-bt_diff_cli "$expected_file" "/dev/null" \
+bt_test_cli "apply log level to one component coming from one non-option argument and one component coming from two non-option arguments (2)" \
+	--expect-stdout "$expected_file" -- \
 	--plugin-path "${plugin_dir}" convert \
 	"${dir_ab}" --log-level DEBUG "${print_log_level[@]}" "${dir_a}" --log-level TRACE "${print_log_level[@]}" \
 	"${details_sink[@]}"
-ok "$?" "apply log level to one component coming from one non-option argument and one component coming from two non-option arguments (2)"
 
 rm -f "$expected_file"

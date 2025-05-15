@@ -38,10 +38,10 @@ test_debug_info() {
 	)
 
 	for mip_version in 0 1; do
-		bt_diff_cli "$expect_dir/trace-$name-mip$mip_version.expect" "/dev/null" \
+		bt_test_cli "MIP '$mip_version': Trace '$name' gives the expected output" \
+			--expect-stdout "$expect_dir/trace-$name-mip$mip_version.expect" -- \
 			"$succeed_trace_dir/$name" "${local_args[@]}" \
 			"--allowed-mip-versions=$mip_version"
-		ok $? "MIP '$mip_version': Trace '$name' gives the expected output"
 	done
 }
 
@@ -123,7 +123,7 @@ test_compare_complete_src_trace() {
 	done
 }
 
-plan_tests 18
+plan_tests 22
 
 test_debug_info debug-info
 
