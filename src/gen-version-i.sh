@@ -18,6 +18,11 @@ if test "${TOP_SRCDIR:-}" = ""; then
 	exit 1
 fi
 
+if test "${ENABLE_GIT_VERSION:-unset}" = "unset"; then
+	echo "$0: ENABLE_GIT_VERSION is not set" >&2
+	exit 1
+fi
+
 GREP=${GREP:-grep}
 SED=${SED:-sed}
 
@@ -28,8 +33,9 @@ if test ! -f common/version.i && test -f "$TOP_SRCDIR/include/version.i"; then
 	cp "$TOP_SRCDIR/include/version.i" common/version.i
 fi
 
-# If "bootstrap" and ".git" exists in the top source directory and the git
-# executable is available, get the current git version string in the form:
+# If $ENABLE_GIT_VERSION is 1, "bootstrap" and ".git" exists in the top source
+# directory, and the git executable is available, get the current git version
+# string in the form:
 #
 #  "latest_tag"(-"number_of_commits_on_top")(-g"latest_commit_hash")(-dirty)
 #
@@ -39,7 +45,9 @@ fi
 #
 # Use an explicit hash abbreviation length, to avoid local `core.abbrev`
 # configurations leading to different results.
-if test -r "$TOP_SRCDIR/bootstrap" && test -r "$TOP_SRCDIR/.git" &&
+if test "$ENABLE_GIT_VERSION" = 1 && \
+		test -r "$TOP_SRCDIR/bootstrap" && \
+		test -r "$TOP_SRCDIR/.git" &&
 		(command -v git > /dev/null 2>&1); then
 	GIT_VERSION_STR="$(cd "$TOP_SRCDIR" && git describe --always --tags --dirty --abbrev=12)"
 	GIT_CURRENT_TAG="$(cd "$TOP_SRCDIR" && (git describe --tags --exact-match --match="v[0-9]*" HEAD || true) 2> /dev/null)"

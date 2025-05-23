@@ -401,6 +401,11 @@ AS_IF([test "x$BABELTRACE_DEBUG_MODE" = x1], [
 ## Optional features selection ##
 ##                             ##
 
+# Whether to generate a version string from git
+# Enabled by default
+AE_FEATURE_DEFAULT_ENABLE
+AE_FEATURE([git-version], [do not use git to generate the version string])
+
 # Python bindings
 # Disabled by default
 AE_FEATURE_DEFAULT_DISABLE
@@ -506,6 +511,9 @@ AM_CONDITIONAL([ENABLE_ASAN], AE_IS_FEATURE_ENABLED([asan]))
 ##                                                                    ##
 ## Set defines for optional features conditionnals in the source code ##
 ##                                                                    ##
+
+AE_IF_FEATURE_ENABLED([git-version], [ENABLE_GIT_VERSION=1], [ENABLE_GIT_VERSION=0])
+AC_SUBST([ENABLE_GIT_VERSION])
 
 AE_IF_FEATURE_ENABLED([built-in-plugins],
   [AC_DEFINE([BT_BUILT_IN_PLUGINS], [1], [Define to ‘1’ to register plug-in attributes in static executable sections])]

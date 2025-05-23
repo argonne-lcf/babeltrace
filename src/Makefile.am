@@ -24,7 +24,12 @@ version_verbose_ = $(version_verbose_@AM_DEFAULT_V@)
 version_verbose_0 = @echo "  GEN     " $@;
 
 common/version.i:
-	$(version_verbose)GREP=$(GREP) SED=$(SED) TOP_SRCDIR="$(top_srcdir)" $(SHELL) $(srcdir)/gen-version-i.sh
+	$(version_verbose)GREP=$(GREP) \
+		SED=$(SED) \
+		TOP_SRCDIR="$(top_srcdir)" \
+		ENABLE_GIT_VERSION=$(ENABLE_GIT_VERSION) \
+		$(SHELL) \
+		$(srcdir)/gen-version-i.sh
 
 dist_noinst_SCRIPTS = gen-version-i.sh
 
