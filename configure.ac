@@ -770,6 +770,10 @@ m4_define([WARN_FLAGS_LIST], [ dnl
   dnl Ref: https://github.com/swig/swig/issues/1259
   -Wno-cast-function-type dnl
   -Wno-maybe-uninitialized dnl
+  dnl We need to use a deprecated literal operator form (with a space) to please
+  dnl g++ 4.8, so disable this diagnostic. There are instances of this both in the
+  dnl babeltrace code and in vendor code.
+  -Wno-deprecated-literal-operator dnl
 ])
 
 # Pass -Werror as an extra flag during the test: this is needed to make the
