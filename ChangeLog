@@ -1,3 +1,17 @@
+2025-07-22 Babeltrace 2.1.2 (National Hammock Day)
+	* src.ctf.fs: be less strict when encountering trailing byte at the end of packetized CTF 1.8 metadata
+	* tests: add bt_test_cli
+	* tests: make bt_cli accept non-positional options
+	* tests: bt_diff_cli: don't pass unexpected extra args to bt_diff
+	* tests: remove unnecessary nonlocal keywords
+	* Fix: Python: set local `typing` version to that of 3.5.2
+	* Fix: Python: missing __contains__ method for _PluginComponentClasses
+	* Fix: tests: Add explicit items method for Mapping compatibility
+	* Tests: sync normand.py with upstream
+	* Fix: tests: Add explicit __iter__ method for Iterator compatibility
+	* Fix: Use local_typing with Python < 3.5.3
+	* Update working version to Babeltrace v2.1.2
+
 2025-04-14 Babeltrace 2.1.1 (Pecan Day)
 	* src.ctf.lttng-live: remove lttng_live_lazy_msg_init function
 	* src.ctf.lttng-live: fix comment formatting
