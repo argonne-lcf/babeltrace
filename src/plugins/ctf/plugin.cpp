@@ -45,6 +45,8 @@ BT_PLUGIN_SOURCE_COMPONENT_CLASS_DESCRIPTION_WITH_ID(
     auto, la, "Read LTTng trace archives for some watched recording session.");
 BT_PLUGIN_SOURCE_COMPONENT_CLASS_HELP_WITH_ID(auto, la,
                                               "Proof of concept for Argonne: no help available!");
+BT_PLUGIN_SOURCE_COMPONENT_CLASS_GET_SUPPORTED_MIP_VERSIONS_METHOD_WITH_ID(
+    auto, la, ctf_la_get_supported_mip_versions);
 BT_PLUGIN_SOURCE_COMPONENT_CLASS_INITIALIZE_METHOD_WITH_ID(auto, la, ctf_la_init);
 BT_PLUGIN_SOURCE_COMPONENT_CLASS_FINALIZE_METHOD_WITH_ID(auto, la, ctf_la_finalize);
 BT_PLUGIN_SOURCE_COMPONENT_CLASS_MESSAGE_ITERATOR_CLASS_INITIALIZE_METHOD_WITH_ID(

@@ -572,14 +572,34 @@ void tryHealHeapEntry(ctf_la_component& comp, ctf_la_msg_iter_data& msgIter,
         /* Set the first message */
         entry.nextMsg();
 
+        /*
+         * A data stream file which the tracer has created but not yet written
+         * any event to yields no message: its single packet holds a header and
+         * nothing else. Reading a recording session live races the tracer, so
+         * this is expected rather than exceptional. Drop the iterator and leave
+         * the entry sick; the next call retries once the file has content.
+         */
+        if (!entry.curMsg) {
+            BT_CPPLOGI_SPEC(msgIter.logger,
+                            "Data stream file holds no message yet: path=\"{}\"",
+                            entry.dsfGroup->curDsfInfo().path);
+            entry.msgIter.reset();
+            return;
+        }
+
         /* First message should be a stream beginning message without a timestamp */
-        BT_ASSERT(entry.curMsg);
         BT_ASSERT(entry.curMsg->isStreamBeginning());
         BT_ASSERT(!entry.curMsgTs);
 
         if (skipStreamBegin) {
             entry.nextMsg();
-            BT_ASSERT(entry.curMsg);
+
+            /* Same race: the file may hold only its stream beginning. */
+            if (!entry.curMsg) {
+                entry.msgIter.reset();
+                return;
+            }
+
             BT_ASSERT(entry.curMsg->isPacketBeginning());
         }
     }
@@ -899,6 +919,15 @@ static ctf_la_component::UP ctf_la_create(const bt2::ConstMapValue params,
     }
 
     return ctf_la;
+}
+
+bt_component_class_get_supported_mip_versions_method_status
+ctf_la_get_supported_mip_versions(bt_self_component_class_source *, const bt_value *, void *,
+                                  bt_logging_level,
+                                  bt_integer_range_set_unsigned *supportedVersionsRaw)
+{
+    bt2::wrap(supportedVersionsRaw).addRange(0, 1);
+    return BT_COMPONENT_CLASS_GET_SUPPORTED_MIP_VERSIONS_METHOD_STATUS_OK;
 }
 
 bt_component_class_initialize_method_status ctf_la_init(bt_self_component_source *self_comp_src,
